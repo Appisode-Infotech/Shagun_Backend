@@ -1,5 +1,7 @@
 import jwt
 from datetime import datetime, timedelta
+
+from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -10,47 +12,97 @@ from Shagun_backend.models import registration_model, user_kyc_model, bank_detai
     app_data_model, add_printer_model, transactions_history_model, gifts_sent_model, track_order_model
 
 
-# validate the api with Santosh to check if required, without user check we cannot provide the jwt token and this
-# functionality is covered by check_user api
-# @api_view(['POST'])
-# def get_token(request):
-#     token = jwt.encode({'username': request.data['uid'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
-#                        'secret_key', algorithm='HS256')
-#     return JsonResponse({
-#         "status": True,
-#         "token": token,
-#         "uid": request.data['uid']
-#     }, status=200)
+def admin_dashboard(request):
+    return render(request, 'index.html')
+
+
+def manage_event(request):
+    response, status_code = event_controller.get_event_list('qwertyuiojhgfd56')
+    context = {
+        'events': response
+    }
+    return render(request, 'template/pages/tables/events.html', context)
+
+
+def manage_event_types(request):
+    response, status_code = event_controller.get_event_type_list_for_admin()
+    context = {
+        'events': response
+    }
+    return render(request, 'template/pages/tables/event_type.html', context)
+
+
+def manage_location(request):
+    response, status_code = event_controller.get_locations_list()
+    context = {
+        'locations_list': response
+    }
+    return render(request, 'template/pages/tables/location.html', context)
+
+
+def manage_kyc(request):
+    response, status_code = user_controller.get_kyc_data()
+    context = {
+        'kyc': response
+    }
+    return render(request, 'template/pages/tables/kyc.html', context)
+
+
+def manage_bank_details(request):
+    response, status_code = user_controller.get_all_bank_data()
+    print(response)
+    context = {
+        'bank': response
+    }
+    return render(request, 'template/pages/tables/bank_details.html', context)
+
+
+def manage_greeting_cards(request):
+    response, status_code = greeting_cards_controller.get_all_greeting_cards()
+    print(response)
+    context = {
+        'greeting': response
+    }
+    return render(request, 'template/pages/tables/greeting_cards.html', context)
+
+
+def manage_users(request):
+    response, status_code = user_controller.get_all_users()
+    print(response)
+    context = {
+        'users': response
+    }
+    return render(request, 'template/pages/tables/users.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # This API ensure that all Shagun app users are using compatible versions of the application, promoting a consistent
 # and seamless user experience while maintaining the ability to leverage the latest features and enhancements.
 @api_view(['POST'])
 def app_compatibility(request):
-    token = request.headers.get('Authorization').split(' ')[1]
-    try:
-        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-        username = decoded_token['username']
-        if username == request.data.get('uid'):
-            app_obj = app_data_model.app_data_model_from_dict(request.data)
-            response, status_code = app_data_controller.app_compatibility(app_obj)
-            return JsonResponse(response, status=status_code)
-        else:
-            return JsonResponse({'message': 'Invalid token for user'}, status=401)
-
-    except jwt.ExpiredSignatureError:
-        return JsonResponse({'message': 'Token has expired'}, status=401)
-    except jwt.InvalidTokenError:
-        return JsonResponse({'message': 'Invalid token'}, status=401)
+    app_obj = app_data_model.app_data_model_from_dict(request.data)
+    response, status_code = app_data_controller.app_compatibility(app_obj)
+    return JsonResponse(response, status=status_code)
 
 
 # This API is used to verify the existence of a user. It checks if the provided user details or credentials match
 # any registered user in the backend system.
 @api_view(['POST'])
 def check_user(request):
-    user, status_code = user_controller.check_user_exist(request.data.get('uid'))
+    user, status_code = user_controller.check_user_exist(request.data.get('uid'), request.data['fcm_token'])
     if user['status']:
-        token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=2)},
+        token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
                            'secret_key', algorithm='HS256')
         return Response({
             "status": user['status'],
@@ -66,14 +118,19 @@ def check_user(request):
         }, status=status_code)
 
 
-# This API allows nxew users to register in the Shagun app. It handles the registration process, validating
+# This API allows new users to register in the Shagun app. It handles the registration process, validating
 # user-provided information, and creating a new user account in the backend database.
 @api_view(['POST'])
 def user_register(request):
+    print(request.data)
     reg_obj = registration_model.registration_model_from_dict(request.data)
     user, status_code = user_controller.user_register(reg_obj)
-    token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=2)},
-                       'secret_key', algorithm='HS256')
+    print(user)
+    if user['user'] is not None:
+        token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
+                           'secret_key', algorithm='HS256')
+    else:
+        token = None
     return JsonResponse({
         "status": user['status'],
         "token": token,
@@ -131,6 +188,12 @@ def update_user_kyc(request):
     return JsonResponse(response, status=status_code)
 
 
+@api_view(['POST'])
+def enable_disable_kyc(request):
+    response, status_code = user_controller.enable_disable_kyc(request.data['uid'], request.data['verification_status'])
+    return JsonResponse(response, status=status_code)
+
+
 # This API enables to securely add their bank account details to the Shagun app. It ensures the confidentiality
 # and integrity of the sensitive information provided by the user, storing it securely in the backend database.
 @api_view(['POST'])
@@ -155,6 +218,12 @@ def update_bank_details(request):
 def create_event(request):
     event_obj = create_event_model.create_event_model_from_dict(request.data)
     response, status_code = event_controller.create_event(event_obj)
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def enable_disable_event(request):
+    response, status_code = event_controller.enable_disable_event(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
 
@@ -205,6 +274,12 @@ def enable_disable_events_type(request):
 @api_view(['POST'])
 def edit_events_type(request):
     response, status_code = event_controller.edit_events_type(request.data['event_type_name'], request.data['id'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def get_event_type_list(request):
+    response, status_code = event_controller.get_event_type_list_for_user()
     return JsonResponse(response, status=status_code)
 
 

@@ -1,16 +1,23 @@
 import pymysql
 from django.db import connection
 from datetime import datetime
-from Shagun_backend.util.constants import CHECK_USER
+
+from Shagun_backend.util import responsegenerator
+from Shagun_backend.util.constants import CHECK_USER, ALL_KYC_DATA, ALL_BANK_DATA, ALL_USERS_DATA
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
-def check_user_exist(username):
+def check_user_exist(username, fcm):
     try:
         with connection.cursor() as cursor:
             query = "SELECT * FROM users WHERE uid = %s;"
             cursor.execute(query, [username])
             result = cursor.fetchone()
+
+            sql_query = "UPDATE users SET fcm_token = %s WHERE uid = %s"
+            values = (fcm, username)
+            cursor.execute(sql_query, values)
+
             if result is not None:
                 return {
                     "status": True,
@@ -28,12 +35,13 @@ def check_user_exist(username):
 
 
 def user_register(reg_obj):
+    print(reg_obj)
     try:
         with connection.cursor() as cursor:
-            sql_query = "INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role)" \
-                        " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            sql_query = "INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, fcm_token, city)" \
+                        " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (reg_obj.name, reg_obj.email, reg_obj.phone, False, reg_obj.profile, reg_obj.uid, True,
-                      reg_obj.auth_type, reg_obj.role)
+                      reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
             cursor.execute(sql_query, values)
             query = "SELECT * FROM users WHERE uid = %s;"
             cursor.execute(query, [reg_obj.uid])
@@ -44,9 +52,9 @@ def user_register(reg_obj):
                 "user": responseGenerator.generateResponse(user_data, CHECK_USER)
             }, 200
     except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
+        return {"status": False, "message": str(e), "user": None}, 301
     except Exception as e:
-        return {"status": False, "message": str(e)}, 301
+        return {"status": False, "message": str(e), "user": None}, 301
 
 
 def edit_user(edit_reg_obj):
@@ -161,6 +169,48 @@ def update_user_kyc(kyc_obj):
         return {"status": False, "message": str(e)}, 301
 
 
+def enable_disable_kyc(uid, v_status):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE user_kyc SET verification_status = %s WHERE uid = %s"
+            values = (v_status, uid)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "User Kyc status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_kyc_data():
+    try:
+        with connection.cursor() as cursor:
+            kyc_data_query = """ SELECT 
+                kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.permanent_address, 
+                kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
+                kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
+                kyc.verification_status, users.profile_pic
+                FROM user_kyc AS kyc
+                INNER JOIN users ON kyc.uid = users.uid """
+
+            cursor.execute(kyc_data_query)
+            kyc_data = cursor.fetchall()
+            return {
+                "status": True,
+                "kyc_data": responsegenerator.responseGenerator.generateResponse(kyc_data, ALL_KYC_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def add_bank_details(bank_obj):
     try:
         with connection.cursor() as cursor:
@@ -221,3 +271,41 @@ def update_bank_details(bank_obj):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
+def get_all_bank_data():
+    try:
+        with connection.cursor() as cursor:
+            bank_data_query = """ SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
+                bnk.account_number, bnk.status ,users.profile_pic
+                FROM bank_details AS bnk
+                INNER JOIN users ON bnk.uid = users.uid """
+
+            cursor.execute(bank_data_query)
+            bank_data_query = cursor.fetchall()
+            return {
+                "status": True,
+                "bank_data": responsegenerator.responseGenerator.generateResponse(bank_data_query, ALL_BANK_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_all_users():
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM Users WHERE role = 3"""
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

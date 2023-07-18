@@ -1,7 +1,8 @@
 import json
 
 from Shagun_backend.util.constants import CHECK_USER, EVENT_LIST, SINGLE_EVENT, APP_COMPATIBILITY, USER_HOME_PAGE, \
-    GIFT_SENT, GREETING_CARDS, TRACK_ORDER
+    GIFT_SENT, GREETING_CARDS, TRACK_ORDER, ALL_EVENT_TYPE_LIST, ALL_LOCATION_LIST, EVENT_TYPE_LIST, ALL_KYC_DATA, \
+    ALL_BANK_DATA, ALL_USERS_DATA
 
 
 class responseGenerator:
@@ -25,7 +26,10 @@ class responseGenerator:
                     {
                         "event_date": events[0],
                         "event_name": events[2],
-                        "admins": json.loads(events[1])
+                        "admins": json.loads(events[1]),
+                        "event_id": events[3],
+                        "is_approved": events[4],
+                        "status": events[5]
                     }
                 )
             return event_list
@@ -40,6 +44,16 @@ class responseGenerator:
                 "admins": json.loads(data[1]),
                 "sub_events": json.loads(data[6])
             }
+
+        if controller_type == EVENT_TYPE_LIST:
+            event_type_list = []
+            for event_type in data:
+                event_type_list.append(
+                 {
+                    "id": event_type[0],
+                    "event_type_name": event_type[1]
+                })
+            return event_type_list
 
         if controller_type == APP_COMPATIBILITY:
             return {
@@ -123,7 +137,9 @@ class responseGenerator:
                     {
                         "card_name": cards[0],
                         "card_image_url": cards[1],
-                        "card_price": cards[2]
+                        "card_price": cards[2],
+                        "card_id": cards[3],
+                        "card_status": cards[4]
                     }
                 )
             return greeting_cards
@@ -140,3 +156,89 @@ class responseGenerator:
                     }
                 )
             return track_order
+
+        if controller_type == ALL_EVENT_TYPE_LIST:
+            event_type_lists = []
+            for event_type in data:
+                event_type_lists.append(
+                    {
+                        "event_type_id": event_type[0],
+                        "event_type_name": event_type[1],
+                        "status": event_type[2]
+                    }
+                )
+            return event_type_lists
+
+        if controller_type == ALL_LOCATION_LIST:
+            location_lists = []
+            for event_type in data:
+                location_lists.append(
+                    {
+                        "location_id": event_type[0],
+                        "location_name": event_type[1],
+                        "status": event_type[2]
+                    }
+                )
+            return location_lists
+
+        if controller_type == ALL_KYC_DATA:
+            kyc_data = []
+            for kyc in data:
+                kyc_data.append(
+                     {
+                        "id": kyc[0],
+                        "uid": kyc[1],
+                        "full_name": kyc[2],
+                        "dob": kyc[3],
+                        "permanent_address": kyc[4],
+                        "identification_proof1": kyc[5],
+                        "identification_proof2": kyc[6],
+                        "identification_number1": kyc[7],
+                        "identification_number2": kyc[8],
+                        "identification_doc1": kyc[9],
+                        "identification_doc2": kyc[10],
+                        "verification_status": kyc[11],
+                        "profile_pic": kyc[12]
+
+                    }
+                )
+            return kyc_data
+
+        if controller_type == ALL_BANK_DATA:
+            bank_data = []
+            for bank in data:
+                bank_data.append(
+                     {
+                        "id": bank[0],
+                        "uid": bank[1],
+                        "ifsc_code": bank[2],
+                        "bank_name": bank[3],
+                        "account_holder_name": bank[4],
+                        "account_number": bank[5],
+                        "status": bank[6],
+                        "profile_pic": bank[7]
+
+                    }
+                )
+            return bank_data
+
+        if controller_type == ALL_USERS_DATA:
+            user_data = []
+            for user in data:
+                user_data.append(
+                    {
+                        "id": user[0],
+                        "uid": user[1],
+                        "name": user[2],
+                        "email": user[3],
+                        "phone": user[4],
+                        "auth_type": user[5],
+                        "kyc": user[6],
+                        "profile_pic": user[7],
+                        "created_on": user[8],
+                        "status": user[9]
+
+                    }
+                )
+            return user_data
+

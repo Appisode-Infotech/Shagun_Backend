@@ -4,7 +4,9 @@ from datetime import datetime
 import json
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import EVENT_LIST, SINGLE_EVENT
+from Shagun_backend.util.constants import EVENT_LIST, SINGLE_EVENT, ALL_EVENT_TYPE_LIST, ALL_LOCATION_LIST, \
+    EVENT_TYPE_LIST
+from Shagun_backend.util.responsegenerator import responseGenerator
 
 
 def create_event(event_obj):
@@ -31,11 +33,29 @@ def create_event(event_obj):
         return {"status": False, "message": str(e)}, 301
 
 
+def enable_disable_event(e_id, etstatus):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE event SET status = %s WHERE id = %s"
+            values = (etstatus, e_id)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "Event Status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 def get_event_list(uid):
     try:
         with connection.cursor() as cursor:
-            sql_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name FROM event " \
-                        "JOIN events_type ON event.event_type_id = events_type.id"
+            sql_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
+                        "event.is_approved, event.status FROM event JOIN events_type ON " \
+                        "event.event_type_id = events_type.id"
             cursor.execute(sql_query)
             events = cursor.fetchall()
             return {
@@ -58,6 +78,7 @@ def get_single_event(event_id):
             cursor.execute(sql_query, (event_id,))
             events = cursor.fetchone()
             return {
+                "status": True,
                 "msg": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
             }, 200
             # return responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT), 200
@@ -117,6 +138,26 @@ def edit_events_type(lid, event_type_name):
         return {"status": False, "message": str(e)}, 301
 
 
+def get_event_type_list_for_user():
+    try:
+        with connection.cursor() as cursor:
+            event_type_list_query = """SELECT * FROM events_type WHERE status=1"""
+            cursor.execute(event_type_list_query)
+            event_type_list = cursor.fetchall()
+            print(event_type_list_query)
+
+            return {
+                "status": True,
+                "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)
+
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def add_location(city_name):
     try:
         with connection.cursor() as cursor:
@@ -160,6 +201,39 @@ def edit_location(lid, lcity_name):
             return {
                 "status": True,
                 "message": "Location edited successfully"
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_event_type_list_for_admin():
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "SELECT id, event_type_name, status FROM events_type"
+            cursor.execute(sql_query)
+            events = cursor.fetchall()
+            print(events)
+            return {
+                "status": True,
+                "events_type": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_TYPE_LIST)
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_locations_list():
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "SELECT id, city_name, status FROM locations"
+            cursor.execute(sql_query)
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "locations": responsegenerator.responseGenerator.generateResponse(events, ALL_LOCATION_LIST)
             }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

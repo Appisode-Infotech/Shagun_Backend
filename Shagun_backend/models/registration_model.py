@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, Any, TypeVar, Type, cast
 
+
 T = TypeVar("T")
 
 
@@ -8,8 +9,14 @@ def from_str(x: Any) -> str:
     assert isinstance(x, str)
     return x
 
+
 def from_int(x: Any) -> int:
     assert isinstance(x, int) and not isinstance(x, bool)
+    return x
+
+
+def from_none(x: Any) -> Any:
+    assert x is None
     return x
 
 def from_union(fs, x):
@@ -19,10 +26,6 @@ def from_union(fs, x):
         except:
             pass
     assert False
-
-def from_none(x: Any) -> Any:
-    assert x is None
-    return x
 
 def to_class(c: Type[T], x: Any) -> dict:
     assert isinstance(x, c)
@@ -36,6 +39,8 @@ class RegistrationModel:
     email: str
     phone: str
     profile: str
+    fcm_token: str
+    city: str
     auth_type: Optional[str] = None
     role: Optional[int] = None
 
@@ -47,9 +52,11 @@ class RegistrationModel:
         email = from_str(obj.get("email"))
         phone = from_str(obj.get("phone"))
         profile = from_str(obj.get("profile"))
+        fcm_token = from_str(obj.get("fcm_token"))
+        city = from_str(obj.get("city"))
         auth_type = from_union([from_str, from_none], obj.get("auth_type"))
         role = from_union([from_int, from_none], obj.get("role"))
-        return RegistrationModel(uid, name, email, phone, profile, auth_type, role)
+        return RegistrationModel(uid, name, email, phone, profile, fcm_token, city, auth_type, role)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -58,6 +65,8 @@ class RegistrationModel:
         result["email"] = from_str(self.email)
         result["phone"] = from_str(self.phone)
         result["profile"] = from_str(self.profile)
+        result["fcm_token"] = from_str(self.fcm_token)
+        result["city"] = from_str(self.city)
         if self.auth_type is not None:
             result["auth_type"] = from_union([from_str, from_none], self.auth_type)
         if self.role is not None:

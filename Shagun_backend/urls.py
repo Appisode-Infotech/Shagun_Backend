@@ -19,7 +19,7 @@ from django.urls import path
 from Shagun_backend.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('api/app_compatibility', app_compatibility, name='app_compatibility'),
     # path('api/get_token', get_token, name='get_token'),
     path('api/check_user', check_user, name='check_user'),
@@ -33,18 +33,31 @@ urlpatterns = [
     path('api/track_order', track_order, name='track_order'),
 
 
+    path('', admin_dashboard, name='admin_dashboard'),
+    path('manage_event', manage_event, name='manage_event'),
+    path('manage_event_types', manage_event_types, name='manage_event_types'),
+    path('manage_location', manage_location, name='manage_location'),
+    path('manage_kyc', manage_kyc, name='manage_kyc'),
+    path('manage_bank_details', manage_bank_details, name='manage_bank_details'),
+    path('manage_greeting_cards', manage_greeting_cards, name='manage_greeting_cards'),
+    path('manage_users', manage_users, name='manage_users'),
+
+
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),
     # path('home', home, name='home'),
     path('add_user_kyc', add_user_kyc, name='add_user_kyc'),
     path('update_user_kyc', update_user_kyc, name='update_user_kyc'),
+    path('enable_disable_kyc', enable_disable_kyc, name='enable_disable_kyc'),
     path('add_bank_details', add_bank_details, name='add_bank_details'),
     path('update_bank_details', update_bank_details, name='update_bank_details'),
     path('create_event', create_event, name='create_event'),
+    path('enable_disable_event', enable_disable_event, name='enable_disable_event'),
     path('get_event_list', get_event_list, name='get_event_list'),
     path('get_single_event', get_single_event, name='get_single_event'),
     path('create_events_type', create_events_type, name='create_events_type'),
     path('enable_disable_events_type', enable_disable_events_type, name='enable_disable_events_type'),
     path('edit_events_type', edit_events_type, name='edit_events_type'),
+    path('get_event_type_list', get_event_type_list, name='get_event_type_list'),
     path('add_location', add_location, name='add_location'),
     path('enable_disable_location', enable_disable_location, name='enable_disable_location'),
     path('edit_location', edit_location, name='edit_location'),

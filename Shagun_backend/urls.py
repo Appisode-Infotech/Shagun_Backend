@@ -31,7 +31,8 @@ urlpatterns = [
     path('api/gift_received_list', gift_received_list, name='gift_received_list'),
     path('api/get_greeting_cards', get_greeting_cards, name='get_greeting_cards'),
     path('api/track_order', track_order, name='track_order'),
-
+    path('api/get_single_event', get_single_event, name='get_single_event'),
+    path('api/get_my_event_list', get_my_event_list, name='get_my_event_list'),
 
     path('', admin_dashboard, name='admin_dashboard'),
     path('manage_event', manage_event, name='manage_event'),
@@ -53,7 +54,6 @@ urlpatterns = [
     path('create_event', create_event, name='create_event'),
     path('enable_disable_event', enable_disable_event, name='enable_disable_event'),
     path('get_event_list', get_event_list, name='get_event_list'),
-    path('get_single_event', get_single_event, name='get_single_event'),
     path('create_events_type', create_events_type, name='create_events_type'),
     path('enable_disable_events_type', enable_disable_events_type, name='enable_disable_events_type'),
     path('edit_events_type', edit_events_type, name='edit_events_type'),

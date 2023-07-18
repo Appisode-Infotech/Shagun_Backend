@@ -16,7 +16,7 @@ def create_event(event_obj):
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
             sql_query = "INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1, address_line2, " \
                         "event_lat_lng, created_on, sub_events, event_date, event_note, event_admin, is_approved, " \
-                        " active) " \
+                        " status) " \
                         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, datetime.now(), sub_events_json,
@@ -50,6 +50,7 @@ def enable_disable_event(e_id, etstatus):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_event_list(uid):
     try:
         with connection.cursor() as cursor:
@@ -79,7 +80,7 @@ def get_single_event(event_id):
             events = cursor.fetchone()
             return {
                 "status": True,
-                "msg": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
+                "event": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
             }, 200
             # return responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT), 200
     except pymysql.Error as e:
@@ -235,6 +236,28 @@ def get_locations_list():
                 "status": True,
                 "locations": responsegenerator.responseGenerator.generateResponse(events, ALL_LOCATION_LIST)
             }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_my_event_list(uid):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+            event.is_approved, event.status FROM event 
+            JOIN events_type ON event.event_type_id = events_type.id 
+            WHERE JSON_CONTAINS(event_admin, %(uid_json)s)
+            """
+            uid_json = '{"uid": "%s"}' % uid
+            cursor.execute(sql_query, {'uid_json': uid_json})
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, EVENT_LIST)
+            }, 200
+
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:

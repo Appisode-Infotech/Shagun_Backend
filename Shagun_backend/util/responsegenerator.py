@@ -49,10 +49,10 @@ class responseGenerator:
             event_type_list = []
             for event_type in data:
                 event_type_list.append(
-                 {
-                    "id": event_type[0],
-                    "event_type_name": event_type[1]
-                })
+                    {
+                        "id": event_type[0],
+                        "event_type_name": event_type[1]
+                    })
             return event_type_list
 
         if controller_type == APP_COMPATIBILITY:
@@ -112,11 +112,14 @@ class responseGenerator:
 
         if controller_type == GIFT_SENT:
             sent_gift = []
+            total_gift_amount = 0
             for sent in data:
+                total_gift_amount = sent[11]
                 sent_gift.append(
                     {
                         "receiver_uid": sent[0],
                         "sender_uid": sent[1],
+                        "name": sent[12],
                         "shagun_amount": sent[2],
                         "transaction_amount": sent[3],
                         "transaction_fee": sent[4],
@@ -125,10 +128,13 @@ class responseGenerator:
                         "card_price": sent[7],
                         "event_type_name": sent[8],
                         "id": sent[9],
-                        "settlement_status": sent[10]
+                        "settlement_status": sent[10],
+                        "bank_name": sent[13],
+                        "bank_logo": sent[14],
+                        "acc_no": sent[15]
                     }
                 )
-            return sent_gift
+            return total_gift_amount, sent_gift
 
         if controller_type == GREETING_CARDS:
             greeting_cards = []
@@ -185,7 +191,7 @@ class responseGenerator:
             kyc_data = []
             for kyc in data:
                 kyc_data.append(
-                     {
+                    {
                         "id": kyc[0],
                         "uid": kyc[1],
                         "full_name": kyc[2],
@@ -208,7 +214,7 @@ class responseGenerator:
             bank_data = []
             for bank in data:
                 bank_data.append(
-                     {
+                    {
                         "id": bank[0],
                         "uid": bank[1],
                         "ifsc_code": bank[2],
@@ -241,4 +247,3 @@ class responseGenerator:
                     }
                 )
             return user_data
-

@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
-    app_data_model, add_printer_model, transactions_history_model, gifts_sent_model, track_order_model
+    app_data_model, add_printer_model, transactions_history_model, track_order_model
 
 
 def admin_dashboard(request):
@@ -102,7 +102,7 @@ def app_compatibility(request):
 def check_user(request):
     user, status_code = user_controller.check_user_exist(request.data.get('uid'), request.data['fcm_token'])
     if user['status']:
-        token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
+        token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=300)},
                            'secret_key', algorithm='HS256')
         return Response({
             "status": user['status'],
@@ -236,6 +236,14 @@ def get_event_list(request):
     return JsonResponse(response, status=status_code)
 
 
+
+@api_view(['POST'])
+def get_my_event_list(request):
+    response, status_code = event_controller.get_my_event_list(request.data['uid'])
+    return JsonResponse(response, status=status_code)
+
+
+
 # By providing the event ID as a parameter, this API allows users to fetch detailed information about a specific event.
 # It retrieves event-specific details such as the event description, date, time, location, participating users, and any
 # other relevant information associated with that particular event.
@@ -366,8 +374,7 @@ def gift_sent_list(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
-            sent_gift_obj = gifts_sent_model.gifts_sent_model_from_dict(request.data)
-            response, status_code = transactions_controller.get_sent_gift(sent_gift_obj)
+            response, status_code = transactions_controller.get_sent_gift(request.data['uid'])
             return JsonResponse(response, status=status_code)
 
         else:
@@ -386,8 +393,7 @@ def gift_received_list(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
-            received_gift_obj = gifts_sent_model.gifts_sent_model_from_dict(request.data)
-            response, status_code = transactions_controller.get_received_gift(received_gift_obj)
+            response, status_code = transactions_controller.get_received_gift(request.data['uid'])
             return JsonResponse(response, status=status_code)
 
         else:

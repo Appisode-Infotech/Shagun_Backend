@@ -31,6 +31,7 @@ class EventAdmin:
     role: str
     profile: str
     qr_code: str
+    uid: str
 
     @staticmethod
     def from_dict(obj: Any) -> 'EventAdmin':
@@ -39,7 +40,8 @@ class EventAdmin:
         role = from_str(obj.get("role"))
         profile = from_str(obj.get("profile"))
         qr_code = from_str(obj.get("QR_code"))
-        return EventAdmin(name, role, profile, qr_code)
+        uid = from_str(obj.get("uid"))
+        return EventAdmin(name, role, profile, qr_code, uid)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -47,6 +49,7 @@ class EventAdmin:
         result["role"] = from_str(self.role)
         result["profile"] = from_str(self.profile)
         result["QR_code"] = from_str(self.qr_code)
+        result["uid"] = from_str(self.uid)
         return result
 
 
@@ -98,8 +101,7 @@ class CreateEventModel:
         event_date = from_str(obj.get("event_date"))
         event_note = from_str(obj.get("event_note"))
         event_admin = from_list(EventAdmin.from_dict, obj.get("event_admin"))
-        return CreateEventModel(created_by_uid, event_type_id, city_id, address_line1, address_line2, event_lat_lng,
-                                sub_events, event_date, event_note, event_admin)
+        return CreateEventModel(created_by_uid, event_type_id, city_id, address_line1, address_line2, event_lat_lng, sub_events, event_date, event_note, event_admin)
 
     def to_dict(self) -> dict:
         result: dict = {}

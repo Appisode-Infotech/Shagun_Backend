@@ -14,7 +14,7 @@ def home_page_data(uid):
         with connection.cursor() as cursor:
             sent_transactions_query = f"""
                 SELECT th.transaction_amount, et.event_type_name, u.name, e.id, u.profile_pic, 
-                (SELECT SUM(transaction_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_amount
+                (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_amount
                 FROM transaction_history AS th
                 JOIN event AS e ON th.event_id = e.id
                 JOIN events_type AS et ON e.event_type_id = et.id
@@ -27,7 +27,7 @@ def home_page_data(uid):
 
             received_transactions_query = f"""
                 SELECT th.transaction_amount, et.event_type_name, u.name, e.id, u.profile_pic,
-                (SELECT SUM(transaction_amount) FROM transaction_history WHERE receiver_uid = '{uid}') AS total_amount
+                (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}') AS total_amount
                 FROM transaction_history AS th
                 JOIN event AS e ON th.event_id = e.id
                 JOIN events_type AS et ON e.event_type_id = et.id

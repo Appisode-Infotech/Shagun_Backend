@@ -17,71 +17,42 @@ def admin_dashboard(request):
 
 
 def manage_event(request):
-    response, status_code = event_controller.get_event_list('qwertyuiojhgfd56')
-    context = {
-        'events': response
-    }
-    return render(request, 'pages/tables/events.html', context)
-
+    response, status_code = event_controller.get_all_event_list()
+    return render(request, 'pages/tables/events.html', response)
 
 def manage_event_types(request):
     response, status_code = event_controller.get_event_type_list_for_admin()
-    context = {
-        'events': response
-    }
-    return render(request, 'template/pages/tables/event_type.html', context)
+    return render(request, 'pages/tables/event_type.html', response)
 
 
 def manage_location(request):
     response, status_code = event_controller.get_locations_list()
-    context = {
-        'locations_list': response
-    }
-    return render(request, 'template/pages/tables/location.html', context)
+    return render(request, 'pages/tables/location.html', response)
 
 
 def manage_kyc(request):
     response, status_code = user_controller.get_kyc_data()
-    context = {
-        'kyc': response
-    }
-    return render(request, 'template/pages/tables/kyc.html', context)
+    return render(request, 'pages/tables/kyc.html', response)
 
 
 def manage_bank_details(request):
     response, status_code = user_controller.get_all_bank_data()
-    print(response)
-    context = {
-        'bank': response
-    }
-    return render(request, 'template/pages/tables/bank_details.html', context)
+    return render(request, 'pages/tables/bank_details.html', response)
 
 
 def manage_greeting_cards(request):
     response, status_code = greeting_cards_controller.get_all_greeting_cards()
-    print(response)
-    context = {
-        'greeting': response
-    }
-    return render(request, 'template/pages/tables/greeting_cards.html', context)
+    return render(request, 'pages/tables/greeting_cards.html', response)
 
 
 def manage_users(request):
     response, status_code = user_controller.get_all_users()
-    print(response)
-    context = {
-        'users': response
-    }
-    return render(request, 'template/pages/tables/users.html', context)
+    return render(request, 'pages/tables/users.html', response)
 
 
 def manage_employee(request):
     response, status_code = user_controller.get_all_employees()
-    print(response)
-    context = {
-        'users': response
-    }
-    return render(request, 'template/pages/tables/employees.html', context)
+    return render(request, 'pages/tables/employees.html', response)
 
 
 @api_view(['POST'])
@@ -103,16 +74,6 @@ def manage_printers(request):
         'printers': response
     }
     return render(request, 'template/pages/tables/printers.html', context)
-
-
-
-
-
-
-
-
-
-
 
 
 # This API ensure that all Shagun app users are using compatible versions of the application, promoting a consistent
@@ -258,18 +219,16 @@ def enable_disable_event(request):
 # This API retrieves a list of registered events from the backend database. It provides comprehensive event information,
 # including event titles, dates, locations, and other relevant data. Users can browse and access the available events
 # through this API.
-@api_view(['POST'])
-def get_event_list(request):
-    response, status_code = event_controller.get_event_list(request.data['uid'])
-    return JsonResponse(response, status=status_code)
-
+# @api_view(['POST'])
+# def get_event_list(request):
+#     response, status_code = event_controller.get_event_list(request.data['uid'])
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
 def get_my_event_list(request):
     response, status_code = event_controller.get_my_event_list(request.data['uid'])
     return JsonResponse(response, status=status_code)
-
 
 
 # By providing the event ID as a parameter, this API allows users to fetch detailed information about a specific event.
@@ -469,12 +428,6 @@ def track_order(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
-
-
-
-
-
-
 
 # @api_view(['POST'])
 # def home(request):

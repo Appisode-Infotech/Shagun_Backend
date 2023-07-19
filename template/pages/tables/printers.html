@@ -127,7 +127,7 @@
                             <i class="ti-settings text-primary"></i>
                             Settings
                         </a>
-                        <a class="dropdown-item">
+                        <a class="dropdown-item" href="/logout">
                             <i class="ti-power-off text-primary"></i>
                             Logout
                         </a>
@@ -371,7 +371,7 @@
                            </tr>
                             </thead>
                             <tbody>
-                            {% for printer in printers.printer_data %}
+                            {% for printer in printer_data %}
                             <tr>
                                 <td>
                                     {{printer.id}}

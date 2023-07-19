@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
+from django.contrib import messages
 
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller
@@ -12,48 +13,98 @@ from Shagun_backend.models import registration_model, user_kyc_model, bank_detai
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model
 
 
+def sign_up(request):
+    if request.method == 'POST':
+        data = request.POST
+        response = user_controller.employee_login(data['username'], data['password'])
+        if response['msg'] == 'Success':
+            request.session['is_logged_in'] = True
+            return redirect('admin_dashboard')
+        else:
+            messages.error(request, response['msg'])
+    return render(request, 'pages/tables/login.html')
+
+
+def logout(request):
+    del request.session['is_logged_in']
+    return redirect('sign_up')
+
+
 def admin_dashboard(request):
-    return render(request, 'index.html')
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        return render(request, 'index.html')
+    else:
+        return redirect('sign_up')
 
 
 def manage_event(request):
-    response, status_code = event_controller.get_all_event_list()
-    return render(request, 'pages/tables/events.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.get_all_event_list()
+        return render(request, 'pages/tables/events.html', response)
+    else:
+        return redirect('sign_up')
+
+@api_view(['POST'])
+def manage_settlement(request):
+    response = event_controller.get_all_active_events()
+    return JsonResponse(response, safe=False)
 
 
 def manage_event_types(request):
-    response, status_code = event_controller.get_event_type_list_for_admin()
-    return render(request, 'pages/tables/event_type.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.get_event_type_list_for_admin()
+        return render(request, 'pages/tables/event_type.html', response)
+    else:
+        return redirect('sign_up')
 
 
 def manage_location(request):
-    response, status_code = event_controller.get_locations_list()
-    return render(request, 'pages/tables/location.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.get_locations_list()
+        return render(request, 'pages/tables/location.html', response)
+    else:
+        return redirect('sign_up')
 
 
 def manage_kyc(request):
-    response, status_code = user_controller.get_kyc_data()
-    return render(request, 'pages/tables/kyc.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_kyc_data()
+        return render(request, 'pages/tables/kyc.html', response)
+    else:
+        return redirect('sign_up')
 
 
 def manage_bank_details(request):
-    response, status_code = user_controller.get_all_bank_data()
-    return render(request, 'pages/tables/bank_details.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_all_bank_data()
+
+        return render(request, 'pages/tables/bank_details.html', response)
+    else:
+        return redirect('sign_up')
 
 
 def manage_greeting_cards(request):
-    response, status_code = greeting_cards_controller.get_all_greeting_cards()
-    return render(request, 'pages/tables/greeting_cards.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = greeting_cards_controller.get_all_greeting_cards()
+        return render(request, 'pages/tables/greeting_cards.html', response)
+    else:
+        return redirect('sign_up')
 
 
 def manage_users(request):
-    response, status_code = user_controller.get_all_users()
-    return render(request, 'pages/tables/users.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_all_users()
+        return render(request, 'pages/tables/users.html', response)
+    else:
+        return redirect('sign_up')
 
 
 def manage_employee(request):
-    response, status_code = user_controller.get_all_employees()
-    return render(request, 'pages/tables/employees.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_all_employees()
+        return render(request, 'pages/tables/employees.html', response)
+    else:
+        return redirect('sign_up')
 
 
 @api_view(['POST'])
@@ -70,11 +121,11 @@ def enable_disable_employee(request):
 
 
 def manage_printers(request):
-    response, status_code = store_controller.get_all_printers()
-    context = {
-        'printers': response
-    }
-    return render(request, 'template/pages/tables/printers.html', context)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = store_controller.get_all_printers()
+        return render(request, 'pages/tables/printers.html', response)
+    else:
+        return redirect('sign_up')
 
 
 # This API ensure that all Shagun app users are using compatible versions of the application, promoting a consistent

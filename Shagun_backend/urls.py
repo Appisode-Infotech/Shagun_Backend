@@ -35,6 +35,8 @@ urlpatterns = [
     path('api/get_my_event_list', get_my_event_list, name='get_my_event_list'),
 
     path('', admin_dashboard, name='admin_dashboard'),
+    path('sign_up', sign_up, name='sign_up'),
+    path('logout', logout, name='logout'),
     path('manage_event', manage_event, name='manage_event'),
     path('manage_event_types', manage_event_types, name='manage_event_types'),
     path('manage_location', manage_location, name='manage_location'),
@@ -46,6 +48,7 @@ urlpatterns = [
     path('add_employee', add_employee, name='add_employee'),
     path('enable_disable_employee', enable_disable_employee, name='enable_disable_employee'),
     path('manage_printers', manage_printers, name='manage_printers'),
+    path('manage_settlement', manage_settlement, name='manage_settlement'),
 
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),

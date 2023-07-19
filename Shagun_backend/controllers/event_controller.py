@@ -281,3 +281,20 @@ def get_all_event_list():
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def get_all_active_events():
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+            event.is_approved, event.status  FROM event JOIN events_type ON event.event_type_id = events_type.id 
+            WHERE event.status= '{True}' """
+            cursor.execute(sql_query)
+            events = cursor.fetchall()
+            return {
+                "msg":events
+            }
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

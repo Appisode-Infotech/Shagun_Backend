@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <style>
+
+        /* login.css */
+
+/* ... (existing styles) ... */
+
+/* Style the error messages container */
+.messages-container {
+  background-color: #ffe6e6; /* Light pink background color */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+/* Style the error messages */
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  color: #b30000; /* Dark red text color for error messages */
+  background-color: #ffd9d9; /* Light red background color for error messages */
+  border: 1px solid #ff8080; /* Dark red border for error messages */
+  padding: 10px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+    </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Skydash Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+
+</head>
+
+<body>
+
+<div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+            <div class="row w-100 mx-0">
+                <div class="col-lg-4 mx-auto">
+                    <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                        <div class="brand-logo">
+                            <img src="{% static 'images/logo.svg' %}" alt="logo">
+                        </div>
+                        {% if messages %}
+                        <div class="messages-container">
+                            <ul class="messages">
+                                {% for message in messages %}
+                                {% if message.tags %}
+                                <li>{{ message }}</li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <br>
+                        {% endif %}
+                        <h4>Hello! let's get started</h4>
+                        <h6 class="font-weight-light">Sign in to continue.</h6>
+
+                        <form class="pt-3" action="/sign_up" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" id="username" name="username" class="form-control form-control-lg"
+                                       placeholder="username"></div>
+
+                            <div class="form-group">
+                                <input type="password" id="password" name="password"
+                                       class="form-control form-control-lg"
+                                       placeholder="password"></div>
+
+                            <input type="submit" value="Submit"
+                                   class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
+
+                            <div class="my-2 d-flex justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <label class="form-check-label text-muted">
+                                        <input type="checkbox" class="form-check-input">
+                                        Keep me signed in
+                                    </label>
+                                </div>
+                                <a href="#" class="auth-link text-black">Forgot password?</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+<!-- endinject -->
+</body>
+
+</html>

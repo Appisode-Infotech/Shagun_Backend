@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7$998xdabvx9(whs-g-p@s+af9ujb(#^jl_5tdzew(vmzq@97c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['santhuofficial123.pythonanywhere.com']
 
 
 # Application definition
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'Shagun_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, "template"],
+        'DIRS': ['/home/santhuofficial123/Shagun_Backend/template/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,10 +79,10 @@ WSGI_APPLICATION = 'Shagun_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'shagun',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'NAME': 'santhuofficial12$shagun',
+        'USER': 'santhuofficial12',
+        'PASSWORD': 'Sandy@#123',
+        'HOST': 'santhuofficial123.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }

@@ -49,7 +49,6 @@ def manage_settlement(request):
     response = event_controller.get_all_active_events()
     return JsonResponse(response, safe=False)
 
-
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()

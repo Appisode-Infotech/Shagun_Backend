@@ -20,7 +20,6 @@ def manage_event(request):
     response, status_code = event_controller.get_all_event_list()
     return render(request, 'pages/tables/events.html', response)
 
-
 def manage_event_types(request):
     response, status_code = event_controller.get_event_type_list_for_admin()
     return render(request, 'pages/tables/event_type.html', response)

@@ -57,7 +57,7 @@ ROOT_URLCONF = 'Shagun_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, "template"],
+        'DIRS': ['home/santhuofficial123/Shagun_Backend/template'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

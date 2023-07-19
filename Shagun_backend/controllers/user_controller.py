@@ -296,7 +296,7 @@ def get_all_users():
     try:
         with connection.cursor() as cursor:
             users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM Users WHERE role = 3"""
+                FROM users WHERE role = 3"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -356,7 +356,7 @@ def get_all_employees():
     try:
         with connection.cursor() as cursor:
             users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM Users WHERE role = 2"""
+                FROM users WHERE role = 2"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {

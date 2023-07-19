@@ -42,6 +42,10 @@ urlpatterns = [
     path('manage_bank_details', manage_bank_details, name='manage_bank_details'),
     path('manage_greeting_cards', manage_greeting_cards, name='manage_greeting_cards'),
     path('manage_users', manage_users, name='manage_users'),
+    path('manage_employee', manage_employee, name='manage_employee'),
+    path('add_employee', add_employee, name='add_employee'),
+    path('enable_disable_employee', enable_disable_employee, name='enable_disable_employee'),
+    path('manage_printers', manage_printers, name='manage_printers'),
 
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),

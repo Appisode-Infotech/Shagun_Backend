@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
-    app_data_model, add_printer_model, transactions_history_model, track_order_model
+    app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model
 
 
 def admin_dashboard(request):
@@ -75,6 +75,34 @@ def manage_users(request):
     return render(request, 'template/pages/tables/users.html', context)
 
 
+def manage_employee(request):
+    response, status_code = user_controller.get_all_employees()
+    print(response)
+    context = {
+        'users': response
+    }
+    return render(request, 'template/pages/tables/employees.html', context)
+
+
+@api_view(['POST'])
+def add_employee(request):
+    emp_obj = employee_model.add_employee_model_from_dict(request.data)
+    response, status_code = user_controller.add_employee(emp_obj)
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def enable_disable_employee(request):
+    response, status_code = user_controller.enable_disable_employee(request.data['uid'], request.data['status'])
+    return JsonResponse(response, status=status_code)
+
+
+def manage_printers(request):
+    response, status_code = store_controller.get_all_printers()
+    context = {
+        'printers': response
+    }
+    return render(request, 'template/pages/tables/printers.html', context)
 
 
 
@@ -441,6 +469,12 @@ def track_order(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
+
+
+
+
 
 # @api_view(['POST'])
 # def home(request):

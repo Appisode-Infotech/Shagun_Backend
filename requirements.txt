@@ -1,4 +1,3 @@
-pip~=23.1.2
 wheel~=0.38.4
 Brotli~=1.0.9
 Pillow~=9.4.0

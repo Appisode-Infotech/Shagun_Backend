@@ -276,10 +276,9 @@ def get_all_bank_data():
     try:
         with connection.cursor() as cursor:
             bank_data_query = """ SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
-                bnk.account_number, bnk.status ,users.profile_pic
+                bnk.account_number, bnk.status, users.profile_pic
                 FROM bank_details AS bnk
-                INNER JOIN users ON bnk.uid = users.uid """
-
+                LEFT JOIN users ON bnk.uid = users.uid """
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()
             return {
@@ -369,3 +368,25 @@ def get_all_employees():
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def employee_login(uname, pwd):
+    with connection.cursor() as cursor:
+        query = "SELECT password FROM users WHERE uid = %s;"
+        cursor.execute(query, [uname])
+        result = cursor.fetchone()
+        if result is not None and result[0] == pwd:
+            return {
+                "msg": "Success",
+                "data": result
+            }
+
+        if result is not None and result[0] != pwd:
+            return {
+                "msg": "wrong password",
+            }
+
+        else:
+            return {
+                "msg": "user not exist, Please register",
+            }

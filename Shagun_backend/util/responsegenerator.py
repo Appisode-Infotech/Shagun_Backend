@@ -2,7 +2,7 @@ import json
 
 from Shagun_backend.util.constants import CHECK_USER, EVENT_LIST, SINGLE_EVENT, APP_COMPATIBILITY, USER_HOME_PAGE, \
     GIFT_SENT, GREETING_CARDS, TRACK_ORDER, ALL_EVENT_TYPE_LIST, ALL_LOCATION_LIST, EVENT_TYPE_LIST, ALL_KYC_DATA, \
-    ALL_BANK_DATA, ALL_USERS_DATA
+    ALL_BANK_DATA, ALL_USERS_DATA, ALL_PRINTERS_DATA
 
 
 class responseGenerator:
@@ -247,3 +247,22 @@ class responseGenerator:
                     }
                 )
             return user_data
+
+        if controller_type == ALL_PRINTERS_DATA:
+            printer_data = []
+            for printer in data:
+                printer_data.append(
+                    {
+                        "id": printer[0],
+                        "store_name": printer[1],
+                        "city": printer[2],
+                        "address": printer[3],
+                        "status": printer[4],
+                        "gst_no": printer[5],
+                        "store_owner": printer[6],
+                        "contact_number": printer[7]
+                    }
+
+                )
+
+            return printer_data

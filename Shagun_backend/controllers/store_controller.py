@@ -1,7 +1,9 @@
 import pymysql
 from django.db import connection
 from datetime import datetime
-from Shagun_backend.util.constants import CHECK_USER
+
+from Shagun_backend.util import responsegenerator
+from Shagun_backend.util.constants import CHECK_USER, ALL_PRINTERS_DATA
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
@@ -52,6 +54,26 @@ def edit_printer(store_obj):
                 "status": True,
                 "message": "Printer edited successfully"
             }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_all_printers():
+    try:
+        with connection.cursor() as cursor:
+            printers_data_query = """ SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
+            p.store_owner, p.contact_number FROM printer AS p
+            LEFT JOIN locations AS l ON p.city = l.id """
+            cursor.execute(printers_data_query)
+            printer_data = cursor.fetchall()
+            print(responsegenerator.responseGenerator.generateResponse(printer_data, ALL_PRINTERS_DATA))
+            return {
+                "status": True,
+                "printer_data": responsegenerator.responseGenerator.generateResponse(printer_data, ALL_PRINTERS_DATA)
+            }, 200
+
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:

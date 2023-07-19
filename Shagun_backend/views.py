@@ -21,7 +21,7 @@ def manage_event(request):
     context = {
         'events': response
     }
-    return render(request, '/template/pages/tables/events.html', context)
+    return render(request, 'pages/tables/events.html', context)
 
 
 def manage_event_types(request):

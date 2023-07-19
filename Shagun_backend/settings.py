@@ -76,10 +76,10 @@ WSGI_APPLICATION = 'Shagun_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'shagun',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'NAME': 'santhuofficial12$shagun',
+        'USER': 'santhuofficial12',
+        'PASSWORD': 'Sandy@#123',
+        'HOST': 'santhuofficial123.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }

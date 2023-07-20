@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 19, 2023 at 04:01 PM
+-- Generation Time: Jul 20, 2023 at 12:24 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -255,7 +255,7 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('cwkw9902rse7gl0d8mprxtsg8iw8p0e6', 'eyJpc19sb2dnZWRfaW4iOnRydWV9:1qM4En:18sszRAAnbaANMRSHO7JeuOmwdkpEGITv7InnbypfYA', '2023-08-02 10:16:53.760058'),
+('cwkw9902rse7gl0d8mprxtsg8iw8p0e6', '.eJw1zE0OgjAQQOGrmFlTCiQuYOVNyEjHMtpOm_6kica7CwvX78v7AOfVBWvJrCywlFSpg8oGFpDXfUcxmHi-3qxHdv0WPHQg6OnsnDw6vPzVUWIKD3a0Rt4OsJcS86J1a60vO7EYRmmc6PzoFtUWpJAUXaMLaLKehnHW46AtCTlGZXKob1RT_4wWvj9_AzyC:1qMN50:W6mBJrMuE5OXVXgYeIdKE1ruc3pBcZlJfIpbXW_FheM', '2023-08-03 06:24:02.518909'),
 ('ezqjc2ykzgka5wj003r75xbs2amcow3z', 'eyJpc19sb2dnZWRfaW4iOnRydWV9:1qM3RA:c96TFYHd0QOBUpPJk2wUA1gESewXVRcpCWzcwiNxzdk', '2023-08-02 09:25:36.616398');
 
 -- --------------------------------------------------------
@@ -295,7 +295,7 @@ INSERT INTO `event` (`id`, `created_by_uid`, `event_type_id`, `city_id`, `addres
 (5, 'admin1', 4, 1, 'Basavanagudi 4th block', 'Bangalore ', '23.876543-11.987656', '2023-07-06 16:19:54', '[{\"sub_event_name\": \"Ganapathi Homa\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"Satyanarayana pooja\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-29 15:50:22', 'House warming', '[{\"name\": \"Yash\", \"role\": \"Host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\"}, {\"name\": \"Radhika\", \"role\": \"Co-host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"jhgfdiu\"}]', 2, 0, 0, '0000-00-00 00:00:00', 1),
 (7, 'admin1', 5, 1, 'Rajajinagar 9th cross', 'Mangalore', '23.876543-11.987656', '2023-07-18 16:06:53', '[{\"sub_event_name\": \"Reception\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"Photo shoot\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-18 16:22:32', 'Grand Reception', '[{\"name\": \"Genelia\", \"role\": \"Bride\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}, {\"name\": \"Ritesh\", \"role\": \"Groom\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"jhgfdiu\", \"uid\": \"23456iuytr45678iuyt\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1),
 (8, 'admin1', 3, 1, 'Gandhi Nagar 8th cross ', 'Tumkur', '23.876543-11.987656', '2023-07-18 16:21:53', '[{\"sub_event_name\": \"Cake cutting\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"Dance party\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-19 16:25:39', 'Bollywood Birthday', '[{\"name\": \"Nikshep\", \"role\": \"Bithday boy\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1),
-(9, 'admin1', 6, 1, 'Kuvempu Nagar 1st main, 2nd cross', 'Mysore', '23.876543-11.987656', '2023-07-18 16:21:54', '[{\"sub_event_name\": \"Ribbon Cutting\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-26 18:35:27', 'Silver Jublie ', '[{\"name\": \"AmitabhSen\", \"role\": \"host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1);
+(9, 'admin1', 6, 1, 'Kuvempu Nagar 1st main, 2nd cross', 'Mysore', '23.876543-11.987656', '2023-07-20 16:21:54', '[{\"sub_event_name\": \"Ribbon Cutting\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-26 18:35:27', 'Silver Jublie ', '[{\"name\": \"AmitabhSen\", \"role\": \"host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -499,7 +499,7 @@ CREATE TABLE `transaction_history` (
   `shagun_amount` double NOT NULL,
   `greeting_card_id` int(11) NOT NULL,
   `transaction_fee` double NOT NULL,
-  `delivery_fee` double NOT NULL DEFAULT current_timestamp(),
+  `delivery_fee` double NOT NULL,
   `transaction_id` varchar(255) NOT NULL,
   `payment_status` tinyint(1) NOT NULL,
   `event_id` int(11) NOT NULL,
@@ -519,7 +519,8 @@ INSERT INTO `transaction_history` (`id`, `sender_uid`, `receiver_uid`, `transact
 (12, 'bZ5yM8nRkVpQ', 'nH9eC3wDpRqJ', 5000.5, 4500.5, 2, 50, 100, 'TRXIDPQRST', 0, 2, 1, '2023-07-07 06:00:57'),
 (13, 'nH9eC3wDpRqJ', '3dYjP5fGqAe9\n', 5000.5, 4500.5, 2, 50, 100, 'TRXIDABCDE\n', 0, 2, 1, '2023-07-07 06:00:57'),
 (14, 'xG2p9W1uXcF7', 'bZ5yM8nRkVpQ', 5000.5, 4500.5, 2, 50, 100, 'TRXID67890\n', 0, 2, 1, '2023-07-07 05:59:20'),
-(15, 'tS7vK4rBmL6W', 'xG2p9W1uXcF7', 5000.5, 4500.5, 2, 50, 100, 'TRXID12345\n', 0, 2, 1, '2023-07-07 05:59:20');
+(15, 'tS7vK4rBmL6W', 'xG2p9W1uXcF7', 5000.5, 4500.5, 2, 50, 100, 'TRXID12345\n', 0, 2, 1, '2023-07-07 05:59:20'),
+(16, 'tS7vK4rBmL6W', 'xG2p9W1uXcF7', 10000.5, 9500.5, 2, 50, 100, 'TRXID12345\r\n', 0, 2, 1, '2023-07-20 05:59:20');
 
 -- --------------------------------------------------------
 
@@ -554,7 +555,7 @@ INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, 
 (7, 'tS7vK4rBmL6W', 'Nisarga Shetty', 'nknishu95@gmail.com', '9900670098', 'Phone', 0, 'https://2.bp.blogspot.com/-VHIREgDLOyY/UOfvnMDHGtI/AAAAAAAABzE/nnp8bg4yTTQ/s1600/Deepika+Padukone+Nauty+Wallpapers+(1).jpg', '2023-07-07 06:00:35', 1, 3, '34567890poiuytredsasdfghjk', 'Bijapur', NULL),
 (8, 'bZ5yM8nRkVpQ', 'Santhosh kumar', 'santhosh@gmail.com', '8660225160', 'Phone', 0, 'https://www.thestatesman.com/wp-content/uploads/2019/07/Sourav-Ganguly.jpg', '2023-07-14 14:00:14', 1, 3, '34567890poiuytredsasdfghjk', 'Hassan', NULL),
 (11, '6aFjG1wVxQsT', 'Susheel Thapa', 'sushi78@gmail.com', '8660034567', 'Phone', 0, 'https://3.bp.blogspot.com/-rWiY8gYBNsU/XA5g-xYvx6I/AAAAAAAAOvI/U32uH99oqzAi72OdVmdwqAbH52GXCF26wCLcBGAs/s1600/Yuvraj%2BSingh%2B%2Bgo%2Bprofile%2B1.jpg', '2023-07-18 05:51:22', 1, 3, '34567890poiuytredsasdfghjk', 'Mysore', NULL),
-(22, 'nH9eC3wDpRqJ', 'Roop Raj Thapa', 'rooprajt@gmail.com', '9900359867', 'Gmail', 0, 'https://media.licdn.com/dms/image/C5603AQElznmED4nMKw/profile-displayphoto-shrink_800_800/0/1647610418724?e=2147483647&v=beta&t=0KbCeaMbyNaogjDmdqYx6naRM9CWk6BcmD-jY-btJoA', '2023-07-18 07:35:03', 1, 3, '234567890-poiuytr567890poijhgf', 'Bangalore', NULL),
+(22, 'nH9eC3wDpRqJ', 'Roop Raj Thapa', 'rooprajt@gmail.com', '9900359867', 'Gmail', 0, 'https://media.licdn.com/dms/image/C5603AQElznmED4nMKw/profile-displayphoto-shrink_800_800/0/1647610418724?e=2147483647&v=beta&t=0KbCeaMbyNaogjDmdqYx6naRM9CWk6BcmD-jY-btJoA', '2023-07-18 07:35:03', 1, 3, 'wertyuiop0987654ertkkjhgf', 'Bangalore', NULL),
 (23, 'nkbhandari95@gmail.com', 'nirmala bhandari', 'nkbhandari@gmail.com', '9865009982', 'employee', 0, 'https://www.theindianwire.com/wp-content/uploads/2019/10/genelia-dsouza-2.jpg', '2023-07-18 11:15:13', 1, 2, '', 'bangladesh', 'nimmi'),
 (24, 'bhavani@gmail.com', 'Bhavani', 'bhavani@gmail.com', '8899543218', 'employee', 0, 'https://i.pinimg.com/originals/4a/ed/52/4aed5202149eb39b61ffd2ede23eb835.jpg', '2023-07-18 12:06:46', 0, 2, '', 'Davanagere', 'bhavu@#789');
 
@@ -590,7 +591,7 @@ CREATE TABLE `user_kyc` (
 INSERT INTO `user_kyc` (`id`, `uid`, `full_name`, `dob`, `permanent_address`, `identification_proof1`, `identification_proof2`, `identification_number1`, `identification_number2`, `identification_doc1`, `identification_doc2`, `verification_status`, `created_on`, `updated_on`, `approved_by`, `approved_on`) VALUES
 (1, 'xG2p9W1uXcF7', 'Shalini Gowda', '1989-09-19', 'Sri byrava nilaya 2nd cross ashok nagar', 'Aadhar', 'PAN', '480259921823', 'ABCDE1234F', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 1, '2023-07-19 12:03:36', '2023-07-19 14:00:50', '', '2023-07-19 14:00:50'),
 (7, 'tS7vK4rBmL6W', 'Nisarga Shetty', '1998-07-10', '1st main, 2nd cross Gandhi nagar', 'Aadhar', 'PAN', '480259921888', 'RSTUV3456W\n', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 0, '2023-07-04 06:03:07', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-(22, 'nH9eC3wDpRqJ', 'Darshan Dhruv', '1997-01-11', '4th main, 1st cross shankar nagar', 'Aadhar', 'PAN', '480259928124', 'LMNOP9012Q', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 1, '2023-07-06 10:41:02', '2023-07-06 16:13:00', '', '0000-00-00 00:00:00');
+(24, 'nH9eC3wDpRqJ', 'Roop Raj', '1994-12-19', 'Sri byrava nilaya 2nd cross ashok nagar', 'Aadhar', 'PAN', '480259925789', 'RJCDE1234F', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 0, '2023-07-20 07:57:57', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -885,7 +886,7 @@ ALTER TABLE `settlements`
 -- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -897,7 +898,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_kyc`
 --
 ALTER TABLE `user_kyc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables

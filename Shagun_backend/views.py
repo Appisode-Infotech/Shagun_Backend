@@ -45,9 +45,7 @@ def admin_dashboard(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response = event_controller.get_all_event_list()
-        print(response)
-        print(type(response))
-        return render(request, 'pages/tables/events.html')
+        return render(request, 'pages/tables/events.html', response)
     else:
         return redirect('sign_up')
 

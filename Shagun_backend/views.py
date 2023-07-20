@@ -35,8 +35,7 @@ def logout(request):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response = admin_controller.admin_dashboard(request.session.get('uid'))
-        print(response)
+        response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
         return redirect('sign_up')
@@ -44,10 +43,12 @@ def admin_dashboard(request):
 
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response = event_controller.get_all_event_list()
+        response, status_code = event_controller.get_all_event_list()
+        print(response)
         return render(request, 'pages/tables/events.html', response)
     else:
         return redirect('sign_up')
+
 
 @api_view(['POST'])
 def manage_settlement(request):
@@ -457,7 +458,6 @@ def get_greeting_cards(request):
         if username == request.data.get('uid'):
             response, status_code = greeting_cards_controller.get_greeting_cards()
             return JsonResponse(response, status=status_code)
-
         else:
             return JsonResponse({'message': 'Invalid token for user'}, status=401)
 

@@ -47,7 +47,7 @@ def admin_dashboard(uid):
                 "today_created_events": event_stats[1],
                 "events": responsegenerator.responseGenerator.generateResponse(today_event_stats, EVENT_LIST)
 
-            }
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:

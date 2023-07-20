@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
-    transactions_controller, user_home_page_controller, greeting_cards_controller
+    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model
 
@@ -19,6 +19,9 @@ def sign_up(request):
         response = user_controller.employee_login(data['username'], data['password'])
         if response['msg'] == 'Success':
             request.session['is_logged_in'] = True
+            request.session['uid'] = data['username']
+            request.session['name'] = response['name']
+            request.session['profile_pic'] = response['profile_pic']
             return redirect('admin_dashboard')
         else:
             messages.error(request, response['msg'])
@@ -26,21 +29,25 @@ def sign_up(request):
 
 
 def logout(request):
-    del request.session['is_logged_in']
+    request.session.clear()
     return redirect('sign_up')
 
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        return render(request, 'index.html')
+        response = admin_controller.admin_dashboard(request.session.get('uid'))
+        print(response)
+        return render(request, 'index.html', response)
     else:
         return redirect('sign_up')
 
 
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = event_controller.get_all_event_list()
-        return render(request, 'pages/tables/events.html', response)
+        response = event_controller.get_all_event_list()
+        print(response)
+        print(type(response))
+        return render(request, 'pages/tables/events.html')
     else:
         return redirect('sign_up')
 

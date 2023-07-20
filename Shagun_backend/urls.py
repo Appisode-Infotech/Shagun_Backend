@@ -24,6 +24,7 @@ urlpatterns = [
     # path('api/get_token', get_token, name='get_token'),
     path('api/check_user', check_user, name='check_user'),
     path('api/user_register', user_register, name='user_register'),
+    path('api/get_user_profile', get_user_profile, name='get_user_profile'),
     path('api/edit_user', edit_user, name='edit_user'),
     path('api/add_transaction_history', add_transaction_history, name='add_transaction_history'),
     path('api/user_home_page', user_home_page, name='user_home_page'),

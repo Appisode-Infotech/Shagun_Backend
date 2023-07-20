@@ -5,7 +5,7 @@ import json
 
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import EVENT_LIST, SINGLE_EVENT, ALL_EVENT_TYPE_LIST, ALL_LOCATION_LIST, \
-    EVENT_TYPE_LIST
+    EVENT_TYPE_LIST, today
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
@@ -145,7 +145,6 @@ def get_event_type_list_for_user():
             event_type_list_query = """SELECT * FROM events_type WHERE status=1"""
             cursor.execute(event_type_list_query)
             event_type_list = cursor.fetchall()
-            print(event_type_list_query)
 
             return {
                 "status": True,
@@ -215,7 +214,6 @@ def get_event_type_list_for_admin():
             sql_query = "SELECT id, event_type_name, status FROM events_type"
             cursor.execute(sql_query)
             events = cursor.fetchall()
-            print(events)
             return {
                 "status": True,
                 "events_type": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_TYPE_LIST)
@@ -245,17 +243,36 @@ def get_locations_list():
 def get_my_event_list(uid):
     try:
         with connection.cursor() as cursor:
-            sql_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-            event.is_approved, event.status FROM event 
-            JOIN events_type ON event.event_type_id = events_type.id 
-            WHERE JSON_CONTAINS(event_admin, %(uid_json)s)
+            # SQL query for events with event_date less than or equal to today
+            sql_query_past_events = f"""
+                SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                    event.is_approved, event.status FROM event 
+                JOIN events_type ON event.event_type_id = events_type.id 
+                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) <= '{today.date()}'
             """
-            uid_json = '{"uid": "%s"}' % uid
-            cursor.execute(sql_query, {'uid_json': uid_json})
-            events = cursor.fetchall()
+
+            # SQL query for events with event_date greater than today
+            sql_query_upcoming_events = f"""
+                SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                    event.is_approved, event.status FROM event 
+                JOIN events_type ON event.event_type_id = events_type.id 
+                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) > '{today.date()}'
+            """
+
+            # UID JSON data
+            uid_json = json.dumps({'uid': uid})
+
+            # Execute the first query for past events
+            cursor.execute(sql_query_past_events, {'uid_json': uid_json})
+            past_events = cursor.fetchall()
+
+            # Execute the second query for upcoming events
+            cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
+            upcoming_events = cursor.fetchall()
             return {
                 "status": True,
-                "event_list": responsegenerator.responseGenerator.generateResponse(events, EVENT_LIST)
+                "past_events": responsegenerator.responseGenerator.generateResponse(past_events, EVENT_LIST),
+                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, EVENT_LIST)
             }, 200
 
     except pymysql.Error as e:

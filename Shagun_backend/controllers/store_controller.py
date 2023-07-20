@@ -68,7 +68,6 @@ def get_all_printers():
             LEFT JOIN locations AS l ON p.city = l.id """
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
-            print(responsegenerator.responseGenerator.generateResponse(printer_data, ALL_PRINTERS_DATA))
             return {
                 "status": True,
                 "printer_data": responsegenerator.responseGenerator.generateResponse(printer_data, ALL_PRINTERS_DATA)

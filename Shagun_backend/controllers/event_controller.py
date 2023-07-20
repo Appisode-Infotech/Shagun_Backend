@@ -292,7 +292,7 @@ def get_all_active_events():
             cursor.execute(sql_query)
             events = cursor.fetchall()
             return {
-                "msg":events
+                "msg": events
             }
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

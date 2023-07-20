@@ -264,5 +264,4 @@ class responseGenerator:
                     }
 
                 )
-
             return printer_data

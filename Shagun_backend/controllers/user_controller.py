@@ -372,13 +372,15 @@ def get_all_employees():
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        query = "SELECT password FROM users WHERE uid = %s;"
+        query = "SELECT password, name, profile_pic FROM users WHERE uid = %s;"
         cursor.execute(query, [uname])
         result = cursor.fetchone()
         if result is not None and result[0] == pwd:
             return {
                 "msg": "Success",
-                "data": result
+                "data": result[0],
+                "name": result[1],
+                "profile_pic": result[2]
             }
 
         if result is not None and result[0] != pwd:

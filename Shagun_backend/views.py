@@ -118,6 +118,24 @@ def manage_printers(request):
     else:
         return redirect('sign_up')
 
+def add_events(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            data = request.POST
+            print(data)
+            # event_obj = create_event_model.create_event_model_from_dict(request.data)
+            # response, status_code = event_controller.create_event(event_obj)
+            return redirect('manage_event')
+        else:
+            return render(request, 'pages/tables/add_events.html')
+
+    else:
+        return redirect('sign_up')
+
+
+
+
+
 
 
 @api_view(['POST'])
@@ -131,7 +149,6 @@ def add_employee(request):
 def enable_disable_employee(request):
     response, status_code = user_controller.enable_disable_employee(request.data['uid'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
 
 
 # This API ensure that all Shagun app users are using compatible versions of the application, promoting a consistent

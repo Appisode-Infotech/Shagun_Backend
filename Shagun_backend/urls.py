@@ -39,6 +39,7 @@ urlpatterns = [
     path('sign_up', sign_up, name='sign_up'),
     path('logout', logout, name='logout'),
     path('manage_event', manage_event, name='manage_event'),
+    path('add_events', add_events, name='add_events'),
     path('manage_event_types', manage_event_types, name='manage_event_types'),
     path('manage_location', manage_location, name='manage_location'),
     path('manage_kyc', manage_kyc, name='manage_kyc'),

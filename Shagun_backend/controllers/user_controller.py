@@ -428,7 +428,7 @@ def get_user_profile(uid):
             kyc_data = cursor.fetchall()
 
             bank_sql_query = f"""
-                                SELECT bd.bank_name, bd.account_number, bd.ifsc_code
+                                SELECT bd.bank_name, bd.account_number, bd.ifsc_code, bd.status
                                 FROM bank_details bd
                                 WHERE bd.uid = '{uid}'
                             """

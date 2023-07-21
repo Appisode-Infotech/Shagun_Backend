@@ -285,7 +285,8 @@ class responseGenerator:
                     {
                         "bank_name": bank[0],
                         "acc_no": bank[1],
-                        "ifsc_code": bank[2]
+                        "ifsc_code": bank[2],
+                        "status": bank[3]
                     }
 
                 )

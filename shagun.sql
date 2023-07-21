@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2023 at 12:31 PM
+-- Generation Time: Jul 21, 2023 at 01:35 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -158,7 +158,9 @@ CREATE TABLE `bank_details` (
 INSERT INTO `bank_details` (`id`, `uid`, `bank_name`, `bank_logo`, `ifsc_code`, `account_holder_name`, `account_number`, `status`, `created on`, `added_by`, `modified_on`) VALUES
 (1, 'xG2p9W1uXcF7', 'ICICI Bank', 'logo', 'ICICI00009845', 'Shalini Gowda', '1234567890', 1, '2023-07-04 06:01:18', 0, '2023-07-04 11:35:15'),
 (2, '3dYjP5fGqAe9\n', 'CANARA Bank', 'logo', 'CAN00009845', 'Sangeetha Thapa', '1234567890', 1, '2023-07-04 10:19:30', 0, '2023-07-04 15:49:30'),
-(3, '3dYjP5fGqAe9\n', 'INDUS Bank', 'logo', 'INS0000555', 'Sangeetha Thapa', '1234567890', 1, '2023-07-06 10:31:21', 0, '2023-07-06 16:01:21');
+(3, '3dYjP5fGqAe9\n', 'INDUS Bank', 'logo', 'INS0000555', 'Sangeetha Thapa', '1234567890', 1, '2023-07-06 10:31:21', 0, '2023-07-06 16:01:21'),
+(4, 'v0FxDg19CZOg0iBjQprxTrBwjk13', 'HDFC Bank', 'logo', 'HDFC0000555', 'Santhosh Kumar M', '987509843214', 1, '2023-07-06 10:31:21', 0, '2023-07-06 16:01:21'),
+(5, 'v0FxDg19CZOg0iBjQprxTrBwjk13', 'Punjab national Bank', '', 'PNB00009845', 'Santhosh kumar M', '123456778915', 1, '2023-07-21 11:31:02', 0, '2023-07-21 17:01:00');
 
 -- --------------------------------------------------------
 
@@ -565,6 +567,21 @@ INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `users_kyc_event_request`
+--
+
+CREATE TABLE `users_kyc_event_request` (
+  `id` int(11) NOT NULL,
+  `uid` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `completed_by` varchar(255) NOT NULL,
+  `created_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_kyc`
 --
 
@@ -594,7 +611,8 @@ CREATE TABLE `user_kyc` (
 INSERT INTO `user_kyc` (`id`, `uid`, `full_name`, `dob`, `permanent_address`, `identification_proof1`, `identification_proof2`, `identification_number1`, `identification_number2`, `identification_doc1`, `identification_doc2`, `verification_status`, `created_on`, `updated_on`, `approved_by`, `approved_on`) VALUES
 (1, 'xG2p9W1uXcF7', 'Shalini Gowda', '1989-09-19', 'Sri byrava nilaya 2nd cross ashok nagar', 'Aadhar', 'PAN', '480259921823', 'ABCDE1234F', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 1, '2023-07-19 12:03:36', '2023-07-19 14:00:50', '', '2023-07-19 14:00:50'),
 (7, 'tS7vK4rBmL6W', 'Nisarga Shetty', '1998-07-10', '1st main, 2nd cross Gandhi nagar', 'Aadhar', 'PAN', '480259921888', 'RSTUV3456W\n', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 0, '2023-07-04 06:03:07', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
-(24, 'nH9eC3wDpRqJ', 'Roop Raj', '1994-12-19', 'Sri byrava nilaya 2nd cross ashok nagar', 'Aadhar', 'PAN', '480259925789', 'RJCDE1234F', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 0, '2023-07-20 07:57:57', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00');
+(24, 'nH9eC3wDpRqJ', 'Roop Raj', '1994-12-19', 'Sri byrava nilaya 2nd cross ashok nagar', 'Aadhar', 'PAN', '480259925789', 'RJCDE1234F', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 0, '2023-07-20 07:57:57', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00'),
+(25, 'v0FxDg19CZOg0iBjQprxTrBwjk13', 'Santhosh Kumar M', '1994-12-19', 'Sri byrava nilaya 2nd cross ashok nagar', 'Aadhar', 'PAN', '480259925789', 'RJCDE1234F', 'https://tse4.mm.bing.net/th?id=OIP.6g-ppiTDcH5VW4ekEilZlQHaED&pid=Api&P=0&h=180', 'https://tse1.mm.bing.net/th?id=OIP.9OIuT6R4m3VERDmK_ANrCwHaDt&pid=Api&P=0&h=180', 1, '2023-07-20 07:57:57', '0000-00-00 00:00:00', 'admin1', '2023-07-21 16:38:04');
 
 -- --------------------------------------------------------
 
@@ -764,7 +782,14 @@ ALTER TABLE `transaction_history`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_uid` (`uid`),
+  ADD UNIQUE KEY `unique_phone` (`phone`),
   ADD KEY `idx_uid` (`uid`);
+
+--
+-- Indexes for table `users_kyc_event_request`
+--
+ALTER TABLE `users_kyc_event_request`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `user_kyc`
@@ -817,7 +842,7 @@ ALTER TABLE `auth_user_user_permissions`
 -- AUTO_INCREMENT for table `bank_details`
 --
 ALTER TABLE `bank_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `django_admin_log`
@@ -898,10 +923,16 @@ ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
+-- AUTO_INCREMENT for table `users_kyc_event_request`
+--
+ALTER TABLE `users_kyc_event_request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `user_kyc`
 --
 ALTER TABLE `user_kyc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Constraints for dumped tables

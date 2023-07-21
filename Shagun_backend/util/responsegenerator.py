@@ -277,3 +277,24 @@ class responseGenerator:
                     }
                 )
             return events_invite_list
+
+        if controller_type == GET_BANK_DATA:
+            bank_data = []
+            for bank in data:
+                bank_data.append(
+                    {
+                        "bank_name": bank[0],
+                        "acc_no": bank[1],
+                        "ifsc_code": bank[2]
+                    }
+
+                )
+            return bank_data
+
+        if controller_type == GET_KYC_DATA:
+            return {
+                        data[0][0]: data[0][2],
+                        data[0][1]: data[0][3],
+                        "status": data[0][4]
+                    }
+

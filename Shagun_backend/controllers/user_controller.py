@@ -2,10 +2,9 @@ import json
 
 import pymysql
 from django.db import connection
-from datetime import datetime
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import CHECK_USER, ALL_KYC_DATA, ALL_BANK_DATA, ALL_USERS_DATA
+from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
@@ -107,7 +106,7 @@ def add_user_kyc(kyc_obj):
                 values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.permanent_address,
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
-                          'pending', datetime.now())
+                          'pending', today)
                 cursor.execute(sql_query, values)
                 return {
                     "status": True,
@@ -147,7 +146,7 @@ def update_user_kyc(kyc_obj):
                               kyc_obj.identification_proof1, kyc_obj.identification_proof2,
                               kyc_obj.identification_number1, kyc_obj.identification_number2,
                               kyc_obj.identification_doc1, kyc_obj.identification_doc2,
-                              datetime.now(), kyc_obj.uid)
+                              today, kyc_obj.uid)
 
                     cursor.execute(update_query, values)
                     return {
@@ -224,7 +223,7 @@ def add_bank_details(bank_obj):
                             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
                           bank_obj.account_number,
-                          True, bank_obj.added_by, datetime.now())
+                          True, bank_obj.added_by, today)
                 cursor.execute(sql_query, values)
                 return {
                     "status": True,
@@ -253,7 +252,7 @@ def update_bank_details(bank_obj):
                 sql_query = "UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, " \
                             "account_number = %s, status = %s, added_by = %s, modified_on = %s WHERE uid = %s"
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          True, bank_obj.added_by, datetime.now(), bank_obj.uid)
+                          True, bank_obj.added_by, today, bank_obj.uid)
                 cursor.execute(sql_query, values)
 
                 return {
@@ -316,7 +315,7 @@ def add_employee(emp_obj):
         with connection.cursor() as cursor:
             add_emp_query = "INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password)" \
                             " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, datetime.now(), True, 2,
+            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 2,
                       emp_obj.city, emp_obj.password)
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
@@ -405,15 +404,11 @@ def get_user_profile(uid):
                             JOIN events_type ON event.event_type_id = events_type.id
                             WHERE JSON_CONTAINS(event_admin, %(uid_json)s)
                         """
-
-            # UID JSON data
             uid_json = json.dumps({'uid': uid})
-
-            # Execute the first query for past events
             cursor.execute(sql_query_events, {'uid_json': uid_json})
             events_count = cursor.fetchone()
 
-            sql_query = f"""
+            count_sql_query = f"""
                     SELECT
                         COUNT(DISTINCT bank_details.id) AS bank_details_count,
                         COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}'), 0) AS total_sent_amount,
@@ -421,12 +416,24 @@ def get_user_profile(uid):
                     FROM bank_details
                     WHERE bank_details.uid = '{uid}'
                 """
-
-            # Execute the query
-            cursor.execute(sql_query)
-
-            # Fetch the counts
+            cursor.execute(count_sql_query)
             counts = cursor.fetchone()
+
+            kyc_sql_query = f"""
+                                SELECT uk.identification_proof1, uk.identification_proof2, uk.identification_number1, 
+                                uk.identification_number2, uk.verification_status
+                                FROM user_kyc uk WHERE uk.uid = '{uid}'
+                            """
+            cursor.execute(kyc_sql_query)
+            kyc_data = cursor.fetchall()
+
+            bank_sql_query = f"""
+                                SELECT bd.bank_name, bd.account_number, bd.ifsc_code
+                                FROM bank_details bd
+                                WHERE bd.uid = '{uid}'
+                            """
+            cursor.execute(bank_sql_query)
+            bank_data = cursor.fetchall()
 
             return {
                 "status": True,
@@ -435,7 +442,9 @@ def get_user_profile(uid):
                 "bank_count": counts[0],
                 "total_amount_sent": counts[1],
                 "total_amount_received": counts[2],
-                "user": responseGenerator.generateResponse(user_data, CHECK_USER)
+                "user": responseGenerator.generateResponse(user_data, CHECK_USER),
+                "bank_data": responseGenerator.generateResponse(bank_data, GET_BANK_DATA),
+                "kyc_data": responseGenerator.generateResponse(kyc_data, GET_KYC_DATA)
             }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e), "user": None}, 301

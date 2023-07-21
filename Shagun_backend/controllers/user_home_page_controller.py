@@ -2,9 +2,6 @@ import pymysql
 from django.db import connection
 import random
 
-from datetime import datetime
-import json
-
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import quotes, USER_HOME_PAGE
 

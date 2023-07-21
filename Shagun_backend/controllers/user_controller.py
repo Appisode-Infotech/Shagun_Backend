@@ -416,8 +416,8 @@ def get_user_profile(uid):
             sql_query = f"""
                     SELECT
                         COUNT(DISTINCT bank_details.id) AS bank_details_count,
-                        (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_sent_amount,
-                        (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}') AS total_received_amount
+                        COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}'), 0) AS total_sent_amount,
+                        COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}'), 0) AS total_received_amount
                     FROM bank_details
                     WHERE bank_details.uid = '{uid}'
                 """

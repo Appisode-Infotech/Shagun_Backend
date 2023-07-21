@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2023 at 12:24 PM
+-- Generation Time: Jul 21, 2023 at 12:31 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -295,7 +295,10 @@ INSERT INTO `event` (`id`, `created_by_uid`, `event_type_id`, `city_id`, `addres
 (5, 'admin1', 4, 1, 'Basavanagudi 4th block', 'Bangalore ', '23.876543-11.987656', '2023-07-06 16:19:54', '[{\"sub_event_name\": \"Ganapathi Homa\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"Satyanarayana pooja\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-29 15:50:22', 'House warming', '[{\"name\": \"Yash\", \"role\": \"Host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\"}, {\"name\": \"Radhika\", \"role\": \"Co-host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"jhgfdiu\"}]', 2, 0, 0, '0000-00-00 00:00:00', 1),
 (7, 'admin1', 5, 1, 'Rajajinagar 9th cross', 'Mangalore', '23.876543-11.987656', '2023-07-18 16:06:53', '[{\"sub_event_name\": \"Reception\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"Photo shoot\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-18 16:22:32', 'Grand Reception', '[{\"name\": \"Genelia\", \"role\": \"Bride\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}, {\"name\": \"Ritesh\", \"role\": \"Groom\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"jhgfdiu\", \"uid\": \"23456iuytr45678iuyt\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1),
 (8, 'admin1', 3, 1, 'Gandhi Nagar 8th cross ', 'Tumkur', '23.876543-11.987656', '2023-07-18 16:21:53', '[{\"sub_event_name\": \"Cake cutting\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"Dance party\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-19 16:25:39', 'Bollywood Birthday', '[{\"name\": \"Nikshep\", \"role\": \"Bithday boy\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1),
-(9, 'admin1', 6, 1, 'Kuvempu Nagar 1st main, 2nd cross', 'Mysore', '23.876543-11.987656', '2023-07-20 16:21:54', '[{\"sub_event_name\": \"Ribbon Cutting\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-26 18:35:27', 'Silver Jublie ', '[{\"name\": \"AmitabhSen\", \"role\": \"host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1);
+(9, 'admin1', 6, 1, 'Kuvempu Nagar 1st main, 2nd cross', 'Mysore', '23.876543-11.987656', '2023-07-20 16:21:54', '[{\"sub_event_name\": \"Ribbon Cutting\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-26 18:35:27', 'Silver Jublie ', '[{\"name\": \"AmitabhSen\", \"role\": \"host\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"ghoiwgjdfgg9879\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1),
+(13, 'admin1', 3, 1, 'Peenya 1st stage', 'Bangalore North', '23.876543-11.987656', '2023-07-21 13:28:46', '[{\"sub_event_name\": \"asdf\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"asdf\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '0000-00-00 00:00:00', 'wert ertyu yubv', '[{\"name\": \"wertyvb\", \"role\": \"Bride\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"v0FxDg19CZOg0iBjQprxTrBwjk13\"}, {\"name\": \"lkjhg\", \"role\": \"Groom\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"jhgfdiu\", \"uid\": \"xG2p9W1uXcF7\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1),
+(14, 'admin1', 3, 1, 'Peenya 1st stage', 'Bangalore North', '23.876543-11.987656', '2023-07-21 14:03:15', '[{\"sub_event_name\": \"asdf\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"asdf\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '2023-07-26 14:03:52', 'Happy Birthday to me', '[{\"name\": \"wertyvb\", \"role\": \"Bride\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"v0FxDg19CZOg0iBjQprxTrBwjk13\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1),
+(15, 'admin1', 2, 1, 'Peenya 1st stage', 'Bangalore North', '23.876543-11.987656', '2023-07-21 14:03:35', '[{\"sub_event_name\": \"asdf\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}, {\"sub_event_name\": \"asdf\", \"start\": \"22/12/2023 12:00\", \"end\": \"24/12/12023 5:00\"}]', '1899-12-31 00:00:00', 'Happy Married life to me', '[{\"name\": \"wertyvb\", \"role\": \"Bride\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"sdfghjkoiuyt\", \"uid\": \"v0FxDg19CZOg0iBjQprxTrBwjk13\"}, {\"name\": \"lkjhg\", \"role\": \"Groom\", \"profile\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1-nmOh7iFjw8kBndATzsEl0iK8Lk51JxaseYBnWsxNElFroJQhY-lq9oZhzN0LbYoT8&usqp=CAU\", \"qr_code\": \"jhgfdiu\", \"uid\": \"xG2p9W1uXcF7\"}]', 0, 0, 0, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -316,7 +319,7 @@ CREATE TABLE `events_type` (
 INSERT INTO `events_type` (`id`, `event_type_name`, `status`) VALUES
 (1, 'Wedding', 1),
 (2, 'Engagement', 1),
-(3, 'Birthday', 0),
+(3, 'Birthday', 1),
 (4, 'House_warming', 1),
 (5, 'Reception', 1),
 (6, 'Company Anniversary', 1);
@@ -356,8 +359,8 @@ CREATE TABLE `event_guest_invite` (
 --
 
 INSERT INTO `event_guest_invite` (`id`, `invited_by`, `invited_to`, `event_id`, `status`, `created_at`) VALUES
-(1, 'ghoiwgjhfhg9879', '8889064576', 2, 1, '2023-07-07 07:14:24'),
-(2, 'ertyuikjhgvbn', '8889064576', 3, 0, '2023-07-07 07:14:24');
+(1, 'nH9eC3wDpRqJ', '8660225160', 2, 1, '2023-07-07 07:14:24'),
+(2, 'tS7vK4rBmL6W', '8660225160', 3, 0, '2023-07-07 07:14:24');
 
 -- --------------------------------------------------------
 
@@ -514,7 +517,7 @@ CREATE TABLE `transaction_history` (
 INSERT INTO `transaction_history` (`id`, `sender_uid`, `receiver_uid`, `transaction_amount`, `shagun_amount`, `greeting_card_id`, `transaction_fee`, `delivery_fee`, `transaction_id`, `payment_status`, `event_id`, `status`, `created_on`) VALUES
 (8, 'xG2p9W1uXcF7', '3dYjP5fGqAe9\n', 5000.5, 4500.5, 1, 50, 100, 'TRXID98765\n', 0, 2, 1, '2023-07-07 05:59:20'),
 (9, 'nH9eC3wDpRqJ', 'tS7vK4rBmL6W', 5000.5, 4500.5, 1, 50, 100, 'TRXID00001', 0, 2, 1, '2023-07-07 06:00:57'),
-(10, '3dYjP5fGqAe9\n', 'tS7vK4rBmL6W', 5000.5, 4500.5, 2, 50, 100, 'TRXID56789', 0, 2, 1, '2023-07-07 06:00:57'),
+(10, '3dYjP5fGqAe9\n', 'tS7vK4rBmL6W', 5000.5, 4500.5, 2, 50, 100, 'TRXID56789', 0, 4, 1, '2023-07-07 06:00:57'),
 (11, 'tS7vK4rBmL6W', 'bZ5yM8nRkVpQ', 5000.5, 4500.5, 2, 50, 100, 'TRXIDUVWXY', 0, 2, 1, '2023-07-07 06:00:57'),
 (12, 'bZ5yM8nRkVpQ', 'nH9eC3wDpRqJ', 5000.5, 4500.5, 2, 50, 100, 'TRXIDPQRST', 0, 2, 1, '2023-07-07 06:00:57'),
 (13, 'nH9eC3wDpRqJ', '3dYjP5fGqAe9\n', 5000.5, 4500.5, 2, 50, 100, 'TRXIDABCDE\n', 0, 2, 1, '2023-07-07 06:00:57'),
@@ -552,8 +555,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, `status`, `role`, `fcm_token`, `city`, `password`) VALUES
 (1, 'xG2p9W1uXcF7', 'Shalini Gowda', 'shalini@gmail.com', '7649085143', 'facebook', 0, 'https://d.ibtimes.co.uk/en/full/1649325/deepika-padukone.jpg', '2023-07-04 06:01:08', 1, 3, '34567890poiuytredsasdfghjk', 'Nelamangala', NULL),
 (2, '3dYjP5fGqAe9\n', 'Sangeetha Thapa', 'sangeethathapa82@gmail.com', '8889064576', 'Phone', 0, 'https://www.bms.co.in/wp-content/uploads/2015/01/Deepika-Padukone-2.jpg', '2023-07-04 10:15:00', 1, 3, 'wertyuiop0987654ertkkjhgf', 'Tumkur', NULL),
-(7, 'tS7vK4rBmL6W', 'Nisarga Shetty', 'nknishu95@gmail.com', '9900670098', 'Phone', 0, 'https://2.bp.blogspot.com/-VHIREgDLOyY/UOfvnMDHGtI/AAAAAAAABzE/nnp8bg4yTTQ/s1600/Deepika+Padukone+Nauty+Wallpapers+(1).jpg', '2023-07-07 06:00:35', 1, 3, '34567890poiuytredsasdfghjk', 'Bijapur', NULL),
-(8, 'bZ5yM8nRkVpQ', 'Santhosh kumar', 'santhosh@gmail.com', '8660225160', 'Phone', 0, 'https://www.thestatesman.com/wp-content/uploads/2019/07/Sourav-Ganguly.jpg', '2023-07-14 14:00:14', 1, 3, '34567890poiuytredsasdfghjk', 'Hassan', NULL),
+(7, 'tS7vK4rBmL6W', 'Nisarga Shetty', 'nknishu95@gmail.com', '9900670098', 'Phone', 0, 'https://2.bp.blogspot.com/-VHIREgDLOyY/UOfvnMDHGtI/AAAAAAAABzE/nnp8bg4yTTQ/s1600/Deepika+Padukone+Nauty+Wallpapers+(1).jpg', '2023-07-07 06:00:35', 1, 3, 'wertyuiop0987654ertkkjhgf', 'Bijapur', NULL),
+(8, 'v0FxDg19CZOg0iBjQprxTrBwjk13', 'Santhosh kumar', 'santhosh@gmail.com', '8660225160', 'Phone', 0, 'https://www.thestatesman.com/wp-content/uploads/2019/07/Sourav-Ganguly.jpg', '2023-07-14 14:00:14', 1, 3, '34567890poiuytredsasdfghjk', 'Hassan', NULL),
 (11, '6aFjG1wVxQsT', 'Susheel Thapa', 'sushi78@gmail.com', '8660034567', 'Phone', 0, 'https://3.bp.blogspot.com/-rWiY8gYBNsU/XA5g-xYvx6I/AAAAAAAAOvI/U32uH99oqzAi72OdVmdwqAbH52GXCF26wCLcBGAs/s1600/Yuvraj%2BSingh%2B%2Bgo%2Bprofile%2B1.jpg', '2023-07-18 05:51:22', 1, 3, '34567890poiuytredsasdfghjk', 'Mysore', NULL),
 (22, 'nH9eC3wDpRqJ', 'Roop Raj Thapa', 'rooprajt@gmail.com', '9900359867', 'Gmail', 0, 'https://media.licdn.com/dms/image/C5603AQElznmED4nMKw/profile-displayphoto-shrink_800_800/0/1647610418724?e=2147483647&v=beta&t=0KbCeaMbyNaogjDmdqYx6naRM9CWk6BcmD-jY-btJoA', '2023-07-18 07:35:03', 1, 3, 'wertyuiop0987654ertkkjhgf', 'Bangalore', NULL),
 (23, 'nkbhandari95@gmail.com', 'nirmala bhandari', 'nkbhandari@gmail.com', '9865009982', 'employee', 0, 'https://www.theindianwire.com/wp-content/uploads/2019/10/genelia-dsouza-2.jpg', '2023-07-18 11:15:13', 1, 2, '', 'bangladesh', 'nimmi'),
@@ -838,7 +841,7 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT for table `event`
 --
 ALTER TABLE `event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `events_type`

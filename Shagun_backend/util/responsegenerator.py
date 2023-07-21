@@ -1,8 +1,6 @@
 import json
 
-from Shagun_backend.util.constants import CHECK_USER, EVENT_LIST, SINGLE_EVENT, APP_COMPATIBILITY, USER_HOME_PAGE, \
-    GIFT_SENT, GREETING_CARDS, TRACK_ORDER, ALL_EVENT_TYPE_LIST, ALL_LOCATION_LIST, EVENT_TYPE_LIST, ALL_KYC_DATA, \
-    ALL_BANK_DATA, ALL_USERS_DATA, ALL_PRINTERS_DATA
+from Shagun_backend.util.constants import *
 
 
 class responseGenerator:
@@ -265,3 +263,17 @@ class responseGenerator:
 
                 )
             return printer_data
+
+        if controller_type == INVITED_EVENT_LIST:
+            events_invite_list = []
+            for invites in data:
+                events_invite_list.append(
+                    {
+                        "event_name": invites[0],
+                        "event_date": invites[1],
+                        "event_id": invites[3],
+                        "is_gifted": invites[4],
+                        "event_admins": json.loads(invites[2])
+                    }
+                )
+            return events_invite_list

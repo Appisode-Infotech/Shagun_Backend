@@ -12,6 +12,9 @@ from Shagun_backend.util.constants import quotes, USER_HOME_PAGE
 def home_page_data(uid):
     try:
         with connection.cursor() as cursor:
+            phone_query = f"""SELECT phone FROM users WHERE uid = '{uid}'"""
+            cursor.execute(phone_query)
+            phone = cursor.fetchone()[0]
             sent_transactions_query = f"""
                 SELECT th.transaction_amount, et.event_type_name, u.name, e.id, u.profile_pic, 
                 (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_amount
@@ -45,7 +48,8 @@ def home_page_data(uid):
                 JOIN users AS u ON u.phone = egi.invited_to
                 JOIN event AS e ON egi.event_id = e.id
                 JOIN events_type AS et ON e.event_type_id = et.id
-                WHERE u.uid = '{uid}' 
+                WHERE egi.invited_to = '{phone}' ORDER BY egi.created_at DESC
+                LIMIT 5
             """
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()

@@ -85,7 +85,7 @@
                     <div class="header-container">
                         <h4 class="card-title">Employee List</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="redirectToAddEmployeesPage()">
+                                onclick="redirectToAddEmployeePage()">
                             Employee
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
@@ -225,8 +225,8 @@
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
 <script>
-    function redirectToAddEmployeesPage() {
-        window.location.href = '{% url "add_events" %}';
+    function redirectToAddEmployeePage() {
+        window.location.href = '{% url "add_employee" %}';
     }
 </script>
 </body>

@@ -156,12 +156,47 @@ def add_kyc(request):
         return redirect('sign_up')
 
 
+def add_bank(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            data = request.POST
+            return redirect('manage_bank_details')
+        else:
+            return render(request, 'pages/tables/add_bank.html')
+    else:
+        return redirect('sign_up')
 
-@api_view(['POST'])
+
 def add_employee(request):
-    emp_obj = employee_model.add_employee_model_from_dict(request.data)
-    response, status_code = user_controller.add_employee(emp_obj)
-    return JsonResponse(response, status=status_code)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            data = request.POST
+            return redirect('manage_bank_details')
+        else:
+            return render(request, 'pages/tables/add_employee.html')
+    else:
+        return redirect('sign_up')
+
+def add_printer(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            data = request.POST
+            return redirect('manage_bank_details')
+        else:
+            return render(request, 'pages/tables/add_printer.html')
+    else:
+        return redirect('sign_up')
+
+
+
+
+
+
+# @api_view(['POST'])
+# def add_employee(request):
+#     emp_obj = employee_model.add_employee_model_from_dict(request.data)
+#     response, status_code = user_controller.add_employee(emp_obj)
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -407,11 +442,11 @@ def edit_location(request):
     return JsonResponse(response, status=status_code)
 
 
-@api_view(['POST'])
-def add_printer(request):
-    store_obj = add_printer_model.add_printer_model_from_dict(request.data)
-    response, status_code = store_controller.add_printer(store_obj)
-    return JsonResponse(response, status=status_code)
+# @api_view(['POST'])
+# def add_printer(request):
+#     store_obj = add_printer_model.add_printer_model_from_dict(request.data)
+#     response, status_code = store_controller.add_printer(store_obj)
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])

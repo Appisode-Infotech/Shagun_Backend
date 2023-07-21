@@ -223,7 +223,7 @@ def add_bank_details(bank_obj):
                             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
                           bank_obj.account_number,
-                          True, bank_obj.added_by, today)
+                          False, bank_obj.added_by, today)
                 cursor.execute(sql_query, values)
                 return {
                     "status": True,

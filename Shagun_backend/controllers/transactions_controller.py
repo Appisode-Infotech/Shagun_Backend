@@ -1,7 +1,6 @@
 import pymysql
 from django.db import connection
-from datetime import datetime
-from Shagun_backend.util.constants import CHECK_USER, GIFT_SENT, TRACK_ORDER, EVENT_TYPE_LIST
+from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
@@ -14,7 +13,7 @@ def add_transaction_history(transaction_obj):
             values = (transaction_obj.sender_uid, transaction_obj.receiver_uid, transaction_obj.transaction_amount,
                       transaction_obj.shagun_amount, transaction_obj.greeting_card_id, transaction_obj.transaction_fee,
                       transaction_obj.delivery_fee, transaction_obj.transaction_id, transaction_obj.payment_status,
-                      transaction_obj.event_id, transaction_obj.status, datetime.now())
+                      transaction_obj.event_id, transaction_obj.status, today)
             cursor.execute(sql_query, values)
 
             return {

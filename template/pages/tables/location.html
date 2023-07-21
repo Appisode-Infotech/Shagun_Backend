@@ -40,6 +40,31 @@
     <!--    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">-->
     <!--    &lt;!&ndash; endinject &ndash;&gt;-->
     <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
+    <style>
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+
+        .btn {
+            margin: 0;
+        }
+
+        .btn-icon-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon-text i {
+            margin-left: 5px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -57,7 +82,14 @@
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Locations List</h4>
+                    <div class="header-container">
+                        <h4 class="card-title">Locations</h4>
+                        <button type="button" class="btn btn-outline-info btn-icon-text"
+                                onclick="redirectToAddLocationPage()">
+                            Location
+                            <i class="ti-plus btn-icon-append"></i>
+                        </button>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -144,6 +176,11 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
+<script>
+    function redirectToAddLocationPage() {
+        window.location.href = '{% url "add_events" %}';
+    }
+</script>
 </body>
 
 </html>

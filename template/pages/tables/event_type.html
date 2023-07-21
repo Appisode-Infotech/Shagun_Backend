@@ -40,6 +40,31 @@
     <!--    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">-->
     <!--    &lt;!&ndash; endinject &ndash;&gt;-->
     <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
+    <style>
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+
+        .btn {
+            margin: 0;
+        }
+
+        .btn-icon-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon-text i {
+            margin-left: 5px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -57,7 +82,14 @@
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Event Types</h4>
+                    <div class="header-container">
+                        <h4 class="card-title">Events Type</h4>
+                        <button type="button" class="btn btn-outline-info btn-icon-text"
+                                onclick="redirectToAddEventTypePage()">
+                            Event Type
+                            <i class="ti-plus btn-icon-append"></i>
+                        </button>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -99,8 +131,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="openEditDialog()">Edit
+                                    <button type="button" class="btn btn-outline-info btn-fw">Edit
                                     </button>
                                 </td>
                             </tr>
@@ -148,22 +179,9 @@
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
 <script>
-function openEditDialog() {
-  // Open the dialog box or perform other actions here
-  var eventTypeName = prompt("Enter the new event type name:", "");
-
-  // Process the event type name or perform other actions as needed
-  if (eventTypeName !== null) {
-    // User clicked "OK" in the prompt dialog
-    console.log("New event type name:", eventTypeName);
-    // You can send an AJAX request or update the UI with the new value
-  } else {
-    // User clicked "Cancel" in the prompt dialog
-    console.log("Edit canceled");
-  }
-}
-
-
+    function redirectToAddEventTypePage() {
+        window.location.href = '{% url "add_events_type" %}';
+    }
 </script>
 </body>
 

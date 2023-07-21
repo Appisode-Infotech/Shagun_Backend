@@ -1,10 +1,8 @@
 import pymysql
 from django.db import connection
-from datetime import datetime
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import CHECK_USER, ALL_PRINTERS_DATA
-from Shagun_backend.util.responsegenerator import responseGenerator
+from Shagun_backend.util.constants import *
 
 
 def add_printer(store_obj):

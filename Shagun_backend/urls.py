@@ -51,6 +51,9 @@ urlpatterns = [
     path('enable_disable_employee', enable_disable_employee, name='enable_disable_employee'),
     path('manage_printers', manage_printers, name='manage_printers'),
     path('manage_settlement', manage_settlement, name='manage_settlement'),
+    path('add_events_type', add_events_type, name='add_events_type'),
+    path('add_kyc', add_kyc, name='add_kyc'),
+    path('add_bank', add_bank, name='add_bank'),
 
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),

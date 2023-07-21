@@ -1,11 +1,9 @@
 import pymysql
 from django.db import connection
-from datetime import datetime
 import json
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import EVENT_LIST, SINGLE_EVENT, ALL_EVENT_TYPE_LIST, ALL_LOCATION_LIST, \
-    EVENT_TYPE_LIST, today
+from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
@@ -19,7 +17,7 @@ def create_event(event_obj):
                         " status) " \
                         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
-                      event_obj.address_line2, event_obj.event_lat_lng, datetime.now(), sub_events_json,
+                      event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True)
             cursor.execute(sql_query, values)
             return {
@@ -243,6 +241,9 @@ def get_locations_list():
 def get_my_event_list(uid):
     try:
         with connection.cursor() as cursor:
+            phone_query = f"""SELECT phone FROM users WHERE uid = '{uid}'"""
+            cursor.execute(phone_query)
+            phone = cursor.fetchone()[0]
             # SQL query for events with event_date less than or equal to today
             sql_query_past_events = f"""
                 SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
@@ -269,10 +270,24 @@ def get_my_event_list(uid):
             # Execute the second query for upcoming events
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()
+
+            invited_events_query = f"""
+                            SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status
+                            FROM event_guest_invite AS egi
+                            JOIN users AS u ON u.phone = egi.invited_to
+                            JOIN event AS e ON egi.event_id = e.id
+                            JOIN events_type AS et ON e.event_type_id = et.id
+                            WHERE egi.invited_to = '{phone}' ORDER BY egi.created_at DESC
+                            LIMIT 5
+                        """
+            cursor.execute(invited_events_query)
+            invited_events = cursor.fetchall()
+
             return {
                 "status": True,
                 "past_events": responsegenerator.responseGenerator.generateResponse(past_events, EVENT_LIST),
-                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, EVENT_LIST)
+                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, EVENT_LIST),
+                "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events, INVITED_EVENT_LIST),
             }, 200
 
     except pymysql.Error as e:

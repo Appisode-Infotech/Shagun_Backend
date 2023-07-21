@@ -247,16 +247,24 @@ def get_my_event_list(uid):
             # SQL query for events with event_date less than or equal to today
             sql_query_past_events = f"""
                 SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                    event.is_approved, event.status FROM event 
-                JOIN events_type ON event.event_type_id = events_type.id 
+                    event.is_approved, event.status,
+                    COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE event_id = event.id),0) AS total_amount,
+                    COUNT(DISTINCT transaction_history.sender_uid) AS sender_count
+                FROM event
+                LEFT JOIN events_type ON event.event_type_id = events_type.id
+                LEFT JOIN transaction_history ON event.id = transaction_history.event_id
                 WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) <= '{today.date()}'
             """
 
             # SQL query for events with event_date greater than today
             sql_query_upcoming_events = f"""
                 SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                    event.is_approved, event.status FROM event 
-                JOIN events_type ON event.event_type_id = events_type.id 
+                    event.is_approved, event.status,
+                    COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE event_id = event.id),0) AS total_amount,
+                    COUNT(DISTINCT transaction_history.sender_uid) AS sender_count
+                FROM event 
+                LEFT JOIN events_type ON event.event_type_id = events_type.id 
+                LEFT JOIN transaction_history ON event.id = transaction_history.event_id
                 WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) > '{today.date()}'
             """
 

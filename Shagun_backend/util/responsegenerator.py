@@ -27,7 +27,9 @@ class responseGenerator:
                         "admins": json.loads(events[1]),
                         "event_id": events[3],
                         "is_approved": events[4],
-                        "status": events[5]
+                        "status": events[5],
+                        "total_recieved_amount": events[6],
+                        "total_senders_count": events[7]
                     }
                 )
             return event_list
@@ -294,8 +296,7 @@ class responseGenerator:
 
         if controller_type == GET_KYC_DATA:
             return {
-                        data[0][0]: data[0][2],
-                        data[0][1]: data[0][3],
-                        "status": data[0][4]
-                    }
-
+                data[0][0]: data[0][2],
+                data[0][1]: data[0][3],
+                "status": data[0][4]
+            }

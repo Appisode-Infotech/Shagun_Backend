@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
-    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller
+    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model
@@ -460,6 +460,13 @@ def edit_printer(request):
     store_obj = add_printer_model.add_printer_model_from_dict(request.data)
     response, status_code = store_controller.edit_printer(store_obj)
     return JsonResponse(response, status=status_code)
+
+@api_view(['POST'])
+def request_pullback(request):
+    response, status_code = request_controller.request_pullback(request.data['uid'], request.data['type'])
+    return JsonResponse(response, status=status_code)
+
+
 
 
 @api_view(['POST'])

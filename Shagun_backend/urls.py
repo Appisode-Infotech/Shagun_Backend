@@ -76,5 +76,6 @@ urlpatterns = [
     path('add_printer', add_printer, name='add_printer'),
     path('enable_disable_printer', enable_disable_printer, name='enable_disable_printer'),
     path('edit_printer', edit_printer, name='edit_printer'),
+    path('request_pullback', request_pullback, name='request_pullback'),
 
 ]

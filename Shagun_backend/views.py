@@ -10,7 +10,8 @@ from django.contrib import messages
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
-    app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model
+    app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
+    gifts_transaction_model
 
 
 def sign_up(request):
@@ -44,7 +45,6 @@ def admin_dashboard(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-        print(response)
         return render(request, 'pages/tables/events.html', response)
     else:
         return redirect('sign_up')
@@ -111,6 +111,32 @@ def manage_employee(request):
     else:
         return redirect('sign_up')
 
+def manage_printers(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = store_controller.get_all_printers()
+        return render(request, 'pages/tables/printers.html', response)
+    else:
+        return redirect('sign_up')
+
+def add_events(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            data = request.POST
+            print(data)
+            # event_obj = create_event_model.create_event_model_from_dict(request.data)
+            # response, status_code = event_controller.create_event(event_obj)
+            return redirect('manage_event')
+        else:
+            return render(request, 'pages/tables/add_events.html')
+
+    else:
+        return redirect('sign_up')
+
+
+
+
+
+
 
 @api_view(['POST'])
 def add_employee(request):
@@ -123,14 +149,6 @@ def add_employee(request):
 def enable_disable_employee(request):
     response, status_code = user_controller.enable_disable_employee(request.data['uid'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
-
-def manage_printers(request):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = store_controller.get_all_printers()
-        return render(request, 'pages/tables/printers.html', response)
-    else:
-        return redirect('sign_up')
 
 
 # This API ensure that all Shagun app users are using compatible versions of the application, promoting a consistent
@@ -168,10 +186,8 @@ def check_user(request):
 # user-provided information, and creating a new user account in the backend database.
 @api_view(['POST'])
 def user_register(request):
-    print(request.data)
     reg_obj = registration_model.registration_model_from_dict(request.data)
     user, status_code = user_controller.user_register(reg_obj)
-    print(user)
     if user['user'] is not None:
         token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
                            'secret_key', algorithm='HS256')
@@ -182,6 +198,25 @@ def user_register(request):
         "token": token,
         "user": user['user']
     }, status=status_code)
+
+
+@api_view(['POST'])
+def get_user_profile(request):
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            response, status_code = user_controller.get_user_profile(request.data['uid'])
+            return JsonResponse(response, status=status_code)
+
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 # This API enables users to modify their credentials or update their user information. It provides the functionality
@@ -418,7 +453,8 @@ def gift_sent_list(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
-            response, status_code = transactions_controller.get_sent_gift(request.data['uid'])
+            gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
+            response, status_code = transactions_controller.get_sent_gift(gift_data_obj)
             return JsonResponse(response, status=status_code)
 
         else:
@@ -437,7 +473,8 @@ def gift_received_list(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
-            response, status_code = transactions_controller.get_received_gift(request.data['uid'])
+            gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
+            response, status_code = transactions_controller.get_received_gift(gift_data_obj)
             return JsonResponse(response, status=status_code)
 
         else:

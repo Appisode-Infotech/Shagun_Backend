@@ -1,3 +1,5 @@
+import json
+
 import pymysql
 from django.db import connection
 from datetime import datetime
@@ -35,7 +37,6 @@ def check_user_exist(username, fcm):
 
 
 def user_register(reg_obj):
-    print(reg_obj)
     try:
         with connection.cursor() as cursor:
             sql_query = "INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, fcm_token, city)" \
@@ -311,11 +312,10 @@ def get_all_users():
 
 
 def add_employee(emp_obj):
-    print(emp_obj)
     try:
         with connection.cursor() as cursor:
             add_emp_query = "INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password)" \
-                        " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, datetime.now(), True, 2,
                       emp_obj.city, emp_obj.password)
             cursor.execute(add_emp_query, values)
@@ -349,7 +349,6 @@ def enable_disable_employee(uid, e_status):
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
 
 
 def get_all_employees():
@@ -392,3 +391,53 @@ def employee_login(uname, pwd):
             return {
                 "msg": "user not exist, Please register",
             }
+
+
+def get_user_profile(uid):
+    try:
+        with connection.cursor() as cursor:
+            query = "SELECT * FROM users WHERE uid = %s;"
+            cursor.execute(query, [uid])
+            user_data = cursor.fetchone()
+
+            sql_query_events = f"""
+                            SELECT count(*) FROM event 
+                            JOIN events_type ON event.event_type_id = events_type.id
+                            WHERE JSON_CONTAINS(event_admin, %(uid_json)s)
+                        """
+
+            # UID JSON data
+            uid_json = json.dumps({'uid': uid})
+
+            # Execute the first query for past events
+            cursor.execute(sql_query_events, {'uid_json': uid_json})
+            events_count = cursor.fetchone()
+
+            sql_query = f"""
+                    SELECT
+                        COUNT(DISTINCT bank_details.id) AS bank_details_count,
+                        (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_sent_amount,
+                        (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}') AS total_received_amount
+                    FROM bank_details
+                    WHERE bank_details.uid = '{uid}'
+                """
+
+            # Execute the query
+            cursor.execute(sql_query)
+
+            # Fetch the counts
+            counts = cursor.fetchone()
+
+            return {
+                "status": True,
+                "message": "User found",
+                "events_count": events_count[0],
+                "bank_count": counts[0],
+                "total_amount_sent": counts[1],
+                "total_amount_received": counts[2],
+                "user": responseGenerator.generateResponse(user_data, CHECK_USER)
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e), "user": None}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e), "user": None}, 301

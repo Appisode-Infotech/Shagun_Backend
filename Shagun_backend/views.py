@@ -133,8 +133,27 @@ def add_events(request):
         return redirect('sign_up')
 
 
+def add_events_type(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            data = request.POST
+            return redirect('manage_event_types')
+        else:
+            return render(request, 'pages/tables/add_events_type.html')
+
+    else:
+        return redirect('sign_up')
 
 
+def add_kyc(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            data = request.POST
+            return redirect('manage_kyc')
+        else:
+            return render(request, 'pages/tables/add_kyc.html')
+    else:
+        return redirect('sign_up')
 
 
 

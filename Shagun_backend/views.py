@@ -9,6 +9,7 @@ from django.contrib import messages
 
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller
+from Shagun_backend.file_upload.forms import UploadedFileForm
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model
@@ -55,6 +56,7 @@ def manage_settlement(request):
     response = event_controller.get_all_active_events()
     return JsonResponse(response, safe=False)
 
+
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
@@ -73,8 +75,16 @@ def manage_location(request):
 
 def manage_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = user_controller.get_kyc_data()
-        return render(request, 'pages/tables/kyc.html', response)
+        if request.method == 'POST':
+            data = request.POST
+            print(data)
+            response, status_code = user_controller.get_kyc_data()
+            return render(request, 'pages/tables/kyc.html', response)
+        else:
+            response, status_code = user_controller.get_kyc_data()
+            return render(request, 'pages/tables/kyc.html', response)
+
+
     else:
         return redirect('sign_up')
 
@@ -111,12 +121,14 @@ def manage_employee(request):
     else:
         return redirect('sign_up')
 
+
 def manage_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.get_all_printers()
         return render(request, 'pages/tables/printers.html', response)
     else:
         return redirect('sign_up')
+
 
 def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -148,9 +160,15 @@ def add_events_type(request):
 def add_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
+            form = UploadedFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+            print(request.FILES)
+            kyc_obj = user_kyc_model.user_kyc_model_from_dict(request.POST)
+            print(kyc_obj)
             return redirect('manage_kyc')
         else:
+            print("GET method")
             return render(request, 'pages/tables/add_kyc.html')
     else:
         return redirect('sign_up')
@@ -177,6 +195,7 @@ def add_employee(request):
     else:
         return redirect('sign_up')
 
+
 def add_printer(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
@@ -188,8 +207,73 @@ def add_printer(request):
         return redirect('sign_up')
 
 
+def location_popup_view(request):
+    return render(request, 'pages/tables/location_popup.html')
 
 
+def activate_deactivate_location(request, location_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        event_controller.disable_location(location_id, status)
+        return redirect('manage_location')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_bank(request, bank_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        user_controller.disable_bank(bank_id, status)
+        return redirect('manage_bank_details')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_users(request, user_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        print(user_id, status)
+        user_controller.enable_disable_employee(user_id, status)
+        return redirect('manage_users')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_employee(request, user_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        user_controller.enable_disable_employee(user_id, status)
+        return redirect('manage_employee')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_printers(request, printer_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        store_controller.disable_printer(printer_id, status)
+        return redirect('manage_printers')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_event_type(request, event_type_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        event_controller.disable_events_type(event_type_id, status)
+        return redirect('manage_event_types')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_greeting_cards(request, card_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        greeting_cards_controller.disable_greeting_cards(card_id, status)
+        return redirect('manage_greeting_cards')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_kyc(request, kyc_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        user_controller.enable_disable_kyc(kyc_id, status)
+        return redirect('manage_kyc')
+    else:
+        return redirect('sign_up')
 
 
 # @api_view(['POST'])
@@ -461,12 +545,11 @@ def edit_printer(request):
     response, status_code = store_controller.edit_printer(store_obj)
     return JsonResponse(response, status=status_code)
 
+
 @api_view(['POST'])
 def request_pullback(request):
     response, status_code = request_controller.request_pullback(request.data['uid'], request.data['type'])
     return JsonResponse(response, status=status_code)
-
-
 
 
 @api_view(['POST'])

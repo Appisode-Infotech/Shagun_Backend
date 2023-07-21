@@ -85,7 +85,7 @@
                     <div class="header-container">
                         <h4 class="card-title">KYC List</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="redirectToAddKycPage()">
+                                onclick="window.location.href='{% url 'add_kyc' %}'">
                             KYC
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
@@ -103,29 +103,29 @@
                                 <th>
                                     Name
                                 </th>
-                                <th>
-                                    DOB
-                                </th>
-                                <th>
-                                    Permanent Address
-                                </th>
+<!--                                <th>-->
+<!--                                    DOB-->
+<!--                                </th>-->
+<!--                                <th>-->
+<!--                                    Permanent Address-->
+<!--                                </th>-->
                                 <th>
                                     Identification Proof1
                                 </th>
                                 <th>
                                     Identification Proof2
                                 </th>
-                                <th>
-                                    Identification Number1
-                                </th>
-                                <th>
-                                    Identification Number2
-                                </th>
-                                <th>
-                                    Identification Document1
-                                </th>
-                                <th>
-                                    Identification Document2
+<!--                                <th>-->
+<!--                                    Identification Number1-->
+<!--                                </th>-->
+<!--                                <th>-->
+<!--                                    Identification Number2-->
+<!--                                </th>-->
+<!--                                <th>-->
+<!--                                    Identification Document1-->
+<!--                                </th>-->
+<!--                                <th>-->
+<!--                                    Identification Document2-->
                                 </th>
                                 <th>
                                     Verification Status
@@ -145,30 +145,32 @@
                                 <td>
                                     {{kyc.full_name}}
                                 </td>
+<!--                                <td>-->
+<!--                                    {{kyc.dob}}-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    {{kyc.permanent_address}}-->
+<!--                                </td>-->
                                 <td>
-                                    {{kyc.dob}}
-                                </td>
-                                <td>
-                                    {{kyc.permanent_address}}
-                                </td>
-                                <td>
-                                    {{kyc.identification_proof1}}
-                                </td>
-                                <td>
-                                    {{kyc.identification_proof2}}
-                                </td>
-                                <td>
+                                    <b>{{kyc.identification_proof1}} :</b></br></br>
                                     {{kyc.identification_number1}}
                                 </td>
                                 <td>
+                                    <b>{{kyc.identification_proof2}} :</b></br><br>
                                     {{kyc.identification_number2}}
                                 </td>
-                                <td>
-                                    {{kyc.identification_doc1}}
-                                </td>
-                                <td>
-                                    {{kyc.identification_doc2}}
-                                </td>
+<!--                                <td>-->
+<!--                                    {{kyc.identification_number1}}-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    {{kyc.identification_number2}}-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    {{kyc.identification_doc1}}-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    {{kyc.identification_doc2}}-->
+<!--                                </td>-->
                                 <td>
                                     {% if kyc.verification_status == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -189,8 +191,8 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="#">Active</a>
-                                            <a class="dropdown-item" href="#">Inactive</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_kyc' kyc.id 1 %}">Active</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_kyc' kyc.id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -242,11 +244,7 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
-<script>
-    function redirectToAddKycPage() {
-        window.location.href = '{% url "add_kyc" %}';
-    }
-</script>
+
 </body>
 
 </html>

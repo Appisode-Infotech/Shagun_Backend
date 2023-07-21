@@ -25,8 +25,8 @@ class UserKycModel:
     identification_proof2: str
     identification_number1: str
     identification_number2: str
-    identification_doc1: str
-    identification_doc2: str
+    # identification_doc1: str
+    # identification_doc2: str
 
     @staticmethod
     def from_dict(obj: Any) -> 'UserKycModel':
@@ -39,10 +39,10 @@ class UserKycModel:
         identification_proof2 = from_str(obj.get("identification_proof2"))
         identification_number1 = from_str(obj.get("identification_number1"))
         identification_number2 = from_str(obj.get("identification_number2"))
-        identification_doc1 = from_str(obj.get("identification_doc1"))
-        identification_doc2 = from_str(obj.get("identification_doc2"))
+        # identification_doc1 = from_str(obj.get("identification_doc1"))
+        # identification_doc2 = from_str(obj.get("identification_doc2"))
         return UserKycModel(uid, full_name, dob, permanent_address, identification_proof1, identification_proof2,
-                            identification_number1, identification_number2, identification_doc1, identification_doc2)
+                            identification_number1, identification_number2)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -54,8 +54,8 @@ class UserKycModel:
         result["identification_proof2"] = from_str(self.identification_proof2)
         result["identification_number1"] = from_str(self.identification_number1)
         result["identification_number2"] = from_str(self.identification_number2)
-        result["identification_doc1"] = from_str(self.identification_doc1)
-        result["identification_doc2"] = from_str(self.identification_doc2)
+        # result["identification_doc1"] = from_str(self.identification_doc1)
+        # result["identification_doc2"] = from_str(self.identification_doc2)
         return result
 
 

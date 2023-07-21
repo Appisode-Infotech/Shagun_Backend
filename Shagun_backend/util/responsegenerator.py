@@ -20,6 +20,7 @@ class responseGenerator:
         if controller_type == EVENT_LIST:
             event_list = []
             for events in data:
+                print(events)
                 event_list.append(
                     {
                         "event_date": events[0],
@@ -30,6 +31,22 @@ class responseGenerator:
                         "status": events[5],
                         "total_recieved_amount": events[6],
                         "total_senders_count": events[7]
+                    }
+                )
+            return event_list
+
+        if controller_type == ALL_EVENT_LIST:
+            event_list = []
+            for events in data:
+                print(events)
+                event_list.append(
+                    {
+                        "event_date": events[0],
+                        "event_name": events[2],
+                        "admins": json.loads(events[1]),
+                        "event_id": events[3],
+                        "is_approved": events[4],
+                        "status": events[5]
                     }
                 )
             return event_list

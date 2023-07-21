@@ -314,7 +314,7 @@ def get_all_event_list():
             events = cursor.fetchall()
             return {
                 "status": True,
-                "event_list": responsegenerator.responseGenerator.generateResponse(events, EVENT_LIST)
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
             }, 200
 
     except pymysql.Error as e:

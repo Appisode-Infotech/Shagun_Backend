@@ -169,11 +169,11 @@ def update_user_kyc(kyc_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-def enable_disable_kyc(uid, v_status):
+def enable_disable_kyc(kyc_id, v_status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE user_kyc SET verification_status = %s WHERE uid = %s"
-            values = (v_status, uid)
+            sql_query = "UPDATE user_kyc SET verification_status = %s WHERE id = %s"
+            values = (v_status, kyc_id)
             cursor.execute(sql_query, values)
             return {
                 "status": True,
@@ -332,11 +332,12 @@ def add_employee(emp_obj):
         return {"status": False, "message": str(e), "user": None}, 301
 
 
-def enable_disable_employee(uid, e_status):
+def enable_disable_employee(uid, status):
+    print(uid, status)
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE users SET status = %s WHERE uid = %s"
-            values = (e_status, uid)
+            sql_query = "UPDATE users SET status = %s WHERE id = %s"
+            values = (status, uid)
             cursor.execute(sql_query, values)
             return {
                 "status": True,
@@ -450,3 +451,21 @@ def get_user_profile(uid):
         return {"status": False, "message": str(e), "user": None}, 301
     except Exception as e:
         return {"status": False, "message": str(e), "user": None}, 301
+
+
+def disable_bank(bank_id, status):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE bank_details SET status = %s WHERE id = %s"
+            values = (status, bank_id)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "Bank status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

@@ -42,3 +42,21 @@ def get_all_greeting_cards():
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def disable_greeting_cards(event_id, estatus):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE greeting_cards SET status = %s WHERE id = %s"
+            values = (estatus, event_id)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "Greeting card changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

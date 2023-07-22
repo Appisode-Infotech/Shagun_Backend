@@ -84,6 +84,38 @@
 
 
 
+
+
+    .event-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .event-input {
+        width: 30%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #addEventButton,
+    #removeEventButton {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    #addEventButton {
+        background-color: #2196F3;
+    }
+
+    #removeEventButton {
+        background-color: #f44336;
+    }
+
     </style>
 
 </head>
@@ -209,8 +241,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
@@ -228,11 +258,33 @@
                                                     <label class="form-control">{{ request.session.name }}</label>
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
                                                            value="{{ request.session.uid }}">
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="exampleTextarea1">Textarea</label>
+                                        <textarea class="form-control" id="event_note" rows="4"
+                                                  name="event_note"></textarea>
+                                    </div>
+
+                                    <div id="events-container">
+                                        <label>Sub Events</label>
+                                        <div class="event-row">
+                                            <input class="event-input" type="text" name="events[0][event_name]"
+                                                   placeholder="Sub Event Name">
+                                            <input class="event-input" type="datetime-local"
+                                                   name="events[0][start_time]" placeholder="Start Time">
+                                            <input class="event-input" type="datetime-local" name="events[0][end_time]"
+                                                   placeholder="End Time">
+                                        </div>
+                                    </div>
+                                    <button type="button" id="addEventButton">Add Sub Event</button>
+                                    <button type="button" id="removeEventButton" style="display: none;">Remove Sub
+                                        Event
+                                    </button>
+
+
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
@@ -301,8 +353,69 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
-</script>
 
+
+
+
+
+
+
+
+
+
+</script>
+<!-- my_template.html -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addEventButton = document.getElementById('addEventButton');
+        const removeEventButton = document.getElementById('removeEventButton');
+        const eventsContainer = document.getElementById('events-container');
+        let eventIndex = 1;
+
+        addEventButton.addEventListener('click', function () {
+             if (eventIndex < 2) {
+                const eventRow = document.createElement('div');
+                eventRow.classList.add('event-row');
+                eventRow.innerHTML = `
+                    <input class="event-input" type="text" name="events[${eventIndex}][event_name]" placeholder="Sub Event Name">
+                    <input class="event-input" type="datetime-local" name="events[${eventIndex}][start_time]" placeholder="Start Time">
+                    <input class="event-input" type="datetime-local" name="events[${eventIndex}][end_time]" placeholder="End Time">
+                `;
+                eventsContainer.appendChild(eventRow);
+                eventIndex++;
+            }
+
+            if (eventIndex === 2) {
+                addEventButton.style.display = 'none';
+                removeEventButton.style.display = 'block';
+            }
+
+            if (eventIndex === 1) {
+                removeEventButton.style.display = 'none';
+                addEventButton.style.display = 'block';
+            }
+        });
+
+        removeEventButton.addEventListener('click', function () {
+            if (eventIndex > 1) {
+                eventIndex--;
+                const eventRows = eventsContainer.getElementsByClassName('event-row');
+                eventsContainer.removeChild(eventRows[eventIndex]);
+            }
+
+            if (eventIndex === 2) {
+                addEventButton.style.display = 'none';
+                removeEventButton.style.display = 'block';
+            }
+
+            if (eventIndex === 1) {
+                removeEventButton.style.display = 'none';
+                addEventButton.style.display = 'block';
+            }
+        });
+    });
+
+</script>
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

@@ -338,3 +338,22 @@ def get_all_active_events():
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def get_city_list_for_user():
+    try:
+        with connection.cursor() as cursor:
+            get_location_query = """SELECT * FROM locations WHERE status=1"""
+            cursor.execute(get_location_query)
+            locations_list = cursor.fetchall()
+
+            return {
+                "status": True,
+                "city_list": responseGenerator.generateResponse(locations_list, ACTIVE_LOCATIONS_LIST)
+
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

@@ -27,6 +27,62 @@
           display: flex;
           justify-content: center;
         }
+        .dropbtn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+          background-color: #3e8e41;
+        }
+
+        #myInput {
+          box-sizing: border-box;
+          background-image: url('searchicon.png');
+          background-position: 14px 12px;
+          background-repeat: no-repeat;
+          font-size: 16px;
+          padding: 14px 20px 12px 45px;
+          border: none;
+          border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f6f6f6;
+          min-width: 230px;
+          overflow: auto;
+          border: 1px solid #ddd;
+          z-index: 1;
+          height:400px;
+        }
+
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+
+
+
+
 
     </style>
 
@@ -50,93 +106,132 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Events</h4>
-                                <form class="form-sample" action="/add_events" method="post">
+                                <h4 class="card-title">Add New Event</h4>
+                                <form class="form-sample" action="/add_events" method="post"
+                                      enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
-                                        Personal info
+                                        Event info
                                     </p>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">UID</label>
+                                                <label class="col-sm-3 col-form-label">Select Event Type</label>
                                                 <div class="col-sm-9">
-                                                    <input id="uid" type="text" class="form-control"/>
+
+                                                    <input type="text" id="event_type_name" readonly
+                                                           onclick="toggleDropdown('myDropdown1')"
+                                                           placeholder="Search.." class="form-control">
+
+                                                    <div id="myDropdown1" class="dropdown-content">
+                                                        <input type="text" placeholder="Search.." id="myInput1"
+                                                               onkeyup="filterFunction('myDropdown1')"
+                                                               class="form-control">
+                                                        {% for events_type in event_types.event_type_list %}
+                                                        <a onclick="setValue('{{events_type.event_type_name}}', '{{events_type.id}}', 'event_type_name', 'event_type_id')">{{events_type.event_type_name}}</a>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <input type="hidden" id="event_type_id" name="event_type_id">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label"> Name</label>
+                                                <label class="col-sm-3 col-form-label">Select City</label>
                                                 <div class="col-sm-9">
-                                                    <input id="name" type="text" class="form-control"/>
+
+                                                    <input type="text" id="city_name" readonly
+                                                           onclick="toggleDropdown('myDropdown2')"
+                                                           placeholder="Search.." class="form-control">
+
+                                                    <div id="myDropdown2" class="dropdown-content">
+                                                        <input type="text" placeholder="Search.." id="myInput2"
+                                                               onkeyup="filterFunction('myDropdown2')"
+                                                               class="form-control">
+                                                        {% for city in location.city_list %}
+                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <input type="hidden" id="city_id" name="city_id">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Select Printer</label>
+                                                <div class="col-sm-9">
+
+                                                    <input type="text" id="printer_name" readonly
+                                                           onclick="toggleDropdown('myDropdown3')"
+                                                           placeholder="Search.." class="form-control">
+
+                                                    <div id="myDropdown3" class="dropdown-content">
+                                                        <input type="text" placeholder="Search.." id="myInput3"
+                                                               onkeyup="filterFunction('myDropdown3')"
+                                                               class="form-control">
+                                                        {% for printers in printers.printer_data %}
+                                                        <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <input type="hidden" id="printer_id" name="printer_id">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Event Date</label>
+                                                <div class="col-sm-9">
+                                                    <input type="datetime-local" id="event_date"
+                                                           name="event_date"
+                                                           class="form-control"
+                                                           placeholder="username">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Address Line1</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="address_line1"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Address Line2</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="address_line2"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <p class="card-description">
-                                        Address
-                                    </p>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address 1</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">State</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address 2</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Postcode</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Country</label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>America</option>
-                                                        <option>Italy</option>
-                                                        <option>Russia</option>
-                                                        <option>Britain</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
 
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Event Lat Lng</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" placeholder="13.0916688-77.407799"
+                                                           id="event_lat_lng" name="event_lat_lng"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <div class="col-sm-9">
+                                                    <label class="form-control">{{ request.session.name }}</label>
+                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
+                                                           value="{{ request.session.uid }}">
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
@@ -163,6 +258,51 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+
+<script>
+// Function to toggle a specific dropdown based on its ID
+function toggleDropdown(dropdownId) {
+  var dropdown = document.getElementById(dropdownId);
+  dropdown.classList.toggle("show");
+}
+
+// Function to filter the dropdown content based on the input value
+function filterFunction(dropdownId) {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput" + dropdownId.slice(-1));
+  filter = input.value.toUpperCase();
+  div = document.getElementById(dropdownId);
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+
+function setValue(value1, value2, inputField1Id, inputField2Id) {
+  if (value1 && value2) {
+    document.getElementById(inputField1Id).value = value1;
+    console.log(inputField1Id)
+    console.log(value1)
+    console.log(value2)
+    document.getElementById(inputField2Id).value = value2;
+    // Optionally, you can hide the dropdown after selecting a value
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var i = 0; i < dropdowns.length; i++) {
+      dropdowns[i].classList.remove("show");
+    }
+  }
+}
+
+
+
+
+</script>
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
@@ -185,6 +325,7 @@
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
+
 </body>
 
 </html>

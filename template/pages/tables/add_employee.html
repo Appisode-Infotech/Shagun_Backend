@@ -21,15 +21,21 @@
 
     <!-- endinject -->
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
-
     <style>
         .center-button {
           display: flex;
           justify-content: center;
         }
 
-    </style>
+        .toggle-password {
+          position: absolute;
+          top: 10px;
+          right: 30px;
+          cursor: pointer;
+        }
 
+
+    </style>
 </head>
 
 <body>
@@ -51,25 +57,30 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Add New Employee</h4>
-                                <form class="form-sample" action="/add_employee" method="post">
+                                <form class="form-sample" action="/add_employee" method="post"
+                                      enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
-                                        Employee info
+                                        Personal info
                                     </p>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">First Name</label>
+                                                <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input id="firstname" type="text" class="form-control"/>
+                                                    <input type="text" id="email" name="email"
+                                                           class="form-control"
+                                                           placeholder="username">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Last Name</label>
+                                                <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" id="name" name="name"
+                                                           class="form-control"
+                                                           placeholder="Full Name">
                                                 </div>
                                             </div>
                                         </div>
@@ -77,129 +88,61 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Gender</label>
+                                                <label class="col-sm-3 col-form-label">Phone</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>Male</option>
-                                                        <option>Female</option>
-                                                    </select>
+                                                    <input type="text" id="phone" name="phone"
+                                                           class="form-control"
+                                                           placeholder="9876543210">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Date of Birth</label>
-                                                <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="dd/mm/yyyy"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Category</label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>Category1</option>
-                                                        <option>Category2</option>
-                                                        <option>Category3</option>
-                                                        <option>Category4</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Membership</label>
-                                                <div class="col-sm-4">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="radio" class="form-check-input"
-                                                                   name="membershipRadios" id="membershipRadios1"
-                                                                   value="" checked>
-                                                            Free
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-5">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="radio" class="form-check-input"
-                                                                   name="membershipRadios" id="membershipRadios2"
-                                                                   value="option2">
-                                                            Professional
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="card-description">
-                                        Address
-                                    </p>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address 1</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">State</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address 2</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Postcode</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" id="city" name="city"
+                                                           class="form-control"
+                                                           placeholder="username">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Password</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" id="password" name="password"
+                                                           class="form-control form-control-lg"
+                                                           placeholder="password">
+                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Country</label>
+                                                <label class="col-sm-3 col-form-label">Confirm Password</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>America</option>
-                                                        <option>Italy</option>
-                                                        <option>Russia</option>
-                                                        <option>Britain</option>
-                                                    </select>
+                                                    <input type="password" id="confirmPassword"
+                                                           class="form-control form-control-lg"
+                                                           placeholder="password">
+                                                    <i class="toggle-password"
+                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
+
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="center-button">
+                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
+                                            not match!
                                         </div>
 
                                     </div>
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input type="submit" value="Submit" class="btn btn-primary mr-2"
+                                               id="submitButton" disabled>
                                     </div>
                                 </form>
                             </div>
@@ -223,6 +166,41 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+
+<script>
+    function toggleVisibility(fieldId) {
+      var field = document.getElementById(fieldId);
+      if (field.type === 'password') {
+        field.type = 'text';
+      } else {
+        field.type = 'password';
+      }
+      validatePasswords(); // Validate passwords after toggling visibility
+    }
+
+    function validatePasswords() {
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+      var passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+      if (password === confirmPassword) {
+        // Passwords match, hide error message
+        passwordMatchMessage.style.display = 'none';
+        submitButton.disabled = false;
+
+      } else {
+        // Passwords do not match, show error message
+        passwordMatchMessage.style.display = 'block';
+        submitButton.disabled = true;
+
+      }
+    }
+
+    // Add event listeners to trigger validation when input changes
+    document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
+
+</script>
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
@@ -245,6 +223,7 @@
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
+
 </body>
 
 </html>

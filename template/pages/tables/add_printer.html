@@ -27,6 +27,66 @@
           display: flex;
           justify-content: center;
         }
+        .dropbtn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+          background-color: #3e8e41;
+        }
+
+        #myInput {
+          box-sizing: border-box;
+          background-image: url('searchicon.png');
+          background-position: 14px 12px;
+          background-repeat: no-repeat;
+          font-size: 16px;
+          padding: 14px 20px 12px 45px;
+          border: none;
+          border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f6f6f6;
+          min-width: 230px;
+          max-width: 300px;
+          overflow: auto;
+          border: 1px solid #ddd;
+          z-index: 1;
+          height:400px;
+        }
+
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+
+        .toggle-password {
+          position: absolute;
+          top: 10px;
+          right: 30px;
+          cursor: pointer;
+        }
 
     </style>
 
@@ -50,8 +110,8 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Printer</h4>
-                                <form class="form-sample" action="/add_printer" method="post">
+                                <h4 class="card-title">Add New Printing Vendor</h4>
+                                <form class="form-sample" action="/add_printer" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Printer info
@@ -59,99 +119,28 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">First Name</label>
+                                                <label class="col-sm-3 col-form-label">User</label>
                                                 <div class="col-sm-9">
-                                                    <input id="firstname" type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Last Name</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Gender</label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>Male</option>
-                                                        <option>Female</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Date of Birth</label>
-                                                <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="dd/mm/yyyy"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Category</label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>Category1</option>
-                                                        <option>Category2</option>
-                                                        <option>Category3</option>
-                                                        <option>Category4</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Membership</label>
-                                                <div class="col-sm-4">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="radio" class="form-check-input"
-                                                                   name="membershipRadios" id="membershipRadios1"
-                                                                   value="" checked>
-                                                            Free
-                                                        </label>
+
+                                                    <input type="text" id="name" readonly onclick="myFunction()"
+                                                           placeholder="Search.." class="form-control">
+
+                                                    <div id="myDropdown" class="dropdown-content">
+                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                               onkeyup="filterFunction()" class="form-control">
+                                                        {% for city in city_list %}
+                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
+                                                        {% endfor %}
                                                     </div>
-                                                </div>
-                                                <div class="col-sm-5">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="radio" class="form-check-input"
-                                                                   name="membershipRadios" id="membershipRadios2"
-                                                                   value="option2">
-                                                            Professional
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="card-description">
-                                        Address
-                                    </p>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address 1</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="hidden" id="city" name="city">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">State</label>
+                                                <label class="col-sm-3 col-form-label">Store Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="store_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -159,17 +148,17 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address 2</label>
+                                                <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="store_owner"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Postcode</label>
+                                                <label class="col-sm-3 col-form-label">Store Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="contact_number"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -177,31 +166,77 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City</label>
+                                                <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="address"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Country</label>
+                                                <label class="col-sm-3 col-form-label">Geo Location</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>America</option>
-                                                        <option>Italy</option>
-                                                        <option>Russia</option>
-                                                        <option>Britain</option>
-                                                    </select>
+                                                    <input type="text" class="form-control" name="lat_lng"/>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label"> Store GST</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="gst_no"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">User Name</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" class="form-control" name="printer_user_name"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Password</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" id="password" name="printer_password"
+                                                           class="form-control form-control-lg"
+                                                           placeholder="password">
+                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Confirm Password</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" id="confirmPassword"
+                                                           class="form-control form-control-lg"
+                                                           placeholder="password">
+                                                    <i class="toggle-password"
+                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center-button">
+                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
+                                            not match!
                                         </div>
 
                                     </div>
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input type="submit" value="Submit" class="btn btn-primary mr-2"
+                                               id="submitButton" disabled>
                                     </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -223,6 +258,70 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+
+<script>
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function filterFunction() {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+function setValue(value1, value2) {
+  document.getElementById("name").value = value1;
+  document.getElementById("city").value = value2;
+  myFunction();
+}
+</script>
+
+
+<script>
+    function toggleVisibility(fieldId) {
+      var field = document.getElementById(fieldId);
+      if (field.type === 'password') {
+        field.type = 'text';
+      } else {
+        field.type = 'password';
+      }
+      validatePasswords(); // Validate passwords after toggling visibility
+    }
+
+    function validatePasswords() {
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+      var passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+      if (password === confirmPassword) {
+        // Passwords match, hide error message
+        passwordMatchMessage.style.display = 'none';
+        submitButton.disabled = false;
+
+      } else {
+        // Passwords do not match, show error message
+        passwordMatchMessage.style.display = 'block';
+        submitButton.disabled = true;
+
+      }
+    }
+
+    // Add event listeners to trigger validation when input changes
+    document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
+
+</script>
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
@@ -245,6 +344,7 @@
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
+
 </body>
 
 </html>

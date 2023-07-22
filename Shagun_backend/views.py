@@ -1,15 +1,17 @@
 import jwt
 from datetime import datetime, timedelta
 
+from django.core.files.storage import default_storage
 from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.contrib import messages
+import time
 
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
-    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller
-from Shagun_backend.file_upload.forms import UploadedFileForm
+    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
+    bank_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model
@@ -77,7 +79,6 @@ def manage_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             data = request.POST
-            print(data)
             response, status_code = user_controller.get_kyc_data()
             return render(request, 'pages/tables/kyc.html', response)
         else:
@@ -134,12 +135,22 @@ def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             data = request.POST
-            print(data)
             # event_obj = create_event_model.create_event_model_from_dict(request.data)
             # response, status_code = event_controller.create_event(event_obj)
             return redirect('manage_event')
         else:
-            return render(request, 'pages/tables/add_events.html')
+            event_types, status_code = event_controller.get_event_type_list_for_user()
+            location, status_code = event_controller.get_city_list_for_user()
+            users_list, status_code = user_controller.get_all_users()
+            printers_list, status_code = store_controller.get_all_printers()
+            context = {
+                "event_types": event_types,
+                "location": location,
+                "users_list": users_list,
+                "printers": printers_list
+
+            }
+            return render(request, 'pages/tables/add_events.html', context)
 
     else:
         return redirect('sign_up')
@@ -159,17 +170,23 @@ def add_events_type(request):
 
 def add_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        form_data = request.POST
         if request.method == 'POST':
-            form = UploadedFileForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-            print(request.FILES)
-            kyc_obj = user_kyc_model.user_kyc_model_from_dict(request.POST)
-            print(kyc_obj)
+            for file_key, file_obj in request.FILES.items():
+                file_name = f"""{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
+                form_data = form_data.copy()
+                form_data[identification_doc_key] = file_name
+                with default_storage.open(file_name, 'wb+') as destination:
+                    for chunk in file_obj.chunks():
+                        destination.write(chunk)
+
+            kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
+            user_controller.add_user_kyc(kyc_obj)
             return redirect('manage_kyc')
         else:
-            print("GET method")
-            return render(request, 'pages/tables/add_kyc.html')
+            response, status_code = user_controller.get_all_users()
+            return render(request, 'pages/tables/add_kyc.html', response)
     else:
         return redirect('sign_up')
 
@@ -177,10 +194,17 @@ def add_kyc(request):
 def add_bank(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
+            bank_obj = bank_details_model.bank_details_model_from_dict(request.POST)
+            user_controller.add_bank_details(bank_obj)
             return redirect('manage_bank_details')
         else:
-            return render(request, 'pages/tables/add_bank.html')
+            user, status_code = user_controller.get_all_users()
+            bank, status_code = bank_controller.get_all_banks_list()
+            context = {
+                "user": user,
+                "bank": bank
+            }
+            return render(request, 'pages/tables/add_bank.html', context)
     else:
         return redirect('sign_up')
 
@@ -188,8 +212,9 @@ def add_bank(request):
 def add_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
-            return redirect('manage_bank_details')
+            emp_obj = employee_model.add_employee_model_from_dict(request.POST)
+            user_controller.add_employee(emp_obj)
+            return redirect('manage_employee')
         else:
             return render(request, 'pages/tables/add_employee.html')
     else:
@@ -199,10 +224,12 @@ def add_employee(request):
 def add_printer(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
-            return redirect('manage_bank_details')
+            store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
+            store_controller.add_printer(store_obj)
+            return redirect('manage_printers')
         else:
-            return render(request, 'pages/tables/add_printer.html')
+            location, status_code = event_controller.get_city_list_for_user()
+            return render(request, 'pages/tables/add_printer.html', location)
     else:
         return redirect('sign_up')
 
@@ -229,7 +256,6 @@ def activate_deactivate_bank(request, bank_id, status):
 
 def activate_deactivate_users(request, user_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        print(user_id, status)
         user_controller.enable_disable_employee(user_id, status)
         return redirect('manage_users')
     else:

@@ -63,6 +63,8 @@ urlpatterns = [
     path('activate_deactivate_event_type/<int:event_type_id>/<int:status>/', activate_deactivate_event_type, name='activate_deactivate_event_type'),
     path('activate_deactivate_greeting_cards/<int:card_id>/<int:status>/', activate_deactivate_greeting_cards, name='activate_deactivate_greeting_cards'),
     path('activate_deactivate_kyc/<int:kyc_id>/<int:status>/', activate_deactivate_kyc, name='activate_deactivate_kyc'),
+    path('activate_deactivate_event/<int:event_id>/<int:status>/', activate_deactivate_event, name='activate_deactivate_event'),
+    path('set_event_status/<int:event_id>/<int:status>/', set_event_status, name='set_event_status'),
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),
     # path('home', home, name='home'),

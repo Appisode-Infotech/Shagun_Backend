@@ -10,11 +10,6 @@ def from_str(x: Any) -> str:
     return x
 
 
-def from_int(x: Any) -> int:
-    assert isinstance(x, int) and not isinstance(x, bool)
-    return x
-
-
 def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
     assert isinstance(x, list)
     return [f(y) for y in x]
@@ -29,57 +24,57 @@ def to_class(c: Type[T], x: Any) -> dict:
 class EventAdmin:
     name: str
     role: str
+    uid: str
     profile: str
     qr_code: str
-    uid: str
 
     @staticmethod
     def from_dict(obj: Any) -> 'EventAdmin':
         assert isinstance(obj, dict)
         name = from_str(obj.get("name"))
         role = from_str(obj.get("role"))
+        uid = from_str(obj.get("uid"))
         profile = from_str(obj.get("profile"))
         qr_code = from_str(obj.get("QR_code"))
-        uid = from_str(obj.get("uid"))
-        return EventAdmin(name, role, profile, qr_code, uid)
+        return EventAdmin(name, role, uid, profile, qr_code)
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["name"] = from_str(self.name)
         result["role"] = from_str(self.role)
+        result["uid"] = from_str(self.uid)
         result["profile"] = from_str(self.profile)
         result["QR_code"] = from_str(self.qr_code)
-        result["uid"] = from_str(self.uid)
         return result
 
 
 @dataclass
 class SubEvent:
     sub_event_name: str
-    start: str
-    end: str
+    start_time: str
+    end_time: str
 
     @staticmethod
     def from_dict(obj: Any) -> 'SubEvent':
         assert isinstance(obj, dict)
         sub_event_name = from_str(obj.get("sub_event_name"))
-        start = from_str(obj.get("start"))
-        end = from_str(obj.get("end"))
-        return SubEvent(sub_event_name, start, end)
+        start_time = from_str(obj.get("start_time"))
+        end_time = from_str(obj.get("end_time"))
+        return SubEvent(sub_event_name, start_time, end_time)
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["sub_event_name"] = from_str(self.sub_event_name)
-        result["start"] = from_str(self.start)
-        result["end"] = from_str(self.end)
+        result["start_time"] = from_str(self.start_time)
+        result["end_time"] = from_str(self.end_time)
         return result
 
 
 @dataclass
 class CreateEventModel:
     created_by_uid: str
-    event_type_id: int
-    city_id: int
+    event_type_id: str
+    city_id: str
     address_line1: str
     address_line2: str
     event_lat_lng: str
@@ -92,8 +87,8 @@ class CreateEventModel:
     def from_dict(obj: Any) -> 'CreateEventModel':
         assert isinstance(obj, dict)
         created_by_uid = from_str(obj.get("created_by_uid"))
-        event_type_id = from_int(obj.get("event_type_id"))
-        city_id = from_int(obj.get("city_id"))
+        event_type_id = from_str(obj.get("event_type_id"))
+        city_id = from_str(obj.get("city_id"))
         address_line1 = from_str(obj.get("address_line1"))
         address_line2 = from_str(obj.get("address_line2"))
         event_lat_lng = from_str(obj.get("event_lat_lng"))
@@ -106,8 +101,8 @@ class CreateEventModel:
     def to_dict(self) -> dict:
         result: dict = {}
         result["created_by_uid"] = from_str(self.created_by_uid)
-        result["event_type_id"] = from_int(self.event_type_id)
-        result["city_id"] = from_int(self.city_id)
+        result["event_type_id"] = from_str(self.event_type_id)
+        result["city_id"] = from_str(self.city_id)
         result["address_line1"] = from_str(self.address_line1)
         result["address_line2"] = from_str(self.address_line2)
         result["event_lat_lng"] = from_str(self.event_lat_lng)

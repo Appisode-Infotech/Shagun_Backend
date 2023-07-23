@@ -15,6 +15,7 @@ from Shagun_backend.controllers import user_controller, event_controller, app_da
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model
+from Shagun_backend.models.create_event_model1 import transform_data_to_json
 
 
 def sign_up(request):
@@ -134,9 +135,9 @@ def manage_printers(request):
 def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
-            # event_obj = create_event_model.create_event_model_from_dict(request.data)
-            # response, status_code = event_controller.create_event(event_obj)
+            json_data = transform_data_to_json(request.POST)
+            event_obj = create_event_model.create_event_model_from_dict(json_data)
+            event_controller.create_event(event_obj)
             return redirect('manage_event')
         else:
             event_types, status_code = event_controller.get_event_type_list_for_user()
@@ -146,9 +147,8 @@ def add_events(request):
             context = {
                 "event_types": event_types,
                 "location": location,
-                "users_list": users_list,
+                "users": users_list,
                 "printers": printers_list
-
             }
             return render(request, 'pages/tables/add_events.html', context)
 
@@ -284,6 +284,22 @@ def activate_deactivate_event_type(request, event_type_id, status):
         return redirect('manage_event_types')
     else:
         return redirect('sign_up')
+
+def activate_deactivate_event(request, event_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        event_controller.enable_disable_event(event_id, status)
+        return redirect('manage_event')
+    else:
+        return redirect('sign_up')
+
+def set_event_status(request, event_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        event_controller.set_event_status(event_id, status)
+        return redirect('manage_event')
+    else:
+        return redirect('sign_up')
+
+
 
 
 def activate_deactivate_greeting_cards(request, card_id, status):

@@ -357,3 +357,21 @@ def get_city_list_for_user():
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def set_event_status(event_id, status):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE event SET is_approved = %s WHERE id = %s"
+            values = (status, event_id)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "Event Status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

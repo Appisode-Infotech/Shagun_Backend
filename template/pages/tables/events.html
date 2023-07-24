@@ -85,7 +85,7 @@
                     <div class="header-container">
                         <h4 class="card-title">Events List</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="redirectToAddEventPage()">
+                                onclick="window.location.href='{% url 'add_events' %}'">
                             Event
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
@@ -98,7 +98,7 @@
                                 <th>Event Id</th>
                                 <th>Event Name</th>
                                 <th>Event Admins</th>
-                                <th>Event Date</th>
+<!--                                <th>Event Date</th>-->
                                 <th>Status</th>
                                 <th>Set Status</th>
                                 <th>Active</th>
@@ -113,9 +113,10 @@
                                 <td>
                                     {% for admin in event.admins %}
                                     <b>{{ admin.role }}</b> : {{ admin.name }}</br></br>
-                                    {% endfor %}
+                                    {% endfor %}</br>
+                                    <b>Date : </b> {{ event.event_date }}
                                 </td>
-                                <td>{{ event.event_date }}</td>
+<!--                                <td>{{ event.event_date }}</td>-->
                                 <td>
                                     {% if event.is_approved == 0 %}
                                     <label class="badge badge-info">Pending</label>
@@ -139,9 +140,9 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="#">Pending</a>
-                                            <a class="dropdown-item" href="#">Approved</a>
-                                            <a class="dropdown-item" href="#">Rejected</a>
+                                            <a class="dropdown-item" href="{% url 'set_event_status' event.event_id 0 %}">Pending</a>
+                                            <a class="dropdown-item" href="{% url 'set_event_status' event.event_id 1 %}">Approved</a>
+                                            <a class="dropdown-item" href="{% url 'set_event_status' event.event_id 2 %}">Rejected</a>
                                         </div>
                                     </div>
                                 </td>
@@ -157,8 +158,8 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="#">Active</a>
-                                            <a class="dropdown-item" href="#">Inactive</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_event' event.event_id 1 %}">Active</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_event' event.event_id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -210,11 +211,7 @@
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
 
-<script>
-    function redirectToAddEventPage() {
-        window.location.href = '{% url "add_events" %}';
-    }
-</script>
+
 </body>
 
 </html>

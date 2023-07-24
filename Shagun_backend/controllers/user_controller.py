@@ -99,14 +99,15 @@ def add_user_kyc(kyc_obj):
             cursor.execute(query, [kyc_obj.uid])
             user = cursor.fetchone()
             if user is not None:
-                sql_query = "INSERT INTO user_kyc (uid, full_name, dob, permanent_address, identification_proof1, " \
-                            "identification_proof2, identification_number1, identification_number2, identification_doc1, " \
-                            "identification_doc2, verification_status, created_on) " \
-                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.permanent_address,
+                sql_query = """INSERT INTO user_kyc (uid, full_name, dob, address_line1, identification_proof1,
+                identification_proof2, identification_number1, identification_number2, identification_doc1, 
+                identification_doc2, verification_status, created_on, gender, address_line2, city, state, postcode, 
+                country, updated_on) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.adress1,
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
-                          'pending', today)
+                          'pending', today, kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
+                          kyc_obj.postcode, kyc_obj.country, today)
                 cursor.execute(sql_query, values)
                 return {
                     "status": True,
@@ -169,11 +170,11 @@ def update_user_kyc(kyc_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-def enable_disable_kyc(uid, v_status):
+def enable_disable_kyc(kyc_id, v_status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE user_kyc SET verification_status = %s WHERE uid = %s"
-            values = (v_status, uid)
+            sql_query = "UPDATE user_kyc SET verification_status = %s WHERE id = %s"
+            values = (v_status, kyc_id)
             cursor.execute(sql_query, values)
             return {
                 "status": True,
@@ -191,7 +192,7 @@ def get_kyc_data():
     try:
         with connection.cursor() as cursor:
             kyc_data_query = """ SELECT 
-                kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.permanent_address, 
+                kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.address_line1, 
                 kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
                 kyc.verification_status, users.profile_pic
@@ -218,12 +219,13 @@ def add_bank_details(bank_obj):
             cursor.execute(query, [bank_obj.uid])
             user = cursor.fetchone()
             if user is not None:
+                cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
+                               (bank_obj.uid,))
                 sql_query = "INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number," \
                             "status, added_by, modified_on) " \
                             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
-                          bank_obj.account_number,
-                          True, bank_obj.added_by, today)
+                          bank_obj.account_number, True, bank_obj.added_by, today)
                 cursor.execute(sql_query, values)
                 return {
                     "status": True,
@@ -332,11 +334,11 @@ def add_employee(emp_obj):
         return {"status": False, "message": str(e), "user": None}, 301
 
 
-def enable_disable_employee(uid, e_status):
+def enable_disable_employee(uid, status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE users SET status = %s WHERE uid = %s"
-            values = (e_status, uid)
+            sql_query = "UPDATE users SET status = %s WHERE id = %s"
+            values = (status, uid)
             cursor.execute(sql_query, values)
             return {
                 "status": True,
@@ -428,7 +430,7 @@ def get_user_profile(uid):
             kyc_data = cursor.fetchall()
 
             bank_sql_query = f"""
-                                SELECT bd.bank_name, bd.account_number, bd.ifsc_code
+                                SELECT bd.bank_name, bd.account_number, bd.ifsc_code, bd.status
                                 FROM bank_details bd
                                 WHERE bd.uid = '{uid}'
                             """
@@ -450,3 +452,21 @@ def get_user_profile(uid):
         return {"status": False, "message": str(e), "user": None}, 301
     except Exception as e:
         return {"status": False, "message": str(e), "user": None}, 301
+
+
+def disable_bank(bank_id, status):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE bank_details SET status = %s WHERE id = %s"
+            values = (status, bank_id)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "Bank status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

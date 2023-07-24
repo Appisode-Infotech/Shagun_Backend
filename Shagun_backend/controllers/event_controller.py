@@ -247,16 +247,24 @@ def get_my_event_list(uid):
             # SQL query for events with event_date less than or equal to today
             sql_query_past_events = f"""
                 SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                    event.is_approved, event.status FROM event 
-                JOIN events_type ON event.event_type_id = events_type.id 
+                    event.is_approved, event.status,
+                    COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE event_id = event.id),0) AS total_amount,
+                    COUNT(DISTINCT transaction_history.sender_uid) AS sender_count
+                FROM event
+                LEFT JOIN events_type ON event.event_type_id = events_type.id
+                LEFT JOIN transaction_history ON event.id = transaction_history.event_id
                 WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) <= '{today.date()}'
             """
 
             # SQL query for events with event_date greater than today
             sql_query_upcoming_events = f"""
                 SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                    event.is_approved, event.status FROM event 
-                JOIN events_type ON event.event_type_id = events_type.id 
+                    event.is_approved, event.status,
+                    COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE event_id = event.id),0) AS total_amount,
+                    COUNT(DISTINCT transaction_history.sender_uid) AS sender_count
+                FROM event 
+                LEFT JOIN events_type ON event.event_type_id = events_type.id 
+                LEFT JOIN transaction_history ON event.id = transaction_history.event_id
                 WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) > '{today.date()}'
             """
 
@@ -306,7 +314,7 @@ def get_all_event_list():
             events = cursor.fetchall()
             return {
                 "status": True,
-                "event_list": responsegenerator.responseGenerator.generateResponse(events, EVENT_LIST)
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
             }, 200
 
     except pymysql.Error as e:
@@ -328,5 +336,42 @@ def get_all_active_events():
             }
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_city_list_for_user():
+    try:
+        with connection.cursor() as cursor:
+            get_location_query = """SELECT * FROM locations WHERE status=1"""
+            cursor.execute(get_location_query)
+            locations_list = cursor.fetchall()
+
+            return {
+                "status": True,
+                "city_list": responseGenerator.generateResponse(locations_list, ACTIVE_LOCATIONS_LIST)
+
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def set_event_status(event_id, status):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE event SET is_approved = %s WHERE id = %s"
+            values = (status, event_id)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "Event Status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
     except Exception as e:
         return {"status": False, "message": str(e)}, 301

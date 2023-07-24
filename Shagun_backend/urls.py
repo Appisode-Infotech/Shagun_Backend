@@ -13,7 +13,7 @@ Including another URLconf
     1. Import to include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+
 from django.urls import path
 
 from Shagun_backend.views import *
@@ -54,7 +54,17 @@ urlpatterns = [
     path('add_events_type', add_events_type, name='add_events_type'),
     path('add_kyc', add_kyc, name='add_kyc'),
     path('add_bank', add_bank, name='add_bank'),
-
+    path('location_popup_view', location_popup_view, name='location_popup_view'),
+    path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location, name='activate_deactivate_location'),
+    path('activate_deactivate_bank/<int:bank_id>/<int:status>/', activate_deactivate_bank, name='activate_deactivate_bank'),
+    path('activate_deactivate_users/<int:user_id>/<int:status>/', activate_deactivate_users, name='activate_deactivate_users'),
+    path('activate_deactivate_employee/<int:user_id>/<int:status>/', activate_deactivate_employee, name='activate_deactivate_employee'),
+    path('activate_deactivate_printers/<int:printer_id>/<int:status>/', activate_deactivate_printers, name='activate_deactivate_printers'),
+    path('activate_deactivate_event_type/<int:event_type_id>/<int:status>/', activate_deactivate_event_type, name='activate_deactivate_event_type'),
+    path('activate_deactivate_greeting_cards/<int:card_id>/<int:status>/', activate_deactivate_greeting_cards, name='activate_deactivate_greeting_cards'),
+    path('activate_deactivate_kyc/<int:kyc_id>/<int:status>/', activate_deactivate_kyc, name='activate_deactivate_kyc'),
+    path('activate_deactivate_event/<int:event_id>/<int:status>/', activate_deactivate_event, name='activate_deactivate_event'),
+    path('set_event_status/<int:event_id>/<int:status>/', set_event_status, name='set_event_status'),
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),
     # path('home', home, name='home'),
@@ -76,5 +86,7 @@ urlpatterns = [
     path('add_printer', add_printer, name='add_printer'),
     path('enable_disable_printer', enable_disable_printer, name='enable_disable_printer'),
     path('edit_printer', edit_printer, name='edit_printer'),
+    path('request_pullback', request_pullback, name='request_pullback'),
 
 ]
+

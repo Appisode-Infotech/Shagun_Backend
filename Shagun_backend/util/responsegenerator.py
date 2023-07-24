@@ -8,6 +8,7 @@ class responseGenerator:
     def generateResponse(cls, data, controller_type):
         if controller_type == CHECK_USER:
             return {
+                "id": data[0],
                 "name": data[2],
                 "email": data[3],
                 "phone": data[4],
@@ -18,6 +19,23 @@ class responseGenerator:
             }
 
         if controller_type == EVENT_LIST:
+            event_list = []
+            for events in data:
+                event_list.append(
+                    {
+                        "event_date": events[0],
+                        "event_name": events[2],
+                        "admins": json.loads(events[1]),
+                        "event_id": events[3],
+                        "is_approved": events[4],
+                        "status": events[5],
+                        "total_recieved_amount": events[6],
+                        "total_senders_count": events[7]
+                    }
+                )
+            return event_list
+
+        if controller_type == ALL_EVENT_LIST:
             event_list = []
             for events in data:
                 event_list.append(
@@ -285,7 +303,8 @@ class responseGenerator:
                     {
                         "bank_name": bank[0],
                         "acc_no": bank[1],
-                        "ifsc_code": bank[2]
+                        "ifsc_code": bank[2],
+                        "status": bank[3]
                     }
 
                 )
@@ -293,8 +312,35 @@ class responseGenerator:
 
         if controller_type == GET_KYC_DATA:
             return {
-                        data[0][0]: data[0][2],
-                        data[0][1]: data[0][3],
-                        "status": data[0][4]
+                data[0][0]: data[0][2],
+                data[0][1]: data[0][3],
+                "status": data[0][4]
+            }
+
+        if controller_type == BANK_LISTS:
+            bank_lists = []
+            for bank in data:
+                bank_lists.append(
+                    {
+                        "bank_id": bank[0],
+                        "bank_name": bank[1],
+                        "bank_logo": bank[2],
+                        "bank_status": bank[3]
                     }
+
+                )
+            return bank_lists
+
+        if controller_type == ACTIVE_LOCATIONS_LIST:
+            locations_lists = []
+            for bank in data:
+                locations_lists.append(
+                    {
+                        "city_id": bank[0],
+                        "city_name": bank[1]
+                    }
+
+                )
+            return locations_lists
+
 

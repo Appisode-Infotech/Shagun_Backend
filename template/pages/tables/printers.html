@@ -86,7 +86,7 @@
                     <div class="header-container">
                         <h4 class="card-title">Printers</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="redirectToAddPrintersPage()">
+                                onclick="window.location.href='{% url 'add_printer' %}'">
                             Printer
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
@@ -113,9 +113,10 @@
                                 <th>
                                     City
                                 </th>
+<!--                                <th>-->
+<!--                                    Address-->
+<!--                                </th>-->
                                 <th>
-                                    Address
-                                </th><th>
                                     Status
                                 </th>
                            </tr>
@@ -141,9 +142,9 @@
                                 <td>
                                     {{printer.city}}
                                 </td>
-                                <td>
-                                    {{printer.address}}
-                                </td>
+<!--                                <td>-->
+<!--                                    {{printer.address}}-->
+<!--                                </td>-->
                                 <td>
                                     {% if printer.status == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -163,8 +164,8 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="#">Active</a>
-                                            <a class="dropdown-item" href="#">Inactive</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_printers' printer.id 1 %}">Active</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_printers' printer.id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -215,11 +216,7 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
-<script>
-    function redirectToAddPrintersPage() {
-        window.location.href = '{% url "add_printer" %}';
-    }
-</script>
+
 </body>
 
 </html>

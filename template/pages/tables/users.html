@@ -77,15 +77,15 @@
                                 <th>
                                     Phone
                                 </th>
-                                <th>
-                                    Auth Type
-                                </th>
+<!--                                <th>-->
+<!--                                    Auth Type-->
+<!--                                </th>-->
                                 <th>
                                     KYC Status
                                 </th>
-                                <th>
-                                    Created on
-                                </th>
+<!--                                <th>-->
+<!--                                    Created on-->
+<!--                                </th>-->
                                 <th>
                                     User Status
                                 </th>
@@ -109,9 +109,9 @@
                                 <td>
                                     {{user.phone}}
                                 </td>
-                                <td>
-                                    {{user.auth_type}}
-                                </td>
+<!--                                <td>-->
+<!--                                    {{user.auth_type}}-->
+<!--                                </td>-->
                                 <td>
                                     {% if user.kyc == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -119,9 +119,9 @@
                                     <label class="badge badge-danger">Inactive</label>
                                     {% endif %}
                                 </td>
-                                <td>
-                                    {{user.created_on}}
-                                </td>
+<!--                                <td>-->
+<!--                                    {{user.created_on}}-->
+<!--                                </td>-->
                                 <td>
                                     {% if user.status == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -141,8 +141,8 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="#">Active</a>
-                                            <a class="dropdown-item" href="#">Inactive</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_users' user.id 1 %}">Active</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_users' user.id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>

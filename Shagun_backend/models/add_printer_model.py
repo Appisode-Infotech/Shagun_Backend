@@ -36,7 +36,7 @@ def to_class(c: Type[T], x: Any) -> dict:
 @dataclass
 class AddPrinterModel:
     store_name: str
-    city: int
+    city: str
     address: str
     lat_lng: str
     gst_no: str
@@ -50,7 +50,7 @@ class AddPrinterModel:
     def from_dict(obj: Any) -> 'AddPrinterModel':
         assert isinstance(obj, dict)
         store_name = from_str(obj.get("store_name"))
-        city = from_int(obj.get("city"))
+        city = from_str(obj.get("city"))
         address = from_str(obj.get("address"))
         lat_lng = from_str(obj.get("lat_lng"))
         gst_no = from_str(obj.get("gst_no"))
@@ -65,7 +65,7 @@ class AddPrinterModel:
     def to_dict(self) -> dict:
         result: dict = {}
         result["store_name"] = from_str(self.store_name)
-        result["city"] = from_int(self.city)
+        result["city"] = from_str(self.city)
         result["address"] = from_str(self.address)
         result["lat_lng"] = from_str(self.lat_lng)
         result["gst_no"] = from_str(self.gst_no)

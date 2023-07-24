@@ -85,7 +85,7 @@
                     <div class="header-container">
                         <h4 class="card-title">Events Type</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="redirectToAddEventTypePage()">
+                                onclick="window.location.href='{% url 'add_events_type' %}'">
                             Event Type
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
@@ -125,8 +125,8 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="#">Active</a>
-                                            <a class="dropdown-item" href="#">Inactive</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_event_type' event.event_type_id 1 %}">Active</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_event_type' event.event_type_id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -178,11 +178,7 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
-<script>
-    function redirectToAddEventTypePage() {
-        window.location.href = '{% url "add_events_type" %}';
-    }
-</script>
+
 </body>
 
 </html>

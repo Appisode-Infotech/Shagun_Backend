@@ -85,7 +85,7 @@
                     <div class="header-container">
                         <h4 class="card-title">Bank Details</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="redirectToAddBankPage()">
+                                onclick="window.location.href='{% url 'add_bank' %}'">
                             Bank Detail
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
@@ -158,8 +158,8 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="#">Active</a>
-                                            <a class="dropdown-item" href="#">Inactive</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_bank' bank.id 1 %}">Active</a>
+                                            <a class="dropdown-item" href="{% url 'activate_deactivate_bank' bank.id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -210,11 +210,6 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
-<script>
-    function redirectToAddBankPage() {
-        window.location.href = '{% url "add_bank" %}';
-    }
-</script>
 </body>
 
 </html>

@@ -27,6 +27,65 @@
           display: flex;
           justify-content: center;
         }
+        .dropbtn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+          background-color: #3e8e41;
+        }
+
+        #myInput {
+          box-sizing: border-box;
+          background-image: url('searchicon.png');
+          background-position: 14px 12px;
+          background-repeat: no-repeat;
+          font-size: 16px;
+          padding: 14px 20px 12px 45px;
+          border: none;
+          border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f6f6f6;
+          min-width: 230px;
+          max-width: 300px;
+          overflow: auto;
+          border: 1px solid #ddd;
+          z-index: 1;
+          height:400px;
+        }
+
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+
+
+
+
+
+
 
     </style>
 
@@ -51,7 +110,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Add New Kyc</h4>
-                                <form class="form-sample" action="/add_kyc" method="post">
+                                <form class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -59,17 +118,32 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">First Name</label>
+                                                <label class="col-sm-3 col-form-label">User</label>
                                                 <div class="col-sm-9">
-                                                    <input id="firstname" type="text" class="form-control"/>
+
+                                                    <input type="text" id="name" readonly onclick="myFunction()"
+                                                           placeholder="Search.." class="form-control">
+
+                                                    <div id="myDropdown" class="dropdown-content">
+                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                               onkeyup="filterFunction()" class="form-control">
+                                                        {% for users in user_data %}
+                                                        <a href="#about"
+                                                           onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
+                                                            {{users.phone}}</a>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <input type="hidden" id="uid" name="uid">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Last Name</label>
+                                                <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" id="full_name" name="full_name"
+                                                           class="form-control"
+                                                           placeholder="username">
                                                 </div>
                                             </div>
                                         </div>
@@ -79,7 +153,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Gender</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control">
+                                                    <select class="form-control" name="gender">
                                                         <option>Male</option>
                                                         <option>Female</option>
                                                     </select>
@@ -90,7 +164,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Date of Birth</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="dd/mm/yyyy"/>
+                                                    <input class="form-control" placeholder="dd/mm/yyyy" id="dob"
+                                                           name="dob"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -98,42 +173,105 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Category</label>
+                                                <label class="col-sm-3 col-form-label">Identification Proof1</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>Category1</option>
-                                                        <option>Category2</option>
-                                                        <option>Category3</option>
-                                                        <option>Category4</option>
+                                                    <select class="form-control" name="identification_proof1">
+                                                        <option>Aadhar Card</option>
+                                                        <option>Voter ID</option>
+                                                        <option>Driving License</option>
+                                                        <option>Ration Card</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Membership</label>
-                                                <div class="col-sm-4">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="radio" class="form-check-input"
-                                                                   name="membershipRadios" id="membershipRadios1"
-                                                                   value="" checked>
-                                                            Free
-                                                        </label>
-                                                    </div>
+                                                <label class="col-sm-3 col-form-label">Identification Number1</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="identification_number1"
+                                                           name="identification_number1"
+                                                           class="form-control"
+                                                           placeholder="username">
                                                 </div>
-                                                <div class="col-sm-5">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="radio" class="form-check-input"
-                                                                   name="membershipRadios" id="membershipRadios2"
-                                                                   value="option2">
-                                                            Professional
-                                                        </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Identification Proof2</label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control" name="identification_proof2">
+                                                        <option>PAN CARD</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Identification Number2</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="identification_number2"
+                                                           name="identification_number2"
+                                                           class="form-control"
+                                                           placeholder="username">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <!--                                        <div class="col-md-6">-->
+                                        <!--                                            <div class="form-group row">-->
+                                        <!--                                                <label class="col-sm-3 col-form-label">Identification Doc1</label>-->
+                                        <!--                                                <div class="col-sm-9">-->
+                                        <!--                                                    <input type="file" id="fileInput1" name="document1"-->
+                                        <!--                                                           accept=".jpg, .jpeg, .png, .gif, .pdf" class="file-upload-default">-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </div>-->
+                                        <!--                                        </div>-->
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Identification Doc1</label>
+                                                <div class="col-sm-9">
+                                                    <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
+                                                           name="document1" class="file-upload-default">
+                                                    <div class="input-group col-xs-12">
+                                                        <input type="text" class="form-control file-upload-info"
+                                                               disabled
+                                                               placeholder="Upload Image">
+                                                        <span class="input-group-append">
+                                                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                                </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Identification Doc2</label>
+                                                <div class="col-sm-9">
+                                                    <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
+                                                           name="document2" class="file-upload-default">
+                                                    <div class="input-group col-xs-12">
+                                                        <input type="text" class="form-control file-upload-info"
+                                                               disabled
+                                                               placeholder="Upload Image">
+                                                        <span class="input-group-append">
+                                                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                                </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--                                        <div class="col-md-6">-->
+                                        <!--                                            <div class="form-group row">-->
+                                        <!--                                                <label class="col-sm-3 col-form-label">Identification Doc2</label>-->
+                                        <!--                                                <div class="col-sm-9">-->
+                                        <!--                                                    <input type="file" id="fileInput2" name="document2"-->
+                                        <!--                                                           accept=".jpg, .jpeg, .png, .gif, .pdf" class="form-control">-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </div>-->
+                                        <!--                                        </div>-->
                                     </div>
                                     <p class="card-description">
                                         Address
@@ -143,7 +281,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address 1</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="adress1"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -151,7 +289,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">State</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="state"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -161,7 +299,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address 2</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="adress2"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -169,7 +307,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Postcode</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="postcode"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -179,7 +317,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"/>
+                                                    <input type="text" class="form-control" name="city"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,11 +325,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Country</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control">
-                                                        <option>America</option>
-                                                        <option>Italy</option>
-                                                        <option>Russia</option>
-                                                        <option>Britain</option>
+                                                    <select class="form-control" name="country">
+                                                        <option>India</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -223,6 +358,41 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+
+<script>
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function filterFunction() {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+function setValue(value1, value2) {
+  document.getElementById("name").value = value1;
+  document.getElementById("uid").value = value2;
+  myFunction();
+}
+
+
+
+
+
+
+</script>
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
@@ -245,6 +415,7 @@
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
+
 </body>
 
 </html>

@@ -14,7 +14,7 @@ from Shagun_backend.controllers import user_controller, event_controller, app_da
     bank_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
-    gifts_transaction_model
+    gifts_transaction_model, request_callback_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
 
 
@@ -339,6 +339,12 @@ def app_compatibility(request):
     response, status_code = app_data_controller.app_compatibility(app_obj)
     return JsonResponse(response, status=status_code)
 
+@api_view(['POST'])
+def update_callback_request(request):
+    callback_obj = request_callback_model.request_callback_model_from_dict(request.data)
+    response, status_code = request_controller.update_callback_request(callback_obj)
+    return JsonResponse(response, status=status_code)
+
 
 # This API is used to verify the existence of a user. It checks if the provided user details or credentials match
 # any registered user in the backend system.
@@ -539,6 +545,12 @@ def enable_disable_events_type(request):
 
 
 @api_view(['POST'])
+def get_events_type_by_id(request):
+    response, status_code = event_controller.events_type_by_id(request.data['id'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
 def edit_events_type(request):
     response, status_code = event_controller.edit_events_type(request.data['event_type_name'], request.data['id'])
     return JsonResponse(response, status=status_code)
@@ -567,6 +579,11 @@ def edit_location(request):
     response, status_code = event_controller.edit_location(request.data['id'], request.data['city_name'])
     return JsonResponse(response, status=status_code)
 
+@api_view(['POST'])
+def get_location_by_id(request):
+    response, status_code = event_controller.get_location_by_id(request.data['id'])
+    return JsonResponse(response, status=status_code)
+
 
 # @api_view(['POST'])
 # def add_printer(request):
@@ -589,8 +606,9 @@ def edit_printer(request):
 
 
 @api_view(['POST'])
-def request_pullback(request):
-    response, status_code = request_controller.request_pullback(request.data['uid'], request.data['type'])
+def request_callback(request):
+    request_obj = request_callback_model.request_callback_model_from_dict(request.data)
+    response, status_code = request_controller.request_callback(request_obj)
     return JsonResponse(response, status=status_code)
 
 
@@ -688,6 +706,13 @@ def get_greeting_cards(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
+@api_view(['POST'])
+def get_greetings_by_id(request):
+    response, status_code = greeting_cards_controller.get_greetings_by_id(request.data['id'])
+    return JsonResponse(response, status=status_code)
+
 
 
 @api_view(['POST'])

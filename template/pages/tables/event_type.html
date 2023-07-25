@@ -63,7 +63,6 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-
     </style>
 </head>
 
@@ -125,15 +124,17 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_event_type' event.event_type_id 1 %}">Active</a>
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_event_type' event.event_type_id 0 %}">Inactive</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_event_type' event.event_type_id 1 %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_event_type' event.event_type_id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-info btn-fw">Edit
+                                    <button type="button" class="btn btn-outline-info btn-fw" onclick="toggleForm()">
+                                        Edit
                                     </button>
-                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -178,6 +179,29 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
+<script>
+        function toggleForm() {
+            var formContainer = document.getElementById("editFormContainer");
+            if (formContainer.style.display === "none") {
+                formContainer.style.display = "block";
+                document.addEventListener("click", hideFormOnClickOutside);
+            } else {
+                formContainer.style.display = "none";
+                document.removeEventListener("click", hideFormOnClickOutside);
+            }
+        }
+
+        function hideFormOnClickOutside(event) {
+            var formContainer = document.getElementById("editFormContainer");
+            if (!formContainer.contains(event.target) && event.target.tagName !== "BUTTON") {
+                formContainer.style.display = "none";
+                document.removeEventListener("click", hideFormOnClickOutside);
+            }
+        }
+
+
+
+</script>
 
 </body>
 

@@ -1,7 +1,8 @@
 import pymysql
 from django.db import connection
 
-from Shagun_backend.util.constants import GREETING_CARDS
+from Shagun_backend.util import responsegenerator
+from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
@@ -58,5 +59,22 @@ def disable_greeting_cards(event_id, estatus):
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
 
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_greetings_by_id(gre_id):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = " SELECT id, card_name FROM greeting_cards WHERE id=%s;"
+            cursor.execute(sql_query, [gre_id])
+            greeting = cursor.fetchone()
+            return {
+                  "status": True,
+                  "greetings": responsegenerator.responseGenerator.generateResponse(greeting, GREETING_CARDS_BY_ID)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301

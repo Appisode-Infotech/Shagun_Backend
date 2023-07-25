@@ -49,6 +49,24 @@ def enable_disable_event(e_id, etstatus):
         return {"status": False, "message": str(e)}, 301
 
 
+def events_type_by_id(et_id):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = " SELECT id, event_type_name FROM events_type WHERE id= %s;"
+            cursor.execute(sql_query, [et_id,])
+            events = cursor.fetchone()
+            return {
+                "status": True,
+                "event_type": responsegenerator.responseGenerator.generateResponse(events, EVENT_TYPE_BY_ID)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+
 def get_event_list(uid):
     try:
         with connection.cursor() as cursor:
@@ -200,6 +218,23 @@ def edit_location(lid, lcity_name):
                 "status": True,
                 "message": "Location edited successfully"
             }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_location_by_id(loc_id):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = " SELECT id, city_name FROM locations WHERE id=%s;"
+            cursor.execute(sql_query, [loc_id])
+            location = cursor.fetchone()
+            return {
+                  "status": True,
+                  "location": responsegenerator.responseGenerator.generateResponse(location, EVENT_TYPE_BY_ID)
+            }, 200
+
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:

@@ -88,6 +88,7 @@
           cursor: pointer;
         }
 
+
     </style>
 
 </head>
@@ -111,7 +112,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Add New Printing Vendor</h4>
-                                <form class="form-sample" action="/add_printer" method="post" enctype="multipart/form-data">
+                                <form class="form-sample" action="/add_printer" method="post"
+                                      enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Printer info
@@ -195,7 +197,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">User Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="email" class="form-control" name="printer_user_name"placeholder="example@gmail.com"/>
+                                                    <input type="email" class="form-control" name="printer_user_name"
+                                                           placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -237,6 +240,7 @@
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton" disabled>
                                     </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -259,33 +263,45 @@
     <!-- page-body-wrapper ends -->
 </div>
 
-<script>
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
 
-function filterFunction() {
-  var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        const dropdown = document.getElementById("myDropdown");
+        dropdown.classList.toggle("show");
     }
-  }
-}
-function setValue(value1, value2) {
-  document.getElementById("name").value = value1;
-  document.getElementById("city").value = value2;
-  myFunction();
-}
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    function setValue(value1, value2) {
+        document.getElementById("name").value = value1;
+        document.getElementById("city").value = value2;
+        myFunction();
+    }
+
+    // Add an event listener to the document to close the dropdown when clicking outside
+    document.addEventListener("click", function(event) {
+        const dropdown = document.getElementById("myDropdown");
+        const nameInput = document.getElementById("name");
+        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
 </script>
 
 
@@ -320,6 +336,7 @@ function setValue(value1, value2) {
 
     // Add event listeners to trigger validation when input changes
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
+
 
 </script>
 <!-- container-scroller -->

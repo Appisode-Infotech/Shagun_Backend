@@ -80,13 +80,17 @@ urlpatterns = [
     path('enable_disable_events_type', enable_disable_events_type, name='enable_disable_events_type'),
     path('edit_events_type', edit_events_type, name='edit_events_type'),
     path('get_event_type_list', get_event_type_list, name='get_event_type_list'),
+    path('get_events_type_by_id', get_events_type_by_id, name='get_events_type_by_id'),
     path('add_location', add_location, name='add_location'),
     path('enable_disable_location', enable_disable_location, name='enable_disable_location'),
     path('edit_location', edit_location, name='edit_location'),
+    path('get_location_by_id', get_location_by_id, name='get_location_by_id'),
     path('add_printer', add_printer, name='add_printer'),
     path('enable_disable_printer', enable_disable_printer, name='enable_disable_printer'),
     path('edit_printer', edit_printer, name='edit_printer'),
-    path('request_pullback', request_pullback, name='request_pullback'),
+    path('get_greetings_by_id', get_greetings_by_id, name='get_greetings_by_id'),
+    path('request_callback', request_callback, name='request_callback'),
+    path('update_callback_request', update_callback_request, name='update_callback_request'),
 
 ]
 

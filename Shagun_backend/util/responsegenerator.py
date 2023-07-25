@@ -71,6 +71,12 @@ class responseGenerator:
                     })
             return event_type_list
 
+        if controller_type == EVENT_TYPE_BY_ID:
+            return {
+                "id": data[0],
+                "event_type_name": data[1]
+            }
+
         if controller_type == APP_COMPATIBILITY:
             return {
                 "app_name": data[0],
@@ -166,6 +172,12 @@ class responseGenerator:
                 )
             return greeting_cards
 
+        if controller_type == GREETING_CARDS_BY_ID:
+            return {
+                "id": data[0],
+                "card_name": data[1]
+            }
+
         if controller_type == TRACK_ORDER:
             track_order = []
             for order in data:
@@ -202,6 +214,12 @@ class responseGenerator:
                     }
                 )
             return location_lists
+
+        if controller_type == LOCATION_BY_ID:
+            return {
+                "id": data[0],
+                "city_name": data[1]
+            }
 
         if controller_type == ALL_KYC_DATA:
             kyc_data = []

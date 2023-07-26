@@ -72,6 +72,7 @@ urlpatterns = [
     path('edit_bank/<int:bank_id>/', edit_bank, name='edit_bank'),
     path('edit_employee/<int:user_id>/', edit_employee, name='edit_employee'),
     path('edit_printer/<int:printer_id>/', edit_printer, name='edit_printer'),
+    path('edit_event/<int:event_id>/', edit_event, name='edit_event'),
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),
     path('get_users_by_name_or_phone', get_users_by_name_or_phone, name='get_users_by_name_or_phone'),

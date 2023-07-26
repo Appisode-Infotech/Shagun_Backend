@@ -404,6 +404,11 @@ def edit_printer(request, printer_id):
         return redirect('sign_up')
 
 
+
+def edit_event(request, event_id):
+    return render(request, 'pages/tables/edit_event.html')
+
+
 # @api_view(['POST'])
 # def add_employee(request):
 #     emp_obj = employee_model.add_employee_model_from_dict(request.data)

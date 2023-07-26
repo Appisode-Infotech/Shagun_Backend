@@ -63,6 +63,26 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
+
+        /* Styling for the centered popup */
+        #popupDiv {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid lightskyblue;
+            padding: 20px;
+            background-color: #fff;
+            z-index: 9999;
+            background-color: #f0f0f0;
+        }
+
+        .center-button {
+          display: flex;
+          justify-content: center;
+        }
+
     </style>
 </head>
 
@@ -132,9 +152,33 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-info btn-fw" onclick="toggleForm()">
-                                        Edit
-                                    </button>
+                                    <button id="showPopupBtn" class="btn btn-outline-info btn-fw">Edit</button>
+                                    <div id="popupDiv">
+                                        <form class="form-sample" action="/add_kyc" method="post">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-3 col-form-label">Event ID</label>
+                                                        <div class="col-sm-9">
+                                                            <label type="text" class="form-control">{{ event.event_type_id }}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-3 col-form-label">Name</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" name="name" value="{{ event.event_type_name }}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="center-button">
+                                                <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -179,6 +223,27 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Function to show the popup div
+    $("#showPopupBtn").click(function() {
+        $("#popupDiv").fadeIn();
+    });
+
+    // Function to hide the popup div when clicking outside it
+    $(document).click(function(event) {
+        if (!$(event.target).closest("#popupDiv, #showPopupBtn").length) {
+            $("#popupDiv").fadeOut();
+        }
+    });
+});
+
+
+
+</script>
 <script>
         function toggleForm() {
             var formContainer = document.getElementById("editFormContainer");

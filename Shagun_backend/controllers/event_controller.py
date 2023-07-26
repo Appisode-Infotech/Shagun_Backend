@@ -49,22 +49,29 @@ def enable_disable_event(e_id, etstatus):
         return {"status": False, "message": str(e)}, 301
 
 
-def events_type_by_id(et_id):
+def get_event_by_id(et_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = " SELECT id, event_type_name FROM events_type WHERE id= %s;"
-            cursor.execute(sql_query, [et_id,])
-            events = cursor.fetchone()
-            return {
-                "status": True,
-                "event_type": responsegenerator.responseGenerator.generateResponse(events, EVENT_TYPE_BY_ID)
-            }, 200
+            sql_query = f""" SELECT * FROM event WHERE id = '{et_id}'"""
+            cursor.execute(sql_query)
+            event = cursor.fetchone()
+            if event is not None:
+                print(event)
+                return {
+                      "status": True,
+                      "event_list": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "event": None
+                }, 301
+
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
 
 
 def get_event_list(uid):
@@ -155,6 +162,29 @@ def edit_events_type(lid, event_type_name):
         return {"status": False, "message": str(e)}, 301
 
 
+def events_type_by_id(et_id):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = " SELECT id, event_type_name FROM events_type WHERE id= %s;"
+            cursor.execute(sql_query, [et_id,])
+            events = cursor.fetchone()
+            if events is not None:
+                return {
+                    "status": True,
+                    "event_type": responsegenerator.responseGenerator.generateResponse(events, EVENT_TYPE_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "event_type": None
+                }, 301
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def get_event_type_list_for_user():
     try:
         with connection.cursor() as cursor:
@@ -230,10 +260,16 @@ def get_location_by_id(loc_id):
             sql_query = " SELECT id, city_name FROM locations WHERE id=%s;"
             cursor.execute(sql_query, [loc_id])
             location = cursor.fetchone()
-            return {
-                  "status": True,
-                  "location": responsegenerator.responseGenerator.generateResponse(location, EVENT_TYPE_BY_ID)
-            }, 200
+            if location is not None:
+                return {
+                      "status": True,
+                      "location": responsegenerator.responseGenerator.generateResponse(location, EVENT_TYPE_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "location": None
+                }, 301
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -337,6 +373,33 @@ def get_my_event_list(uid):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def search_user_event(uid):
+    try:
+        with connection.cursor() as cursor:
+            sql_query_upcoming_events = f"""
+                            SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                                event.is_approved, event.status
+                            FROM event 
+                            LEFT JOIN events_type ON event.event_type_id = events_type.id 
+                            WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) > '{today.date()}' """
+            uid_json = json.dumps({'uid': uid})
+            cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
+            upcoming_events = cursor.fetchall()
+            print(upcoming_events)
+
+            return {
+                "status": True,
+                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, SEARCH_EVENT_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 
 
 def get_all_event_list():

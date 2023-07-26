@@ -73,6 +73,24 @@ def edit_user(edit_reg_obj):
         return {"status": False, "message": str(e)}, 301
 
 
+def get_all_users():
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 3"""
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def deactivate_user(uid, esstatus):
     try:
         with connection.cursor() as cursor:
@@ -87,6 +105,24 @@ def deactivate_user(uid, esstatus):
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
 
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_users_by_name_or_phone(search):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f""" SELECT * FROM users WHERE name LIKE '%{search}%' OR phone LIKE '%{search}%' """
+            cursor.execute(sql_query)
+            user_data = cursor.fetchall()
+            print(user_data)
+            return {
+                "status": True,
+                "user": responseGenerator.generateResponse(user_data, GET_USERS_BY_NAME_OR_PHONE)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
@@ -212,6 +248,30 @@ def get_kyc_data():
         return {"status": False, "message": str(e)}, 301
 
 
+def get_kyc_by_id(kyc_id):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f""" SELECT uk.*, u.name FROM user_kyc AS uk 
+            LEFT JOIN users AS u ON uk.uid = u.uid
+            WHERE uk.id = '{kyc_id}'"""
+            cursor.execute(sql_query)
+            kyc_data = cursor.fetchone()
+            if kyc_data is not None:
+                return {
+                    "status": True,
+                    "kyc": responsegenerator.responseGenerator.generateResponse(kyc_data, KYC_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "KYC": None
+                }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def add_bank_details(bank_obj):
     try:
         with connection.cursor() as cursor:
@@ -222,10 +282,10 @@ def add_bank_details(bank_obj):
                 cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
                                (bank_obj.uid,))
                 sql_query = "INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number," \
-                            "status, added_by, modified_on) " \
-                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                            "status, added_by, modified_on,modified_by) " \
+                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
-                          bank_obj.account_number, True, bank_obj.added_by, today)
+                          bank_obj.account_number, True, bank_obj.added_by, today, bank_obj.added_by)
                 cursor.execute(sql_query, values)
                 return {
                     "status": True,
@@ -244,7 +304,7 @@ def add_bank_details(bank_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-def update_bank_details(bank_obj):
+def edit_bank_details(bank_obj):
     try:
         with connection.cursor() as cursor:
             query = "SELECT * FROM users WHERE uid = %s;"
@@ -252,9 +312,9 @@ def update_bank_details(bank_obj):
             user = cursor.fetchone()
             if user is not None:
                 sql_query = "UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, " \
-                            "account_number = %s, status = %s, added_by = %s, modified_on = %s WHERE uid = %s"
+                            "account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          True, bank_obj.added_by, today, bank_obj.uid)
+                          True, today, bank_obj.modified_by, bank_obj.uid )
                 cursor.execute(sql_query, values)
 
                 return {
@@ -274,6 +334,28 @@ def update_bank_details(bank_obj):
         return {"status": False, "message": str(e)}, 301
 
 
+def get_bank_by_id(bnk_id):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f""" SELECT * FROM bank_details WHERE id = '{bnk_id}'"""
+            cursor.execute(sql_query)
+            bank_data = cursor.fetchone()
+            if bank_data is not None:
+                return {
+                    "status": True,
+                    "bank": responsegenerator.responseGenerator.generateResponse(bank_data, BANK_DETAILS_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "bank_details": None
+                }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def get_all_bank_data():
     try:
         with connection.cursor() as cursor:
@@ -286,24 +368,6 @@ def get_all_bank_data():
             return {
                 "status": True,
                 "bank_data": responsegenerator.responseGenerator.generateResponse(bank_data_query, ALL_BANK_DATA)
-            }, 200
-
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
-
-
-def get_all_users():
-    try:
-        with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM users WHERE role = 3"""
-            cursor.execute(users_data_query)
-            user_data = cursor.fetchall()
-            return {
-                "status": True,
-                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
             }, 200
 
     except pymysql.Error as e:
@@ -332,6 +396,24 @@ def add_employee(emp_obj):
         return {"status": False, "message": str(e), "user": None}, 301
     except Exception as e:
         return {"status": False, "message": str(e), "user": None}, 301
+
+
+def edit_employee(emp_obj):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = "UPDATE users SET name = %s, email = %s, phone = %s, status = %s, city = %s," \
+                        " password = %s WHERE uid = %s"
+            values = (
+            emp_obj.name, emp_obj.email, emp_obj.phone, True, emp_obj.city, emp_obj.password, emp_obj.email)
+            cursor.execute(sql_query, values)
+            return {
+                "status": True,
+                "message": "Employee edited successfully"
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
 
 
 def enable_disable_employee(uid, status):
@@ -392,6 +474,29 @@ def employee_login(uname, pwd):
             return {
                 "msg": "user not exist, Please register",
             }
+
+
+def get_employee_by_id(emp_id):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city,password
+             FROM users WHERE id = '{emp_id}'"""
+            cursor.execute(sql_query)
+            emp_data = cursor.fetchone()
+            if emp_data is not None:
+                return {
+                    "status": True,
+                    "emp": responsegenerator.responseGenerator.generateResponse(emp_data, EMPLOYEE_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "employee": None
+                }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
 
 
 def get_user_profile(uid):
@@ -463,6 +568,72 @@ def disable_bank(bank_id, status):
             return {
                 "status": True,
                 "message": "Bank status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def edit_user_kyc(obj):
+    try:
+        with connection.cursor() as cursor:
+            print("in edit kyc controller =================================================")
+            print(obj.identification_doc2)
+            print(obj.identification_doc1)
+            # Prepare the SQL query for updating the data
+            sql = "UPDATE user_kyc SET "
+            values = []
+
+            # Check each field in the object and update the SQL query accordingly
+            if obj.identification_doc1 is None and obj.identification_doc2 is None:
+                print("both none")
+                sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
+                sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, postcode=%s, "
+                sql += "city=%s, country=%s WHERE id=%s"
+                values.extend([
+                    obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
+                    obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
+                    obj.postcode, obj.city, obj.country, obj.id
+                ])
+            elif obj.identification_doc1 is None:
+                sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
+                sql += "address_line1=%s, state=%s, address_line2=%s, postcode=%s, city=%s, country=%s, identification_doc2=%s "
+                sql += "WHERE id=%s"
+                values.extend([
+                    obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
+                    obj.adress1, obj.state, obj.adress2, obj.postcode, obj.city, obj.country,
+                    obj.identification_doc2, obj.id
+                ])
+            elif obj.identification_doc2 is None:
+                sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
+                sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, "
+                sql += "postcode=%s, city=%s, country=%s, identification_doc1=%s WHERE id=%s"
+                values.extend([
+                    obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
+                    obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
+                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.id
+                ])
+            else:
+                print("both are none")
+                # Handle the case where both identification_doc1 and identification_doc2 are not None
+                sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
+                sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, "
+                sql += "postcode=%s, city=%s, country=%s, identification_doc1=%s, identification_doc2=%s WHERE id=%s"
+                values.extend([
+                    obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
+                    obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
+                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.identification_doc2, obj.id
+                ])
+
+            print(sql)
+            cursor.execute(sql, values)
+            connection.commit()
+            return {
+                "status": True,
+                "message": "KYC status changed successfully"
             }, 200
 
     except pymysql.Error as e:

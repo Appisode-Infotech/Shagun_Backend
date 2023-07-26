@@ -346,6 +346,8 @@
     <!-- page-body-wrapper ends -->
 </div>
 
+<!-- my_template.html -->
+
 <script>
 // Function to toggle a specific dropdown based on its ID
 function toggleDropdown(dropdownId) {
@@ -386,10 +388,16 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
   }
 }
 
-
+  document.addEventListener("click", function(event) {
+        const dropdown = document.getElementById("dropdownId");
+        const nameInput = document.getElementById("name");
+        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
 
 </script>
-<!-- my_template.html -->
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const addSubEventButton = document.getElementById('addSubEventButton');
@@ -474,8 +482,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         addEventAdminButton.addEventListener('click', addEventAdmin);
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
-
-
 
 </script>
 

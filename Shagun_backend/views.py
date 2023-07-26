@@ -14,7 +14,7 @@ from Shagun_backend.controllers import user_controller, event_controller, app_da
     bank_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
-    gifts_transaction_model, request_callback_model
+    gifts_transaction_model, request_callback_model, greeting_cards_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
 
 
@@ -182,7 +182,9 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
+            print(kyc_obj)
             user_controller.add_user_kyc(kyc_obj)
+            print(user_controller.add_user_kyc(kyc_obj))
             return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_all_users()
@@ -195,6 +197,7 @@ def add_bank(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             bank_obj = bank_details_model.bank_details_model_from_dict(request.POST)
+            print(bank_obj)
             user_controller.add_bank_details(bank_obj)
             return redirect('manage_bank_details')
         else:
@@ -285,6 +288,7 @@ def activate_deactivate_event_type(request, event_type_id, status):
     else:
         return redirect('sign_up')
 
+
 def activate_deactivate_event(request, event_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         event_controller.enable_disable_event(event_id, status)
@@ -292,14 +296,43 @@ def activate_deactivate_event(request, event_id, status):
     else:
         return redirect('sign_up')
 
+
+def edit_kyc(request, event_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        form_data = request.POST
+        if request.method == 'POST':
+            for file_key, file_obj in request.FILES.items():
+                file_name = f"""{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
+                form_data = form_data.copy()
+                form_data[identification_doc_key] = file_name
+                with default_storage.open(file_name, 'wb+') as destination:
+                    for chunk in file_obj.chunks():
+                        destination.write(chunk)
+
+            kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
+            print(kyc_obj)
+            user_controller.edit_user_kyc(kyc_obj)
+            return redirect('manage_kyc')
+        else:
+            kyc_data, status_code = user_controller.get_kyc_by_id(event_id)
+            print(kyc_data)
+            users_list, status_code = user_controller.get_all_users()
+            context = {
+                "kyc_data": kyc_data,
+                "user_list": users_list
+            }
+            return render(request, 'pages/tables/edit_kyc.html', context)
+    else:
+        return redirect('sign_up')
+
+
 def set_event_status(request, event_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         event_controller.set_event_status(event_id, status)
         return redirect('manage_event')
     else:
         return redirect('sign_up')
-
-
 
 
 def activate_deactivate_greeting_cards(request, card_id, status):
@@ -318,6 +351,59 @@ def activate_deactivate_kyc(request, kyc_id, status):
         return redirect('sign_up')
 
 
+def edit_bank(request, bank_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            bank_update_obj = bank_details_model.bank_details_model_from_dict(request.POST)
+            user_controller.edit_bank_details(bank_update_obj)
+            return redirect('manage_bank_details')
+        else:
+            bank_data, status_code = user_controller.get_bank_by_id(bank_id)
+            bank_list, status_code = bank_controller.get_all_banks_list()
+            context = {
+                "bank_data": bank_data,
+                "bank_list": bank_list
+            }
+            return render(request, 'pages/tables/edit_bank.html', context)
+    else:
+        return redirect('sign_up')
+
+
+def edit_employee(request, user_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            emp_obj = employee_model.add_employee_model_from_dict(request.POST)
+            user_controller.edit_employee(emp_obj)
+            return redirect('manage_employee')
+        else:
+            response, status_code = user_controller.get_employee_by_id(user_id)
+            return render(request, 'pages/tables/edit_employee.html', response)
+    else:
+        return redirect('sign_up')
+
+
+def edit_printer(request, printer_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            print(request.POST)
+            store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
+            response, status_code = store_controller.edit_printer(store_obj)
+            print(response)
+            return redirect('manage_printers')
+        else:
+            printer_data, status_code = store_controller.get_printer_by_id(printer_id)
+            location, status_code = event_controller.get_city_list_for_user()
+            context = {
+                "printer_data": printer_data,
+                "location": location
+            }
+
+            return render(request, 'pages/tables/edit_printer.html', context)
+
+    else:
+        return redirect('sign_up')
+
+
 # @api_view(['POST'])
 # def add_employee(request):
 #     emp_obj = employee_model.add_employee_model_from_dict(request.data)
@@ -331,6 +417,19 @@ def enable_disable_employee(request):
     return JsonResponse(response, status=status_code)
 
 
+# @api_view(['POST'])
+# def edit_employee(request):
+#     emp_obj = employee_model.add_employee_model_from_dict(request.data)
+#     response, status_code = user_controller.edit_employee(emp_obj)
+#     return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def get_employee_by_id(request):
+    response, status_code = user_controller.get_employee_by_id(request.data['id'])
+    return JsonResponse(response, status=status_code)
+
+
 # This API ensure that all Shagun app users are using compatible versions of the application, promoting a consistent
 # and seamless user experience while maintaining the ability to leverage the latest features and enhancements.
 @api_view(['POST'])
@@ -338,6 +437,7 @@ def app_compatibility(request):
     app_obj = app_data_model.app_data_model_from_dict(request.data)
     response, status_code = app_data_controller.app_compatibility(app_obj)
     return JsonResponse(response, status=status_code)
+
 
 @api_view(['POST'])
 def update_callback_request(request):
@@ -366,6 +466,12 @@ def check_user(request):
             "user": None
 
         }, status=status_code)
+
+
+@api_view(['POST'])
+def get_users_by_name_or_phone(request):
+    response, status_code = user_controller.get_users_by_name_or_phone(request.data['search'])
+    return JsonResponse(response, status=status_code)
 
 
 # This API allows new users to register in the Shagun app. It handles the registration process, validating
@@ -461,11 +567,18 @@ def enable_disable_kyc(request):
     return JsonResponse(response, status=status_code)
 
 
+@api_view(['POST'])
+def get_kyc_by_id(request):
+    response, status_code = user_controller.get_kyc_by_id(request.data['id'])
+    return JsonResponse(response, status=status_code)
+
+
 # This API enables to securely add their bank account details to the Shagun app. It ensures the confidentiality
 # and integrity of the sensitive information provided by the user, storing it securely in the backend database.
 @api_view(['POST'])
 def add_bank_details(request):
     bank_obj = bank_details_model.bank_details_model_from_dict(request.data)
+    print(bank_obj)
     response, status_code = user_controller.add_bank_details(bank_obj)
     return JsonResponse(response, status=status_code)
 
@@ -473,9 +586,15 @@ def add_bank_details(request):
 # Users can utilize this API to update their bank account details if needed. It allows for the modification of
 # information associated with the user's bank account, such as account number or any other relevant details.
 @api_view(['POST'])
-def update_bank_details(request):
+def edit_bank_details(request):
     bank_update_obj = bank_details_model.bank_details_model_from_dict(request.data)
-    response, status_code = user_controller.update_bank_details(bank_update_obj)
+    response, status_code = user_controller.edit_bank_details(bank_update_obj)
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def get_bank_by_id(request):
+    response, status_code = user_controller.get_bank_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
 
 
@@ -506,6 +625,18 @@ def enable_disable_event(request):
 @api_view(['POST'])
 def get_my_event_list(request):
     response, status_code = event_controller.get_my_event_list(request.data['uid'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def get_event_by_id(request):
+    response, status_code = event_controller.get_event_by_id(request.data['id'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def search_user_event(request):
+    response, status_code = event_controller.search_user_event(request.data['uid'])
     return JsonResponse(response, status=status_code)
 
 
@@ -579,6 +710,7 @@ def edit_location(request):
     response, status_code = event_controller.edit_location(request.data['id'], request.data['city_name'])
     return JsonResponse(response, status=status_code)
 
+
 @api_view(['POST'])
 def get_location_by_id(request):
     response, status_code = event_controller.get_location_by_id(request.data['id'])
@@ -598,10 +730,16 @@ def enable_disable_printer(request):
     return JsonResponse(response, status=status_code)
 
 
+# @api_view(['POST'])
+# def edit_printer(request):
+#     store_obj = add_printer_model.add_printer_model_from_dict(request.data)
+#     response, status_code = store_controller.edit_printer(store_obj)
+#     return JsonResponse(response, status=status_code)
+
+
 @api_view(['POST'])
-def edit_printer(request):
-    store_obj = add_printer_model.add_printer_model_from_dict(request.data)
-    response, status_code = store_controller.edit_printer(store_obj)
+def get_printer_by_id(request):
+    response, status_code = store_controller.get_printer_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
 
 
@@ -709,10 +847,16 @@ def get_greeting_cards(request):
 
 
 @api_view(['POST'])
+def edit_greeting_cards(request):
+    grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.data)
+    response, status_code = greeting_cards_controller.edit_greeting_cards(grt_obj)
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
 def get_greetings_by_id(request):
     response, status_code = greeting_cards_controller.get_greetings_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
-
 
 
 @api_view(['POST'])

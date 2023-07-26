@@ -18,6 +18,21 @@ class responseGenerator:
                 "created_on": data[8]
             }
 
+        if controller_type == EMPLOYEE_BY_ID:
+            return {
+                "id": data[0],
+                "uid": data[1],
+                "name": data[2],
+                "email": data[3],
+                "phone": data[4],
+                "profile_pic": data[5],
+                "created_on": data[6],
+                "status": data[7],
+                "role": data[8],
+                "city": data[9],
+                "password": data[10]
+            }
+
         if controller_type == EVENT_LIST:
             event_list = []
             for events in data:
@@ -31,6 +46,21 @@ class responseGenerator:
                         "status": events[5],
                         "total_recieved_amount": events[6],
                         "total_senders_count": events[7]
+                    }
+                )
+            return event_list
+
+        if controller_type == SEARCH_EVENT_LIST:
+            event_list = []
+            for events in data:
+                event_list.append(
+                    {
+                        "event_date": events[0],
+                        "event_name": events[2],
+                        "admins": json.loads(events[1]),
+                        "event_id": events[3],
+                        "is_approved": events[4],
+                        "status": events[5]
                     }
                 )
             return event_list
@@ -59,6 +89,27 @@ class responseGenerator:
                 "event_lat_lng": data[5],
                 "admins": json.loads(data[1]),
                 "sub_events": json.loads(data[6])
+            }
+
+        if controller_type == EVENT_BY_ID:
+            return {
+                "id": data[0],
+                "created_by_uid": data[1],
+                "event_type_id": data[2],
+                "city_id": data[3],
+                "address_line1": data[4],
+                "address_line2": data[5],
+                "event_lat_lng": data[6],
+                "created_on": data[7],
+                "sub_events": json.loads(data[8]),
+                "event_date": data[9],
+                "event_note": data[10],
+                "event_admin": json.loads(data[11]),
+                "is_approved": data[12],
+                "approved_by": data[13],
+                "printer_id": data[14],
+                "approved_date_time": data[15],
+                "status": data[16]
             }
 
         if controller_type == EVENT_TYPE_LIST:
@@ -244,6 +295,34 @@ class responseGenerator:
                 )
             return kyc_data
 
+        if controller_type == KYC_BY_ID:
+            return {
+                        "id": data[0],
+                        "uid": data[1],
+                        "full_name": data[2],
+                        "dob": data[3],
+                        "gender": data[4],
+                        "address_line1": data[5],
+                        "address_line2": data[6],
+                        "city": data[7],
+                        "state": data[8],
+                        "postcode": data[9],
+                        "country": data[10],
+                        "identification_proof1": data[11],
+                        "identification_proof2": data[12],
+                        "identification_number1": data[13],
+                        "identification_number2": data[14],
+                        "identification_doc1": data[15],
+                        "identification_doc2": data[16],
+                        "verification_status": data[17],
+                        "created_on": data[18],
+                        "updated_by": data[19],
+                        "updated_on": data[20],
+                        "approved_by": data[21],
+                        "approved_on": data[22],
+                        "username": data[23]
+        }
+
         if controller_type == ALL_BANK_DATA:
             bank_data = []
             for bank in data:
@@ -261,6 +340,23 @@ class responseGenerator:
                     }
                 )
             return bank_data
+
+        if controller_type == BANK_DETAILS_BY_ID:
+            return {
+                "id": data[0],
+                "uid": data[1],
+                "bank_name": data[2],
+                "bank_logo": data[3],
+                "ifsc_code": data[4],
+                "account_holder_name": data[5],
+                "account_number": data[6],
+                "status": data[7],
+                "created_on": data[8],
+                "added_by": data[9],
+                "modified_on": data[10],
+                "modified_by": data[11]
+
+            }
 
         if controller_type == ALL_USERS_DATA:
             user_data = []
@@ -282,6 +378,21 @@ class responseGenerator:
                 )
             return user_data
 
+        if controller_type == GET_USERS_BY_NAME_OR_PHONE:
+            get_users_by_name_or_phone = []
+            for user in data:
+                get_users_by_name_or_phone.append(
+                    {
+                        "id": user[0],
+                        "uid": user[1],
+                        "name": user[2],
+                        "phone": user[4],
+                        "profile_pic": user[7]
+
+                    }
+                )
+            return get_users_by_name_or_phone
+
         if controller_type == ALL_PRINTERS_DATA:
             printer_data = []
             for printer in data:
@@ -299,6 +410,22 @@ class responseGenerator:
 
                 )
             return printer_data
+
+        if controller_type == PRINTER_BY_ID:
+            return {
+                        "id": data[0],
+                        "store_name": data[1],
+                        "city": data[2],
+                        "address": data[3],
+                        "lat_lng": data[4],
+                        "status": data[5],
+                        "gst_no": data[6],
+                        "store_owner": data[7],
+                        "contact_number": data[8],
+                        "printer_user_name": data[9],
+                        "printer_password": data[10]
+
+            }
 
         if controller_type == INVITED_EVENT_LIST:
             events_invite_list = []

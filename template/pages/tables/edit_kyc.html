@@ -53,36 +53,6 @@
 
         #myInput:focus {outline: 3px solid #ddd;}
 
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f6f6f6;
-          min-width: 230px;
-          max-width: 300px;
-          overflow: auto;
-          border: 1px solid #ddd;
-          z-index: 1;
-          height:400px;
-        }
-
-        .dropdown-content a {
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
-        }
-
-        .dropdown a:hover {background-color: #ddd;}
-
-        .show {display: block;}
-
-
-
 
 
 
@@ -111,8 +81,9 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Kyc</h4>
-                                <form class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data">
+                                <h4 class="card-title">Edit Kyc</h4>
+                                <form class="form-sample" action="{% url 'edit_kyc' kyc_data.kyc.id %}" method="post"
+                                      enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -122,19 +93,12 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">User</label>
                                                 <div class="col-sm-9">
-
                                                     <input type="text" id="name" readonly onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
-
-                                                    <div id="myDropdown" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput"
-                                                               onkeyup="filterFunction()" class="form-control">
-                                                        {% for users in user_data %}
-                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
-                                                            {{users.phone}}</a>
-                                                        {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="uid" name="uid">
+                                                           class="form-control" value="{{kyc_data.kyc.username}}">
+                                                    <input type="hidden" id="uid" name="uid"
+                                                           value="{{kyc_data.kyc.uid}}">
+                                                    <input type="hidden" id="id" name="id"
+                                                           value="{{kyc_data.kyc.id}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -144,7 +108,7 @@
                                                 <div class="col-sm-9">
                                                     <input type="text" id="full_name" name="full_name"
                                                            class="form-control"
-                                                           placeholder="username">
+                                                           value="{{kyc_data.kyc.full_name}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -155,8 +119,13 @@
                                                 <label class="col-sm-3 col-form-label">Gender</label>
                                                 <div class="col-sm-9">
                                                     <select class="form-control" name="gender">
-                                                        <option>Male</option>
+                                                        {% if kyc_data.kyc.gender == "Male" %}
+                                                        <option selected>Male</option>
                                                         <option>Female</option>
+                                                        {% elif kyc_data.kyc.gender == "Female" %}
+                                                        <option>Male</option>
+                                                        <option selected>Female</option>
+                                                        {% endif %}
                                                     </select>
                                                 </div>
                                             </div>
@@ -165,7 +134,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Date of Birth</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="dd/mm/yyyy" id="dob"
+                                                    <input class="form-control" value="{{kyc_data.kyc.dob}}" id="dob"
                                                            name="dob"/>
                                                 </div>
                                             </div>
@@ -177,10 +146,27 @@
                                                 <label class="col-sm-3 col-form-label">Identification Proof1</label>
                                                 <div class="col-sm-9">
                                                     <select class="form-control" name="identification_proof1">
+                                                        {% if kyc_data.kyc.identification_proof1 == "Aadhar Card" %}
+                                                        <option selected>Aadhar Card</option>
+                                                        <option>Driving License</option>
+                                                        <option>Voter ID</option>
+                                                        <option>Ration Card</option>
+                                                        {% elif kyc_data.kyc.identification_proof1 == "Driving License" %}
+                                                        <option selected>Driving License</option>
                                                         <option>Aadhar Card</option>
                                                         <option>Voter ID</option>
+                                                        <option>Ration Card</option>
+                                                        {% elif kyc_data.kyc.identification_proof1 == "Voter ID" %}
+                                                        <option selected>Voter ID</option>
+                                                        <option>Aadhar Card</option>
                                                         <option>Driving License</option>
                                                         <option>Ration Card</option>
+                                                        {% elif kyc_data.kyc.identification_proof1 == "Ration Card" %}
+                                                        <option selected>Ration Card</option>
+                                                        <option>Aadhar Card</option>
+                                                        <option>Driving License</option>
+                                                        <option>Voter ID</option>
+                                                        {% endif %}
                                                     </select>
                                                 </div>
                                             </div>
@@ -192,7 +178,7 @@
                                                     <input type="text" id="identification_number1"
                                                            name="identification_number1"
                                                            class="form-control"
-                                                           placeholder="username">
+                                                           value="{{kyc_data.kyc.identification_number1}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -215,21 +201,12 @@
                                                     <input type="text" id="identification_number2"
                                                            name="identification_number2"
                                                            class="form-control"
-                                                           placeholder="username">
+                                                           value="{{kyc_data.kyc.identification_number2}}">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <!--                                        <div class="col-md-6">-->
-                                        <!--                                            <div class="form-group row">-->
-                                        <!--                                                <label class="col-sm-3 col-form-label">Identification Doc1</label>-->
-                                        <!--                                                <div class="col-sm-9">-->
-                                        <!--                                                    <input type="file" id="fileInput1" name="document1"-->
-                                        <!--                                                           accept=".jpg, .jpeg, .png, .gif, .pdf" class="file-upload-default">-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                        </div>-->
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Doc1</label>
@@ -238,25 +215,27 @@
                                                            name="document1" class="file-upload-default">
                                                     <div class="input-group col-xs-12">
                                                         <input type="text" class="form-control file-upload-info"
-                                                               disabled
-                                                               placeholder="Upload Image">
+                                                               disabled value="{{kyc_data.kyc.identification_doc1}}">
                                                         <span class="input-group-append">
-                                                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                                                </span>
+                                                            <button class="file-upload-browse btn btn-primary"
+                                                                    type="button">Upload</button>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Doc2</label>
                                                 <div class="col-sm-9">
                                                     <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
-                                                           name="document2" class="file-upload-default">
+                                                           name="document2" class="file-upload-default"
+                                                           value="{{kyc_data.kyc.identification_doc2}}">
                                                     <div class="input-group col-xs-12">
                                                         <input type="text" class="form-control file-upload-info"
                                                                disabled
-                                                               placeholder="Upload Image">
+                                                               value="{{kyc_data.kyc.identification_doc2}}">
                                                         <span class="input-group-append">
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                 </span>
@@ -282,7 +261,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address 1</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="adress1"/>
+                                                    <input type="text" class="form-control" name="adress1"
+                                                           value="{{kyc_data.kyc.address_line1}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -290,7 +270,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">State</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="state"/>
+                                                    <input type="text" class="form-control" name="state"
+                                                           value="{{kyc_data.kyc.state}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -300,7 +281,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address 2</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="adress2"/>
+                                                    <input type="text" class="form-control" name="adress2"
+                                                           value="{{kyc_data.kyc.address_line2}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -308,7 +290,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Postcode</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="postcode"/>
+                                                    <input type="text" class="form-control" name="postcode"
+                                                           value="{{kyc_data.kyc.postcode}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -318,7 +301,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="city"/>
+                                                    <input type="text" class="form-control" name="city"
+                                                           value="{{kyc_data.kyc.city}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -334,14 +318,79 @@
                                         </div>
                                     </div>
                                     <div class="row">
-
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <label class="col-sm-3 col-form-label">Activate/ Deactivate</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
-                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
-                                                           value="{{ request.session.uid }}">
+                                                    <div class="dropdown">
+                                                        <button type="button"
+                                                                class="btn btn-outline-info dropdown-toggle"
+                                                                id="dropdownMenuIconButton2" data-toggle="dropdown"
+                                                                aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            {% if kyc_data.kyc.verification_status == 0 %}
+                                                            Inactive
+                                                            {% elif kyc_data.kyc.verification_status == 1 %}
+                                                            Active
+                                                            {% endif %}
+                                                        </button>
+                                                        <div class="dropdown-menu"
+                                                             aria-labelledby="dropdownMenuIconButton3">
+                                                            <a class="dropdown-item"
+                                                               href="{% url 'activate_deactivate_kyc' kyc_data.kyc.id 1 %}">Active</a>
+                                                            <a class="dropdown-item"
+                                                               href="{% url 'activate_deactivate_kyc' kyc_data.kyc.id 0 %}">Inactive</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">created on</label>
+                                                <div class="col-sm-9">
+                                                    <input disabled type="text" class="form-control" name="city"
+                                                           value="{{kyc_data.kyc.created_on}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Approved by</label>
+                                                <div class="col-sm-9">
+                                                    <input disabled type="text" class="form-control" name="adress2"
+                                                           value="{{kyc_data.kyc.approved_by}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Approved on</label>
+                                                <div class="col-sm-9">
+                                                    <input disabled type="text" class="form-control" name="postcode"
+                                                           value="{{kyc_data.kyc.approved_on}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Last Modified by</label>
+                                                <div class="col-sm-9">
+                                                    <input disabled type="text" class="form-control"
+                                                           value="{{kyc_data.kyc.updated_by}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Last Modified on</label>
+                                                <div class="col-sm-9">
+                                                    <input disabled type="text" class="form-control"
+                                                           value="{{kyc_data.kyc.updated_on}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -371,49 +420,6 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-
-
-<script>
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-        const dropdown = document.getElementById("myDropdown");
-        dropdown.classList.toggle("show");
-    }
-
-    function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
-
-    function setValue(value1, value2) {
-        document.getElementById("name").value = value1;
-        document.getElementById("uid").value = value2;
-        myFunction();
-    }
-
-    // Add an event listener to the document to close the dropdown when clicking outside
-    document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("myDropdown");
-        const nameInput = document.getElementById("name");
-        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
-        }
-    });
-
-
-</script>
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

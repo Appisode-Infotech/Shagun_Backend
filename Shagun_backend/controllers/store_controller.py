@@ -57,6 +57,27 @@ def edit_printer(store_obj):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def get_printer_by_id(pid):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f""" SELECT * FROM printer WHERE id = '{pid}'"""
+            cursor.execute(sql_query)
+            printer = cursor.fetchone()
+            if printer is not None:
+                return {
+                      "status": True,
+                      "store": responsegenerator.responseGenerator.generateResponse(printer, PRINTER_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "Printer": None
+                }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 
 def get_all_printers():
     try:

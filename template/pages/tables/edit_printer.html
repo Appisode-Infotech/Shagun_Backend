@@ -109,8 +109,8 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Printing Vendor</h4>
-                                <form class="form-sample" action="/add_printer" method="post"
+                                <h4 class="card-title">Edit Printing Vendor</h4>
+                                <form class="form-sample" action="{% url 'edit_printer' printer_data.store.id %}" method="post"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -123,16 +123,17 @@
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
+                                                           value="{{printer_data.store.city}}" class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content">
                                                         <input type="text" placeholder="Search.." id="myInput"
-                                                               onkeyup="filterFunction()" class="form-control">
-                                                        {% for city in city_list %}
+                                                               onkeyup="filterFunction()" class="form-control" >
+                                                        {% for city in location.city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="city" name="city">
+                                                    <input type="hidden" id="city" name="city" value="{{printer_data.store.city}}">
+                                                    <input type="hidden" id="id" name="store_id" value="{{printer_data.store.id}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -140,7 +141,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="store_name"/>
+                                                    <input type="text" class="form-control" name="store_name" value="{{printer_data.store.store_name}}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -150,7 +151,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="store_owner"/>
+                                                    <input type="text" class="form-control" name="store_owner" value="{{printer_data.store.store_owner}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -158,7 +159,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="contact_number"/>
+                                                    <input type="text" class="form-control" name="contact_number" value="{{printer_data.store.contact_number}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -168,7 +169,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address"/>
+                                                    <input type="text" class="form-control" name="address" value="{{printer_data.store.address}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -176,7 +177,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Geo Location</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="lat_lng"/>
+                                                    <input type="text" class="form-control" name="lat_lng" value="{{printer_data.store.lat_lng}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,7 +188,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label"> Store GST</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="gst_no"/>
+                                                    <input type="text" class="form-control" name="gst_no" value="{{printer_data.store.gst_no}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,7 +197,7 @@
                                                 <label class="col-sm-3 col-form-label">User Name</label>
                                                 <div class="col-sm-9">
                                                     <input type="email" class="form-control" name="printer_user_name"
-                                                           placeholder="example@gmail.com"/>
+                                                           value="{{printer_data.store.printer_user_name}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -208,7 +209,7 @@
                                                 <div class="col-sm-9">
                                                     <input type="password" id="password" name="printer_password"
                                                            class="form-control form-control-lg"
-                                                           placeholder="password">
+                                                           value="{{printer_data.store.printer_password}}">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -220,7 +221,7 @@
                                                 <div class="col-sm-9">
                                                     <input type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
-                                                           placeholder="password">
+                                                           value="{{printer_data.store.printer_password}}">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
 

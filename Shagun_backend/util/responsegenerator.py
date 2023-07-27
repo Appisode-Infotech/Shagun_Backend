@@ -60,10 +60,12 @@ class responseGenerator:
                         "admins": json.loads(events[1]),
                         "event_id": events[3],
                         "is_approved": events[4],
-                        "status": events[5]
+                        "status": events[5],
+                        "phone": events[6]
                     }
                 )
             return event_list
+
 
         if controller_type == ALL_EVENT_LIST:
             event_list = []
@@ -110,6 +112,28 @@ class responseGenerator:
                 "printer_id": data[14],
                 "approved_date_time": data[15],
                 "status": data[16]
+            }
+
+        if controller_type == GIFT_EVENT:
+            return {
+                "id": data[0],
+                "created_by_uid": data[1],
+                "event_type_id": data[2],
+                "city_id": data[3],
+                "address_line1": data[4],
+                "address_line2": data[5],
+                "event_lat_lng": data[6],
+                "created_on": data[7],
+                "sub_events": json.loads(data[8]),
+                "event_date": data[9],
+                "event_note": data[10],
+                "event_admin": json.loads(data[11]),
+                "is_approved": data[12],
+                "approved_by": data[13],
+                "printer_id": data[14],
+                "approved_date_time": data[15],
+                "status": data[16],
+                "uid": data[17]
             }
 
         if controller_type == EVENT_TYPE_LIST:
@@ -297,31 +321,31 @@ class responseGenerator:
 
         if controller_type == KYC_BY_ID:
             return {
-                        "id": data[0],
-                        "uid": data[1],
-                        "full_name": data[2],
-                        "dob": data[3],
-                        "gender": data[4],
-                        "address_line1": data[5],
-                        "address_line2": data[6],
-                        "city": data[7],
-                        "state": data[8],
-                        "postcode": data[9],
-                        "country": data[10],
-                        "identification_proof1": data[11],
-                        "identification_proof2": data[12],
-                        "identification_number1": data[13],
-                        "identification_number2": data[14],
-                        "identification_doc1": data[15],
-                        "identification_doc2": data[16],
-                        "verification_status": data[17],
-                        "created_on": data[18],
-                        "updated_by": data[19],
-                        "updated_on": data[20],
-                        "approved_by": data[21],
-                        "approved_on": data[22],
-                        "username": data[23]
-        }
+                "id": data[0],
+                "uid": data[1],
+                "full_name": data[2],
+                "dob": data[3],
+                "gender": data[4],
+                "address_line1": data[5],
+                "address_line2": data[6],
+                "city": data[7],
+                "state": data[8],
+                "postcode": data[9],
+                "country": data[10],
+                "identification_proof1": data[11],
+                "identification_proof2": data[12],
+                "identification_number1": data[13],
+                "identification_number2": data[14],
+                "identification_doc1": data[15],
+                "identification_doc2": data[16],
+                "verification_status": data[17],
+                "created_on": data[18],
+                "updated_by": data[19],
+                "updated_on": data[20],
+                "approved_by": data[21],
+                "approved_on": data[22],
+                "username": data[23]
+            }
 
         if controller_type == ALL_BANK_DATA:
             bank_data = []
@@ -354,7 +378,8 @@ class responseGenerator:
                 "created_on": data[8],
                 "added_by": data[9],
                 "modified_on": data[10],
-                "modified_by": data[11]
+                "modified_by": data[11],
+                "name": data[12]
 
             }
 
@@ -413,17 +438,18 @@ class responseGenerator:
 
         if controller_type == PRINTER_BY_ID:
             return {
-                        "id": data[0],
-                        "store_name": data[1],
-                        "city": data[2],
-                        "address": data[3],
-                        "lat_lng": data[4],
-                        "status": data[5],
-                        "gst_no": data[6],
-                        "store_owner": data[7],
-                        "contact_number": data[8],
-                        "printer_user_name": data[9],
-                        "printer_password": data[10]
+                "id": data[0],
+                "store_name": data[1],
+                "city": data[2],
+                "address": data[3],
+                "lat_lng": data[4],
+                "status": data[5],
+                "gst_no": data[6],
+                "store_owner": data[7],
+                "contact_number": data[8],
+                "printer_user_name": data[9],
+                "printer_password": data[10],
+                "city_name": data[11]
 
             }
 
@@ -487,5 +513,3 @@ class responseGenerator:
 
                 )
             return locations_lists
-
-

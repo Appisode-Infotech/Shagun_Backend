@@ -60,6 +60,12 @@ def manage_settlement(request):
     return JsonResponse(response, safe=False)
 
 
+@api_view(['POST'])
+def event_settlement(request):
+    response, status_code = transactions_controller.event_settlement(request.data['event_id'])
+    return JsonResponse(response, status=status_code)
+
+
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
@@ -197,7 +203,6 @@ def add_bank(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             bank_obj = bank_details_model.bank_details_model_from_dict(request.POST)
-            print(bank_obj)
             user_controller.add_bank_details(bank_obj)
             return redirect('manage_bank_details')
         else:
@@ -236,9 +241,6 @@ def add_printer(request):
     else:
         return redirect('sign_up')
 
-
-def location_popup_view(request):
-    return render(request, 'pages/tables/location_popup.html')
 
 
 def activate_deactivate_location(request, location_id, status):
@@ -360,6 +362,7 @@ def edit_bank(request, bank_id):
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)
             bank_list, status_code = bank_controller.get_all_banks_list()
+            print(bank_data)
             context = {
                 "bank_data": bank_data,
                 "bank_list": bank_list
@@ -378,6 +381,24 @@ def edit_employee(request, user_id):
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
             return render(request, 'pages/tables/edit_employee.html', response)
+    else:
+        return redirect('sign_up')
+
+
+def edit_event_type(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            print(request.POST)
+            event_controller.edit_events_type(request.POST['id'], request.POST['name'])
+            return redirect('manage_event_types')
+    else:
+        return redirect('sign_up')
+
+def edit_location(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            event_controller.edit_location(request.POST['id'], request.POST['name'])
+            return redirect('manage_location')
     else:
         return redirect('sign_up')
 
@@ -402,7 +423,6 @@ def edit_printer(request, printer_id):
 
     else:
         return redirect('sign_up')
-
 
 
 def edit_event(request, event_id):
@@ -669,6 +689,12 @@ def get_single_event(request):
 
 
 @api_view(['POST'])
+def gift_event(request):
+    response, status_code = event_controller.gift_event(request.data['id'], request.data['phone'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
 def create_events_type(request):
     response, status_code = event_controller.create_events_type(request.data['event_type_name'])
     return JsonResponse(response, status=status_code)
@@ -709,11 +735,11 @@ def enable_disable_location(request):
     response, status_code = event_controller.disable_location(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
-
-@api_view(['POST'])
-def edit_location(request):
-    response, status_code = event_controller.edit_location(request.data['id'], request.data['city_name'])
-    return JsonResponse(response, status=status_code)
+#
+# @api_view(['POST'])
+# def edit_location(request):
+#     response, status_code = event_controller.edit_location(request.data['id'], request.data['city_name'])
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])

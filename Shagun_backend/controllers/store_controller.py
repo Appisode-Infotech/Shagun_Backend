@@ -60,7 +60,8 @@ def edit_printer(store_obj):
 def get_printer_by_id(pid):
     try:
         with connection.cursor() as cursor:
-            sql_query = f""" SELECT * FROM printer WHERE id = '{pid}'"""
+            sql_query = f""" SELECT p.*, loc.city_name FROM printer AS p LEFT JOIN locations AS loc ON p.city = loc.id
+             WHERE p.id = '{pid}'"""
             cursor.execute(sql_query)
             printer = cursor.fetchone()
             if printer is not None:

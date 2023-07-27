@@ -81,6 +81,10 @@
         .center-button {
           display: flex;
           justify-content: center;
+
+        }
+        .center-button button {
+            margin-right: 10px;
         }
 
     </style>
@@ -152,15 +156,19 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button id="showPopupBtn" class="btn btn-outline-info btn-fw">Edit</button>
+                                    <button onclick="showPopUpDiv('{{event.event_type_id}}', '{{event.event_type_name}}')"
+                                            class="btn btn-outline-info btn-fw">Edit
+                                    </button>
                                     <div id="popupDiv">
-                                        <form class="form-sample" action="/add_kyc" method="post">
+                                        <form class="form-sample" action="/edit_event_type" method="post">
+                                            {% csrf_token %}
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-3 col-form-label">Event ID</label>
+                                                        <label class="col-sm-3 col-form-label">Event ID </label>
                                                         <div class="col-sm-9">
-                                                            <label type="text" class="form-control">{{ event.event_type_id }}</label>
+                                                            <input readonly id="event_type_id" name="id" type="text"
+                                                                   class="form-control"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -168,12 +176,17 @@
                                                     <div class="form-group row">
                                                         <label class="col-sm-3 col-form-label">Name</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" class="form-control" name="name" value="{{ event.event_type_name }}"/>
+                                                            <input id="name" type="text" class="form-control"
+                                                                   name="name"
+                                                                   value="{{ event.event_type_name }}"/>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="center-button">
+                                                <button type="button" onclick="hidePopUpDiv()"
+                                                        class="btn btn-inverse-dark btn-fw">Cancel
+                                                </button>
                                                 <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                             </div>
                                         </form>
@@ -227,22 +240,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    // Function to show the popup div
-    $("#showPopupBtn").click(function() {
-        $("#popupDiv").fadeIn();
-    });
+    function showPopUpDiv(val1, val2) {
+        // Display the popup by changing its style to "display: block"
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "block";
 
-    // Function to hide the popup div when clicking outside it
-    $(document).click(function(event) {
-        if (!$(event.target).closest("#popupDiv, #showPopupBtn").length) {
-            $("#popupDiv").fadeOut();
-        }
-    });
-});
+        // Set the values for the fields in the popup form
+        document.getElementById("event_type_id").value = val1;
+        document.getElementById("name").value = val2;
+    }
 
-
-
+    function hidePopUpDiv() {
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "none";
+    }
 </script>
 <script>
         function toggleForm() {
@@ -263,6 +274,9 @@ $(document).ready(function() {
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
+
+
 
 
 

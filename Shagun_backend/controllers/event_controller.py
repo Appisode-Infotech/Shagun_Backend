@@ -58,8 +58,8 @@ def get_event_by_id(et_id):
             if event is not None:
                 print(event)
                 return {
-                      "status": True,
-                      "event_list": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
+                    "status": True,
+                    "event_list": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
                 }, 200
             else:
                 return {
@@ -67,6 +67,30 @@ def get_event_by_id(et_id):
                     "event": None
                 }, 301
 
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def gift_event(e_id, phone):
+    try:
+        with connection.cursor() as cursor:
+            sql_query = f""" SELECT * , (SELECT uid FROM users WHERE phone = '{phone}') AS users FROM event 
+            WHERE id = '{e_id}'"""
+            cursor.execute(sql_query)
+            event = cursor.fetchone()
+            if event is not None:
+                print(event)
+                return {
+                    "status": True,
+                    "gift_event": responsegenerator.responseGenerator.generateResponse(event, GIFT_EVENT)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "event": None
+                }, 301
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -149,9 +173,8 @@ def disable_events_type(event_id, estatus):
 def edit_events_type(lid, event_type_name):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE events_type SET event_type_name = %s where id=%s"
-            values = (event_type_name, lid)
-            cursor.execute(sql_query, values)
+            sql_query = f"""UPDATE events_type SET event_type_name = '{event_type_name}' where id= '{lid}'"""
+            cursor.execute(sql_query)
             return {
                 "status": True,
                 "message": "Events Type edited successfully"
@@ -166,7 +189,7 @@ def events_type_by_id(et_id):
     try:
         with connection.cursor() as cursor:
             sql_query = " SELECT id, event_type_name FROM events_type WHERE id= %s;"
-            cursor.execute(sql_query, [et_id,])
+            cursor.execute(sql_query, [et_id, ])
             events = cursor.fetchone()
             if events is not None:
                 return {
@@ -241,9 +264,8 @@ def disable_location(location_id, lstatus):
 def edit_location(lid, lcity_name):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE locations SET city_name = %s where id=%s"
-            values = (lcity_name, lid)
-            cursor.execute(sql_query, values)
+            sql_query = f"""UPDATE locations SET city_name = '{lcity_name}' where id= '{lid}' """
+            cursor.execute(sql_query)
             return {
                 "status": True,
                 "message": "Location edited successfully"
@@ -262,8 +284,8 @@ def get_location_by_id(loc_id):
             location = cursor.fetchone()
             if location is not None:
                 return {
-                      "status": True,
-                      "location": responsegenerator.responseGenerator.generateResponse(location, EVENT_TYPE_BY_ID)
+                    "status": True,
+                    "location": responsegenerator.responseGenerator.generateResponse(location, EVENT_TYPE_BY_ID)
                 }, 200
             else:
                 return {
@@ -366,7 +388,8 @@ def get_my_event_list(uid):
                 "status": True,
                 "past_events": responsegenerator.responseGenerator.generateResponse(past_events, EVENT_LIST),
                 "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, EVENT_LIST),
-                "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events, INVITED_EVENT_LIST),
+                "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
+                                                                                       INVITED_EVENT_LIST),
             }, 200
 
     except pymysql.Error as e:
@@ -380,26 +403,25 @@ def search_user_event(uid):
         with connection.cursor() as cursor:
             sql_query_upcoming_events = f"""
                             SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                                event.is_approved, event.status
+                                event.is_approved, event.status, (SELECT phone FROM users WHERE uid = '{uid}') AS users
                             FROM event 
-                            LEFT JOIN events_type ON event.event_type_id = events_type.id 
+                            LEFT JOIN events_type ON event.event_type_id = events_type.id
+                            
                             WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) > '{today.date()}' """
             uid_json = json.dumps({'uid': uid})
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()
-            print(upcoming_events)
 
             return {
                 "status": True,
-                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, SEARCH_EVENT_LIST)
+                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events,
+                                                                                        SEARCH_EVENT_LIST)
             }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
-
 
 
 def get_all_event_list():

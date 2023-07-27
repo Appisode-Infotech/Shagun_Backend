@@ -1,13 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, TypeVar, Type, cast
-
+from typing import Optional, Any, TypeVar, Type, cast
 
 T = TypeVar("T")
-
-
-def from_int(x: Any) -> int:
-    assert isinstance(x, int) and not isinstance(x, bool)
-    return x
 
 
 def from_str(x: Any) -> str:
@@ -15,14 +9,18 @@ def from_str(x: Any) -> str:
     return x
 
 
-def from_float(x: Any) -> float:
-    assert isinstance(x, (float, int)) and not isinstance(x, bool)
-    return float(x)
-
-
-def to_float(x: Any) -> float:
-    assert isinstance(x, float)
+def from_none(x: Any) -> Any:
+    assert x is None
     return x
+
+
+def from_union(fs, x):
+    for f in fs:
+        try:
+            return f(x)
+        except:
+            pass
+    assert False
 
 
 def to_class(c: Type[T], x: Any) -> dict:
@@ -32,29 +30,31 @@ def to_class(c: Type[T], x: Any) -> dict:
 
 @dataclass
 class GreetingCardsModel:
-    id: int
+    id: str
     card_name: str
-    card_image_url: str
-    card_price: float
-    status: int
+    card_price: str
+    card_image_url: Optional[str] = None
+    status: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'GreetingCardsModel':
         assert isinstance(obj, dict)
-        id = from_int(obj.get("id"))
+        id = from_str(obj.get("id"))
         card_name = from_str(obj.get("card_name"))
-        card_image_url = from_str(obj.get("card_image_url"))
-        card_price = from_float(obj.get("card_price"))
-        status = from_int(obj.get("status"))
-        return GreetingCardsModel(id, card_name, card_image_url, card_price, status)
+        card_price = from_str(obj.get("card_price"))
+        card_image_url = from_union([from_str, from_none], obj.get("card_image_url"))
+        status = from_union([from_str, from_none], obj.get("status"))
+        return GreetingCardsModel(id, card_name, card_price, card_image_url, status)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["id"] = from_int(self.id)
+        result["id"] = from_str(self.id)
         result["card_name"] = from_str(self.card_name)
-        result["card_image_url"] = from_str(self.card_image_url)
-        result["card_price"] = to_float(self.card_price)
-        result["status"] = from_int(self.status)
+        result["card_price"] = from_str(self.card_price)
+        if self.card_image_url is not None:
+            result["card_image_url"] = from_union([from_str, from_none], self.card_image_url)
+        if self.status is not None:
+            result["status"] = from_union([from_str, from_none], self.status)
         return result
 
 

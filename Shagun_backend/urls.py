@@ -75,6 +75,7 @@ urlpatterns = [
     path('edit_employee/<int:user_id>/', edit_employee, name='edit_employee'),
     path('edit_printer/<int:printer_id>/', edit_printer, name='edit_printer'),
     path('edit_event/<int:event_id>/', edit_event, name='edit_event'),
+    path('edit_greeting_cards', edit_greeting_cards, name='edit_greeting_cards'),
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),
     path('get_users_by_name_or_phone', get_users_by_name_or_phone, name='get_users_by_name_or_phone'),
@@ -105,7 +106,6 @@ urlpatterns = [
     path('enable_disable_printer', enable_disable_printer, name='enable_disable_printer'),
     path('edit_printer', edit_printer, name='edit_printer'),
     path('get_greetings_by_id', get_greetings_by_id, name='get_greetings_by_id'),
-    path('edit_greeting_cards', edit_greeting_cards, name='edit_greeting_cards'),
     path('request_callback', request_callback, name='request_callback'),
     path('update_callback_request', update_callback_request, name='update_callback_request'),
 

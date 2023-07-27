@@ -394,11 +394,24 @@ def edit_event_type(request):
     else:
         return redirect('sign_up')
 
+
+
 def edit_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             event_controller.edit_location(request.POST['id'], request.POST['name'])
             return redirect('manage_location')
+    else:
+        return redirect('sign_up')
+
+
+def edit_greeting_cards(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
+            print(grt_obj)
+            print(greeting_cards_controller.edit_greeting_cards(grt_obj))
+            return redirect('manage_greeting_cards')
     else:
         return redirect('sign_up')
 
@@ -876,12 +889,12 @@ def get_greeting_cards(request):
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
-
-@api_view(['POST'])
-def edit_greeting_cards(request):
-    grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.data)
-    response, status_code = greeting_cards_controller.edit_greeting_cards(grt_obj)
-    return JsonResponse(response, status=status_code)
+#
+# @api_view(['POST'])
+# def edit_greeting_cards(request):
+#     grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.data)
+#     response, status_code = greeting_cards_controller.edit_greeting_cards(grt_obj)
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])

@@ -62,13 +62,13 @@ def disable_greeting_cards(event_id, estatus):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def edit_greeting_cards(grt_obj):
     try:
         with connection.cursor() as cursor:
-            query = "UPDATE greeting_cards SET card_name = %s, card_image_url = %s, card_price = %s," \
-                    " status = %s WHERE id = %s"
-            values = (grt_obj.card_name, grt_obj.card_image_url, grt_obj.card_price, grt_obj.status, grt_obj.id)
-            cursor.execute(query, values)
+            query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', card_price = '{grt_obj.card_price}' 
+            WHERE id = '{grt_obj.id}' """
+            cursor.execute(query)
             return {
                 "status": True,
                 "msg": "Greeting card updated successfully"
@@ -88,8 +88,8 @@ def get_greetings_by_id(gre_id):
             greeting = cursor.fetchone()
             if greeting is not None:
                 return {
-                      "status": True,
-                      "greetings": responsegenerator.responseGenerator.generateResponse(greeting, GREETING_CARDS_BY_ID)
+                    "status": True,
+                    "greetings": responsegenerator.responseGenerator.generateResponse(greeting, GREETING_CARDS_BY_ID)
                 }, 200
             else:
                 return {

@@ -30,26 +30,28 @@ def to_class(c: Type[T], x: Any) -> dict:
 
 @dataclass
 class GreetingCardsModel:
-    id: str
     card_name: str
     card_price: str
     card_image_url: Optional[str] = None
     status: Optional[str] = None
+    id: Optional[str] = None
+
 
     @staticmethod
     def from_dict(obj: Any) -> 'GreetingCardsModel':
         assert isinstance(obj, dict)
-        id = from_str(obj.get("id"))
+        id = from_union([from_str, from_none], obj.get("id"))
         card_name = from_str(obj.get("card_name"))
         card_price = from_str(obj.get("card_price"))
         card_image_url = from_union([from_str, from_none], obj.get("card_image_url"))
         status = from_union([from_str, from_none], obj.get("status"))
-        return GreetingCardsModel(id, card_name, card_price, card_image_url, status)
+        return GreetingCardsModel(card_name, card_price, card_image_url, status, id)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["id"] = from_str(self.id)
-        result["card_name"] = from_str(self.card_name)
+        if self.id is not None:
+            result["id"] = from_union([from_str, from_none], self.id)
+            result["card_name"] = from_str(self.card_name)
         result["card_price"] = from_str(self.card_price)
         if self.card_image_url is not None:
             result["card_image_url"] = from_union([from_str, from_none], self.card_image_url)

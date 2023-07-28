@@ -311,11 +311,11 @@ def edit_bank_details(bank_obj):
             cursor.execute(query, [bank_obj.uid])
             user = cursor.fetchone()
             if user is not None:
-                sql_query = "UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, " \
+                edit_bank_query = "UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, " \
                             "account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          True, today, bank_obj.modified_by, bank_obj.uid )
-                cursor.execute(sql_query, values)
+                          True, today, bank_obj.modified_by, bank_obj.uid)
+                cursor.execute(edit_bank_query, values)
 
                 return {
                     "status": True,
@@ -337,9 +337,9 @@ def edit_bank_details(bank_obj):
 def get_bank_by_id(bnk_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = f""" SELECT bd.* ,u.name  FROM bank_details AS bd LEFT JOIN users AS u ON bd.uid = u.uid
+            bank_data_query = f""" SELECT bd.* ,u.name  FROM bank_details AS bd LEFT JOIN users AS u ON bd.uid = u.uid
              WHERE bd.id = '{bnk_id}'"""
-            cursor.execute(sql_query)
+            cursor.execute(bank_data_query)
             bank_data = cursor.fetchone()
             if bank_data is not None:
                 return {
@@ -402,11 +402,11 @@ def add_employee(emp_obj):
 def edit_employee(emp_obj):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE users SET name = %s, email = %s, phone = %s, status = %s, city = %s," \
+            edit_emp_query = "UPDATE users SET name = %s, email = %s, phone = %s, status = %s, city = %s," \
                         " password = %s WHERE uid = %s"
             values = (
             emp_obj.name, emp_obj.email, emp_obj.phone, True, emp_obj.city, emp_obj.password, emp_obj.email)
-            cursor.execute(sql_query, values)
+            cursor.execute(edit_emp_query, values)
             return {
                 "status": True,
                 "message": "Employee edited successfully"
@@ -420,9 +420,9 @@ def edit_employee(emp_obj):
 def enable_disable_employee(uid, status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE users SET status = %s WHERE id = %s"
+            disable_emp_query = "UPDATE users SET status = %s WHERE id = %s"
             values = (status, uid)
-            cursor.execute(sql_query, values)
+            cursor.execute(disable_emp_query, values)
             return {
                 "status": True,
                 "message": "Employee status changed successfully"
@@ -455,8 +455,8 @@ def get_all_employees():
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        query = "SELECT password, name, profile_pic FROM users WHERE uid = %s;"
-        cursor.execute(query, [uname])
+        emp_login_query = "SELECT password, name, profile_pic FROM users WHERE uid = %s;"
+        cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
         if result is not None and result[0] == pwd:
             return {
@@ -480,9 +480,9 @@ def employee_login(uname, pwd):
 def get_employee_by_id(emp_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city,password
+            emp_data_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city,password
              FROM users WHERE id = '{emp_id}'"""
-            cursor.execute(sql_query)
+            cursor.execute(emp_data_query)
             emp_data = cursor.fetchone()
             if emp_data is not None:
                 return {
@@ -503,8 +503,8 @@ def get_employee_by_id(emp_id):
 def get_user_profile(uid):
     try:
         with connection.cursor() as cursor:
-            query = "SELECT * FROM users WHERE uid = %s;"
-            cursor.execute(query, [uid])
+            user_data_query = "SELECT * FROM users WHERE uid = %s;"
+            cursor.execute(user_data_query, [uid])
             user_data = cursor.fetchone()
 
             sql_query_events = f"""
@@ -563,9 +563,9 @@ def get_user_profile(uid):
 def disable_bank(bank_id, status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE bank_details SET status = %s WHERE id = %s"
+            disable_bank_query = "UPDATE bank_details SET status = %s WHERE id = %s"
             values = (status, bank_id)
-            cursor.execute(sql_query, values)
+            cursor.execute(disable_bank_query, values)
             return {
                 "status": True,
                 "message": "Bank status changed successfully"

@@ -7,14 +7,14 @@ from Shagun_backend.util.responsegenerator import responseGenerator
 def add_transaction_history(transaction_obj):
     try:
         with connection.cursor() as cursor:
-            sql_query = "INSERT INTO transaction_history (sender_uid, receiver_uid, transaction_amount, shagun_amount, " \
-                        "greeting_card_id, transaction_fee, delivery_fee, transaction_id, payment_status, event_id, " \
-                        "status, created_on) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            transaction_history_query = "INSERT INTO transaction_history (sender_uid, receiver_uid, transaction_amount"\
+                     ", shagun_amount,greeting_card_id, transaction_fee, delivery_fee, transaction_id, payment_status,"\
+                     " event_id, status, created_on) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (transaction_obj.sender_uid, transaction_obj.receiver_uid, transaction_obj.transaction_amount,
                       transaction_obj.shagun_amount, transaction_obj.greeting_card_id, transaction_obj.transaction_fee,
                       transaction_obj.delivery_fee, transaction_obj.transaction_id, transaction_obj.payment_status,
                       transaction_obj.event_id, transaction_obj.status, today)
-            cursor.execute(sql_query, values)
+            cursor.execute(transaction_history_query, values)
 
             return {
                 "status": True,
@@ -30,7 +30,7 @@ def add_transaction_history(transaction_obj):
 def event_settlement(event_id):
     try:
         with connection.cursor() as cursor:
-            query = f"""
+            event_settlement_query = f"""
                 SELECT SUM(CASE WHEN s.transaction_id IS NULL THEN shagun_amount ELSE 0 END) 
                 AS total_shagun_amount, 
                 SUM(CASE WHEN s.transaction_id IS NOT NULL THEN shagun_amount ELSE 0 END)
@@ -41,7 +41,7 @@ def event_settlement(event_id):
                 settlements s ON th.id = s.transaction_id 
                 WHERE th.event_id = '{event_id}';
             """
-            cursor.execute(query)
+            cursor.execute(event_settlement_query)
             amount = cursor.fetchone()
 
             return {
@@ -66,8 +66,7 @@ def get_sent_gift(gift_data_obj):
         month_filter = "1"
     try:
         with connection.cursor() as cursor:
-            events_list_query = f"""
-                                        SELECT id, event_type_name from events_type"""
+            events_list_query = """ SELECT id, event_type_name from events_type """
             cursor.execute(events_list_query)
             events_data = cursor.fetchall()
 
@@ -75,8 +74,8 @@ def get_sent_gift(gift_data_obj):
                 SELECT th.receiver_uid, th.sender_uid, th.shagun_amount, th.transaction_amount,
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, ev.id, 
                     CASE WHEN st.transaction_id IS NOT NULL THEN True ELSE False END AS settlement_status,
-                    (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{gift_data_obj.uid}') AS total_amount,
-                    u.name, bd.bank_name, bd.bank_logo, bd.account_number
+                    (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{gift_data_obj.uid}')
+                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
                 FROM transaction_history AS th
                 JOIN users As u ON th.receiver_uid = u.uid
                 JOIN event AS ev ON th.event_id = ev.id
@@ -113,8 +112,7 @@ def get_received_gift(gift_data_obj):
         month_filter = "1"
     try:
         with connection.cursor() as cursor:
-            events_list_query = f"""
-                            SELECT id, event_type_name from events_type"""
+            events_list_query = """SELECT id, event_type_name from events_type"""
             cursor.execute(events_list_query)
             events_data = cursor.fetchall()
 

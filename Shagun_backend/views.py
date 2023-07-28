@@ -60,12 +60,6 @@ def manage_settlement(request):
     return JsonResponse(response, safe=False)
 
 
-@api_view(['POST'])
-def event_settlement(request):
-    response, status_code = transactions_controller.event_settlement(request.data['event_id'])
-    return JsonResponse(response, status=status_code)
-
-
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
@@ -188,9 +182,7 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            print(kyc_obj)
             user_controller.add_user_kyc(kyc_obj)
-            print(user_controller.add_user_kyc(kyc_obj))
             return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_all_users()
@@ -241,6 +233,27 @@ def add_printer(request):
     else:
         return redirect('sign_up')
 
+
+def add_greeting_cards(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        form_data = request.POST
+        if request.method == 'POST':
+            for file_key, file_obj in request.FILES.items():
+                file_name = f"""{int(time.time())}_{str(file_obj)}"""
+                form_data = form_data.copy()
+                form_data['card_image_url'] = file_name
+                with default_storage.open(file_name, 'wb+') as destination:
+                    for chunk in file_obj.chunks():
+                        destination.write(chunk)
+            grt_obj = greeting_cards_model.greeting_cards_model_from_dict(form_data)
+            greeting_cards_controller.add_greeting_card(grt_obj)
+            return redirect('manage_greeting_cards')
+        else:
+            printers_list, status_code = store_controller.get_all_printers()
+            return render(request, 'pages/tables/add_greeting_cards.html', printers_list)
+
+    else:
+        return redirect('sign_up')
 
 
 def activate_deactivate_location(request, location_id, status):
@@ -393,7 +406,6 @@ def edit_event_type(request):
             return redirect('manage_event_types')
     else:
         return redirect('sign_up')
-
 
 
 def edit_location(request):
@@ -659,6 +671,11 @@ def enable_disable_event(request):
 #     response, status_code = event_controller.get_event_list(request.data['uid'])
 #     return JsonResponse(response, status=status_code)
 
+@api_view(['POST'])
+def event_settlement(request):
+    response, status_code = transactions_controller.event_settlement(request.data['event_id'])
+    return JsonResponse(response, status=status_code)
+
 
 @api_view(['POST'])
 def get_my_event_list(request):
@@ -669,6 +686,12 @@ def get_my_event_list(request):
 @api_view(['POST'])
 def get_event_by_id(request):
     response, status_code = event_controller.get_event_by_id(request.data['id'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def get_active_event(request):
+    response, status_code = event_controller.get_active_event(request.data['status'])
     return JsonResponse(response, status=status_code)
 
 
@@ -747,6 +770,7 @@ def add_location(request):
 def enable_disable_location(request):
     response, status_code = event_controller.disable_location(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
+
 
 #
 # @api_view(['POST'])
@@ -888,6 +912,7 @@ def get_greeting_cards(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
+
 
 #
 # @api_view(['POST'])

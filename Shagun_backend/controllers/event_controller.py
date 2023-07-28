@@ -12,14 +12,14 @@ def create_event(event_obj):
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
-            sql_query = "INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1, address_line2, " \
-                        "event_lat_lng, created_on, sub_events, event_date, event_note, event_admin, is_approved, " \
-                        " status) " \
-                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            create_event_query = "INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1, " \
+                                 "address_line2, event_lat_lng, created_on, sub_events, event_date," \
+                                 "event_note, event_admin, is_approved,  status) " \
+                                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True)
-            cursor.execute(sql_query, values)
+            cursor.execute(create_event_query, values)
             return {
                 "status": True,
                 "message": "Event Created successfully"
@@ -31,12 +31,12 @@ def create_event(event_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-def enable_disable_event(e_id, etstatus):
+def enable_disable_event(e_id, et_status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE event SET status = %s WHERE id = %s"
-            values = (etstatus, e_id)
-            cursor.execute(sql_query, values)
+            disable_event_query = "UPDATE event SET status = %s WHERE id = %s"
+            values = (et_status, e_id)
+            cursor.execute(disable_event_query, values)
             return {
                 "status": True,
                 "message": "Event Status changed successfully"
@@ -52,8 +52,8 @@ def enable_disable_event(e_id, etstatus):
 def get_event_by_id(et_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = f""" SELECT * FROM event WHERE id = '{et_id}'"""
-            cursor.execute(sql_query)
+            get_event_query = f""" SELECT * FROM event WHERE id = '{et_id}'"""
+            cursor.execute(get_event_query)
             event = cursor.fetchone()
             if event is not None:
                 print(event)
@@ -73,12 +73,40 @@ def get_event_by_id(et_id):
         return {"status": False, "message": str(e)}, 301
 
 
+def get_active_event(status):
+    try:
+        with connection.cursor() as cursor:
+            event_settlement_query = f"""
+                    SELECT e.* ,
+                      IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
+                      IFNULL(SUM(CASE WHEN s.transaction_id IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
+                      IFNULL(SUM(CASE WHEN s.transaction_id IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount
+                    FROM event e
+                    LEFT JOIN transaction_history th ON e.id = th.event_id
+                    LEFT JOIN settlements s ON th.id = s.transaction_id
+                    WHERE DATE(e.event_date) >= '{today.date()}' AND e.status = '{1}'
+                    GROUP BY e.id, e.event_date;
+                    """
+            cursor.execute(event_settlement_query)
+            amount = cursor.fetchall()
+            return {
+                "status": True,
+                # "msg": amount
+                "active_event": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def gift_event(e_id, phone):
     try:
         with connection.cursor() as cursor:
-            sql_query = f""" SELECT * , (SELECT uid FROM users WHERE phone = '{phone}') AS users FROM event 
+            gift_event_query = f""" SELECT * , (SELECT uid FROM users WHERE phone = '{phone}') AS users FROM event 
             WHERE id = '{e_id}'"""
-            cursor.execute(sql_query)
+            cursor.execute(gift_event_query)
             event = cursor.fetchone()
             if event is not None:
                 print(event)
@@ -101,10 +129,10 @@ def gift_event(e_id, phone):
 def get_event_list(uid):
     try:
         with connection.cursor() as cursor:
-            sql_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
-                        "event.is_approved, event.status FROM event JOIN events_type ON " \
-                        "event.event_type_id = events_type.id"
-            cursor.execute(sql_query)
+            event_list_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
+                               "event.is_approved, event.status FROM event JOIN events_type ON " \
+                               "event.event_type_id = events_type.id"
+            cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
                 "status": True,
@@ -120,16 +148,15 @@ def get_event_list(uid):
 def get_single_event(event_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = "SELECT event.event_date, event.event_admin, event.event_note, event.address_line1, " \
-                        "event.address_line2, event.event_lat_lng, event.sub_events, events_type.event_type_name  " \
-                        "FROM event JOIN events_type ON event.event_type_id = events_type.id WHERE event.id = %s"
-            cursor.execute(sql_query, (event_id,))
+            single_event_query = "SELECT event.event_date, event.event_admin, event.event_note, event.address_line1, " \
+                                 "event.address_line2, event.event_lat_lng, event.sub_events, events_type.event_type_name  " \
+                                 "FROM event JOIN events_type ON event.event_type_id = events_type.id WHERE event.id = %s"
+            cursor.execute(single_event_query, (event_id,))
             events = cursor.fetchone()
             return {
                 "status": True,
                 "event": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
             }, 200
-            # return responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT), 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -139,9 +166,9 @@ def get_single_event(event_id):
 def create_events_type(event_name):
     try:
         with connection.cursor() as cursor:
-            sql_query = "INSERT INTO events_type (event_type_name, status) VALUES (%s,%s)"
+            events_type_query = "INSERT INTO events_type (event_type_name, status) VALUES (%s,%s)"
             values = (event_name, True)
-            cursor.execute(sql_query, values)
+            cursor.execute(events_type_query, values)
             return {
                 "status": True,
                 "message": "Event Type added successfully"
@@ -152,12 +179,12 @@ def create_events_type(event_name):
         return {"status": False, "message": str(e)}, 301
 
 
-def disable_events_type(event_id, estatus):
+def disable_events_type(event_id, e_status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE events_type SET status = %s WHERE id = %s"
-            values = (estatus, event_id)
-            cursor.execute(sql_query, values)
+            disable_events_type_query = "UPDATE events_type SET status = %s WHERE id = %s"
+            values = (e_status, event_id)
+            cursor.execute(disable_events_type_query, values)
             return {
                 "status": True,
                 "message": "Event Type changed successfully"
@@ -173,8 +200,8 @@ def disable_events_type(event_id, estatus):
 def edit_events_type(lid, event_type_name):
     try:
         with connection.cursor() as cursor:
-            sql_query = f"""UPDATE events_type SET event_type_name = '{event_type_name}' where id= '{lid}'"""
-            cursor.execute(sql_query)
+            edit_query = f"""UPDATE events_type SET event_type_name = '{event_type_name}' where id= '{lid}'"""
+            cursor.execute(edit_query)
             return {
                 "status": True,
                 "message": "Events Type edited successfully"
@@ -188,8 +215,8 @@ def edit_events_type(lid, event_type_name):
 def events_type_by_id(et_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = " SELECT id, event_type_name FROM events_type WHERE id= %s;"
-            cursor.execute(sql_query, [et_id, ])
+            events_type_query = " SELECT id, event_type_name FROM events_type WHERE id= %s;"
+            cursor.execute(events_type_query, [et_id, ])
             events = cursor.fetchone()
             if events is not None:
                 return {
@@ -230,9 +257,9 @@ def get_event_type_list_for_user():
 def add_location(city_name):
     try:
         with connection.cursor() as cursor:
-            sql_query = "INSERT INTO locations (city_name, status) VALUES (%s,%s)"
+            add_location_query = "INSERT INTO locations (city_name, status) VALUES (%s,%s)"
             values = (city_name, True)
-            cursor.execute(sql_query, values)
+            cursor.execute(add_location_query, values)
             return {
                 "status": True,
                 "message": "location added successfully"
@@ -243,12 +270,12 @@ def add_location(city_name):
         return {"status": False, "message": str(e)}, 301
 
 
-def disable_location(location_id, lstatus):
+def disable_location(location_id, loc_status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE locations SET status = %s WHERE id = %s"
-            values = (lstatus, location_id)
-            cursor.execute(sql_query, values)
+            disable_loc_query = "UPDATE locations SET status = %s WHERE id = %s"
+            values = (loc_status, location_id)
+            cursor.execute(disable_loc_query, values)
             return {
                 "status": True,
                 "message": "Location status changed successfully"
@@ -261,11 +288,11 @@ def disable_location(location_id, lstatus):
         return {"status": False, "message": str(e)}, 301
 
 
-def edit_location(lid, lcity_name):
+def edit_location(lid, city_name):
     try:
         with connection.cursor() as cursor:
-            sql_query = f"""UPDATE locations SET city_name = '{lcity_name}' where id= '{lid}' """
-            cursor.execute(sql_query)
+            edit_location_query = f"""UPDATE locations SET city_name = '{city_name}' where id= '{lid}' """
+            cursor.execute(edit_location_query)
             return {
                 "status": True,
                 "message": "Location edited successfully"
@@ -279,8 +306,8 @@ def edit_location(lid, lcity_name):
 def get_location_by_id(loc_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = " SELECT id, city_name FROM locations WHERE id=%s;"
-            cursor.execute(sql_query, [loc_id])
+            get_location_query = " SELECT id, city_name FROM locations WHERE id=%s;"
+            cursor.execute(get_location_query, [loc_id])
             location = cursor.fetchone()
             if location is not None:
                 return {
@@ -302,8 +329,8 @@ def get_location_by_id(loc_id):
 def get_event_type_list_for_admin():
     try:
         with connection.cursor() as cursor:
-            sql_query = "SELECT id, event_type_name, status FROM events_type"
-            cursor.execute(sql_query)
+            event_type_for_admin_query = "SELECT id, event_type_name, status FROM events_type"
+            cursor.execute(event_type_for_admin_query)
             events = cursor.fetchall()
             return {
                 "status": True,
@@ -318,8 +345,8 @@ def get_event_type_list_for_admin():
 def get_locations_list():
     try:
         with connection.cursor() as cursor:
-            sql_query = "SELECT id, city_name, status FROM locations"
-            cursor.execute(sql_query)
+            location_list_query = "SELECT id, city_name, status FROM locations"
+            cursor.execute(location_list_query)
             events = cursor.fetchall()
             return {
                 "status": True,
@@ -427,10 +454,10 @@ def search_user_event(uid):
 def get_all_event_list():
     try:
         with connection.cursor() as cursor:
-            sql_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
-                        "event.is_approved, event.status FROM event JOIN events_type ON " \
-                        "event.event_type_id = events_type.id"
-            cursor.execute(sql_query)
+            event_list_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
+                               "event.is_approved, event.status FROM event JOIN events_type ON " \
+                               "event.event_type_id = events_type.id"
+            cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
                 "status": True,
@@ -446,10 +473,10 @@ def get_all_event_list():
 def get_all_active_events():
     try:
         with connection.cursor() as cursor:
-            sql_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+            active_events_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
             event.is_approved, event.status  FROM event JOIN events_type ON event.event_type_id = events_type.id 
             WHERE event.status= '{True}' """
-            cursor.execute(sql_query)
+            cursor.execute(active_events_query)
             events = cursor.fetchall()
             return {
                 "msg": events
@@ -482,9 +509,9 @@ def get_city_list_for_user():
 def set_event_status(event_id, status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE event SET is_approved = %s WHERE id = %s"
+            event_status_query = "UPDATE event SET is_approved = %s WHERE id = %s"
             values = (status, event_id)
-            cursor.execute(sql_query, values)
+            cursor.execute(event_status_query, values)
             return {
                 "status": True,
                 "message": "Event Status changed successfully"

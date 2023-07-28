@@ -18,7 +18,6 @@ def admin_dashboard(uid):
                 """
             cursor.execute(transaction_stats_query)
             transaction_stats = cursor.fetchone()
-
             event_stats_query = f"""
                 SELECT 
                     COUNT(*) AS total_events,
@@ -31,8 +30,7 @@ def admin_dashboard(uid):
             today_events_query = f"""
                             SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id,
                             event.is_approved, event.status FROM event 
-                            JOIN events_type ON event.event_type_id = events_type.id 
-                            WHERE DATE(event_date) = '{today.date()}';
+                             WHERE DATE(event_date) = '{today.date()}';
                             """
             cursor.execute(today_events_query)
             today_event_stats = cursor.fetchall()

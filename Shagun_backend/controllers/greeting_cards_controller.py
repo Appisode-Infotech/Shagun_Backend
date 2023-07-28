@@ -48,9 +48,9 @@ def get_all_greeting_cards():
 def disable_greeting_cards(event_id, estatus):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE greeting_cards SET status = %s WHERE id = %s"
+            disable_cards_query = "UPDATE greeting_cards SET status = %s WHERE id = %s"
             values = (estatus, event_id)
-            cursor.execute(sql_query, values)
+            cursor.execute(disable_cards_query, values)
             return {
                 "status": True,
                 "message": "Greeting card changed successfully"
@@ -66,9 +66,9 @@ def disable_greeting_cards(event_id, estatus):
 def edit_greeting_cards(grt_obj):
     try:
         with connection.cursor() as cursor:
-            query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', card_price = '{grt_obj.card_price}' 
+            edit_cards_query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', card_price = '{grt_obj.card_price}' 
             WHERE id = '{grt_obj.id}' """
-            cursor.execute(query)
+            cursor.execute(edit_cards_query)
             return {
                 "status": True,
                 "msg": "Greeting card updated successfully"
@@ -83,8 +83,8 @@ def edit_greeting_cards(grt_obj):
 def get_greetings_by_id(gre_id):
     try:
         with connection.cursor() as cursor:
-            sql_query = f"""SELECT id, card_name FROM greeting_cards WHERE id = '{gre_id}' """
-            cursor.execute(sql_query)
+            get_greetings_query = f"""SELECT id, card_name FROM greeting_cards WHERE id = '{gre_id}' """
+            cursor.execute(get_greetings_query)
             greeting = cursor.fetchone()
             if greeting is not None:
                 return {
@@ -96,6 +96,25 @@ def get_greetings_by_id(gre_id):
                     "status": False,
                     "greeting_card": None
                 }, 301
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def add_greeting_card(grt_obj):
+    try:
+        with connection.cursor() as cursor:
+            greeting_cards_query = f"""INSERT INTO greeting_cards (card_name, card_image_url, card_price, status)
+                        VALUES (%s, %s, %s, %s)"""
+            cursor.execute(greeting_cards_query,
+                           (grt_obj.card_name, grt_obj.card_image_url, grt_obj.card_price, True))
+            return {
+                "status": True,
+                "msg": "card added successfully"
+
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

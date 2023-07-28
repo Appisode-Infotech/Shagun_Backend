@@ -66,7 +66,6 @@ class responseGenerator:
                 )
             return event_list
 
-
         if controller_type == ALL_EVENT_LIST:
             event_list = []
             for events in data:
@@ -92,6 +91,36 @@ class responseGenerator:
                 "admins": json.loads(data[1]),
                 "sub_events": json.loads(data[6])
             }
+
+        if controller_type == ACTIVE_EVENT:
+            active_event = []
+            for events in data:
+                active_event.append(
+                    {
+                        "id": events[0],
+                        "created_by_uid": events[1],
+                        "event_type_id": events[2],
+                        "city_id": events[3],
+                        "address_line1": events[4],
+                        "address_line2": events[5],
+                        "event_lat_lng": events[6],
+                        "created_on": events[7],
+                        "sub_events": json.loads(events[8]),
+                        "event_date": events[9],
+                        "event_note": events[10],
+                        "event_admin": json.loads(events[11]),
+                        "is_approved": events[12],
+                        "approved_by": events[13],
+                        "printer_id": events[14],
+                        "approved_date_time": events[15],
+                        "status": events[16],
+                        "total_received_amount": events[17],
+                        "total_shagun_amount": events[18],
+                        "settled_amount": events[19]
+
+                    }
+                )
+            return active_event
 
         if controller_type == EVENT_BY_ID:
             return {

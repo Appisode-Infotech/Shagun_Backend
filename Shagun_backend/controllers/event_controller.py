@@ -163,11 +163,11 @@ def get_single_event(event_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def create_events_type(event_name):
+def create_events_type(event_name, created_by):
     try:
         with connection.cursor() as cursor:
-            events_type_query = "INSERT INTO events_type (event_type_name, status) VALUES (%s,%s)"
-            values = (event_name, True)
+            events_type_query = "INSERT INTO events_type (event_type_name, status,created_by) VALUES (%s,%s,%s)"
+            values = (event_name, True, created_by)
             cursor.execute(events_type_query, values)
             return {
                 "status": True,
@@ -254,11 +254,11 @@ def get_event_type_list_for_user():
         return {"status": False, "message": str(e)}, 301
 
 
-def add_location(city_name):
+def add_location(city_name, created_by):
     try:
         with connection.cursor() as cursor:
-            add_location_query = "INSERT INTO locations (city_name, status) VALUES (%s,%s)"
-            values = (city_name, True)
+            add_location_query = "INSERT INTO locations (city_name, status, created_by) VALUES (%s,%s, %s)"
+            values = (city_name, True, created_by)
             cursor.execute(add_location_query, values)
             return {
                 "status": True,

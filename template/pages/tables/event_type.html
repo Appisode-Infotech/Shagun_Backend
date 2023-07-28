@@ -65,11 +65,12 @@
         }
 
         /* Styling for the centered popup */
-        #popupDiv {
+        #popupDiv, #popupDiv1 {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
+            width: 50%;
             transform: translate(-50%, -50%);
             border: 2px solid lightskyblue;
             padding: 20px;
@@ -86,6 +87,8 @@
         .center-button button {
             margin-right: 10px;
         }
+
+
 
     </style>
 </head>
@@ -108,10 +111,42 @@
                     <div class="header-container">
                         <h4 class="card-title">Events Type</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'add_events_type' %}'">
+                                onclick="showPopUpDiv1()">
                             Event Type
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
+                        <div id="popupDiv1">
+                            <form class="form-sample" action="/add_events_type" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Event Type Name </label>
+                                            <div class="col-sm-9">
+                                                <input id="event_type_name" name="event_type_name" type="text"
+                                                       class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Created By</label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control">{{ request.session.name }}</label>
+                                                <input type="hidden" id="created_by_uid" name="created_by_uid"
+                                                       value="{{ request.session.uid }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="center-button">
+                                    <button type="button" onclick="hidePopUpDiv1()"
+                                            class="btn btn-inverse-dark btn-fw">Cancel
+                                    </button>
+                                    <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -247,6 +282,16 @@
         var popupDiv = document.getElementById("popupDiv");
         popupDiv.style.display = "none";
     }
+
+    function showPopUpDiv1() {
+        var popupDiv1 = document.getElementById("popupDiv1");
+        popupDiv1.style.display = "block";
+    }
+
+    function hidePopUpDiv1() {
+        var popupDiv1 = document.getElementById("popupDiv1");
+        popupDiv1.style.display = "none";
+    }
 </script>
 <script>
         function toggleForm() {
@@ -267,12 +312,6 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
-
-
-
-
-
-
 </script>
 
 </body>

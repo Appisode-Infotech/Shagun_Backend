@@ -159,7 +159,7 @@ def add_events(request):
 def add_events_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
+            event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by_uid'])
             return redirect('manage_event_types')
         else:
             return render(request, 'pages/tables/add_events_type.html')
@@ -252,6 +252,16 @@ def add_greeting_cards(request):
             printers_list, status_code = store_controller.get_all_printers()
             return render(request, 'pages/tables/add_greeting_cards.html', printers_list)
 
+    else:
+        return redirect('sign_up')
+
+
+def add_location(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            response, status_code = event_controller.add_location(request.POST['city_name'],
+                                                                  request.POST['created_by_uid'])
+            return redirect('manage_location')
     else:
         return redirect('sign_up')
 
@@ -730,10 +740,11 @@ def gift_event(request):
     return JsonResponse(response, status=status_code)
 
 
-@api_view(['POST'])
-def create_events_type(request):
-    response, status_code = event_controller.create_events_type(request.data['event_type_name'])
-    return JsonResponse(response, status=status_code)
+#
+# @api_view(['POST'])
+# def create_events_type(request):
+#     response, status_code = event_controller.create_events_type(request.data['event_type_name'])
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -760,11 +771,11 @@ def get_event_type_list(request):
     return JsonResponse(response, status=status_code)
 
 
-@api_view(['POST'])
-def add_location(request):
-    response, status_code = event_controller.add_location(request.data['city_name'])
-    return JsonResponse(response, status=status_code)
-
+# @api_view(['POST'])
+# def add_location(request):
+#     response, status_code = event_controller.add_location(request.data['city_name'])
+#     return JsonResponse(response, status=status_code)
+#
 
 @api_view(['POST'])
 def enable_disable_location(request):

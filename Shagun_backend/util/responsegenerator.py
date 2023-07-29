@@ -81,17 +81,6 @@ class responseGenerator:
                 )
             return event_list
 
-        if controller_type == SINGLE_EVENT:
-            return {
-                "event_date": data[0],
-                "event_note": data[2],
-                "address_line1": data[3],
-                "address_line2": data[4],
-                "event_lat_lng": data[5],
-                "admins": json.loads(data[1]),
-                "sub_events": json.loads(data[6])
-            }
-
         if controller_type == ACTIVE_EVENT:
             active_event = []
             for events in data:
@@ -544,3 +533,6 @@ class responseGenerator:
 
                 )
             return locations_lists
+
+        if controller_type == SINGLE_EVENT:
+            return "ok"

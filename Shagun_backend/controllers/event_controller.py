@@ -359,34 +359,53 @@ def get_locations_list():
 
 
 def get_my_event_list(uid):
+    print(uid)
     try:
         with connection.cursor() as cursor:
             phone_query = f"""SELECT phone FROM users WHERE uid = '{uid}'"""
             cursor.execute(phone_query)
             phone = cursor.fetchone()[0]
             # SQL query for events with event_date less than or equal to today
-            sql_query_past_events = f"""
-                SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                    event.is_approved, event.status,
-                    COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE event_id = event.id),0) AS total_amount,
-                    COUNT(DISTINCT transaction_history.sender_uid) AS sender_count
-                FROM event
-                LEFT JOIN events_type ON event.event_type_id = events_type.id
-                LEFT JOIN transaction_history ON event.id = transaction_history.event_id
-                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.date()}'
-            """
+            sql_query_past_events = sql_query_upcoming_events = f"""
+                    SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                        event.is_approved, event.status,
+                        total_amount.shagun_amount AS total_amount,
+                        sender_count.sender_uid_count AS sender_count
+                    FROM event
+                    LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id
+                    LEFT OUTER JOIN (
+                        SELECT event_id, SUM(shagun_amount) AS shagun_amount
+                        FROM transaction_history
+                        GROUP BY event_id
+                    ) AS total_amount ON event.id = total_amount.event_id
+                    LEFT OUTER JOIN (
+                        SELECT event_id, COUNT(DISTINCT sender_uid) AS sender_uid_count
+                        FROM transaction_history
+                        GROUP BY event_id
+                    ) AS sender_count ON event.id = sender_count.event_id
+                    WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.today()}'
+                """
 
             # SQL query for events with event_date greater than today
             sql_query_upcoming_events = f"""
-                SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                    event.is_approved, event.status,
-                    COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE event_id = event.id),0) AS total_amount,
-                    COUNT(DISTINCT transaction_history.sender_uid) AS sender_count
-                FROM event 
-                LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id 
-                LEFT OUTER JOIN transaction_history ON event.id = transaction_history.event_id
-                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) > '{today.now()}'
-            """
+                        SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                            event.is_approved, event.status,
+                            total_amount.shagun_amount AS total_amount,
+                            sender_count.sender_uid_count AS sender_count
+                        FROM event 
+                        LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id 
+                        LEFT OUTER JOIN (
+                            SELECT event_id, SUM(shagun_amount) AS shagun_amount
+                            FROM transaction_history
+                            GROUP BY event_id
+                        ) AS total_amount ON event.id = total_amount.event_id
+                        LEFT OUTER JOIN (
+                            SELECT event_id, COUNT(DISTINCT sender_uid) AS sender_uid_count
+                            FROM transaction_history
+                            GROUP BY event_id
+                        ) AS sender_count ON event.id = sender_count.event_id
+                        WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.today()}'
+                    """
 
             # UID JSON data
             uid_json = json.dumps({'uid': uid})
@@ -394,17 +413,12 @@ def get_my_event_list(uid):
             # Execute the first query for past events
             cursor.execute(sql_query_past_events, {'uid_json': uid_json})
             past_events = cursor.fetchall()
-            print(past_events)
-            if past_events[0][0] is None:
-                past_events = ()
+            print(past_events, "past")
 
             # Execute the second query for upcoming events
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()
-            print(upcoming_events)
-
-            if upcoming_events[0][0] is None:
-                upcoming_events = ()
+            print(upcoming_events, "upcoming")
 
             invited_events_query = f"""
                             SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status

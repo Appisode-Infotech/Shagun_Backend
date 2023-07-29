@@ -8,9 +8,9 @@ from Shagun_backend.util.constants import *
 def add_printer(store_obj):
     try:
         with connection.cursor() as cursor:
-            query = "INSERT INTO printer (store_name, city, address, lat_lng, gst_no, store_owner, contact_number, " \
-                    "printer_user_name, printer_password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(query, [store_obj.store_name, store_obj.city, store_obj.address, store_obj.lat_lng,
+            add_printer_query = "INSERT INTO printer (store_name, city, address, lat_lng, gst_no, store_owner,  " \
+                    "contact_number, printer_user_name, printer_password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address, store_obj.lat_lng,
                                    store_obj.gst_no, store_obj.store_owner, store_obj.contact_number,
                                    store_obj.printer_user_name, store_obj.printer_password])
             return {
@@ -52,6 +52,28 @@ def edit_printer(store_obj):
                 "status": True,
                 "message": "Printer edited successfully"
             }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+def get_printer_by_id(pid):
+    try:
+        with connection.cursor() as cursor:
+            printer_by_id_query = f""" SELECT p.*, loc.city_name FROM printer AS p LEFT JOIN locations AS loc ON p.city = loc.id
+             WHERE p.id = '{pid}'"""
+            cursor.execute(printer_by_id_query)
+            printer = cursor.fetchone()
+            if printer is not None:
+                return {
+                      "status": True,
+                      "store": responsegenerator.responseGenerator.generateResponse(printer, PRINTER_BY_ID)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "Printer": None
+                }, 301
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:

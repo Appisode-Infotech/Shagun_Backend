@@ -64,6 +64,32 @@
             margin-left: 5px;
         }
 
+        /* Styling for the centered popup */
+        #popupDiv1, #popupDiv {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid lightskyblue;
+            padding: 20px;
+            background-color: #fff;
+            z-index: 9999;
+            background-color: #f0f0f0;
+        }
+
+        .center-button {
+          display: flex;
+          justify-content: center;
+
+        }
+        .center-button button {
+            margin-right: 10px;
+        }
+
+
+
     </style>
 </head>
 
@@ -85,10 +111,42 @@
                     <div class="header-container">
                         <h4 class="card-title">Locations</h4>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'location_popup_view' %}'">
+                                onclick="showPopUpDiv1()">
                             Location
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
+                        <div id="popupDiv1">
+                            <form class="form-sample" action="/add_location" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Location Name </label>
+                                            <div class="col-sm-9">
+                                                <input id="city_name" name="city_name" type="text"
+                                                       class="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Created By</label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control">{{ request.session.name }}</label>
+                                                <input type="hidden" id="created_by_uid" name="created_by_uid"
+                                                       value="{{ request.session.uid }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="center-button">
+                                    <button type="button" onclick="hidePopUpDiv1()"
+                                            class="btn btn-inverse-dark btn-fw">Cancel
+                                    </button>
+                                    <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -124,13 +182,48 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_location' location.location_id 1 %}">Active</a>
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_location' location.location_id 0 %}">Inactive</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_location' location.location_id 1 %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_location' location.location_id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-info btn-fw">Edit</button>
+                                    <button onclick="showPopUpDiv('{{location.location_id}}', '{{location.location_name}}')"
+                                            class="btn btn-outline-info btn-fw">Edit
+                                    </button>
+                                    <div id="popupDiv">
+                                        <form class="form-sample" action="/edit_location" method="post">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-3 col-form-label">Location ID </label>
+                                                        <div class="col-sm-9">
+                                                            <input readonly id="id" name="id" type="text"
+                                                                   class="form-control"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-3 col-form-label">Name</label>
+                                                        <div class="col-sm-9">
+                                                            <input id="name" type="text" class="form-control"
+                                                                   name="name"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="center-button">
+                                                <button type="button" onclick="hidePopUpDiv()"
+                                                        class="btn btn-inverse-dark btn-fw">Cancel
+                                                </button>
+                                                <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -145,14 +238,7 @@
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
-<footer class="footer">
-    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a
-                href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i
-                class="ti-heart text-danger ml-1"></i></span>
-    </div>
-</footer>
+{% include 'footer.html' %}
 <!-- partial -->
 </div>
 <!-- main-panel ends -->
@@ -176,7 +262,33 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
+<script>
+    function showPopUpDiv(val1, val2) {
+        // Display the popup by changing its style to "display: block"
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "block";
 
+        // Set the values for the fields in the popup form
+        document.getElementById("id").value = val1;
+        document.getElementById("name").value = val2;
+    }
+
+    function hidePopUpDiv() {
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "none";
+    }
+
+    function showPopUpDiv1() {
+        var popupDiv1 = document.getElementById("popupDiv1");
+        popupDiv1.style.display = "block";
+    }
+
+    function hidePopUpDiv1() {
+        var popupDiv1 = document.getElementById("popupDiv1");
+        popupDiv1.style.display = "none";
+    }
+
+</script>
 
 </body>
 

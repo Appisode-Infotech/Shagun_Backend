@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, TypeVar, Type, cast
-
+from typing import Optional, Any, TypeVar, Type, cast
 
 T = TypeVar("T")
 
@@ -8,6 +7,25 @@ T = TypeVar("T")
 def from_str(x: Any) -> str:
     assert isinstance(x, str)
     return x
+
+
+def from_int(x: Any) -> int:
+    assert isinstance(x, int) and not isinstance(x, bool)
+    return x
+
+
+def from_none(x: Any) -> Any:
+    assert x is None
+    return x
+
+
+def from_union(fs, x):
+    for f in fs:
+        try:
+            return f(x)
+        except:
+            pass
+    assert False
 
 
 def to_class(c: Type[T], x: Any) -> dict:
@@ -28,11 +46,12 @@ class UserKycModel:
     adress1: str
     state: str
     adress2: str
-    postcode: int
+    postcode: str
     city: str
-    identification_doc1: str
-    identification_doc2: str
     country: str
+    identification_doc1: Optional[str] = None
+    identification_doc2: Optional[str] = None
+    id: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'UserKycModel':
@@ -48,12 +67,15 @@ class UserKycModel:
         adress1 = from_str(obj.get("adress1"))
         state = from_str(obj.get("state"))
         adress2 = from_str(obj.get("adress2"))
-        postcode = int(from_str(obj.get("postcode")))
+        postcode = from_str(obj.get("postcode"))
         city = from_str(obj.get("city"))
-        identification_doc1 = from_str(obj.get("identification_doc1"))
-        identification_doc2 = from_str(obj.get("identification_doc2"))
+        identification_doc1 = from_union([from_str, from_none], obj.get("identification_doc1"))
+        identification_doc2 = from_union([from_str, from_none], obj.get("identification_doc2"))
+        id = from_union([from_str, from_none], obj.get("id"))
         country = from_str(obj.get("country"))
-        return UserKycModel(uid, full_name, gender, dob, identification_proof1, identification_number1, identification_proof2, identification_number2, adress1, state, adress2, postcode, city, identification_doc1, identification_doc2, country)
+        return UserKycModel(uid, full_name, gender, dob, identification_proof1, identification_number1,
+                            identification_proof2, identification_number2, adress1, state, adress2, postcode, city,
+                            country, identification_doc1, identification_doc2, id)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -68,11 +90,15 @@ class UserKycModel:
         result["adress1"] = from_str(self.adress1)
         result["state"] = from_str(self.state)
         result["adress2"] = from_str(self.adress2)
-        result["postcode"] = from_str(str(self.postcode))
+        result["postcode"] = from_str(self.postcode)
         result["city"] = from_str(self.city)
-        result["identification_doc1"] = from_str(self.identification_doc1)
-        result["identification_doc2"] = from_str(self.identification_doc2)
+        if self.identification_doc1 is not None:
+            result["identification_doc1"] = from_union([from_str, from_none], self.identification_doc1)
+        if self.identification_doc2 is not None:
+            result["identification_doc2"] = from_union([from_str, from_none], self.identification_doc2)
         result["country"] = from_str(self.country)
+        if self.id is not None:
+            result["id"] = from_union([from_str, from_none], self.id)
         return result
 
 

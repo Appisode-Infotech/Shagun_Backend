@@ -1,13 +1,26 @@
 from dataclasses import dataclass
-from typing import Any, TypeVar, Type, cast
+from typing import Optional, Any, TypeVar, Type, cast
 
 
 T = TypeVar("T")
 
-
 def from_str(x: Any) -> str:
     assert isinstance(x, str)
     return x
+
+
+def from_none(x: Any) -> Any:
+    assert x is None
+    return x
+
+
+def from_union(fs, x):
+    for f in fs:
+        try:
+            return f(x)
+        except:
+            pass
+    assert False
 
 
 def to_class(c: Type[T], x: Any) -> dict:
@@ -22,7 +35,8 @@ class BankDetailsModel:
     ifsc_code: str
     account_holder_name: str
     account_number: str
-    added_by: str
+    added_by: Optional[str] = None
+    modified_by: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'BankDetailsModel':
@@ -32,8 +46,9 @@ class BankDetailsModel:
         ifsc_code = from_str(obj.get("ifsc_code"))
         account_holder_name = from_str(obj.get("account_holder_name"))
         account_number = from_str(obj.get("account_number"))
-        added_by = from_str(obj.get("added_by"))
-        return BankDetailsModel(uid, bank_name, ifsc_code, account_holder_name, account_number, added_by)
+        added_by = from_union([from_str, from_none], obj.get("added_by"))
+        modified_by = from_union([from_str, from_none], obj.get("modified_by"))
+        return BankDetailsModel(uid, bank_name, ifsc_code, account_holder_name, account_number, added_by, modified_by)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -42,7 +57,10 @@ class BankDetailsModel:
         result["ifsc_code"] = from_str(self.ifsc_code)
         result["account_holder_name"] = from_str(self.account_holder_name)
         result["account_number"] = from_str(self.account_number)
-        result["added_by"] = from_str(self.added_by)
+        if self.added_by is not None:
+            result["added_by"] = from_union([from_str, from_none], self.added_by)
+        if self.modified_by is not None:
+            result["modified_by"] = from_union([from_str, from_none], self.modified_by)
         return result
 
 

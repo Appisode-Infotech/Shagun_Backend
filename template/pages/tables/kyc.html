@@ -8,6 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -64,6 +65,9 @@
             margin-left: 5px;
         }
 
+
+
+
     </style>
 </head>
 
@@ -103,29 +107,29 @@
                                 <th>
                                     Name
                                 </th>
-<!--                                <th>-->
-<!--                                    DOB-->
-<!--                                </th>-->
-<!--                                <th>-->
-<!--                                    Permanent Address-->
-<!--                                </th>-->
+                                <!--                                <th>-->
+                                <!--                                    DOB-->
+                                <!--                                </th>-->
+                                <!--                                <th>-->
+                                <!--                                    Permanent Address-->
+                                <!--                                </th>-->
                                 <th>
                                     Identification Proof1
                                 </th>
                                 <th>
                                     Identification Proof2
                                 </th>
-<!--                                <th>-->
-<!--                                    Identification Number1-->
-<!--                                </th>-->
-<!--                                <th>-->
-<!--                                    Identification Number2-->
-<!--                                </th>-->
-<!--                                <th>-->
-<!--                                    Identification Document1-->
-<!--                                </th>-->
-<!--                                <th>-->
-<!--                                    Identification Document2-->
+                                <!--                                <th>-->
+                                <!--                                    Identification Number1-->
+                                <!--                                </th>-->
+                                <!--                                <th>-->
+                                <!--                                    Identification Number2-->
+                                <!--                                </th>-->
+                                <!--                                <th>-->
+                                <!--                                    Identification Document1-->
+                                <!--                                </th>-->
+                                <!--                                <th>-->
+                                <!--                                    Identification Document2-->
                                 </th>
                                 <th>
                                     Verification Status
@@ -145,12 +149,12 @@
                                 <td>
                                     {{kyc.full_name}}
                                 </td>
-<!--                                <td>-->
-<!--                                    {{kyc.dob}}-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    {{kyc.permanent_address}}-->
-<!--                                </td>-->
+                                <!--                                <td>-->
+                                <!--                                    {{kyc.dob}}-->
+                                <!--                                </td>-->
+                                <!--                                <td>-->
+                                <!--                                    {{kyc.permanent_address}}-->
+                                <!--                                </td>-->
                                 <td>
                                     <b>{{kyc.identification_proof1}} :</b></br></br>
                                     {{kyc.identification_number1}}
@@ -159,18 +163,18 @@
                                     <b>{{kyc.identification_proof2}} :</b></br><br>
                                     {{kyc.identification_number2}}
                                 </td>
-<!--                                <td>-->
-<!--                                    {{kyc.identification_number1}}-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    {{kyc.identification_number2}}-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    {{kyc.identification_doc1}}-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    {{kyc.identification_doc2}}-->
-<!--                                </td>-->
+                                <!--                                <td>-->
+                                <!--                                    {{kyc.identification_number1}}-->
+                                <!--                                </td>-->
+                                <!--                                <td>-->
+                                <!--                                    {{kyc.identification_number2}}-->
+                                <!--                                </td>-->
+                                <!--                                <td>-->
+                                <!--                                    {{kyc.identification_doc1}}-->
+                                <!--                                </td>-->
+                                <!--                                <td>-->
+                                <!--                                    {{kyc.identification_doc2}}-->
+                                <!--                                </td>-->
                                 <td>
                                     {% if kyc.verification_status == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -179,7 +183,7 @@
                                     {% endif %}
                                 </td>
 
-                                 <td>
+                                <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                 id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
@@ -191,13 +195,19 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_kyc' kyc.id 1 %}">Active</a>
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_kyc' kyc.id 0 %}">Inactive</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_kyc' kyc.id 1 %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_kyc' kyc.id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-info btn-fw">View</button>
+                                    <button type="button" class="btn btn-outline-info btn-fw"
+                                            onclick="window.location.href='{% url 'edit_kyc' kyc.id %}'">
+                                        Edit
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                 </td>
                             </tr>
 
@@ -213,14 +223,7 @@
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
-<footer class="footer">
-    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a
-                href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i
-                class="ti-heart text-danger ml-1"></i></span>
-    </div>
-</footer>
+{% include 'footer.html' %}
 <!-- partial -->
 </div>
 <!-- main-panel ends -->

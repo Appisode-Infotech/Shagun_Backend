@@ -854,7 +854,6 @@ def request_callback(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-
 @api_view(['POST'])
 def add_transaction_history(request):
     token = request.headers.get('Authorization').split(' ')[1]

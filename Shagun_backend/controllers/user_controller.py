@@ -209,9 +209,11 @@ def update_user_kyc(kyc_obj):
 def enable_disable_kyc(kyc_id, v_status):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE user_kyc SET verification_status = %s WHERE id = %s"
-            values = (v_status, kyc_id)
-            cursor.execute(sql_query, values)
+            sql_query = f"""UPDATE user_kyc AS uk
+                JOIN users AS u ON uk.uid = u.uid
+                SET uk.verification_status = '{v_status}', u.kyc = '{v_status}'
+                WHERE uk.id = '{kyc_id}' """
+            cursor.execute(sql_query)
             return {
                 "status": True,
                 "message": "User Kyc status changed successfully"

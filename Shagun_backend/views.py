@@ -461,6 +461,19 @@ def edit_printer(request, printer_id):
 
 
 def edit_event(request, event_id):
+    event_types, status_code = event_controller.get_event_type_list_for_user()
+    location, status_code = event_controller.get_city_list_for_user()
+    users_list, status_code = user_controller.get_all_users()
+    printers_list, status_code = store_controller.get_all_printers()
+    event_data, status_code = event_controller.get_event_by_id(event_id)
+
+    context = {
+        "event_types": event_types,
+        "location": location,
+        "users": users_list,
+        "printers": printers_list,
+        "event_data": event_data
+    }
     return render(request, 'pages/tables/edit_event.html')
 
 

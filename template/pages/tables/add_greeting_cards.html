@@ -120,7 +120,7 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Kyc</h4>
+                                <h4 class="card-title">Add Greeting Card</h4>
                                 <form class="form-sample" action="/add_greeting_cards" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="row">
@@ -151,7 +151,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput3"
+                                                        <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction('myDropdown')"
                                                                class="form-control">
                                                         {% for printers in printer_data %}
@@ -241,29 +241,25 @@ function toggleDropdown(dropdownId) {
 }
 
 // Function to filter the dropdown content based on the input value
-function filterFunction(dropdownId) {
-  var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput" + dropdownId.slice(-1));
-  filter = input.value.toUpperCase();
-  div = document.getElementById(dropdownId);
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
+function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
     }
-  }
-}
 
 function setValue(value1, value2, inputField1Id, inputField2Id) {
   if (value1 && value2) {
     document.getElementById(inputField1Id).value = value1;
-    console.log(inputField1Id)
-    console.log(inputField2Id)
-    console.log(value1)
-    console.log(value2)
     document.getElementById(inputField2Id).value = value2;
     // Optionally, you can hide the dropdown after selecting a value
     var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -274,13 +270,12 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 }
 
   document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("dropdownId");
-        const nameInput = document.getElementById("name");
+        const dropdown = document.getElementById("myDropdown");
+        const nameInput = document.getElementById("printer_name");
         if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
             dropdown.classList.remove("show");
         }
     });
-
 </script>
 <!-- container-scroller -->
 <!-- plugins:js -->

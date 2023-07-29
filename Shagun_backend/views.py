@@ -691,7 +691,7 @@ def enable_disable_event(request):
 # through this API.
 # @api_view(['POST'])
 # def get_event_list(request):
-#     response, status_code = event_controller.get_event_list(request.data['uid'])
+    response, status_code = event_controller.get_event_list(request.data['uid'])
 #     return JsonResponse(response, status=status_code)
 
 @api_view(['POST'])
@@ -852,7 +852,6 @@ def request_callback(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
-
 
 
 @api_view(['POST'])

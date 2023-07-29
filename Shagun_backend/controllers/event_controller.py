@@ -373,7 +373,7 @@ def get_my_event_list(uid):
                 FROM event
                 LEFT JOIN events_type ON event.event_type_id = events_type.id
                 LEFT JOIN transaction_history ON event.id = transaction_history.event_id
-                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) <= '{today.date()}'
+                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.date()}'
             """
 
             # SQL query for events with event_date greater than today
@@ -385,7 +385,7 @@ def get_my_event_list(uid):
                 FROM event 
                 LEFT JOIN events_type ON event.event_type_id = events_type.id 
                 LEFT JOIN transaction_history ON event.id = transaction_history.event_id
-                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) > '{today.date()}'
+                WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}'
             """
 
             # UID JSON data
@@ -394,6 +394,9 @@ def get_my_event_list(uid):
             # Execute the first query for past events
             cursor.execute(sql_query_past_events, {'uid_json': uid_json})
             past_events = cursor.fetchall()
+            print(type(past_events), "hjk")
+            if past_events[0][0] is None:
+                past_events = ()
 
             # Execute the second query for upcoming events
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
@@ -411,6 +414,8 @@ def get_my_event_list(uid):
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
 
+            if upcoming_events[0][0] is None:
+                upcoming_events = ()
             return {
                 "status": True,
                 "past_events": responsegenerator.responseGenerator.generateResponse(past_events, EVENT_LIST),

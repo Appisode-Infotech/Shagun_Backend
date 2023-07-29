@@ -35,6 +35,8 @@ urlpatterns = [
     path('api/get_single_event', get_single_event, name='get_single_event'),
     path('api/get_my_event_list', get_my_event_list, name='get_my_event_list'),
     path('api/request_callback', request_callback, name='request_callback'),
+    path('api/get_users_by_name_or_phone', get_users_by_name_or_phone, name='get_users_by_name_or_phone'),
+    path('api/search_user_event', search_user_event, name='search_user_event'),
 
     path('', admin_dashboard, name='admin_dashboard'),
     path('sign_up', sign_up, name='sign_up'),
@@ -80,7 +82,6 @@ urlpatterns = [
     path('edit_greeting_cards', edit_greeting_cards, name='edit_greeting_cards'),
 
     path('activate_deactivate_user', activate_deactivate_user, name='activate_deactivate_user'),
-    path('get_users_by_name_or_phone', get_users_by_name_or_phone, name='get_users_by_name_or_phone'),
     # path('home', home, name='home'),
     path('add_user_kyc', add_user_kyc, name='add_user_kyc'),
     path('update_user_kyc', update_user_kyc, name='update_user_kyc'),
@@ -94,7 +95,6 @@ urlpatterns = [
     path('get_event_by_id', get_event_by_id, name='get_event_by_id'),
     path('get_active_event', get_active_event, name='get_active_event'),
     path('gift_event', gift_event, name='gift_event'),
-    path('search_user_event', search_user_event, name='search_user_event'),
     # path('get_event_list', get_event_list, name='get_event_list'),
     # path('create_events_type', create_events_type, name='create_events_type'),
     path('enable_disable_events_type', enable_disable_events_type, name='enable_disable_events_type'),

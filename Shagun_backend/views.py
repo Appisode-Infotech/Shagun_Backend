@@ -735,7 +735,9 @@ def get_single_event(request):
         username = decoded_token['username']
         if username == request.data.get('uid'):
             event_id = request.data['event_id']
-            response, status_code = event_controller.get_single_event(event_id)
+            phone = request.data['phone']
+            response, status_code = event_controller.get_single_event(event_id, phone)
+            print(response)
             return JsonResponse(response, status=status_code)
 
         else:

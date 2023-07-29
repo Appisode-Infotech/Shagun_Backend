@@ -145,14 +145,20 @@ def get_event_list(uid):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_single_event(event_id):
+def get_single_event(event_id, phone):
     try:
         with connection.cursor() as cursor:
-            single_event_query = "SELECT event.event_date, event.event_admin, event.event_note, event.address_line1, " \
-                                 "event.address_line2, event.event_lat_lng, event.sub_events, events_type.event_type_name  " \
-                                 "FROM event JOIN events_type ON event.event_type_id = events_type.id WHERE event.id = %s"
-            cursor.execute(single_event_query, (event_id,))
+            single_event_query = f"""SELECT 
+                                        event.event_date, event.event_admin, event.event_note, 
+                                        event.address_line1, event.address_line2, event.event_lat_lng, 
+                                        event.sub_events, events_type.event_type_name, users.uid 
+                                    FROM event
+                                    JOIN events_type ON event.event_type_id = events_type.id
+                                    LEFT JOIN users ON users.phone = '{phone}'
+                                    WHERE event.id = '{event_id}'"""
+            cursor.execute(single_event_query)
             events = cursor.fetchone()
+            print(responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT))
             return {
                 "status": True,
                 "event": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
@@ -384,6 +390,7 @@ def get_my_event_list(uid):
                         GROUP BY event_id
                     ) AS sender_count ON event.id = sender_count.event_id
                     WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.today()}'
+                    AND event.is_approved = 1
                 """
 
             # SQL query for events with event_date greater than today
@@ -405,6 +412,7 @@ def get_my_event_list(uid):
                             GROUP BY event_id
                         ) AS sender_count ON event.id = sender_count.event_id
                         WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.today()}'
+                        AND event.is_approved = 1
                     """
 
             # UID JSON data

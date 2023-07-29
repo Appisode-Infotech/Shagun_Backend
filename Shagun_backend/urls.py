@@ -34,6 +34,7 @@ urlpatterns = [
     path('api/track_order', track_order, name='track_order'),
     path('api/get_single_event', get_single_event, name='get_single_event'),
     path('api/get_my_event_list', get_my_event_list, name='get_my_event_list'),
+    path('api/request_callback', request_callback, name='request_callback'),
 
     path('', admin_dashboard, name='admin_dashboard'),
     path('sign_up', sign_up, name='sign_up'),
@@ -108,7 +109,6 @@ urlpatterns = [
     path('enable_disable_printer', enable_disable_printer, name='enable_disable_printer'),
     path('edit_printer', edit_printer, name='edit_printer'),
     path('get_greetings_by_id', get_greetings_by_id, name='get_greetings_by_id'),
-    path('request_callback', request_callback, name='request_callback'),
     path('update_callback_request', update_callback_request, name='update_callback_request'),
 
 ]

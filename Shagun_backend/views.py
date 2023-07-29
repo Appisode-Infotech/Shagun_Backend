@@ -837,9 +837,22 @@ def get_printer_by_id(request):
 
 @api_view(['POST'])
 def request_callback(request):
-    request_obj = request_callback_model.request_callback_model_from_dict(request.data)
-    response, status_code = request_controller.request_callback(request_obj)
-    return JsonResponse(response, status=status_code)
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            request_obj = request_callback_model.request_callback_model_from_dict(request.data)
+            response, status_code = request_controller.request_callback(request_obj)
+            return JsonResponse(response, status=status_code)
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
+
 
 
 @api_view(['POST'])

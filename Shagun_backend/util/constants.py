@@ -1,6 +1,7 @@
 import datetime
 import pytz
 
+
 ist = pytz.timezone('Asia/Kolkata')
 today = datetime.datetime.now(ist)
 
@@ -50,3 +51,6 @@ SEARCH_EVENT_LIST = "SEARCH_EVENT_LIST"
 GET_USERS_BY_NAME_OR_PHONE = "GET_USERS_BY_NAME_OR_PHONE"
 GIFT_EVENT = "GIFT_EVENT"
 ACTIVE_EVENT = "ACTIVE_EVENT"
+
+
+

@@ -643,3 +643,33 @@ def edit_user_kyc(obj):
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+
+def get_user_requests(param):
+    try:
+        with connection.cursor() as cursor:
+            request_query = f"""SELECT
+                        users.name, users.phone, users.profile_pic, user_callback_request.type,
+                        user_callback_request.status, user_callback_request.created_on, user_callback_request.id
+                        user_callback_request.event_date, user_callback_request.event_type, locations.city_name
+                    FROM
+                        user_callback_request
+                    JOIN
+                        users ON user_callback_request.uid = users.uid
+                    JOIN
+                        locations ON user_callback_request.city = locations.id
+                    WHERE
+                        user_callback_request.status = '{param}' AND users.role = 3; """
+
+            cursor.execute(request_query)
+            request_list = cursor.fetchall()
+            return {
+                "status": True,
+                "req_list": responsegenerator.responseGenerator.generateResponse(request_list, REQUEST_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

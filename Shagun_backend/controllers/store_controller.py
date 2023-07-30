@@ -80,12 +80,12 @@ def get_printer_by_id(pid):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_all_printers():
+def get_all_printers(status):
     try:
         with connection.cursor() as cursor:
-            printers_data_query = """ SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
+            printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
             p.store_owner, p.contact_number FROM printer AS p
-            LEFT JOIN locations AS l ON p.city = l.id """
+            LEFT JOIN locations AS l ON p.city = l.id WHERE status LIKE '{status}'"""
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
             return {

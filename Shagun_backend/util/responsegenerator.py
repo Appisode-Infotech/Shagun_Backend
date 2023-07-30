@@ -122,7 +122,7 @@ class responseGenerator:
                 "event_lat_lng": data[6],
                 "created_on": data[7],
                 "sub_events": json.loads(data[8]),
-                "event_date": data[9],
+                "event_date": data[9].strftime('%Y-%m-%dT%H:%M'),
                 "event_note": data[10],
                 "event_admin": json.loads(data[11]),
                 "is_approved": data[12],

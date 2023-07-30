@@ -558,15 +558,15 @@ class responseGenerator:
                 req_list.append(
                     {
                         "name": req[0],
-                        "phone": req[0],
-                        "profile": req[0],
-                        "type": req[0],
-                        "status": req[0],
-                        "created_on": req[0],
-                        "id": req[0],
-                        "event_date": req[0],
-                        "event_type": req[0],
-                        "city_name": req[0],
+                        "phone": req[1],
+                        "profile": req[2],
+                        "type": req[3],
+                        "status": req[4],
+                        "created_on": req[5],
+                        "id": req[6],
+                        "event_date": req[7],
+                        "event_type": req[8],
+                        "city_name": req[9],
                     }
                 )
             return req_list

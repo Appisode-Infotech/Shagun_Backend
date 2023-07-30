@@ -138,6 +138,7 @@ def manage_kyc_request(request):
         return render(request, 'pages/tables/manage_kyc_request.html', response)
     else:
         return redirect('sign_up')
+
 def manage_event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
@@ -373,6 +374,19 @@ def set_event_status(request, event_id, status):
     else:
         return redirect('sign_up')
 
+def set_KYC_request_status(request, req_id, cmpltd_by, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        request_controller.update_callback_request(req_id, cmpltd_by, status)
+        return redirect('manage_kyc_request')
+    else:
+        return redirect('sign_up')
+def set_event_request_status(request, req_id, cmpltd_by, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        request_controller.update_callback_request(req_id, cmpltd_by, status)
+        return redirect('manage_event_request')
+    else:
+        return redirect('sign_up')
+
 
 def activate_deactivate_greeting_cards(request, card_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -535,12 +549,12 @@ def app_compatibility(request):
     response, status_code = app_data_controller.app_compatibility(app_obj)
     return JsonResponse(response, status=status_code)
 
-
-@api_view(['POST'])
-def update_callback_request(request):
-    callback_obj = request_callback_model.request_callback_model_from_dict(request.data)
-    response, status_code = request_controller.update_callback_request(callback_obj)
-    return JsonResponse(response, status=status_code)
+#
+# @api_view(['POST'])
+# def update_callback_request(request):
+#     callback_obj = request_callback_model.request_callback_model_from_dict(request.data)
+#     response, status_code = request_controller.update_callback_request(callback_obj)
+#     return JsonResponse(response, status=status_code)
 
 
 # This API is used to verify the existence of a user. It checks if the provided user details or credentials match

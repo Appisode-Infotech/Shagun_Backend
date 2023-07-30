@@ -16,6 +16,7 @@ from Shagun_backend.models import registration_model, user_kyc_model, bank_detai
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
+from Shagun_backend.util.constants import today
 
 
 def sign_up(request):
@@ -895,6 +896,7 @@ def user_home_page(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
+            print(today.date(), today.now())
             response, status_code = user_home_page_controller.home_page_data(request.data['uid'])
             return JsonResponse(response, status=status_code)
 

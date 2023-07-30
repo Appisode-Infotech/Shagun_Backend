@@ -73,11 +73,11 @@ def edit_user(edit_reg_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_all_users():
+def get_all_users(kyc):
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM users WHERE role = 3 AND kyc = 1 """
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 3 AND kyc LIKE '{kyc}' """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -457,7 +457,7 @@ def get_all_employees():
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        emp_login_query = "SELECT password, name, profile_pic FROM users WHERE uid = %s;"
+        emp_login_query = "SELECT password, name, profile_pic FROM users WHERE uid = %s AND ( role = 2 OR role = 1 );"
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
         if result is not None and result[0] == pwd:
@@ -511,7 +511,6 @@ def get_user_profile(uid):
 
             sql_query_events = f"""
                             SELECT count(*) FROM event 
-                            JOIN events_type ON event.event_type_id = events_type.id
                             WHERE JSON_CONTAINS(event_admin, %(uid_json)s)
                         """
             uid_json = json.dumps({'uid': uid})

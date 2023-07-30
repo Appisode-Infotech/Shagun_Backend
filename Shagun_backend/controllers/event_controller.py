@@ -151,7 +151,7 @@ def get_single_event(event_id, phone):
             single_event_query = f"""SELECT 
                                         event.event_date, event.event_admin, event.event_note, 
                                         event.address_line1, event.address_line2, event.event_lat_lng, 
-                                        event.sub_events, events_type.event_type_name, users.uid 
+                                        event.sub_events, events_type.event_type_name, users.uid, users.name 
                                     FROM event
                                     JOIN events_type ON event.event_type_id = events_type.id
                                     LEFT JOIN users ON users.phone = '{phone}'
@@ -388,7 +388,7 @@ def get_my_event_list(uid):
                         FROM transaction_history
                         GROUP BY event_id
                     ) AS sender_count ON event.id = sender_count.event_id
-                    WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.today()}'
+                    WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.date()}'
                     AND event.is_approved = 1
                 """
 
@@ -410,7 +410,7 @@ def get_my_event_list(uid):
                             FROM transaction_history
                             GROUP BY event_id
                         ) AS sender_count ON event.id = sender_count.event_id
-                        WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.today()}'
+                        WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}'
                         AND event.is_approved = 1
                     """
 

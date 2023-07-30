@@ -110,10 +110,10 @@ def get_greetings_by_id(gre_id):
 def add_greeting_card(grt_obj):
     try:
         with connection.cursor() as cursor:
-            greeting_cards_query = f"""INSERT INTO greeting_cards (card_name, card_image_url, card_price, status)
-                        VALUES (%s, %s, %s, %s)"""
+            greeting_cards_query = f"""INSERT INTO greeting_cards (card_name, card_image_url, card_price, status,printer_id)
+                        VALUES (%s, %s, %s, %s, %s)"""
             cursor.execute(greeting_cards_query,
-                           (grt_obj.card_name, grt_obj.card_image_url, grt_obj.card_price, True))
+                           (grt_obj.card_name, grt_obj.card_image_url, grt_obj.card_price, True, grt_obj.printer_id))
             return {
                 "status": True,
                 "msg": "card added successfully"

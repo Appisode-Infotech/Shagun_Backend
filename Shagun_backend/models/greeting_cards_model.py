@@ -35,6 +35,7 @@ class GreetingCardsModel:
     card_image_url: Optional[str] = None
     status: Optional[str] = None
     id: Optional[str] = None
+    printer_id: Optional[str] = None
 
 
     @staticmethod
@@ -45,7 +46,8 @@ class GreetingCardsModel:
         card_price = from_str(obj.get("card_price"))
         card_image_url = from_union([from_str, from_none], obj.get("card_image_url"))
         status = from_union([from_str, from_none], obj.get("status"))
-        return GreetingCardsModel(card_name, card_price, card_image_url, status, id)
+        printer_id = from_union([from_str, from_none], obj.get("printer_id"))
+        return GreetingCardsModel(card_name, card_price, card_image_url, status, id, printer_id)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -57,6 +59,8 @@ class GreetingCardsModel:
             result["card_image_url"] = from_union([from_str, from_none], self.card_image_url)
         if self.status is not None:
             result["status"] = from_union([from_str, from_none], self.status)
+        if self.printer_id is not None:
+            result["printer_id"] = from_union([from_str, from_none], self.printer_id)
         return result
 
 

@@ -543,6 +543,7 @@ class responseGenerator:
                 "event_lat_lng": data[5],
                 "event_type": data[7],
                 "uid": data[8],
+                "name": data[9],
                 "admins": json.loads(data[1]),
                 "sub_events": json.loads(data[6]),
             }

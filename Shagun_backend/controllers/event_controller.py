@@ -14,11 +14,11 @@ def create_event(event_obj):
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
             create_event_query = "INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1, " \
                                  "address_line2, event_lat_lng, created_on, sub_events, event_date," \
-                                 "event_note, event_admin, is_approved,  status) " \
-                                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                 "event_note, event_admin, is_approved,  status, printer_id) " \
+                                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
-                      event_obj.event_date, event_obj.event_note, event_admin_json, False, True)
+                      event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id)
             cursor.execute(create_event_query, values)
             return {
                 "status": True,

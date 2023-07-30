@@ -16,6 +16,7 @@ from Shagun_backend.models import registration_model, user_kyc_model, bank_detai
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
+from Shagun_backend.util.constants import today
 
 
 def sign_up(request):
@@ -173,7 +174,7 @@ def add_kyc(request):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
-                file_name = f"""{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
                 identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
                 form_data = form_data.copy()
                 form_data[identification_doc_key] = file_name
@@ -239,7 +240,7 @@ def add_greeting_cards(request):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
-                file_name = f"""{int(time.time())}_{str(file_obj)}"""
+                file_name = f"""images/greeting_card/{int(time.time())}_{str(file_obj)}"""
                 form_data = form_data.copy()
                 form_data['card_image_url'] = file_name
                 with default_storage.open(file_name, 'wb+') as destination:
@@ -327,7 +328,7 @@ def edit_kyc(request, event_id):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
-                file_name = f"""{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
                 identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
                 form_data = form_data.copy()
                 form_data[identification_doc_key] = file_name
@@ -720,8 +721,21 @@ def get_active_event(request):
 
 @api_view(['POST'])
 def search_user_event(request):
-    response, status_code = event_controller.search_user_event(request.data['uid'])
-    return JsonResponse(response, status=status_code)
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            response, status_code = event_controller.search_user_event(request.data['search_uid'])
+            return JsonResponse(response, status=status_code)
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
+
 
 
 # By providing the event ID as a parameter, this API allows users to fetch detailed information about a specific event.
@@ -882,6 +896,7 @@ def user_home_page(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
+            print(today.date(), today.now())
             response, status_code = user_home_page_controller.home_page_data(request.data['uid'])
             return JsonResponse(response, status=status_code)
 

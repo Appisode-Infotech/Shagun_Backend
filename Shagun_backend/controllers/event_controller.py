@@ -31,6 +31,49 @@ def create_event(event_obj):
         return {"status": False, "message": str(e)}, 301
 
 
+def edit_event(event_obj, event_id):
+    try:
+        with connection.cursor() as cursor:
+            sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
+            event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
+            update_event_query = """
+                        UPDATE event
+                        SET
+                            event_type_id = %s,
+                            city_id = %s,
+                            printer_id = %s,
+                            address_line1 = %s,
+                            address_line2 = %s,
+                            event_lat_lng = %s,
+                            sub_events = %s,
+                            event_date = %s,
+                            event_note = %s,
+                            event_admin = %s
+                        WHERE
+                            id = %s
+                    """
+
+            # Assuming you have the event_obj, sub_events_json, and event_admin_json available
+            values = (
+                event_obj.event_type_id, event_obj.city_id, event_obj.printer_id,
+                event_obj.address_line1, event_obj.address_line2, event_obj.event_lat_lng,
+                sub_events_json, event_obj.event_date, event_obj.event_note,
+                event_admin_json, event_id
+            )
+            cursor.execute(update_event_query, values)
+            return {
+                "status": True,
+                "message": "Event Created successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        print(str(e))
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        print(str(e))
+        return {"status": False, "message": str(e)}, 301
+
+
 def enable_disable_event(e_id, et_status):
     try:
         with connection.cursor() as cursor:

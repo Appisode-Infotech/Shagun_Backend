@@ -23,3 +23,4 @@ def get_all_banks_list():
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+

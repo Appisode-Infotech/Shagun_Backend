@@ -131,6 +131,19 @@ def manage_printers(request):
         return render(request, 'pages/tables/printers.html', response)
     else:
         return redirect('sign_up')
+def manage_kyc_request(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_user_requests('KYC')
+        print(response)
+        return render(request, 'pages/tables/manage_kyc_request.html', response)
+    else:
+        return redirect('sign_up')
+def manage_event_request(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_user_requests('event')
+        return render(request, 'pages/tables/manage_event_request.html', response)
+    else:
+        return redirect('sign_up')
 
 
 def add_events(request):

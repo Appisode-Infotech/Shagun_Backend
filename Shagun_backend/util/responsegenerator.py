@@ -552,3 +552,21 @@ class responseGenerator:
                 "sub_events": json.loads(data[6]),
             }
 
+        if controller_type == REQUEST_LIST:
+            req_list = []
+            for req in data:
+                req_list.append(
+                    {
+                        "name": req[0],
+                        "phone": req[0],
+                        "profile": req[0],
+                        "type": req[0],
+                        "status": req[0],
+                        "created_on": req[0],
+                        "id": req[0],
+                        "event_date": req[0],
+                        "event_type": req[0],
+                        "city_name": req[0],
+                    }
+                )
+            return req_list

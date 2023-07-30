@@ -148,8 +148,8 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Event</h4>
-                                <form class="form-sample" action="/add_events" method="post"
+                                <h4 class="card-title">Edit Event</h4>
+                                <form class="form-sample" action="{% url 'edit_event' event.event_data.id %}" method="post"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -172,7 +172,7 @@
                                                         <a onclick="setValue('{{events_type.event_type_name}}', '{{events_type.id}}', 'event_type_name', 'event_type_id')">{{events_type.event_type_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="event_type_id" name="event_type_id">
+                                                    <input type="hidden" id="event_type_id" name="event_type_id" value="{{event.event_data.event_type_id}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -180,20 +180,19 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select City</label>
                                                 <div class="col-sm-9">
-
                                                     <input type="text" id="city_name" readonly
                                                            onclick="toggleDropdown('myDropdown2')"
                                                            value="{{event.event_data.city_id}}" class="form-control">
 
                                                     <div id="myDropdown2" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput2"
+                                                        <input type="text" value="{{event.event_data.city_id}}" id="myInput2"
                                                                onkeyup="filterFunction('myDropdown2')"
                                                                class="form-control">
                                                         {% for city in location.city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="city_id" name="city_id">
+                                                    <input type="hidden" id="city_id" name="city_id" value="{{event.event_data.city_id}}" >
                                                 </div>
                                             </div>
                                         </div>
@@ -216,7 +215,7 @@
                                                         <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="printer_id" name="printer_id">
+                                                    <input type="hidden" id="printer_id" name="printer_id" value="{{event.event_data.printer_id}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -274,7 +273,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note</label>
                                         <textarea class="form-control" id="event_note" rows="4"
-                                                  name="event_note" value="{{event.event_data.event_note}}"></textarea>
+                                                  name="event_note" >{{event.event_data.event_note}}</textarea>
                                     </div>
 
                                     <div id="sub-events-container">
@@ -309,15 +308,10 @@
                                             <input class="event-input" type="text"
                                                    name="event_admin[0][role]" value="{{admin.role}}">
 
-                                            <input type="hidden" id="uid" name="event_admin[0][uid]">
+                                            <input type="hidden" id="uid" name="event_admin[0][uid]" value="{{admin.uid}}">
                                         </div>
                                         {% endfor %}
                                     </div>
-                                    <button type="button" id="addEventAdminButton">Add Event Admin</button>
-                                    <button type="button" id="removeEventAdminButton" style="display: none;">Remove
-                                        Event Admin
-                                    </button>
-
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
@@ -371,7 +365,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
     console.log(value1)
     console.log(value2)
     document.getElementById(inputField2Id).value = value2;
-    // Optionally, you can hide the dropdown after selecting a value
     var dropdowns = document.getElementsByClassName("dropdown-content");
     for (var i = 0; i < dropdowns.length; i++) {
       dropdowns[i].classList.remove("show");

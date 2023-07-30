@@ -51,6 +51,7 @@ def transform_data_to_json(data):
         "created_by_uid": data['created_by_uid'],
         "event_type_id": data['event_type_id'],
         "city_id": data['city_id'],
+        "printer_id": data['printer_id'],
         "address_line1": data['address_line1'],
         "address_line2": data['address_line2'],
         "event_lat_lng": data['event_lat_lng'],

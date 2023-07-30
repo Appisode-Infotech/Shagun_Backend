@@ -323,7 +323,7 @@ def activate_deactivate_event(request, event_id, status):
         return redirect('sign_up')
 
 
-def edit_kyc(request, event_id):
+def edit_kyc(request, kyc_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         form_data = request.POST
         if request.method == 'POST':
@@ -341,7 +341,7 @@ def edit_kyc(request, event_id):
             user_controller.edit_user_kyc(kyc_obj)
             return redirect('manage_kyc')
         else:
-            kyc_data, status_code = user_controller.get_kyc_by_id(event_id)
+            kyc_data, status_code = user_controller.get_kyc_by_id(kyc_id)
             print(kyc_data)
             users_list, status_code = user_controller.get_all_users()
             context = {
@@ -464,10 +464,14 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
+            print("=======================================================")
             json_data = transform_data_to_json(request.POST)
+            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
-            event_controller.create_event(event_obj)
-            return redirect('manage_printers')
+            print(event_obj)
+            print(event_controller.edit_event(event_obj, event_id))
+            return redirect('manage_event')
         else:
             event_types, status_code = event_controller.get_event_type_list_for_user()
             location, status_code = event_controller.get_city_list_for_user()

@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, List, TypeVar, Callable, Type, cast
-
+from typing import Optional, Any, List, TypeVar, Callable, Type, cast
 
 T = TypeVar("T")
 
@@ -8,6 +7,20 @@ T = TypeVar("T")
 def from_str(x: Any) -> str:
     assert isinstance(x, str)
     return x
+
+
+def from_none(x: Any) -> Any:
+    assert x is None
+    return x
+
+
+def from_union(fs, x):
+    for f in fs:
+        try:
+            return f(x)
+        except:
+            pass
+    assert False
 
 
 def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
@@ -72,8 +85,6 @@ class SubEvent:
 
 @dataclass
 class CreateEventModel:
-    created_by_uid: str
-    event_type_id: str
     city_id: str
     address_line1: str
     address_line2: str
@@ -82,26 +93,33 @@ class CreateEventModel:
     event_date: str
     event_note: str
     event_admin: List[EventAdmin]
+    printer_id: str
+    created_by_uid: Optional[str] = None
+    event_type_id: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'CreateEventModel':
         assert isinstance(obj, dict)
-        created_by_uid = from_str(obj.get("created_by_uid"))
-        event_type_id = from_str(obj.get("event_type_id"))
+        created_by_uid = from_union([from_str, from_none], obj.get("created_by_uid"))
+        event_type_id = from_union([from_str, from_none], obj.get("event_type_id"))
         city_id = from_str(obj.get("city_id"))
         address_line1 = from_str(obj.get("address_line1"))
         address_line2 = from_str(obj.get("address_line2"))
         event_lat_lng = from_str(obj.get("event_lat_lng"))
         sub_events = from_list(SubEvent.from_dict, obj.get("sub_events"))
         event_date = from_str(obj.get("event_date"))
+        printer_id = from_str(obj.get("printer_id"))
         event_note = from_str(obj.get("event_note"))
         event_admin = from_list(EventAdmin.from_dict, obj.get("event_admin"))
-        return CreateEventModel(created_by_uid, event_type_id, city_id, address_line1, address_line2, event_lat_lng, sub_events, event_date, event_note, event_admin)
+        return CreateEventModel(city_id, address_line1, address_line2, event_lat_lng, sub_events, event_date,
+                                event_note, event_admin, printer_id, created_by_uid, event_type_id)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["created_by_uid"] = from_str(self.created_by_uid)
-        result["event_type_id"] = from_str(self.event_type_id)
+        if self.created_by_uid is not None:
+            result["created_by_uid"] = from_union([from_str, from_none], self.created_by_uid)
+        if self.event_type_id is not None:
+            result["event_type_id"] = from_union([from_str, from_none], self.event_type_id)
         result["city_id"] = from_str(self.city_id)
         result["address_line1"] = from_str(self.address_line1)
         result["address_line2"] = from_str(self.address_line2)
@@ -109,6 +127,7 @@ class CreateEventModel:
         result["sub_events"] = from_list(lambda x: to_class(SubEvent, x), self.sub_events)
         result["event_date"] = from_str(self.event_date)
         result["event_note"] = from_str(self.event_note)
+        result["printer_id"] = from_str(self.printer_id)
         result["event_admin"] = from_list(lambda x: to_class(EventAdmin, x), self.event_admin)
         return result
 

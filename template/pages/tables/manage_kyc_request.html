@@ -92,31 +92,15 @@
                                     <img src="{{ req.profile_pic }}" alt="image"/>
                                 </td>
                                 <td>
-                                    {{user.name}}
+                                    {{req.name}}
                                 </td>
                                 <td>
-                                    {{user.email}}
+                                    {{req.phone}}
                                 </td>
                                 <td>
-                                    {{user.phone}}
-                                </td>
-<!--                                <td>-->
-<!--                                    {{user.auth_type}}-->
-<!--                                </td>-->
-                                <td>
-                                    {% if user.kyc == 1 %}
+                                    {% if req.status == 1 %}
                                     <label class="badge badge-success">Active</label>
-                                    {% elif user.kyc == 0 %}
-                                    <label class="badge badge-danger">Inactive</label>
-                                    {% endif %}
-                                </td>
-<!--                                <td>-->
-<!--                                    {{user.created_on}}-->
-<!--                                </td>-->
-                                <td>
-                                    {% if user.status == 1 %}
-                                    <label class="badge badge-success">Active</label>
-                                    {% elif user.status == 0 %}
+                                    {% elif req.status == 0 %}
                                     <label class="badge badge-danger">Inactive</label>
                                     {% endif %}
                                 </td>

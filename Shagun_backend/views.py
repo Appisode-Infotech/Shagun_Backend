@@ -462,20 +462,30 @@ def edit_printer(request, printer_id):
 
 
 def edit_event(request, event_id):
-    event_types, status_code = event_controller.get_event_type_list_for_user()
-    location, status_code = event_controller.get_city_list_for_user()
-    users_list, status_code = user_controller.get_all_users()
-    printers_list, status_code = store_controller.get_all_printers()
-    event_data, status_code = event_controller.get_event_by_id(event_id)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            json_data = transform_data_to_json(request.POST)
+            event_obj = create_event_model.create_event_model_from_dict(json_data)
+            event_controller.create_event(event_obj)
+            return redirect('manage_printers')
+        else:
+            event_types, status_code = event_controller.get_event_type_list_for_user()
+            location, status_code = event_controller.get_city_list_for_user()
+            users_list, status_code = user_controller.get_all_users()
+            printers_list, status_code = store_controller.get_all_printers()
+            event_data, status_code = event_controller.get_event_by_id(event_id)
 
-    context = {
-        "event_types": event_types,
-        "location": location,
-        "users": users_list,
-        "printers": printers_list,
-        "event": event_data
-    }
-    return render(request, 'pages/tables/edit_event.html', context)
+            context = {
+                "event_types": event_types,
+                "location": location,
+                "users": users_list,
+                "printers": printers_list,
+                "event": event_data
+            }
+            return render(request, 'pages/tables/edit_event.html', context)
+
+    else:
+        return redirect('sign_up')
 
 
 # @api_view(['POST'])

@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from django.db import connection
 
 
 # Helper function to convert date and time format
@@ -34,11 +35,15 @@ def event_admins(data):
     event_admins_count //= 3
     event_admins_list = []
     for i in range(event_admins_count):
+        with connection.cursor() as cursor:
+            user_data_query = "SELECT * FROM users WHERE uid = %s;"
+            cursor.execute(user_data_query, data[f'event_admin[{i}][uid]'])
+            user_data = cursor.fetchone()
         event_admins_list.append({
             "name": data[f'event_admin[{i}][name]'],
             "role": data[f'event_admin[{i}][role]'],
             "uid": data[f'event_admin[{i}][uid]'],
-            "profile": "profile url",
+            "profile": user_data[0],
             "QR_code": "qr code"
         })
 

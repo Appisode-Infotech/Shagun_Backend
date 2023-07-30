@@ -500,13 +500,16 @@ class responseGenerator:
             return bank_data
 
         if controller_type == GET_KYC_DATA:
-            return {
-                'doc_name': data[0][0],
-                'doc_num': data[0][2],
-                'doc_name1': data[0][1],
-                'doc_num1': data[0][3],
-                'status': data[0][4]
-            }
+            if data:
+                return {
+                    'doc_name': data[0][0],
+                    'doc_num': data[0][2],
+                    'doc_name1': data[0][1],
+                    'doc_num1': data[0][3],
+                    'status': data[0][4]
+                }
+            else:
+                return {}
 
         if controller_type == BANK_LISTS:
             bank_lists = []

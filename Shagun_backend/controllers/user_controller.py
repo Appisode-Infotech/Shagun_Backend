@@ -511,7 +511,6 @@ def get_user_profile(uid):
 
             sql_query_events = f"""
                             SELECT count(*) FROM event 
-                            JOIN events_type ON event.event_type_id = events_type.id
                             WHERE JSON_CONTAINS(event_admin, %(uid_json)s)
                         """
             uid_json = json.dumps({'uid': uid})

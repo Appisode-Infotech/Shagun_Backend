@@ -365,7 +365,6 @@ def get_locations_list():
 
 
 def get_my_event_list(uid):
-    print(uid)
     try:
         with connection.cursor() as cursor:
             phone_query = f"""SELECT phone FROM users WHERE uid = '{uid}'"""

@@ -160,7 +160,6 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select Event Type</label>
                                                 <div class="col-sm-9">
-
                                                     <input type="text" id="event_type_name" readonly
                                                            onclick="toggleDropdown('myDropdown1')"
                                                             value="{{event.event_data.event_type_id}}" class="form-control">
@@ -184,7 +183,7 @@
 
                                                     <input type="text" id="city_name" readonly
                                                            onclick="toggleDropdown('myDropdown2')"
-                                                           placeholder="Search.." class="form-control">
+                                                           value="{{event.event_data.city_id}}" class="form-control">
 
                                                     <div id="myDropdown2" class="dropdown-content">
                                                         <input type="text" placeholder="Search.." id="myInput2"
@@ -207,7 +206,7 @@
 
                                                     <input type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown3')"
-                                                           placeholder="Search.." class="form-control">
+                                                           value="{{event.event_data.printer_id}}" class="form-control">
 
                                                     <div id="myDropdown3" class="dropdown-content">
                                                         <input type="text" placeholder="Search.." id="myInput3"
@@ -228,7 +227,7 @@
                                                     <input type="datetime-local" id="event_date"
                                                            name="event_date"
                                                            class="form-control"
-                                                           placeholder="username">
+                                                           value="{{event.event_data.event_date}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -238,7 +237,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line1</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address_line1"/>
+                                                    <input type="text" class="form-control" name="address_line1" value="{{event.event_data.address_line1}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -246,7 +245,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line2</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address_line2"/>
+                                                    <input type="text" class="form-control" name="address_line2" value="{{event.event_data.address_line2}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -256,7 +255,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Lat Lng</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="13.0916688-77.407799"
+                                                    <input class="form-control" value="{{event.event_data.event_lat_lng}}"
                                                            id="event_lat_lng" name="event_lat_lng"/>
                                                 </div>
                                             </div>
@@ -265,44 +264,42 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
+                                                    <label class="form-control">{{event.event_data.created_by_uid}}</label>
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
-                                                           value="{{ request.session.uid }}">
+                                                           value={{event.event_data.created_by_uid}}>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 col-form-label">Textarea</label>
+                                        <label class="col-sm-3 col-form-label">Event Note</label>
                                         <textarea class="form-control" id="event_note" rows="4"
-                                                  name="event_note"></textarea>
+                                                  name="event_note" value="{{event.event_data.event_note}}"></textarea>
                                     </div>
 
                                     <div id="sub-events-container">
                                         <label class="col-sm-3 col-form-label">Sub Events</label>
+                                        {% for sub_event in event.event_data.sub_events %}
                                         <div class="event-row">
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
-                                                   placeholder="Sub Event Name">
+                                                   value="{{sub_event.sub_event_name}}">
                                             <input class="event-input" type="datetime-local"
-                                                   name="sub_events[0][start]" placeholder="Start Time">
+                                                   name="sub_events[0][start]" value="{{sub_event.start_time}}">
                                             <input class="event-input" type="datetime-local" name="sub_events[0][end]"
-                                                   placeholder="End Time">
+                                                   value="{{sub_event.end_time}}">
                                         </div>
+                                        {% endfor %}
                                     </div>
-                                    <button type="button" id="addSubEventButton">Add Sub Event</button>
-                                    <button type="button" id="removeEventButton" style="display: none;">Remove Sub
-                                        Event
-                                    </button>
-
                                     <div id="event-admin-container">
                                         <label class="col-sm-3 col-form-label">Event Admins</label>
+                                        {% for admin in event.event_data.event_admin %}
                                         <div class="event-row">
                                             <input type="text" id="name"  name="event_admin[0][name]" readonly
                                                    onclick="toggleDropdown('myDropdown4')"
-                                                   placeholder="Search.." class="event-input">
+                                                   value="{{admin.name}}" class="event-input">
 
                                             <div id="myDropdown4" class="dropdown-content">
-                                                <input type="text" placeholder="Search.." id="myInput"
+                                                <input type="text" value="{{admin.name}}" id="myInput"
                                                        onkeyup="filterFunction('myDropdown4')" class="form-control">
                                                 {% for users in users.user_data %}
                                                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}
@@ -310,10 +307,11 @@
                                                 {% endfor %}
                                             </div>
                                             <input class="event-input" type="text"
-                                                   name="event_admin[0][role]" placeholder="Bride, Groom etc ....">
+                                                   name="event_admin[0][role]" value="{{admin.role}}">
 
                                             <input type="hidden" id="uid" name="event_admin[0][uid]">
                                         </div>
+                                        {% endfor %}
                                     </div>
                                     <button type="button" id="addEventAdminButton">Add Event Admin</button>
                                     <button type="button" id="removeEventAdminButton" style="display: none;">Remove

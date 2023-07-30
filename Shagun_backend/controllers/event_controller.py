@@ -59,7 +59,7 @@ def get_event_by_id(et_id):
                 print(event)
                 return {
                     "status": True,
-                    "event_list": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
+                    "event_data": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
                 }, 200
             else:
                 return {

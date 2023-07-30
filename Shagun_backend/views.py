@@ -473,7 +473,7 @@ def edit_event(request, event_id):
         "location": location,
         "users": users_list,
         "printers": printers_list,
-        "event_data": event_data
+        "event": event_data
     }
     return render(request, 'pages/tables/edit_event.html')
 

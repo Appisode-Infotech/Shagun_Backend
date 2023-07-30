@@ -74,6 +74,8 @@ urlpatterns = [
     path('activate_deactivate_kyc/<int:kyc_id>/<int:status>/', activate_deactivate_kyc, name='activate_deactivate_kyc'),
     path('activate_deactivate_event/<int:event_id>/<int:status>/', activate_deactivate_event, name='activate_deactivate_event'),
     path('set_event_status/<int:event_id>/<int:status>/', set_event_status, name='set_event_status'),
+    path('set_KYC_request_status/<int:req_id>/<str:cmpltd_by>/<int:status>/', set_KYC_request_status, name='set_KYC_request_status'),
+    path('set_event_request_status/<int:req_id>/<str:cmpltd_by>/<int:status>/', set_event_request_status, name='set_event_request_status'),
     path('edit_event_type', edit_event_type, name='edit_event_type'),
     path('edit_location', edit_location, name='edit_location'),
     path('edit_kyc/<int:kyc_id>/', edit_kyc, name='edit_kyc'),
@@ -112,7 +114,7 @@ urlpatterns = [
     path('enable_disable_printer', enable_disable_printer, name='enable_disable_printer'),
     path('edit_printer', edit_printer, name='edit_printer'),
     path('get_greetings_by_id', get_greetings_by_id, name='get_greetings_by_id'),
-    path('update_callback_request', update_callback_request, name='update_callback_request'),
+    # path('update_callback_request', update_callback_request, name='update_callback_request'),
 
 ]
 

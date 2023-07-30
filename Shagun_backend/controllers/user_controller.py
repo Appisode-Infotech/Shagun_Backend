@@ -649,18 +649,20 @@ def edit_user_kyc(obj):
 def get_user_requests(param):
     try:
         with connection.cursor() as cursor:
-            request_query = f"""SELECT
-                        users.name, users.phone, users.profile_pic, user_callback_request.type,
-                        user_callback_request.status, user_callback_request.created_on, user_callback_request.id
-                        user_callback_request.event_date, user_callback_request.event_type, locations.city_name
-                    FROM
-                        user_callback_request
-                    JOIN
-                        users ON user_callback_request.uid = users.uid
-                    JOIN
-                        locations ON user_callback_request.city = locations.id
-                    WHERE
-                        user_callback_request.status = '{param}' AND users.role = 3; """
+            request_query = f"""
+                            SELECT
+                                u.name, u.phone, u.profile_pic, ucr.type,
+                                ucr.status, ucr.created_on, ucr.id,
+                                ucr.event_date, ucr.event_type, l.city_name
+                            FROM
+                                user_callback_request AS ucr
+                            LEFT JOIN
+                                users AS u ON ucr.uid = u.uid
+                            LEFT JOIN
+                                locations AS l ON ucr.city = l.id
+                            WHERE
+                                ucr.type = '{param}' AND u.role = 3;
+                        """
 
             cursor.execute(request_query)
             request_list = cursor.fetchall()

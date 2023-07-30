@@ -20,12 +20,12 @@ def request_callback(request_obj):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
-def update_callback_request(callback_obj):
+def update_callback_request(req_id, cmpltd_by, status):
     try:
         with connection.cursor() as cursor:
-            update_request_query = " UPDATE  user_callback_request SET status = %s, completed_by = %s WHERE id = % s  "
-            values = (callback_obj.status, callback_obj.completed_by, callback_obj.id)
-            cursor.execute(update_request_query, values)
+            update_request_query = f""" UPDATE  user_callback_request SET status = '{status}', 
+            completed_by = '{cmpltd_by}' WHERE id = '{req_id}'  """
+            cursor.execute(update_request_query)
             return {
                 "status": True,
                 "message": "Updated successfully"

@@ -475,7 +475,7 @@ def edit_event(request, event_id):
         "printers": printers_list,
         "event": event_data
     }
-    return render(request, 'pages/tables/edit_event.html')
+    return render(request, 'pages/tables/edit_event.html', context)
 
 
 # @api_view(['POST'])
@@ -969,7 +969,7 @@ def get_greeting_cards(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
-            response, status_code = greeting_cards_controller.get_greeting_cards()
+            response, status_code = greeting_cards_controller.get_greeting_cards(request.data['event_id'])
             return JsonResponse(response, status=status_code)
         else:
             return JsonResponse({'message': 'Invalid token for user'}, status=401)

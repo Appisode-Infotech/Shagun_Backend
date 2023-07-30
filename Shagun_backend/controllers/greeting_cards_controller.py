@@ -6,7 +6,7 @@ from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, 
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
-def get_greeting_cards():
+def get_greeting_cards(event_id):
     try:
         with connection.cursor() as cursor:
             greeting_cards_query = """SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards 

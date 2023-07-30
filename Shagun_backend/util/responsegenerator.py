@@ -544,6 +544,7 @@ class responseGenerator:
                 "event_type": data[7],
                 "uid": data[8],
                 "name": data[9],
+                "event_id": data[10],
                 "admins": json.loads(data[1]),
                 "sub_events": json.loads(data[6]),
             }

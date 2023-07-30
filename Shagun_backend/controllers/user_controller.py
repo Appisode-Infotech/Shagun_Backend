@@ -112,7 +112,7 @@ def deactivate_user(uid, esstatus):
 def get_users_by_name_or_phone(search):
     try:
         with connection.cursor() as cursor:
-            sql_query = f""" SELECT * FROM users WHERE name LIKE '%{search}%' OR phone LIKE '%{search}%' AND role = 3"""
+            sql_query = f""" SELECT * FROM users WHERE role = 3 AND name LIKE '%{search}%' OR phone LIKE '%{search}%' """
             cursor.execute(sql_query)
             user_data = cursor.fetchall()
             print(user_data)

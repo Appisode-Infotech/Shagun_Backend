@@ -439,12 +439,18 @@ def get_my_event_list(uid):
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
 
+            event_type_list_query = """SELECT * FROM events_type WHERE status=1"""
+            cursor.execute(event_type_list_query)
+            event_type_list = cursor.fetchall()
+
             return {
                 "status": True,
                 "past_events": responsegenerator.responseGenerator.generateResponse(past_events, EVENT_LIST),
                 "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, EVENT_LIST),
                 "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
                                                                                        INVITED_EVENT_LIST),
+                "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)
+
             }, 200
 
     except pymysql.Error as e:

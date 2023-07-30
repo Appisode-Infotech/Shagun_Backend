@@ -59,7 +59,7 @@ def get_event_by_id(et_id):
                 print(event)
                 return {
                     "status": True,
-                    "event_list": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
+                    "event_data": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
                 }, 200
             else:
                 return {
@@ -151,7 +151,7 @@ def get_single_event(event_id, phone):
             single_event_query = f"""SELECT 
                                         event.event_date, event.event_admin, event.event_note, 
                                         event.address_line1, event.address_line2, event.event_lat_lng, 
-                                        event.sub_events, events_type.event_type_name, users.uid, users.name 
+                                        event.sub_events, events_type.event_type_name, users.uid, users.name , event.id
                                     FROM event
                                     JOIN events_type ON event.event_type_id = events_type.id
                                     LEFT JOIN users ON users.phone = '{phone}'
@@ -439,12 +439,18 @@ def get_my_event_list(uid):
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
 
+            event_type_list_query = """SELECT * FROM events_type WHERE status=1"""
+            cursor.execute(event_type_list_query)
+            event_type_list = cursor.fetchall()
+
             return {
                 "status": True,
                 "past_events": responsegenerator.responseGenerator.generateResponse(past_events, EVENT_LIST),
                 "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, EVENT_LIST),
                 "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
                                                                                        INVITED_EVENT_LIST),
+                "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)
+
             }, 200
 
     except pymysql.Error as e:

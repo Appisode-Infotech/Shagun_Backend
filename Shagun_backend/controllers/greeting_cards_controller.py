@@ -2,21 +2,25 @@ import pymysql
 from django.db import connection
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID
+from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
-def get_greeting_cards():
+def get_greeting_cards(event_id):
     try:
         with connection.cursor() as cursor:
-            greeting_cards_query = """SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards 
-            WHERE status=1"""
+            greeting_cards_query = f"""
+                                    SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status
+                                    FROM greeting_cards gc
+                                    INNER JOIN event e ON e.printer_id = gc.printer_id AND e.id = '{event_id}'
+                                """
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
 
             return {
                 "status": True,
-                "active_greeting_cards": responseGenerator.generateResponse(greeting_cards, GREETING_CARDS)
+                "active_greeting_cards": responseGenerator.generateResponse(greeting_cards, GREETING_CARDS),
+                "wishes": wishes
 
             }, 200
 

@@ -18,6 +18,21 @@ quotes = [
     "Unlock the joy of giving and make every occasion a remarkable journey with Shagun."
 ]
 
+wishes = [
+    "Dear ABC, as you begin this beautiful journey together, may your love shine brighter with each passing day, and may your hearts forever be entwined in happiness and joy.",
+    "Dear ABC, on this special day, we wish you a lifetime of love and laughter, and may your love story inspire others to find their own happily ever after.",
+    "Dear ABC, as you take each step hand in hand, may you always find comfort and strength in each other, and may your love grow deeper and more profound with every moment you share.",
+    "Dear ABC, on your wedding day, we wish you a future filled with endless love, endless adventures, and endless memories to cherish forever.",
+    "Dear ABC, may the love you share today blossom into an extraordinary bond that brings you both immense happiness and fulfillment throughout your lives.",
+    "Dear ABC, as you embark on this new chapter, may your love be a guiding light, leading you through every joy and every challenge, and may your commitment to each other only grow stronger with time.",
+    "Dear ABC, may your wedding day be just the beginning of a beautiful love story, filled with laughter, understanding, and the magic of togetherness.",
+    "Dear ABC, as you say your vows, know that your love has touched the hearts of everyone around you, and we wish you a lifetime of blessings and unconditional love.",
+    "Dear ABC, as you unite your lives, may you find in each other a best friend, a confidante, and a soulmate, and may your love be a source of comfort and inspiration.",
+    "Dear ABC, may your marriage be a journey of growth and discovery, where you continue to fall in love with each other every day, creating a bond that lasts a lifetime."
+]
+
+
+
 CHECK_USER = "CHECK_USER"
 EVENT_LIST = "EVENT_LIST"
 SINGLE_EVENT = "SINGLE_EVENT"

@@ -163,10 +163,10 @@
 
                                                     <input type="text" id="event_type_name" readonly
                                                            onclick="toggleDropdown('myDropdown1')"
-                                                           placeholder="Search.." class="form-control">
+                                                            value="{{event.event_data.event_type_id}}" class="form-control">
 
                                                     <div id="myDropdown1" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput1"
+                                                        <input type="text" value="{{event.event_data.event_type_id}}" id="myInput1"
                                                                onkeyup="filterFunction('myDropdown1')"
                                                                class="form-control">
                                                         {% for events_type in event_types.event_type_list %}

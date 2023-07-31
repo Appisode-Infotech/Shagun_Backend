@@ -36,8 +36,8 @@ def event_admins(data):
     event_admins_list = []
     for i in range(event_admins_count):
         with connection.cursor() as cursor:
-            user_data_query = "SELECT * FROM users WHERE uid = %s;"
-            cursor.execute(user_data_query, data[f'event_admin[{i}][uid]'])
+            user_data_query = f"""SELECT profile_pic FROM users WHERE uid = '{data[f'event_admin[{i}][uid]']}';"""
+            cursor.execute(user_data_query)
             user_data = cursor.fetchone()
         event_admins_list.append({
             "name": data[f'event_admin[{i}][name]'],

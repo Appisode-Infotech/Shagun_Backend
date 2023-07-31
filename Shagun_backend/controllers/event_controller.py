@@ -512,13 +512,13 @@ def search_user_event(uid):
     try:
         with connection.cursor() as cursor:
             sql_query_upcoming_events = f"""
-                            SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                                event.is_approved, event.status, (SELECT phone FROM users WHERE uid = '{uid}') AS users
-                            FROM event 
-                            LEFT JOIN events_type ON event.event_type_id = events_type.id
-                            
-                            WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}' 
-                            AND status = 1"""
+                        SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                            event.is_approved, event.status, (SELECT phone FROM users WHERE uid = '{uid}') AS users
+                        FROM event 
+                        LEFT JOIN events_type ON event.event_type_id = events_type.id
+                        
+                        WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}' 
+                        AND status = 1"""
             uid_json = json.dumps({'uid': uid})
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()

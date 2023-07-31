@@ -132,6 +132,8 @@ def manage_printers(request):
         return render(request, 'pages/tables/printers.html', response)
     else:
         return redirect('sign_up')
+
+
 def manage_kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('KYC')
@@ -140,12 +142,20 @@ def manage_kyc_request(request):
     else:
         return redirect('sign_up')
 
+
 def manage_event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
         return render(request, 'pages/tables/manage_event_request.html', response)
     else:
         return redirect('sign_up')
+
+
+def get_settlement_for_event(request, status):
+    print(status)
+    response, status_code = event_controller.get_active_event(status)
+    print(response)
+    return render(request, 'pages/tables/settlements.html', response)
 
 
 def add_events(request):
@@ -378,12 +388,15 @@ def set_event_status(request, event_id, status):
     else:
         return redirect('sign_up')
 
+
 def set_KYC_request_status(request, req_id, cmpltd_by, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         request_controller.update_callback_request(req_id, cmpltd_by, status)
         return redirect('manage_kyc_request')
     else:
         return redirect('sign_up')
+
+
 def set_event_request_status(request, req_id, cmpltd_by, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         request_controller.update_callback_request(req_id, cmpltd_by, status)
@@ -554,6 +567,7 @@ def app_compatibility(request):
     app_obj = app_data_model.app_data_model_from_dict(request.data)
     response, status_code = app_data_controller.app_compatibility(app_obj)
     return JsonResponse(response, status=status_code)
+
 
 #
 # @api_view(['POST'])
@@ -729,20 +743,20 @@ def enable_disable_event(request):
     response, status_code = event_controller.enable_disable_event(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
-
-# This API retrieves a list of registered events from the backend database. It provides comprehensive event information,
-# including event titles, dates, locations, and other relevant data. Users can browse and access the available events
-# through this API.
-# @api_view(['POST'])
-# def get_event_list(request):
+    # This API retrieves a list of registered events from the backend database. It provides comprehensive event information,
+    # including event titles, dates, locations, and other relevant data. Users can browse and access the available events
+    # through this API.
+    # @api_view(['POST'])
+    # def get_event_list(request):
     response, status_code = event_controller.get_event_list(request.data['uid'])
+
+
 #     return JsonResponse(response, status=status_code)
 
 @api_view(['POST'])
 def active_event_settlement(request):
     response, status_code = transactions_controller.event_settlement(request.data['event_id'])
     return JsonResponse(response, status=status_code)
-
 
 
 @api_view(['POST'])
@@ -763,17 +777,17 @@ def get_my_event_list(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-
 @api_view(['POST'])
 def get_event_by_id(request):
     response, status_code = event_controller.get_event_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
 
 
-@api_view(['POST'])
-def get_settlement_for_event(request):
-    response, status_code = event_controller.get_active_event(request.data['status'])
-    return JsonResponse(response, status=status_code)
+#
+# @api_view(['POST'])
+# def get_settlement_for_event(request):
+#     response, status_code = event_controller.get_active_event(request.data['status'])
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])

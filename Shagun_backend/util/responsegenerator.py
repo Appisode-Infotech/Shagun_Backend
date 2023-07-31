@@ -104,9 +104,9 @@ class responseGenerator:
                         "approved_date_time": events[15],
                         "status": events[16],
                         "total_received_amount": events[17],
-                        "total_shagun_amount": events[18],
-                        "settled_amount": events[19]
-
+                        "balance_shagun_amount": events[18],
+                        "settled_amount": events[19],
+                        "event_type_name": events[20]
                     }
                 )
             return active_event

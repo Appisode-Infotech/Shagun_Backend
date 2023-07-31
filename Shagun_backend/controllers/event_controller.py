@@ -129,10 +129,12 @@ def get_active_event(status):
                     SELECT e.* ,
                       IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
                       IFNULL(SUM(CASE WHEN s.transaction_id IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
-                      IFNULL(SUM(CASE WHEN s.transaction_id IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount
+                      IFNULL(SUM(CASE WHEN s.transaction_id IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                      et.event_type_name
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id
                     LEFT JOIN settlements s ON th.id = s.transaction_id
+                    LEFT JOIN events_type et ON e.event_type_id = et.id
                     WHERE e.status = '{status}'
                     GROUP BY e.id, e.event_date;
                     """

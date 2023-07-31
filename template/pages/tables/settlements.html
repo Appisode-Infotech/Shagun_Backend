@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shagun Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'js/select.dataTables.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <!--    &lt;!&ndash; Required meta tags &ndash;&gt;-->
+    <!--    <meta charset="utf-8">-->
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <!--    <title>Shagun Admin</title>-->
+    <!--    &lt;!&ndash; plugins:css &ndash;&gt;-->
+    <!--    {% load static%}-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">-->
+
+    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
+    <!--    &lt;!&ndash; Plugin css for this page &ndash;&gt;-->
+    <!--    &lt;!&ndash; End plugin css for this page &ndash;&gt;-->
+    <!--    &lt;!&ndash; inject:css &ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">-->
+    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
+    <style>
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+
+        .btn {
+            margin: 0;
+        }
+
+        .btn-icon-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon-text i {
+            margin-left: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="container-scroller" id="active_event">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include 'app_bar.html' %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        {% include 'theme_setting.html' %}
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        {% include 'nav_bar.html' %}
+        <!-- partial -->
+
+        <div class="col-lg-10 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="header-container">
+                        <h4 class="card-title">Open Events Settlements</h4>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Event Id</th>
+                                <th>Event Name</th>
+                                <th>Event Admins</th>
+                                <th>Total Shagun Amount</th>
+                                <th>Settled Amount</th>
+                                <th>Balance Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for event in active_event %}
+
+                            <tr>
+                                <td>{{ event.id }}</td>
+                                <td>{{ event.event_type_name }}</td>
+                                <td>
+                                    {% for admin in event.event_admin %}
+                                    <b>{{ admin.role }}</b> : {{ admin.name }}</br></br>
+                                    {% endfor %}</br>
+                                    <b>Date : </b> {{ event.event_date }}
+                                </td>
+                                <td>{{event.total_received_amount}}</td>
+                                <td>{{event.settled_amount}}</td>
+                                <td>{{event.balance_shagun_amount}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info btn-fw"
+                                            onclick="">
+                                        Check Out
+                                        <i class="fas fa-credit-card"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- content-wrapper ends -->
+<!-- partial:../../partials/_footer.html -->
+{% include 'footer.html' %}
+<!-- partial -->
+</div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+
+<!-- endinject -->
+<!-- Custom js for this page-->
+<!-- End custom js for this page-->
+
+
+</body>
+
+</html>

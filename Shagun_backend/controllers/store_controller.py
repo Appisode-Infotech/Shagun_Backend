@@ -85,7 +85,7 @@ def get_all_printers(status):
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
             p.store_owner, p.contact_number FROM printer AS p
-            LEFT JOIN locations AS l ON p.city = l.id WHERE status LIKE '{status}'"""
+            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status LIKE '{status}'"""
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
             return {

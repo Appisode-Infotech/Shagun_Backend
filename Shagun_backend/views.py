@@ -128,6 +128,7 @@ def manage_employee(request):
 def manage_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.get_all_printers('%')
+        print(response)
         return render(request, 'pages/tables/printers.html', response)
     else:
         return redirect('sign_up')

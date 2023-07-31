@@ -517,7 +517,8 @@ def search_user_event(uid):
                             FROM event 
                             LEFT JOIN events_type ON event.event_type_id = events_type.id
                             
-                            WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}' """
+                            WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}' 
+                            AND status = 1"""
             uid_json = json.dumps({'uid': uid})
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()

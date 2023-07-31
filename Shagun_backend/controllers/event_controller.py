@@ -95,9 +95,15 @@ def enable_disable_event(e_id, et_status):
 def get_event_by_id(et_id):
     try:
         with connection.cursor() as cursor:
-            get_event_query = f""" SELECT * FROM event WHERE id = '{et_id}'"""
+            get_event_query = f""" SELECT e.*, et.event_type_name,
+            l.city_name, p.store_name FROM event e
+            LEFT JOIN events_type et ON e.event_type_id = et.id
+            LEFT JOIN locations l ON e.city_id = l.id
+            LEFT JOIN printer p ON e.printer_id = p.id;
+            WHERE id = '{et_id}'"""
             cursor.execute(get_event_query)
             event = cursor.fetchone()
+            print(event)
             if event is not None:
                 print(event)
                 return {

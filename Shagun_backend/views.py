@@ -361,7 +361,6 @@ def edit_kyc(request, kyc_id):
             return redirect('manage_kyc')
         else:
             kyc_data, status_code = user_controller.get_kyc_by_id(kyc_id)
-            print(kyc_data)
             users_list, status_code = user_controller.get_all_users(1)
             context = {
                 "kyc_data": kyc_data,

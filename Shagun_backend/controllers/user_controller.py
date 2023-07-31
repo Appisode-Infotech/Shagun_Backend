@@ -318,7 +318,7 @@ def edit_bank_details(bank_obj):
             user = cursor.fetchone()
             if user is not None:
                 edit_bank_query = "UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, " \
-                            "account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"
+                                  "account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
                           True, today, bank_obj.modified_by, bank_obj.uid)
                 cursor.execute(edit_bank_query, values)
@@ -409,9 +409,9 @@ def edit_employee(emp_obj):
     try:
         with connection.cursor() as cursor:
             edit_emp_query = "UPDATE users SET name = %s, email = %s, phone = %s, status = %s, city = %s," \
-                        " password = %s WHERE uid = %s"
+                             " password = %s WHERE uid = %s"
             values = (
-            emp_obj.name, emp_obj.email, emp_obj.phone, True, emp_obj.city, emp_obj.password, emp_obj.email)
+                emp_obj.name, emp_obj.email, emp_obj.phone, True, emp_obj.city, emp_obj.password, emp_obj.email)
             cursor.execute(edit_emp_query, values)
             return {
                 "status": True,
@@ -586,9 +586,6 @@ def disable_bank(bank_id, status):
 def edit_user_kyc(obj):
     try:
         with connection.cursor() as cursor:
-            print("in edit kyc controller =================================================")
-            print(obj.identification_doc2)
-            print(obj.identification_doc1)
             # Prepare the SQL query for updating the data
             sql = "UPDATE user_kyc SET "
             values = []
@@ -598,40 +595,42 @@ def edit_user_kyc(obj):
                 print("both none")
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
                 sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, postcode=%s, "
-                sql += "city=%s, country=%s WHERE id=%s"
+                sql += "city=%s, country=%s, updated_by=%s,updated_on=%s WHERE id=%s"
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.id
+                    obj.postcode, obj.city, obj.country, obj.modified_by_uid, today.now(), obj.id
                 ])
             elif obj.identification_doc1 is None:
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
                 sql += "address_line1=%s, state=%s, address_line2=%s, postcode=%s, city=%s, country=%s, identification_doc2=%s "
-                sql += "WHERE id=%s"
+                sql += ", updated_by=%s,updated_on=%s WHERE id=%s"
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.adress1, obj.state, obj.adress2, obj.postcode, obj.city, obj.country,
-                    obj.identification_doc2, obj.id
+                    obj.identification_doc2, obj.modified_by_uid, today.now(), obj.id
                 ])
             elif obj.identification_doc2 is None:
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
                 sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, "
-                sql += "postcode=%s, city=%s, country=%s, identification_doc1=%s WHERE id=%s"
+                sql += "postcode=%s, city=%s, country=%s, identification_doc1=%s, updated_by=%s,updated_on=%s WHERE id=%s"
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.id
+                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid, today.now(),
+                    obj.id
                 ])
             else:
                 print("both are none")
                 # Handle the case where both identification_doc1 and identification_doc2 are not None
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
                 sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, "
-                sql += "postcode=%s, city=%s, country=%s, identification_doc1=%s, identification_doc2=%s WHERE id=%s"
+                sql += "postcode=%s, city=%s, country=%s, identification_doc1=%s, identification_doc2=%s, updated_by=%s,updated_on=%s WHERE id=%s"
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.identification_doc2, obj.id
+                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.identification_doc2,
+                    obj.modified_by_uid, today.now(), obj.id
                 ])
 
             print(sql)
@@ -647,7 +646,6 @@ def edit_user_kyc(obj):
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
 
 
 def get_user_requests(param):

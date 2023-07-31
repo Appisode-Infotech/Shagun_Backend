@@ -107,26 +107,35 @@
                                     {{req.created_on}}
                                 </td>
                                 <td>
-                                    {% if req.status == 1 %}
-                                    <label class="badge badge-success">Active</label>
-                                    {% elif req.status == 0 %}
-                                    <label class="badge badge-danger">Inactive</label>
+                                    {% if req.status == 0 %}
+                                    <label class="badge badge-info">Pending</label>
+                                    {% elif req.status == 1 %}
+                                    <label class="badge badge-success">Approved</label>
+                                    {% elif req.status == 2 %}
+                                    <label class="badge badge-danger">Rejected</label>
                                     {% endif %}
                                 </td>
+
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
+                                                id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false">
                                             {% if req.status == 0 %}
-                                            Inactive
+                                            Pending
                                             {% elif req.status == 1 %}
-                                            Active
+                                            Approved
+                                            {% elif req.status == 2 %}
+                                            Rejected
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="{% url 'set_KYC_request_status' req.id request.session.uid 1 %}">Active</a>
-                                            <a class="dropdown-item" href="{% url 'set_KYC_request_status' req.id request.session.uid 0 %}">Inactive</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'set_KYC_request_status' req.id request.session.uid 0 %}">Pending</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'set_KYC_request_status' req.id request.session.uid 1 %}">Approved</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'set_KYC_request_status' req.id request.session.uid 2 %}">Rejected</a>
                                         </div>
                                     </div>
                                 </td>

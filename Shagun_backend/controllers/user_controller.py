@@ -141,12 +141,13 @@ def add_user_kyc(kyc_obj):
                 sql_query = """INSERT INTO user_kyc (uid, full_name, dob, address_line1, identification_proof1,
                 identification_proof2, identification_number1, identification_number2, identification_doc1, 
                 identification_doc2, verification_status, created_on, gender, address_line2, city, state, postcode, 
-                country, updated_on) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                country, updated_on, created_by, updated_by) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.adress1,
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
                           'pending', today, kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
-                          kyc_obj.postcode, kyc_obj.country, today)
+                          kyc_obj.postcode, kyc_obj.country, today, kyc_obj.created_by_uid, kyc_obj.created_by_uid)
                 cursor.execute(sql_query, values)
                 return {
                     "status": True,

@@ -52,6 +52,7 @@ class UserKycModel:
     identification_doc1: Optional[str] = None
     identification_doc2: Optional[str] = None
     id: Optional[str] = None
+    created_by_uid: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'UserKycModel':
@@ -71,11 +72,12 @@ class UserKycModel:
         city = from_str(obj.get("city"))
         identification_doc1 = from_union([from_str, from_none], obj.get("identification_doc1"))
         identification_doc2 = from_union([from_str, from_none], obj.get("identification_doc2"))
+        created_by_uid = from_union([from_str, from_none], obj.get("created_by_uid"))
         id = from_union([from_str, from_none], obj.get("id"))
         country = from_str(obj.get("country"))
         return UserKycModel(uid, full_name, gender, dob, identification_proof1, identification_number1,
                             identification_proof2, identification_number2, adress1, state, adress2, postcode, city,
-                            country, identification_doc1, identification_doc2, id)
+                            country, identification_doc1, identification_doc2, id, created_by_uid)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -99,6 +101,8 @@ class UserKycModel:
         result["country"] = from_str(self.country)
         if self.id is not None:
             result["id"] = from_union([from_str, from_none], self.id)
+        if self.created_by_uid is not None:
+            result["created_by_uid"] = from_union([from_str, from_none], self.created_by_uid)
         return result
 
 

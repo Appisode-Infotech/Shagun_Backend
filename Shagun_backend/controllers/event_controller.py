@@ -14,7 +14,7 @@ def create_event(event_obj):
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
             create_event_query = "INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1, " \
                                  "address_line2, event_lat_lng, created_on, sub_events, event_date," \
-                                 "event_note, event_admin, is_approved,  status, printer_id) " \
+                                 "event_note, event_admin, is_approved,  status, printer_id, ) " \
                                  "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
@@ -133,7 +133,7 @@ def get_active_event(status):
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id
                     LEFT JOIN settlements s ON th.id = s.transaction_id
-                    WHERE DATE(e.event_date) >= '{today.date()}' AND e.status = '{1}'
+                    WHERE e.status = '{status}'
                     GROUP BY e.id, e.event_date;
                     """
             cursor.execute(event_settlement_query)

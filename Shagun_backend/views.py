@@ -201,7 +201,8 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            user_controller.add_user_kyc(kyc_obj)
+            print(kyc_obj)
+            print(user_controller.add_user_kyc(kyc_obj))
             return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_all_users('%')
@@ -495,8 +496,10 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
             json_data = transform_data_to_json(request.POST)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
+            print(event_obj)
             event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
         else:
@@ -737,9 +740,10 @@ def enable_disable_event(request):
 #     return JsonResponse(response, status=status_code)
 
 @api_view(['POST'])
-def event_settlement(request):
+def active_event_settlement(request):
     response, status_code = transactions_controller.event_settlement(request.data['event_id'])
     return JsonResponse(response, status=status_code)
+
 
 
 @api_view(['POST'])
@@ -768,7 +772,7 @@ def get_event_by_id(request):
 
 
 @api_view(['POST'])
-def get_active_event(request):
+def get_settlement_for_event(request):
     response, status_code = event_controller.get_active_event(request.data['status'])
     return JsonResponse(response, status=status_code)
 
@@ -789,7 +793,6 @@ def search_user_event(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
-
 
 
 # By providing the event ID as a parameter, this API allows users to fetch detailed information about a specific event.

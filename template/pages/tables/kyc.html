@@ -64,6 +64,32 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
+        /* Styling for the centered popup */
+        #popupDiv, #popupDiv1 {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid lightskyblue;
+            padding: 20px;
+            background-color: #fff;
+            z-index: 9999;
+            background-color: #f0f0f0;
+        }
+
+        .center-button {
+          display: flex;
+          justify-content: center;
+
+        }
+        .center-button button {
+            margin-right: 10px;
+        }
+
+
+
 
 
 
@@ -107,29 +133,12 @@
                                 <th>
                                     Name
                                 </th>
-                                <!--                                <th>-->
-                                <!--                                    DOB-->
-                                <!--                                </th>-->
-                                <!--                                <th>-->
-                                <!--                                    Permanent Address-->
-                                <!--                                </th>-->
                                 <th>
                                     Identification Proof1
                                 </th>
                                 <th>
                                     Identification Proof2
                                 </th>
-                                <!--                                <th>-->
-                                <!--                                    Identification Number1-->
-                                <!--                                </th>-->
-                                <!--                                <th>-->
-                                <!--                                    Identification Number2-->
-                                <!--                                </th>-->
-                                <!--                                <th>-->
-                                <!--                                    Identification Document1-->
-                                <!--                                </th>-->
-                                <!--                                <th>-->
-                                <!--                                    Identification Document2-->
                                 </th>
                                 <th>
                                     Verification Status
@@ -149,32 +158,35 @@
                                 <td>
                                     {{kyc.full_name}}
                                 </td>
-                                <!--                                <td>-->
-                                <!--                                    {{kyc.dob}}-->
-                                <!--                                </td>-->
-                                <!--                                <td>-->
-                                <!--                                    {{kyc.permanent_address}}-->
-                                <!--                                </td>-->
                                 <td>
-                                    <b>{{kyc.identification_proof1}} :</b></br></br>
-                                    {{kyc.identification_number1}}
+                                    <div style="display: flex;">
+                                        <div style="flex: 90;">
+                                            <b>{{kyc.identification_proof1}} :</b><br><br>
+                                            {{kyc.identification_number1}}
+                                        </div>
+
+                                        <div style="flex: 10;">
+                                            </br><i class="fas fa-eye" style="color: blue;"
+                                                    onclick="showPopUpDiv('{{kyc.identification_doc1}}')"></i>
+                                        </div>
+                                    </div>
+
                                 </td>
+
                                 <td>
-                                    <b>{{kyc.identification_proof2}} :</b></br><br>
-                                    {{kyc.identification_number2}}
+                                    <div style="display: flex;">
+                                        <div style="flex: 90;">
+                                            <b>{{kyc.identification_proof2}} :</b><br><br>
+                                            {{kyc.identification_number2}}
+                                        </div>
+
+                                        <div style="flex: 10;">
+                                            </br><i class="fas fa-eye" style="color: blue;"
+                                                    onclick="showPopUpDiv('{{kyc.identification_doc2}}')"></i>
+                                        </div>
+                                    </div>
                                 </td>
-                                <!--                                <td>-->
-                                <!--                                    {{kyc.identification_number1}}-->
-                                <!--                                </td>-->
-                                <!--                                <td>-->
-                                <!--                                    {{kyc.identification_number2}}-->
-                                <!--                                </td>-->
-                                <!--                                <td>-->
-                                <!--                                    {{kyc.identification_doc1}}-->
-                                <!--                                </td>-->
-                                <!--                                <td>-->
-                                <!--                                    {{kyc.identification_doc2}}-->
-                                <!--                                </td>-->
+
                                 <td>
                                     {% if kyc.verification_status == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -210,10 +222,23 @@
                                     </button>
                                 </td>
                             </tr>
-
                             {% endfor %}
                             </tbody>
                         </table>
+                        <div id="popupDiv">
+                            <input type="text" class="form-control" id="image_url"/>
+                                <img id="uploadedImage" src="{% static 'images/greeting_logo.png' %}"
+                                     alt="Image"/>
+                            <div class="center-button">
+                                <button type="button" onclick="hidePopUpDiv()"
+                                        class="btn btn-inverse-dark btn-fw">Cancel
+                                </button>
+                                <button type="button" onclick="downloadImage()"
+                                        class="btn btn-primary mr-2">Download
+                                </button>
+                                  <a id="downloadLink" style="display: none;"></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -230,6 +255,45 @@
 </div>
 <!-- page-body-wrapper ends -->
 </div>
+
+<script>
+    function showPopUpDiv(val1) {
+        // Display the popup by changing its style to "display: block"
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "block";
+        console.log(val1)
+
+        // Set the values for the fields in the popup form
+        document.getElementById("uploadedImage").value = val1;
+        document.getElementById("image_url").value = val1;
+    }
+
+    function hidePopUpDiv() {
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "none";
+    }
+</script>
+
+<script>
+  function downloadImage() {
+    // Get the image source
+    var imgSrc = document.getElementById("uploadedImage").src;
+
+    // Create a temporary link to trigger the download
+    var downloadLink = document.createElement("a");
+    downloadLink.href = imgSrc;
+    downloadLink.download = "image.png"; // Change the filename if needed
+
+    // Append the link to the document and trigger the click event
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    // Remove the link from the document
+    document.body.removeChild(downloadLink);
+  }
+</script>
+
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

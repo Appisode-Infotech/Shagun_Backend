@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 30, 2023 at 01:28 PM
+-- Generation Time: Aug 01, 2023 at 06:59 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -298,6 +298,15 @@ CREATE TABLE `event` (
   `status` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `event`
+--
+
+INSERT INTO `event` (`id`, `created_by_uid`, `event_type_id`, `city_id`, `address_line1`, `address_line2`, `event_lat_lng`, `created_on`, `sub_events`, `event_date`, `event_note`, `event_admin`, `is_approved`, `approved_by`, `printer_id`, `approved_date_time`, `status`) VALUES
+(34, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:38:49', '[{\"sub_event_name\": \"cake cutting\", \"start_time\": \"2023-07-31 13:34:00\", \"end_time\": \"2023-07-31 13:34:00\"}]', '2023-07-31 13:33:00', 'wertyuiklkjhgfds', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"user_data[0]\", \"qr_code\": \"qr code\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
+(35, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:43:17', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-05 13:40:00\", \"end_time\": \"2023-08-05 13:40:00\"}]', '2023-08-05 13:40:00', 'dfghjk', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"user_data[0]\", \"qr_code\": \"qr code\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
+(36, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -310,6 +319,13 @@ CREATE TABLE `events_type` (
   `status` tinyint(1) DEFAULT 1,
   `created_by` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `events_type`
+--
+
+INSERT INTO `events_type` (`id`, `event_type_name`, `status`, `created_by`) VALUES
+(11, 'Marriage', 1, 'nkbhandari95@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -341,6 +357,13 @@ CREATE TABLE `event_guest_invite` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `event_guest_invite`
+--
+
+INSERT INTO `event_guest_invite` (`id`, `invited_by`, `invited_to`, `event_id`, `status`, `created_at`) VALUES
+(3, 'v0FxDg19CZOg0iBjQprxTrBwjk13', '8660225160', 34, 0, '2023-07-31 18:05:29');
+
 -- --------------------------------------------------------
 
 --
@@ -357,6 +380,13 @@ CREATE TABLE `greeting_cards` (
   `status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `greeting_cards`
+--
+
+INSERT INTO `greeting_cards` (`id`, `card_name`, `card_image_url`, `card_price`, `printer_id`, `created_on`, `status`) VALUES
+(9, 'Wedding1', 'images/greeting_card/1690794699_wed2.jpg', 250, 14, '2023-07-31 09:11:39', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -369,6 +399,13 @@ CREATE TABLE `locations` (
   `status` tinyint(1) DEFAULT 1,
   `created_by` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `locations`
+--
+
+INSERT INTO `locations` (`id`, `city_name`, `status`, `created_by`) VALUES
+(11, 'Mysore', 1, 'nkbhandari95@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -389,6 +426,14 @@ CREATE TABLE `printer` (
   `printer_user_name` varchar(255) NOT NULL,
   `printer_password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `printer`
+--
+
+INSERT INTO `printer` (`id`, `store_name`, `city`, `address`, `lat_lng`, `status`, `gst_no`, `store_owner`, `contact_number`, `printer_user_name`, `printer_password`) VALUES
+(14, 'Big Printers', 11, '4rd Cross', '23.987654-89.9809876', 1, 'GSTIN09897564456', 'Vijay Kumar', '9864332469', 'viji@gmail.com', '1234'),
+(15, 'Nirmala Printing Press', 11, '4rd Cross', '23.987654-89.9809876', 1, 'GSTIN09897564456', 'Nirmala Kumari Bhandari', '9090909090', 'nkbhandariprinters@gmail.com', '1234');
 
 -- --------------------------------------------------------
 
@@ -421,6 +466,13 @@ CREATE TABLE `settlements` (
   `created_on` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `settlements`
+--
+
+INSERT INTO `settlements` (`id`, `transaction_id`, `event_id`, `receiver_bank_id`, `created_on`) VALUES
+(4, 17, 34, 1, '2023-07-31 17:59:22');
+
 -- --------------------------------------------------------
 
 --
@@ -442,6 +494,15 @@ CREATE TABLE `transaction_history` (
   `status` tinyint(1) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transaction_history`
+--
+
+INSERT INTO `transaction_history` (`id`, `sender_uid`, `receiver_uid`, `transaction_amount`, `shagun_amount`, `greeting_card_id`, `transaction_fee`, `delivery_fee`, `transaction_id`, `payment_status`, `event_id`, `status`, `created_on`) VALUES
+(17, 'wjkkjhgfdserty', 'wjkkjhgfdserty', 5000, 4800, 0, 200, 0, '', 0, 34, 0, '2023-07-31 17:58:35'),
+(18, 'wjkkjhgfdserty', 'wjkkjhgfdserty', 5000, 4800, 0, 200, 0, '', 0, 34, 0, '2023-07-31 17:58:35'),
+(19, 'wjkkjhgfdserty', 'wjkkjhgfdserty', 5000, 4800, 0, 200, 0, '', 0, 34, 0, '2023-07-31 17:58:35');
 
 -- --------------------------------------------------------
 
@@ -466,6 +527,14 @@ CREATE TABLE `users` (
   `password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, `status`, `role`, `fcm_token`, `city`, `password`) VALUES
+(29, 'admin@gmail.com', 'admin', 'admin@gmail.com', '9898989898', '', 0, 'http://cdn.onlinewebfonts.com/svg/img_504768.png', '2023-07-30 14:54:58', 1, 2, 'wertyuiop0987654ertkkjhgf', '', 'admin'),
+(32, 'wjkkjhgfdserty', 'admin', 'admin@gmail.com', '9898989892', '', 1, 'http://cdn.onlinewebfonts.com/svg/img_504768.png', '2023-07-30 14:54:58', 1, 3, 'wertyuiop0987654ertkkjhgf', '', 'admin');
+
 -- --------------------------------------------------------
 
 --
@@ -483,6 +552,14 @@ CREATE TABLE `user_callback_request` (
   `event_type` varchar(255) DEFAULT NULL,
   `city` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_callback_request`
+--
+
+INSERT INTO `user_callback_request` (`id`, `uid`, `type`, `status`, `completed_by`, `created_on`, `event_date`, `event_type`, `city`) VALUES
+(9, 'wjkkjhgfdserty', 'KYC', 1, 'nkbhandari95@gmail.com', '2023-07-30 16:15:37', NULL, NULL, 0),
+(10, 'wjkkjhgfdserty', 'event', 2, 'nkbhandari95@gmail.com', '2023-07-30 16:15:37', NULL, 'Marriage', 1);
 
 -- --------------------------------------------------------
 
@@ -510,11 +587,19 @@ CREATE TABLE `user_kyc` (
   `identification_doc2` varchar(255) NOT NULL,
   `verification_status` tinyint(1) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(255) NOT NULL,
   `updated_by` varchar(255) NOT NULL,
   `updated_on` datetime NOT NULL,
   `approved_by` varchar(255) NOT NULL,
   `approved_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_kyc`
+--
+
+INSERT INTO `user_kyc` (`id`, `uid`, `full_name`, `dob`, `gender`, `address_line1`, `address_line2`, `city`, `state`, `postcode`, `country`, `identification_proof1`, `identification_proof2`, `identification_number1`, `identification_number2`, `identification_doc1`, `identification_doc2`, `verification_status`, `created_on`, `created_by`, `updated_by`, `updated_on`, `approved_by`, `approved_on`) VALUES
+(40, 'wjkkjhgfdserty', 'Roop Raj Thapa', '22/12/1996', 'Male', '4rd Cross', 'Peenya 1st stage', 'Bangalore', 'Karnataka', '560058', 'India', 'Aadhar Card', 'PAN CARD', '121212121212', 'BARPT3925R', 'images/documents/121212121212_1690802065_F16_FY2022-23_13452695 (1).pdf', 'images/documents/BARPT3925RRRR_1690802065_SSCD (1) (1).pdf', 1, '2023-07-31 11:06:57', 'nkbhandari95@gmail.com', 'nkbhandari95@gmail.com', '2023-07-31 21:54:37', '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -787,37 +872,37 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT for table `event`
 --
 ALTER TABLE `event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `events_type`
 --
 ALTER TABLE `events_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `event_guest_invite`
 --
 ALTER TABLE `event_guest_invite`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `greeting_cards`
 --
 ALTER TABLE `greeting_cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `printer`
 --
 ALTER TABLE `printer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `print_jobs`
@@ -829,31 +914,31 @@ ALTER TABLE `print_jobs`
 -- AUTO_INCREMENT for table `settlements`
 --
 ALTER TABLE `settlements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `user_callback_request`
 --
 ALTER TABLE `user_callback_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_kyc`
 --
 ALTER TABLE `user_kyc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `version_details`

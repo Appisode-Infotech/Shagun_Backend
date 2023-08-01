@@ -227,8 +227,8 @@
                         </table>
                         <div id="popupDiv">
                             <input type="text" class="form-control" id="image_url"/>
-                                <img id="uploadedImage" src="{% static 'images/greeting_logo.png' %}"
-                                     alt="Image"/>
+<!--                                <img id="uploadedImage"-->
+<!--                                     alt="Image"/>-->
                             <div class="center-button">
                                 <button type="button" onclick="hidePopUpDiv()"
                                         class="btn btn-inverse-dark btn-fw">Cancel
@@ -264,7 +264,7 @@
         console.log(val1)
 
         // Set the values for the fields in the popup form
-        document.getElementById("uploadedImage").value = val1;
+        document.getElementById("uploadedImage").src = val1;
         document.getElementById("image_url").value = val1;
     }
 

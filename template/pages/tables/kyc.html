@@ -64,34 +64,6 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        /* Styling for the centered popup */
-        #popupDiv, #popupDiv1 {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid lightskyblue;
-            padding: 20px;
-            background-color: #fff;
-            z-index: 9999;
-            background-color: #f0f0f0;
-        }
-
-        .center-button {
-          display: flex;
-          justify-content: center;
-
-        }
-        .center-button button {
-            margin-right: 10px;
-        }
-
-
-
-
-
 
 
     </style>
@@ -166,8 +138,10 @@
                                         </div>
 
                                         <div style="flex: 10;">
-                                            </br><i class="fas fa-eye" style="color: blue;"
-                                                    onclick="showPopUpDiv('{{MEDIA_URL}}{{kyc.identification_doc1}}')"></i>
+                                            </br>
+                                            <a href="{{ MEDIA_URL }}{{ kyc.identification_doc1 }}" target="_blank">
+                                                <i class="fas fa-eye" style="color: blue; cursor: pointer;"></i>
+                                            </a>
                                         </div>
                                     </div>
 
@@ -181,8 +155,10 @@
                                         </div>
 
                                         <div style="flex: 10;">
-                                            </br><i class="fas fa-eye" style="color: blue;"
-                                                    onclick="showPopUpDiv('{{MEDIA_URL}}{{kyc.identification_doc2}}')"></i>
+                                            </br>
+                                            <a href="{{ MEDIA_URL }}{{ kyc.identification_doc2 }}" target="_blank">
+                                                <i class="fas fa-eye" style="color: blue; cursor: pointer;"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </td>
@@ -225,20 +201,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div id="popupDiv">
-<!--                            <input type="text" class="form-control" id="image_url"/>-->
-                                <img id="uploadedImage"
-                                     alt="Image"/>
-                            <div class="center-button">
-                                <button type="button" onclick="hidePopUpDiv()"
-                                        class="btn btn-inverse-dark btn-fw">Cancel
-                                </button>
-                                <button type="button" onclick="downloadImage()"
-                                        class="btn btn-primary mr-2">Download
-                                </button>
-                                  <a id="downloadLink" style="display: none;"></a>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -256,23 +219,6 @@
 <!-- page-body-wrapper ends -->
 </div>
 
-<script>
-    function showPopUpDiv(val1) {
-        // Display the popup by changing its style to "display: block"
-        var popupDiv = document.getElementById("popupDiv");
-        popupDiv.style.display = "block";
-        console.log(val1)
-
-        // Set the values for the fields in the popup form
-        document.getElementById("uploadedImage").src = val1;
-        document.getElementById("image_url").value = val1;
-    }
-
-    function hidePopUpDiv() {
-        var popupDiv = document.getElementById("popupDiv");
-        popupDiv.style.display = "none";
-    }
-</script>
 
 <script>
   function downloadImage() {
@@ -291,6 +237,7 @@
     // Remove the link from the document
     document.body.removeChild(downloadLink);
   }
+
 </script>
 
 

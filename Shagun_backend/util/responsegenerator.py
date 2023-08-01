@@ -104,9 +104,9 @@ class responseGenerator:
                         "approved_date_time": events[15],
                         "status": events[16],
                         "total_received_amount": events[17],
-                        "total_shagun_amount": events[18],
-                        "settled_amount": events[19]
-
+                        "balance_shagun_amount": events[18],
+                        "settled_amount": events[19],
+                        "event_type_name": events[20]
                     }
                 )
             return active_event
@@ -361,11 +361,12 @@ class responseGenerator:
                 "identification_doc2": data[16],
                 "verification_status": data[17],
                 "created_on": data[18],
-                "updated_by": data[19],
-                "updated_on": data[20],
-                "approved_by": data[21],
-                "approved_on": data[22],
-                "username": data[23]
+                "created_by": data[19],
+                "updated_by": data[20],
+                "updated_on": data[21],
+                "approved_by": data[22],
+                "approved_on": data[23],
+                "username": data[24]
             }
 
         if controller_type == ALL_BANK_DATA:

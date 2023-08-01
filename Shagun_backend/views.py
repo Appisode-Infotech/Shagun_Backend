@@ -132,6 +132,8 @@ def manage_printers(request):
         return render(request, 'pages/tables/printers.html', response)
     else:
         return redirect('sign_up')
+
+
 def manage_kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('KYC')
@@ -140,12 +142,20 @@ def manage_kyc_request(request):
     else:
         return redirect('sign_up')
 
+
 def manage_event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
         return render(request, 'pages/tables/manage_event_request.html', response)
     else:
         return redirect('sign_up')
+
+
+def get_settlement_for_event(request, status):
+    print(status)
+    response, status_code = event_controller.get_active_event(status)
+    print(response)
+    return render(request, 'pages/tables/settlements.html', response)
 
 
 def add_events(request):
@@ -201,7 +211,8 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            user_controller.add_user_kyc(kyc_obj)
+            print(kyc_obj)
+            print(user_controller.add_user_kyc(kyc_obj))
             return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_all_users('%')
@@ -360,7 +371,6 @@ def edit_kyc(request, kyc_id):
             return redirect('manage_kyc')
         else:
             kyc_data, status_code = user_controller.get_kyc_by_id(kyc_id)
-            print(kyc_data)
             users_list, status_code = user_controller.get_all_users(1)
             context = {
                 "kyc_data": kyc_data,
@@ -378,12 +388,15 @@ def set_event_status(request, event_id, status):
     else:
         return redirect('sign_up')
 
+
 def set_KYC_request_status(request, req_id, cmpltd_by, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         request_controller.update_callback_request(req_id, cmpltd_by, status)
         return redirect('manage_kyc_request')
     else:
         return redirect('sign_up')
+
+
 def set_event_request_status(request, req_id, cmpltd_by, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         request_controller.update_callback_request(req_id, cmpltd_by, status)
@@ -495,8 +508,10 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
             json_data = transform_data_to_json(request.POST)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
+            print(event_obj)
             event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
         else:
@@ -552,6 +567,7 @@ def app_compatibility(request):
     app_obj = app_data_model.app_data_model_from_dict(request.data)
     response, status_code = app_data_controller.app_compatibility(app_obj)
     return JsonResponse(response, status=status_code)
+
 
 #
 # @api_view(['POST'])
@@ -727,17 +743,18 @@ def enable_disable_event(request):
     response, status_code = event_controller.enable_disable_event(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
-
-# This API retrieves a list of registered events from the backend database. It provides comprehensive event information,
-# including event titles, dates, locations, and other relevant data. Users can browse and access the available events
-# through this API.
-# @api_view(['POST'])
-# def get_event_list(request):
+    # This API retrieves a list of registered events from the backend database. It provides comprehensive event information,
+    # including event titles, dates, locations, and other relevant data. Users can browse and access the available events
+    # through this API.
+    # @api_view(['POST'])
+    # def get_event_list(request):
     response, status_code = event_controller.get_event_list(request.data['uid'])
+
+
 #     return JsonResponse(response, status=status_code)
 
 @api_view(['POST'])
-def event_settlement(request):
+def active_event_settlement(request):
     response, status_code = transactions_controller.event_settlement(request.data['event_id'])
     return JsonResponse(response, status=status_code)
 
@@ -760,17 +777,17 @@ def get_my_event_list(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-
 @api_view(['POST'])
 def get_event_by_id(request):
     response, status_code = event_controller.get_event_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
 
 
-@api_view(['POST'])
-def get_active_event(request):
-    response, status_code = event_controller.get_active_event(request.data['status'])
-    return JsonResponse(response, status=status_code)
+#
+# @api_view(['POST'])
+# def get_settlement_for_event(request):
+#     response, status_code = event_controller.get_active_event(request.data['status'])
+#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -789,7 +806,6 @@ def search_user_event(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
-
 
 
 # By providing the event ID as a parameter, this API allows users to fetch detailed information about a specific event.

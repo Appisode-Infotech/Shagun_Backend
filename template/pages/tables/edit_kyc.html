@@ -355,26 +355,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Approved by</label>
-                                                <div class="col-sm-9">
-                                                    <input disabled type="text" class="form-control" name="adress2"
-                                                           value="{{kyc_data.kyc.approved_by}}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Approved on</label>
-                                                <div class="col-sm-9">
-                                                    <input disabled type="text" class="form-control" name="postcode"
-                                                           value="{{kyc_data.kyc.approved_on}}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+<!--                                    <div class="row">-->
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="col-sm-3 col-form-label">Approved by</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input disabled type="text" class="form-control" name="adress2"-->
+<!--                                                           value="{{kyc_data.kyc.approved_by}}"/>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="col-sm-3 col-form-label">Approved on</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input disabled type="text" class="form-control" name="postcode"-->
+<!--                                                           value="{{kyc_data.kyc.approved_on}}"/>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
@@ -395,6 +395,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="modified_by_uid" name="modified_by_uid"
+                                                           value="{{ request.session.uid }}">
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>

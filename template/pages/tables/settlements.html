@@ -8,6 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -40,10 +41,36 @@
     <!--    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">-->
     <!--    &lt;!&ndash; endinject &ndash;&gt;-->
     <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
+    <style>
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+
+        .btn {
+            margin: 0;
+        }
+
+        .btn-icon-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon-text i {
+            margin-left: 5px;
+        }
+
+
+    </style>
 </head>
 
 <body>
-<div class="container-scroller">
+<div class="container-scroller" id="active_event">
     <!-- partial:../../partials/_navbar.html -->
     {% include 'app_bar.html' %}
     <!-- partial -->
@@ -54,90 +81,47 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">KYC Request List</h4>
+                    <div class="header-container">
+                        <h4 class="card-title">Open Events Settlements</h4>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>
-                                    Id
-                                </th>
-                                <th>
-                                    User
-                                </th>
-                                <th>
-                                    Name
-                                </th>
-                                <th>
-                                    Phone
-                                </th>
-                                <th>
-                                    Type
-                                </th>
-                                <th>
-                                    created on
-                                </th>
-                                <th>
-                                    Status
-                                </th>
+                                <th>Event Id</th>
+                                <th>Event Name</th>
+                                <th>Event Admins</th>
+                                <th>Total Shagun Amount</th>
+                                <th>Settled Amount</th>
+                                <th>Balance Amount</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for req in req_list %}
-                            <tr>
-                                <td>
-                                    {{req.id}}
-                                </td>
-                                <td class="py-1">
-                                    <img src="{{ req.profile }}" alt="image"/>
-                                </td>
-                                <td>
-                                    {{req.name}}
-                                </td>
-                                <td>
-                                    {{req.phone}}
-                                </td>
-                                <td>
-                                    {{req.type}}
-                                </td>
-                                <td>
-                                    {{req.created_on}}
-                                </td>
-                                <td>
-                                    {% if req.status == 0 %}
-                                    <label class="badge badge-info">Pending</label>
-                                    {% elif req.status == 1 %}
-                                    <label class="badge badge-success">Completed</label>
-                                    {% elif req.status == 2 %}
-                                    <label class="badge badge-danger">Rejected</label>
-                                    {% endif %}
-                                </td>
+                            {% for event in active_event %}
 
+                            <tr>
+                                <td>{{ event.id }}</td>
+                                <td>{{ event.event_type_name }}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            {% if req.status == 0 %}
-                                            Pending
-                                            {% elif req.status == 1 %}
-                                            Completed
-                                            {% elif req.status == 2 %}
-                                            Rejected
-                                            {% endif %}
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item"
-                                               href="{% url 'set_KYC_request_status' req.id request.session.uid 0 %}">Pending</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'set_KYC_request_status' req.id request.session.uid 1 %}">Completed</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'set_KYC_request_status' req.id request.session.uid 2 %}">Rejected</a>
-                                        </div>
-                                    </div>
+                                    {% for admin in event.event_admin %}
+                                    <b>{{ admin.role }}</b> : {{ admin.name }}</br></br>
+                                    {% endfor %}</br>
+                                    <b>Date : </b> {{ event.event_date }}
+                                </td>
+                                <td>{{event.total_received_amount}}</td>
+                                <td>{{event.settled_amount}}</td>
+                                <td>{{event.balance_shagun_amount}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info btn-fw"
+                                            onclick="">
+                                        Check Out
+                                        <i class="fas fa-credit-card"></i>
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -150,6 +134,7 @@
 
     </div>
 </div>
+
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
 {% include 'footer.html' %}
@@ -176,6 +161,8 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
+
+
 </body>
 
 </html>

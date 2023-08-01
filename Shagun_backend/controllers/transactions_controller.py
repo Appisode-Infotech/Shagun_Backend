@@ -38,6 +38,37 @@ def event_settlement(event_id):
                 SUM(shagun_amount) AS total_received_amount 
                 FROM transaction_history th
                 LEFT JOIN 
+                settlements s ON th.id = s.transaction_id
+                WHERE th.event_id = '{event_id}' ;
+            """
+            cursor.execute(event_settlement_query)
+            amount = cursor.fetchone()
+
+            return {
+                "status": True,
+                "total_shagun": amount[2],
+                "settled_amount": amount[1],
+                "unsettled_shagun_amount": amount[0]
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+
+def status_event_settlement(event_id):
+    try:
+        with connection.cursor() as cursor:
+            event_settlement_query = f"""
+                SELECT SUM(CASE WHEN s.transaction_id IS NULL THEN shagun_amount ELSE 0 END) 
+                AS total_shagun_amount, 
+                SUM(CASE WHEN s.transaction_id IS NOT NULL THEN shagun_amount ELSE 0 END)
+                AS settled_amount,
+                SUM(shagun_amount) AS total_received_amount 
+                FROM transaction_history th
+                LEFT JOIN 
                 settlements s ON th.id = s.transaction_id 
                 WHERE th.event_id = '{event_id}';
             """

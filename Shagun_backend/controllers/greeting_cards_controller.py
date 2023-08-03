@@ -48,6 +48,24 @@ def get_all_greeting_cards():
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def dashboard_search_greetings(search):
+    try:
+        with connection.cursor() as cursor:
+            search_greeting_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards
+             WHERE (id LIKE '%{search}%' OR card_name LIKE '%{search}%') """
+            cursor.execute(search_greeting_query)
+            greeting_cards = cursor.fetchall()
+            print(greeting_cards)
+            return {
+                "status": True,
+                "all_greeting_cards": responsegenerator.responseGenerator.generateResponse(greeting_cards, GREETING_CARDS)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 
 def disable_greeting_cards(event_id, estatus):
     try:
@@ -70,8 +88,8 @@ def disable_greeting_cards(event_id, estatus):
 def edit_greeting_cards(grt_obj):
     try:
         with connection.cursor() as cursor:
-            edit_cards_query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', card_price = '{grt_obj.card_price}' 
-            WHERE id = '{grt_obj.id}' """
+            edit_cards_query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', 
+            card_price = '{grt_obj.card_price}' WHERE id = '{grt_obj.id}' """
             cursor.execute(edit_cards_query)
             return {
                 "status": True,
@@ -100,7 +118,6 @@ def get_greetings_by_id(gre_id):
                     "status": False,
                     "greeting_card": None
                 }, 301
-
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -110,8 +127,9 @@ def get_greetings_by_id(gre_id):
 def add_greeting_card(grt_obj):
     try:
         with connection.cursor() as cursor:
-            greeting_cards_query = f"""INSERT INTO greeting_cards (card_name, card_image_url, card_price, status,printer_id)
-                        VALUES (%s, %s, %s, %s, %s)"""
+            greeting_cards_query = f"""INSERT INTO greeting_cards 
+                                    (card_name, card_image_url, card_price, status,printer_id)
+                                    VALUES (%s, %s, %s, %s, %s)"""
             cursor.execute(greeting_cards_query,
                            (grt_obj.card_name, grt_obj.card_image_url, grt_obj.card_price, True, grt_obj.printer_id))
             return {

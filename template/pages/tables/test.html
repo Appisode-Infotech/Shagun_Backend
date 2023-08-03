@@ -67,6 +67,52 @@
 
 
 
+        /* Pagination Styles */
+    .pagination {
+        margin-top: 10px;
+    }
+
+    .pagination a {
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #ddd;
+    }
+
+    .pagination .current-page {
+        font-weight: bold;
+    }
+
+        .pagination-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #008000;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-right: 5px;
+    }
+
+    .pagination-btn:hover {
+        background-color: #006400;
+    }
+
+
+
+
+
+
+
+
+
+
 
     </style>
 </head>
@@ -102,7 +148,6 @@
                             </form>
                         </div>
                         <div class="dropdown">
-                            <label> Filter on event status: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -118,7 +163,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
                                 <a class="dropdown-item"
-                                   href="{% url 'manage_event'  %}">All</a>
+                                   href="{% url 'test_view'  %}">All</a>
                                 <a class="dropdown-item"
                                    href="{% url 'filtered_events_on_approval_status' 0 %}">Pending</a>
                                 <a class="dropdown-item"
@@ -134,7 +179,6 @@
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
                     </div>
-
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -228,6 +272,8 @@
 
     </div>
 </div>
+<!-- content-wrapper ends -->
+<!-- Pagination links -->
 <div class="pagination justify-content-center">
     <ul class="pagination">
         {% if response.has_previous %}
@@ -261,7 +307,6 @@
         {% endif %}
     </ul>
 </div>
-<!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
 {% include 'footer.html' %}
 <!-- partial -->
@@ -278,6 +323,10 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
+
+
 
 
 </script>

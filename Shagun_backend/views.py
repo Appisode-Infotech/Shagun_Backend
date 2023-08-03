@@ -2,6 +2,7 @@ import jwt
 from datetime import datetime, timedelta
 
 from django.core.files.storage import default_storage
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -50,7 +51,10 @@ def admin_dashboard(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-        return render(request, 'pages/tables/events.html', response)
+        paginator = Paginator(response['event_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/events.html', {'response': response})
     else:
         return redirect('sign_up')
 
@@ -80,13 +84,11 @@ def manage_location(request):
 def manage_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
             response, status_code = user_controller.get_kyc_data()
             return render(request, 'pages/tables/kyc.html', response)
         else:
             response, status_code = user_controller.get_kyc_data()
             return render(request, 'pages/tables/kyc.html', response)
-
 
     else:
         return redirect('sign_up')
@@ -104,7 +106,10 @@ def manage_bank_details(request):
 def manage_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
-        return render(request, 'pages/tables/greeting_cards.html', response)
+        paginator = Paginator(response['all_greeting_cards'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/greeting_cards.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -120,7 +125,10 @@ def manage_users(request):
 def manage_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_employees()
-        return render(request, 'pages/tables/employees.html', response)
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/employees.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -128,13 +136,12 @@ def manage_employee(request):
 def manage_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.get_all_printers('%')
-        print(response)
-        return render(request, 'pages/tables/printers.html', response)
+        return render(request, 'pages/tables/printers.html', {"response": response['printer_data']})
     else:
         return redirect('sign_up')
 
 
-def manage_kyc_request(request):
+def kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('KYC')
         print(response)
@@ -143,7 +150,7 @@ def manage_kyc_request(request):
         return redirect('sign_up')
 
 
-def manage_event_request(request):
+def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
         return render(request, 'pages/tables/manage_event_request.html', response)
@@ -152,9 +159,15 @@ def manage_event_request(request):
 
 
 def get_settlement_for_event(request, status):
-    print(status)
-    response, status_code = event_controller.get_active_event(status)
-    print(response)
+    response, status_code = event_controller.event_settlement(status)
+    paginator = Paginator(response['event_settlement'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/tables/settlements.html', {"response": response})
+
+
+def get_event_settlement_by_id(request, event_id):
+    response, status_code = event_controller.event_settlement_by_id(event_id)
     return render(request, 'pages/tables/settlements.html', response)
 
 
@@ -202,7 +215,8 @@ def add_kyc(request):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
-                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1"
+                else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
                 identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
                 form_data = form_data.copy()
                 form_data[identification_doc_key] = file_name
@@ -289,8 +303,7 @@ def add_greeting_cards(request):
 def add_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            response, status_code = event_controller.add_location(request.POST['city_name'],
-                                                                  request.POST['created_by_uid'])
+            event_controller.add_location(request.POST['city_name'], request.POST['created_by_uid'])
             return redirect('manage_location')
     else:
         return redirect('sign_up')
@@ -357,7 +370,8 @@ def edit_kyc(request, kyc_id):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
-                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1"
+                else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
                 identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
                 form_data = form_data.copy()
                 form_data[identification_doc_key] = file_name
@@ -366,7 +380,6 @@ def edit_kyc(request, kyc_id):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            print(kyc_obj)
             user_controller.edit_user_kyc(kyc_obj)
             return redirect('manage_kyc')
         else:
@@ -430,7 +443,7 @@ def edit_bank(request, bank_id):
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)
             bank_list, status_code = bank_controller.get_all_banks_list()
-            print(bank_data)
+            # print(bank_data)
             context = {
                 "bank_data": bank_data,
                 "bank_list": bank_list
@@ -530,6 +543,60 @@ def edit_event(request, event_id):
             }
             return render(request, 'pages/tables/edit_event.html', context)
 
+    else:
+        return redirect('sign_up')
+
+
+def filtered_events_on_approval_status(request, status):
+    # Get all events filtered by status
+    response, status_code = event_controller.get_event_by_approval_status(status)
+    paginator = Paginator(response['event_list'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/tables/events.html', {'response': response, "status": status})
+
+
+def dashboard_search_event(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.dashboard_search_event(request.POST['search'])
+        paginator = Paginator(response['event_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/events.html', {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_employee(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.dashboard_search_employee(request.POST['search'])
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/employees.html', {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_printers(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = store_controller.dashboard_search_printers(request.POST['search'])
+        paginator = Paginator(response['printer_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/printers.html', {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_greetings(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = greeting_cards_controller.dashboard_search_greetings(request.POST['search'])
+        paginator = Paginator(response['all_greeting_cards'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/greeting_cards.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -743,15 +810,6 @@ def enable_disable_event(request):
     response, status_code = event_controller.enable_disable_event(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
-    # This API retrieves a list of registered events from the backend database. It provides comprehensive event information,
-    # including event titles, dates, locations, and other relevant data. Users can browse and access the available events
-    # through this API.
-    # @api_view(['POST'])
-    # def get_event_list(request):
-    response, status_code = event_controller.get_event_list(request.data['uid'])
-
-
-#     return JsonResponse(response, status=status_code)
 
 @api_view(['POST'])
 def active_event_settlement(request):
@@ -1069,6 +1127,7 @@ def track_order(request):
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
+
 # @api_view(['POST'])
 # def home(request):
 #     token = request.headers.get('Authorization').split(' ')[1]
@@ -1085,3 +1144,42 @@ def track_order(request):
 #         return JsonResponse({'message': 'Token has expired'}, status=401)
 #     except jwt.InvalidTokenError:
 #         return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
+# test done here
+
+# def test_view(request):
+#     # response['event_list']
+#     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+#         response, status_code = event_controller.get_all_event_list()
+#         paginator = Paginator(response['event_list'], 2)
+#
+#         # Get the current page number from the request's GET parameters
+#         page_number = request.GET.get('page')
+#
+#         # Get the Page object for the current page
+#         page_obj = paginator.get_page(page_number)
+#
+#         context = {
+#             'page_obj': page_obj
+#         }
+#         return render(request, 'pages/tables/test.html', context)
+#     else:
+#         return redirect('sign_up')
+
+
+def test_view(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.get_all_event_list()
+        paginator = Paginator(response['event_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/test.html', {'response': response})
+    else:
+        return redirect('sign_up')
+
+
+@api_view(['POST'])
+def add_ev(request):
+    resp, status_code = event_controller.add()
+    return JsonResponse(resp)

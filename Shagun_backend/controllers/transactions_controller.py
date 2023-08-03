@@ -7,14 +7,15 @@ from Shagun_backend.util.responsegenerator import responseGenerator
 def add_transaction_history(transaction_obj):
     try:
         with connection.cursor() as cursor:
-            transaction_history_query = "INSERT INTO transaction_history (sender_uid, receiver_uid, transaction_amount"\
-                     ", shagun_amount,greeting_card_id, transaction_fee, delivery_fee, transaction_id, payment_status,"\
-                     " event_id, status, created_on) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            values = (transaction_obj.sender_uid, transaction_obj.receiver_uid, transaction_obj.transaction_amount,
-                      transaction_obj.shagun_amount, transaction_obj.greeting_card_id, transaction_obj.transaction_fee,
-                      transaction_obj.delivery_fee, transaction_obj.transaction_id, transaction_obj.payment_status,
-                      transaction_obj.event_id, transaction_obj.status, today)
-            cursor.execute(transaction_history_query, values)
+            transaction_history_query = f"""INSERT INTO transaction_history (sender_uid, receiver_uid, 
+            transaction_amount, shagun_amount,greeting_card_id, transaction_fee, delivery_fee, transaction_id, 
+            payment_status, event_id, status, created_on) 
+            VALUES ('{transaction_obj.sender_uid}', '{transaction_obj.receiver_uid}', 
+            '{transaction_obj.transaction_amount}, {transaction_obj.shagun_amount}, {transaction_obj.greeting_card_id},
+            '{transaction_obj.transaction_fee}, {transaction_obj.delivery_fee}, '{transaction_obj.transaction_id}',
+            '{transaction_obj.payment_status}', {transaction_obj.event_id}, '{transaction_obj.status}', '{today}')"""
+
+            cursor.execute(transaction_history_query)
 
             return {
                 "status": True,
@@ -55,7 +56,6 @@ def event_settlement(event_id):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
 
 
 def status_event_settlement(event_id):
@@ -151,8 +151,8 @@ def get_received_gift(gift_data_obj):
                 SELECT th.receiver_uid, th.sender_uid, th.shagun_amount, th.transaction_amount,
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, ev.id, 
                     CASE WHEN st.transaction_id IS NOT NULL THEN True ELSE False END AS settlement_status,
-                    (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{gift_data_obj.uid}') AS total_amount,
-                    u.name, bd.bank_name, bd.bank_logo, bd.account_number
+                    (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{gift_data_obj.uid}') 
+                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
                 FROM transaction_history AS th
                 JOIN users As u ON th.sender_uid = u.uid
                 JOIN event AS ev ON th.event_id = ev.id

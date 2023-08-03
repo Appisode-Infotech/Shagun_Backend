@@ -38,8 +38,8 @@ def check_user_exist(username, fcm):
 def user_register(reg_obj):
     try:
         with connection.cursor() as cursor:
-            sql_query = "INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, fcm_token, city)" \
-                        " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            sql_query = """INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, 
+                            fcm_token, city) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (reg_obj.name, reg_obj.email, reg_obj.phone, False, reg_obj.profile, reg_obj.uid, True,
                       reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
             cursor.execute(sql_query, values)
@@ -178,10 +178,10 @@ def update_user_kyc(kyc_obj):
 
                 if existing_user is not None:
                     # Query to update the KYC details for the user
-                    update_query = "UPDATE user_kyc SET full_name = %s, dob = %s, permanent_address = %s, " \
-                                   "identification_proof1 = %s, identification_proof2 = %s, identification_number1 = " \
-                                   "%s,identification_number2 = %s , identification_doc1 = %s, identification_doc2 = " \
-                                   "%s , updated_on = %s  WHERE uid = %s "
+                    update_query = """UPDATE user_kyc SET full_name = %s, dob = %s, permanent_address = %s, 
+                                    identification_proof1 = %s, identification_proof2 = %s, identification_number1 = %s,
+                                    identification_number2 = %s , identification_doc1 = %s, identification_doc2 = %s , 
+                                    updated_on = %s  WHERE uid = %s """
 
                     values = (kyc_obj.full_name, kyc_obj.dob, kyc_obj.permanent_address,
                               kyc_obj.identification_proof1, kyc_obj.identification_proof2,
@@ -287,9 +287,8 @@ def add_bank_details(bank_obj):
             if user is not None:
                 cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
                                (bank_obj.uid,))
-                sql_query = "INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number," \
-                            "status, added_by, modified_on,modified_by) " \
-                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql_query = """INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number, 
+                            status, added_by, modified_on,modified_by) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
                           bank_obj.account_number, True, bank_obj.added_by, today, bank_obj.added_by)
                 cursor.execute(sql_query, values)
@@ -317,8 +316,8 @@ def edit_bank_details(bank_obj):
             cursor.execute(query, [bank_obj.uid])
             user = cursor.fetchone()
             if user is not None:
-                edit_bank_query = "UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, " \
-                                  "account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"
+                edit_bank_query = """UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, 
+                                account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"""
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
                           True, today, bank_obj.modified_by, bank_obj.uid)
                 cursor.execute(edit_bank_query, values)
@@ -386,8 +385,8 @@ def get_all_bank_data():
 def add_employee(emp_obj):
     try:
         with connection.cursor() as cursor:
-            add_emp_query = "INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password)" \
-                            " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 2,
                       emp_obj.city, emp_obj.password)
             cursor.execute(add_emp_query, values)
@@ -408,8 +407,8 @@ def add_employee(emp_obj):
 def edit_employee(emp_obj):
     try:
         with connection.cursor() as cursor:
-            edit_emp_query = "UPDATE users SET name = %s, email = %s, phone = %s, status = %s, city = %s," \
-                             " password = %s WHERE uid = %s"
+            edit_emp_query = """UPDATE users SET name = %s, email = %s, phone = %s, status = %s, city = %s, 
+                                password = %s WHERE uid = %s"""
             values = (
                 emp_obj.name, emp_obj.email, emp_obj.phone, True, emp_obj.city, emp_obj.password, emp_obj.email)
             cursor.execute(edit_emp_query, values)
@@ -448,6 +447,40 @@ def get_all_employees():
                 FROM users WHERE role = 2"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+def get_all_employees():
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 2"""
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+def dashboard_search_employee(search):
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 2 AND ( id LIKE '%{search}%' OR name LIKE '%{search}%' OR phone LIKE '%{search}%' ) """
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -524,8 +557,10 @@ def get_user_profile(uid):
             count_sql_query = f"""
                     SELECT
                         COUNT(DISTINCT bank_details.id) AS bank_details_count,
-                        COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}'), 0) AS total_sent_amount,
-                        COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}'), 0) AS total_received_amount
+                        COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}'), 0) 
+                        AS total_sent_amount,
+                        COALESCE((SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}'), 0) 
+                        AS total_received_amount
                     FROM bank_details
                     WHERE bank_details.uid = '{uid}'
                 """
@@ -594,8 +629,8 @@ def edit_user_kyc(obj):
             if obj.identification_doc1 is None and obj.identification_doc2 is None:
                 print("both none")
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
-                sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, postcode=%s, "
-                sql += "city=%s, country=%s, updated_by=%s,updated_on=%s WHERE id=%s"
+                sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s,  "
+                sql += "address_line2=%s, postcode=%s, city=%s, country=%s, updated_by=%s,updated_on=%s WHERE id=%s"
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
@@ -603,8 +638,8 @@ def edit_user_kyc(obj):
                 ])
             elif obj.identification_doc1 is None:
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
-                sql += "address_line1=%s, state=%s, address_line2=%s, postcode=%s, city=%s, country=%s, identification_doc2=%s "
-                sql += ", updated_by=%s,updated_on=%s WHERE id=%s"
+                sql += "address_line1=%s, state=%s, address_line2=%s, postcode=%s, city=%s, country=%s,  "
+                sql += "identification_doc2=%s, updated_by=%s,updated_on=%s WHERE id=%s"
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.adress1, obj.state, obj.adress2, obj.postcode, obj.city, obj.country,

@@ -42,8 +42,12 @@ urlpatterns = [
     path('sign_up', sign_up, name='sign_up'),
     path('logout', logout, name='logout'),
     path('manage_event', manage_event, name='manage_event'),
-    path('manage_kyc_request', manage_kyc_request, name='manage_kyc_request'),
-    path('manage_event_request', manage_event_request, name='manage_event_request'),
+    path('manage_kyc_request', kyc_request, name='kyc_request'),
+    path('event_request', event_request, name='event_request'),
+    path('dashboard_search_event', dashboard_search_event, name='dashboard_search_event'),
+    path('dashboard_search_greetings', dashboard_search_greetings, name='dashboard_search_greetings'),
+    path('dashboard_search_printers', dashboard_search_printers, name='dashboard_search_printers'),
+    path('dashboard_search_employee', dashboard_search_employee, name='dashboard_search_employee'),
     path('add_events', add_events, name='add_events'),
     path('manage_event_types', manage_event_types, name='manage_event_types'),
     path('manage_location', manage_location, name='manage_location'),
@@ -99,6 +103,7 @@ urlpatterns = [
     path('enable_disable_event', enable_disable_event, name='enable_disable_event'),
     path('get_event_by_id', get_event_by_id, name='get_event_by_id'),
     path('get_settlement_for_event/<int:status>/', get_settlement_for_event, name='get_settlement_for_event'),
+    path('get_event_settlement_by_id/<int:id>/', get_event_settlement_by_id, name='get_event_settlement_by_id'),
     path('gift_event', gift_event, name='gift_event'),
     # path('get_event_list', get_event_list, name='get_event_list'),
     # path('create_events_type', create_events_type, name='create_events_type'),
@@ -115,6 +120,10 @@ urlpatterns = [
     path('edit_printer', edit_printer, name='edit_printer'),
     path('get_greetings_by_id', get_greetings_by_id, name='get_greetings_by_id'),
     # path('update_callback_request', update_callback_request, name='update_callback_request'),
+
+    path('add_ev', add_ev, name='add_ev'),
+    path('test_view', test_view, name='test_view'),
+    path('filtered_events_on_approval_status/<str:status>/', filtered_events_on_approval_status, name='filtered_events_on_approval_status'),
 
 ]
 

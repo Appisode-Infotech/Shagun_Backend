@@ -86,6 +86,19 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Printers</h4>
+                        <div class="form-group">
+                            <form action="{% url 'dashboard_search_printers' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input name="search" id="search" type="text" class="form-control"
+                                           placeholder="search......." value="{{search}}"
+                                           aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_printer' %}'">
                             Printer
@@ -114,16 +127,13 @@
                                 <th>
                                     City
                                 </th>
-<!--                                <th>-->
-<!--                                    Address-->
-<!--                                </th>-->
                                 <th>
                                     Status
                                 </th>
                            </tr>
                             </thead>
                             <tbody>
-                            {% for printer in printer_data %}
+                            {% for printer in response %}
                             <tr>
                                 <td>
                                     {{printer.id}}
@@ -143,9 +153,6 @@
                                 <td>
                                     {{printer.city}}
                                 </td>
-<!--                                <td>-->
-<!--                                    {{printer.address}}-->
-<!--                                </td>-->
                                 <td>
                                     {% if printer.status == 1 %}
                                     <label class="badge badge-success">Active</label>

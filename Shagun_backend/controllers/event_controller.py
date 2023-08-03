@@ -12,10 +12,10 @@ def create_event(event_obj):
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
-            create_event_query = "INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1, " \
-                                 "address_line2, event_lat_lng, created_on, sub_events, event_date," \
-                                 "event_note, event_admin, is_approved,  status, printer_id, ) " \
-                                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
+                                    address_line2, event_lat_lng, created_on, sub_events, event_date, event_note, 
+                                    event_admin, is_approved,  status, printer_id, ) 
+                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id)
@@ -122,7 +122,7 @@ def get_event_by_id(et_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_active_event(status):
+def event_settlement(status):
     try:
         with connection.cursor() as cursor:
             event_settlement_query = f"""
@@ -143,7 +143,58 @@ def get_active_event(status):
             return {
                 "status": True,
                 # "msg": amount
+                "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def event_settlement_by_id(event_id):
+    try:
+        with connection.cursor() as cursor:
+            event_settlement_query = f"""
+                    SELECT e.* ,
+                      IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
+                      IFNULL(SUM(CASE WHEN s.transaction_id IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
+                      IFNULL(SUM(CASE WHEN s.transaction_id IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                      et.event_type_name
+                    FROM event e
+                    LEFT JOIN transaction_history th ON e.id = th.event_id
+                    LEFT JOIN settlements s ON th.id = s.transaction_id
+                    LEFT JOIN events_type et ON e.event_type_id = et.id
+                    WHERE e.id = '{event_id}'
+                    GROUP BY e.id, e.event_date;
+                    """
+            cursor.execute(event_settlement_query)
+            amount = cursor.fetchall()
+            print(amount)
+            return {
+                "status": True,
+                # "msg": amount
                 "active_event": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_event_by_approval_status(status):
+    try:
+        with connection.cursor() as cursor:
+            event_list_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id,
+                        event.is_approved, event.status FROM event 
+                        JOIN events_type ON event.event_type_id = events_type.id 
+                        WHERE event.is_approved LIKE '{status}'"""
+            cursor.execute(event_list_query)
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
             }, 200
 
     except pymysql.Error as e:
@@ -180,9 +231,9 @@ def gift_event(e_id, phone):
 def get_event_list(uid):
     try:
         with connection.cursor() as cursor:
-            event_list_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
-                               "event.is_approved, event.status FROM event JOIN events_type ON " \
-                               "event.event_type_id = events_type.id"
+            event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                                  event.is_approved, event.status FROM event JOIN events_type ON
+                                  event.event_type_id = events_type.id"""
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
@@ -540,10 +591,34 @@ def search_user_event(uid):
 def get_all_event_list():
     try:
         with connection.cursor() as cursor:
-            event_list_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
-                               "event.is_approved, event.status FROM event JOIN events_type ON " \
-                               "event.event_type_id = events_type.id"
+            event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                                  event.is_approved, event.status FROM event JOIN events_type ON 
+                                  event.event_type_id = events_type.id"""
             cursor.execute(event_list_query)
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def dashboard_search_event(search):
+    try:
+        with connection.cursor() as cursor:
+            single_events_query = f"""
+                                    SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                                        event.is_approved, event.status
+                                    FROM event 
+                                    LEFT JOIN events_type ON event.event_type_id = events_type.id
+                                    WHERE event.id LIKE '%%{search}%%' OR events_type.event_type_name LIKE '%%{search}%%' 
+                                    OR LOWER(event.event_admin) LIKE LOWER('%%{search}%%') OR 
+                                    event.event_date LIKE '%%{search}%%' """
+            cursor.execute(single_events_query)
             events = cursor.fetchall()
             return {
                 "status": True,
@@ -598,6 +673,34 @@ def set_event_status(event_id, status):
             event_status_query = "UPDATE event SET is_approved = %s WHERE id = %s"
             values = (status, event_id)
             cursor.execute(event_status_query, values)
+            return {
+                "status": True,
+                "message": "Event Status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def add():
+    try:
+        with connection.cursor() as cursor:
+            event_status_query = """
+                    INSERT INTO `event` 
+                        (`id`, `created_by_uid`, `event_type_id`, `city_id`, `address_line1`, `address_line2`, `event_lat_lng`,
+                         `created_on`, `sub_events`, `event_date`, `event_note`, `event_admin`, `is_approved`, `approved_by`,
+                         `printer_id`, `approved_date_time`, `status`)
+                    VALUES 
+                        (NULL, 'nkbhandari95@gmail.com', '11', '11', '4rd Cross', '#A148', '13.09876543-77.0987653', 
+                         '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', 
+                         '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 
+                         '0', '0', '15', '0000-00-00 00:00:00', '1');
+                    """
+            for i in range(50):
+                cursor.execute(event_status_query)
             return {
                 "status": True,
                 "message": "Event Status changed successfully"

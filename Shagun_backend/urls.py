@@ -68,6 +68,10 @@ urlpatterns = [
     path('add_bank', add_bank, name='add_bank'),
     path('add_greeting_cards', add_greeting_cards, name='add_greeting_cards'),
     path('get_printer_by_id', get_printer_by_id, name='get_printer_by_id'),
+    path('dashboard_search_printers_status/<str:status>/', dashboard_search_printers_status, name='dashboard_search_printers_status'),
+    path('dashboard_search_greetings_status/<str:status>/', dashboard_search_greetings_status, name='dashboard_search_greetings_status'),
+    path('dashboard_search_employee_status/<str:status>/', dashboard_search_employee_status, name='dashboard_search_employee_status'),
+
     path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location, name='activate_deactivate_location'),
     path('activate_deactivate_bank/<int:bank_id>/<int:status>/', activate_deactivate_bank, name='activate_deactivate_bank'),
     path('activate_deactivate_users/<int:user_id>/<int:status>/', activate_deactivate_users, name='activate_deactivate_users'),

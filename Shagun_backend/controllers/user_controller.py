@@ -491,6 +491,24 @@ def dashboard_search_employee(search):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def dashboard_search_employee_status(status):
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 2 AND status = '{status}' """
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            print(user_data)
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:

@@ -81,7 +81,7 @@ def get_printer_by_id(pid):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_all_printers(status):
+def get_printers_by_status(status):
     try:
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
@@ -109,6 +109,26 @@ def dashboard_search_printers(search):
             WHERE (p.id LIKE '%{search}%' OR store_name LIKE '%{search}%' OR store_owner LIKE '%{search}%'
             OR contact_number LIKE '%{search}%' OR printer_user_name LIKE '%{search}%' )"""
             cursor.execute(printers_data_query)
+            printer_data = cursor.fetchall()
+            print(printer_data)
+            return {
+                "status": True,
+                "printer_data": responsegenerator.responseGenerator.generateResponse(printer_data, ALL_PRINTERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def dashboard_search_printers_status(status):
+    try:
+        with connection.cursor() as cursor:
+            printers_status_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
+            p.store_owner, p.contact_number FROM printer AS p
+            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}'"""
+            cursor.execute(printers_status_query)
             printer_data = cursor.fetchall()
             print(printer_data)
             return {

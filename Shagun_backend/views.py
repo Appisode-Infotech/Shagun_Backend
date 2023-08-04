@@ -135,7 +135,7 @@ def manage_employee(request):
 
 def manage_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = store_controller.get_all_printers('%')
+        response, status_code = store_controller.get_printers_by_status('%')
         return render(request, 'pages/tables/printers.html', {"response": response['printer_data']})
     else:
         return redirect('sign_up')
@@ -174,18 +174,15 @@ def get_event_settlement_by_id(request, event_id):
 def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
-            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
-            print(event_obj)
-            print(event_controller.create_event(event_obj))
+            event_controller.create_event(event_obj)
             return redirect('manage_event')
         else:
             event_types, status_code = event_controller.get_event_type_list_for_user()
             location, status_code = event_controller.get_city_list_for_user()
             users_list, status_code = user_controller.get_all_users(1)
-            printers_list, status_code = store_controller.get_all_printers(1)
+            printers_list, status_code = store_controller.get_printers_by_status(1)
             context = {
                 "event_types": event_types,
                 "location": location,
@@ -293,7 +290,7 @@ def add_greeting_cards(request):
             greeting_cards_controller.add_greeting_card(grt_obj)
             return redirect('manage_greeting_cards')
         else:
-            printers_list, status_code = store_controller.get_all_printers(1)
+            printers_list, status_code = store_controller.get_printers_by_status(1)
             return render(request, 'pages/tables/add_greeting_cards.html', printers_list)
 
     else:
@@ -531,7 +528,7 @@ def edit_event(request, event_id):
             event_types, status_code = event_controller.get_event_type_list_for_user()
             location, status_code = event_controller.get_city_list_for_user()
             users_list, status_code = user_controller.get_all_users(1)
-            printers_list, status_code = store_controller.get_all_printers(1)
+            printers_list, status_code = store_controller.get_printers_by_status(1)
             event_data, status_code = event_controller.get_event_by_id(event_id)
 
             context = {
@@ -577,6 +574,14 @@ def dashboard_search_employee(request):
     else:
         return redirect('sign_up')
 
+def dashboard_search_employee_status(request, status):
+    # Get all employee filtered by status
+    response, status_code = user_controller.dashboard_search_employee_status(status)
+    paginator = Paginator(response['user_data'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/tables/employees.html', {'response': response, "status": status})
+
 
 def dashboard_search_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -588,6 +593,13 @@ def dashboard_search_printers(request):
     else:
         return redirect('sign_up')
 
+def dashboard_search_printers_status(request, status):
+    # Get all printers filtered by status
+    response, status_code = store_controller.dashboard_search_printers_status(status)
+    paginator = Paginator(response['printer_data'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/tables/printers.html', {'response': response, "status": status})
 
 def dashboard_search_greetings(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -600,6 +612,18 @@ def dashboard_search_greetings(request):
     else:
         return redirect('sign_up')
 
+def dashboard_search_greetings_status(request, status):
+    # Get all printers filtered by status
+    response, status_code = greeting_cards_controller.dashboard_search_greetings(status)
+    paginator = Paginator(response['all_greeting_cards'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/tables/printers.html', {'response': response, "status": status})
+
+# @api_view(['POST'])
+# def dashboard_search_greetings_status(request):
+#     response, status_code = greeting_cards_controller.dashboard_search_greetings(request.data['status'])
+#     return JsonResponse(response, status=status_code)
 
 # @api_view(['POST'])
 # def add_employee(request):

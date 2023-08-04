@@ -475,6 +475,31 @@ class responseGenerator:
 
             }
 
+        if controller_type == ALL_JOBS:
+            jobs_data = []
+            for jobs in data:
+                jobs_data.append(
+                    {
+                        "id": jobs[0],
+                        "transaction_id": jobs[1],
+                        "printer_id": jobs[2],
+                        "card_id": jobs[3],
+                        "status": jobs[4],
+                        "created_on": jobs[5],
+                        "last_modified": jobs[6],
+                        "billing_amount": jobs[7],
+                        "event_id": jobs[8],
+                        "store_name": jobs[9],
+                        "event_type_name": jobs[10],
+                        "card_name": jobs[11],
+                        "card_image_url": jobs[12],
+                        "card_price": jobs[13],
+                        "event_date": jobs[14]
+
+                    }
+                )
+            return jobs_data
+
         if controller_type == INVITED_EVENT_LIST:
             events_invite_list = []
             for invites in data:

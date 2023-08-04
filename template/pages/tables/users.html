@@ -77,22 +77,16 @@
                                 <th>
                                     Phone
                                 </th>
-<!--                                <th>-->
-<!--                                    Auth Type-->
-<!--                                </th>-->
                                 <th>
                                     KYC Status
                                 </th>
-<!--                                <th>-->
-<!--                                    Created on-->
-<!--                                </th>-->
                                 <th>
                                     User Status
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for user in user_data %}
+                            {% for user in response %}
                             <tr>
                                 <td>
                                     {{user.id}}
@@ -109,9 +103,6 @@
                                 <td>
                                     {{user.phone}}
                                 </td>
-<!--                                <td>-->
-<!--                                    {{user.auth_type}}-->
-<!--                                </td>-->
                                 <td>
                                     {% if user.kyc == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -119,9 +110,6 @@
                                     <label class="badge badge-danger">Inactive</label>
                                     {% endif %}
                                 </td>
-<!--                                <td>-->
-<!--                                    {{user.created_on}}-->
-<!--                                </td>-->
                                 <td>
                                     {% if user.status == 1 %}
                                     <label class="badge badge-success">Active</label>
@@ -159,6 +147,39 @@
         </div>
 
     </div>
+</div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->

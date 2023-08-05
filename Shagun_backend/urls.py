@@ -76,6 +76,7 @@ urlpatterns = [
     path('dashboard_search_printers_status/<str:status>/', dashboard_search_printers_status, name='dashboard_search_printers_status'),
     path('dashboard_search_greetings_status/<str:status>/', dashboard_search_greetings_status, name='dashboard_search_greetings_status'),
     path('dashboard_search_employee_status/<str:status>/', dashboard_search_employee_status, name='dashboard_search_employee_status'),
+    path('transactions_settlement/<str:event_id>/', transactions_settlement, name='transactions_settlement'),
 
     path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location, name='activate_deactivate_location'),
     path('activate_deactivate_bank/<int:bank_id>/<int:status>/', activate_deactivate_bank, name='activate_deactivate_bank'),

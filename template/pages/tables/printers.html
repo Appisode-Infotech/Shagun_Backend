@@ -99,6 +99,29 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="dropdown">
+                            <label> Printer Filter </label>
+                            <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                {% if status is None %}
+                                All
+                                {% elif status == '0' %}
+                                Inactive
+                                {% elif status == '1' %}
+                                Active
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                <a class="dropdown-item"
+                                   href="{% url 'manage_printers'  %}">All</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'dashboard_search_printers_status' 1 %}">Active</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'dashboard_search_printers_status' 0 %}">Inactive</a>
+                            </div>
+
+                        </div>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_printer' %}'">
                             Printer

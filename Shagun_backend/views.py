@@ -176,46 +176,81 @@ def event_request(request):
 
 
 def get_settlement_for_event(request, status):
-    response, status_code = event_controller.event_settlement(status)
-    paginator = Paginator(response['event_settlement'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/tables/settlements.html', {"response": response})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.event_settlement(status)
+        paginator = Paginator(response['event_settlement'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/settlements.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
 
 
 def get_event_settlement_by_id(request, event_id):
-    response, status_code = event_controller.event_settlement_by_id(event_id)
-    paginator = Paginator(response['event_settlement'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/tables/settlements.html', {"response": response})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.event_settlement_by_id(event_id)
+        paginator = Paginator(response['event_settlement'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/settlements.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
 
 
 def all_printer_jobs(request):
-    status = [1, 2, 3, 4, 5]
-    response, status_code = store_controller.get_all_jobs(status)
-    paginator = Paginator(response['jobs'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/tables/all_jobs.html', {"response": response})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4, 5]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
 
 
 def Open_printer_jobs(request):
-    status = [1, 2, 3, 4]
-    response, status_code = store_controller.get_all_jobs(status)
-    paginator = Paginator(response['jobs'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/tables/all_jobs.html', {"response": response})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
 
 
 def closed_printer_jobs(request):
-    status = [5]
-    response, status_code = store_controller.get_all_jobs(status)
-    paginator = Paginator(response['jobs'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/tables/closed_jobs.html', {"response": response})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [5]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/closed_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+
+
+# I need the data from transaction history table (sender, reciever, total amount, shagun, amount, card amount,
+# created date, event date.... all details
+def transactions_settlement(request, event_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [5]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/closed_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
 
 
 def add_events(request):
@@ -623,7 +658,6 @@ def dashboard_search_employee(request):
 
 
 def dashboard_search_employee_status(request, status):
-    # Get all employee filtered by status
     response, status_code = user_controller.dashboard_search_employee_status(status)
     paginator = Paginator(response['user_data'], 25)
     page = request.GET.get('page')

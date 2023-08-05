@@ -69,6 +69,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -109,7 +110,7 @@
                                 <td>{{ job.id }}</td>
                                 <td>{{ job.event_type_name }}</td>
                                 <td>
-                                    <b>Card Name</b> : {{ job.card_name }}</br></br>
+                                    <b>Card Id</b> : {{ job.card_name }}</br></br>
                                     <b>Event Date : </b> {{ job.event_date }}
                                 </td>
                                 <td>{{ job.billing_amount }}</td>
@@ -126,8 +127,6 @@
                                     <label class="badge badge-success">Closed</label>
                                     {% endif %}
                                 </td>
-
-
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -189,6 +188,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 

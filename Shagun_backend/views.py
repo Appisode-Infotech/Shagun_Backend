@@ -248,6 +248,13 @@ def transactions_settlement(request, event_id):
         if request.method == 'POST':
             print("===================================")
             print(request.POST)
+            print(request.POST['selected_uid'])
+            print(request.POST['selected_ids'])
+            selected_uid_list = request.POST.getlist('selected_uid')
+            selected_ids_list = request.POST.getlist('selected_ids')
+            print(selected_uid_list)
+            print(selected_ids_list)
+            transactions_controller.settle_payment(selected_uid_list, selected_ids_list)
             response, status_code = transactions_controller.get_transaction_list(event_id)
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
@@ -255,7 +262,6 @@ def transactions_settlement(request, event_id):
             return render(request, 'pages/tables/transactions_settlement.html', {"response": response, "event_id": event_id})
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id)
-            print(response)
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)

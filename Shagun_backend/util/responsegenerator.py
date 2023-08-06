@@ -616,9 +616,11 @@ class responseGenerator:
                     "payment_status": trans[9],
                     "event_id": trans[10],
                     "status": trans[11],
-                    "created_on": trans[12],
-                    "event_date": trans[13],
-                    "event_type": trans[14]
+                    "is_settled": trans[12],
+                    "reciever_bank_id": trans[13],
+                    "created_on": trans[14],
+                    "event_date": trans[15],
+                    "event_type": trans[16]
                 }
                 )
             return transaction_list

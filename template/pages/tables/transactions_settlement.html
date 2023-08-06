@@ -81,12 +81,6 @@
             color: white;
         }
 
-
-
-
-
-
-
     </style>
 </head>
 
@@ -130,7 +124,7 @@
                                     <th>Receiver</th>
                                     <th>Transaction Details</th>
                                     <th>Shagun Amount</th>
-                                    <th>Payment Status</th>
+                                    <th>Settlement Status</th>
                                     <th>Transaction Date</th>
                                     <th>Event Date</th>
                                 </tr>
@@ -138,11 +132,14 @@
                                 <tbody>
                                 {% for data in response %}
                                 <tr>
-
                                     <td>
-                                        <input type="checkbox" class="select-row" name="selected_ids"
+                                    {% if data.is_settled == 0 %}
+                                    <input type="checkbox" class="select-row" name="selected_ids"
                                                value="{{ data.id }}">
-                                    </td>
+                                    {% elif data.is_settled == 1 %}
+                                        <input type="checkbox" class="select-row" name="selected_ids" DISABLED>
+                                    {% endif %}
+                                </td>
                                     <td>{{ data.id }}</td>
                                     <td>{{ data.event_type }}</td>
                                     <td>{{ data.sender_uid }}</td>
@@ -158,7 +155,7 @@
                                         {{ data.shagun_amount }}
                                     </td>
                                     <td>
-                                        {{ data.payment_status }}
+                                        {{ data.is_settled }}
                                     </td>
                                     <td>
                                         {{ data.created_on }}
@@ -166,6 +163,7 @@
                                     <td>
                                         {{ data.event_date }}
                                     </td>
+                                    <td><input type="hidden" name="selected_uid" value="{{data.receiver_uid}}"></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
@@ -243,8 +241,10 @@
             // If "select-all" is checked, add all IDs to the selectedIds list
             selectedIds = [];
             for (var i = 0; i < selectRowCheckboxes.length; i++) {
-                selectRowCheckboxes[i].checked = true;
-                selectedIds.push(selectRowCheckboxes[i].value);
+                if (!selectRowCheckboxes[i].disabled) {
+                    selectRowCheckboxes[i].checked = true;
+                    selectedIds.push(selectRowCheckboxes[i].value);
+                }
             }
         } else {
             // If "select-all" is unchecked, remove all IDs from the selectedIds list
@@ -257,19 +257,21 @@
     }
 
     $(document).on('change', '.select-row', function () {
-        var checkboxValue = $(this).val();
-        if ($(this).prop('checked')) {
-            // If checkbox is checked, add ID to the selectedIds list
-            selectedIds.push(checkboxValue);
-        } else {
-            // If checkbox is unchecked, remove ID from the selectedIds list
-            var index = selectedIds.indexOf(checkboxValue);
-            if (index !== -1) {
-                selectedIds.splice(index, 1);
+        if (!this.disabled) {
+            var checkboxValue = $(this).val();
+            if ($(this).prop('checked')) {
+                // If checkbox is checked, add ID to the selectedIds list
+                selectedIds.push(checkboxValue);
+            } else {
+                // If checkbox is unchecked, remove ID from the selectedIds list
+                var index = selectedIds.indexOf(checkboxValue);
+                if (index !== -1) {
+                    selectedIds.splice(index, 1);
+                }
             }
-        }
 
-        updateHiddenField();
+            updateHiddenField();
+        }
     });
 
     function updateHiddenField() {
@@ -277,16 +279,15 @@
         var selectedIdsList = [];
         var selectRowCheckboxes = document.getElementsByClassName('select-row');
         for (var i = 0; i < selectRowCheckboxes.length; i++) {
-            if (selectRowCheckboxes[i].checked) {
+            if (selectRowCheckboxes[i].checked && !selectRowCheckboxes[i].disabled) {
                 selectedIdsList.push(selectRowCheckboxes[i].value);
             }
         }
         document.getElementById('selected_id_list').value = selectedIdsList.join(',');
     }
 
-
-
 </script>
+
 
 
 <script>
@@ -295,21 +296,14 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
-
-
-
-
-
-
 </script>
-
 <script>
     // Function to update the sum of Shagun Amount for selected rows
     function updateShagunSum() {
         let sum = 0;
         const selectRows = document.getElementsByClassName('select-row');
         for (let i = 0; i < selectRows.length; i++) {
-            if (selectRows[i].checked) {
+            if (selectRows[i].checked && !selectRows[i].disabled) {
                 const shagunAmountCell = selectRows[i].parentNode.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling;
                 const shagunAmount = parseFloat(shagunAmountCell.textContent);
                 sum += shagunAmount;
@@ -323,7 +317,9 @@
     selectAllCheckbox.addEventListener('change', function () {
         const selectRows = document.getElementsByClassName('select-row');
         for (let i = 0; i < selectRows.length; i++) {
-            selectRows[i].checked = selectAllCheckbox.checked;
+            if (!selectRows[i].disabled) {
+                selectRows[i].checked = selectAllCheckbox.checked;
+            }
         }
         updateShagunSum();
     });
@@ -335,12 +331,8 @@
         });
     }
 
-
-
-
-
-
 </script>
+
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 
 <!-- endinject -->

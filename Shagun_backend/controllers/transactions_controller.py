@@ -223,3 +223,7 @@ def get_transaction_list(event_id):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def settle_payment(transaction_list, receiver_list):
+    print("")

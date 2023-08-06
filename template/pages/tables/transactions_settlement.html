@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shagun Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'js/select.dataTables.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <!--    &lt;!&ndash; Required meta tags &ndash;&gt;-->
+    <!--    <meta charset="utf-8">-->
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <!--    <title>Shagun Admin</title>-->
+    <!--    &lt;!&ndash; plugins:css &ndash;&gt;-->
+    <!--    {% load static%}-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">-->
+
+    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
+    <!--    &lt;!&ndash; Plugin css for this page &ndash;&gt;-->
+    <!--    &lt;!&ndash; End plugin css for this page &ndash;&gt;-->
+    <!--    &lt;!&ndash; inject:css &ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">-->
+    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
+    <style>
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+
+        .btn {
+            margin: 0;
+        }
+
+        .btn-icon-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon-text i {
+            margin-left: 5px;
+        }
+        .center-button {
+          display: flex;
+          justify-content: center;
+
+        }
+        .center-button button {
+            margin: 10px;
+        }
+        #shagun-sum-label {
+        font-weight: bold;
+        color: #9925b9;
+        }
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
+
+
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include 'app_bar.html' %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        {% include 'theme_setting.html' %}
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        {% include 'nav_bar.html' %}
+        <!-- partial -->
+        <div class="col-lg-10 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="header-container">
+                        <h4 class="card-title">Transaction_settlement</h4>
+                        <label id="shagun-sum-label" class="col-sm-3 col-form-label">Total Shagun Amount:
+                            0.0</label>
+                        <button type="button" class="btn btn-outline-info btn-icon-text"
+                                onclick="window.location.href='{% url 'add_events' %}'">
+                            Settle All
+                            <i class="fas fa-money-check"></i>
+                        </button>
+                    </div>
+                    </br>
+                    <form class="form-sample" action="/transactions_settlement/{{ event_id }}/" method="post"
+                          id="myForm">
+                        {% csrf_token %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="select-all" onclick="toggleSelectAll()"></th>
+                                    <th>ID</th>
+                                    <th>Event Name</th>
+                                    <th>Sender</th>
+                                    <th>Receiver</th>
+                                    <th>Transaction Details</th>
+                                    <th>Shagun Amount</th>
+                                    <th>Payment Status</th>
+                                    <th>Transaction Date</th>
+                                    <th>Event Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for data in response %}
+                                <tr>
+
+                                    <td>
+                                        <input type="checkbox" class="select-row" name="selected_ids"
+                                               value="{{ data.id }}">
+                                    </td>
+                                    <td>{{ data.id }}</td>
+                                    <td>{{ data.event_type }}</td>
+                                    <td>{{ data.sender_uid }}</td>
+                                    <td>{{ data.receiver_uid }}</td>
+                                    <td>
+                                        <b>Transaction Amount : </b>{{ data.transaction_amount }}</br></br>
+                                        <b>Shagun Amount: </b>{{ data.shagun_amount }}</br></br>
+                                        <b>Transaction Fee: </b>{{ data.transaction_fee }}</br></br>
+                                        <b>Delivery Fee: </b>{{ data.delivery_fee }}</br></br>
+                                        <b>Transaction ID: </b>{{ data.transaction_id }}</br></br>
+                                    </td>
+                                    <td>
+                                        {{ data.shagun_amount }}
+                                    </td>
+                                    <td>
+                                        {{ data.payment_status }}
+                                    </td>
+                                    <td>
+                                        {{ data.created_on }}
+                                    </td>
+                                    <td>
+                                        {{ data.event_date }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <div class="center-button">
+                            <button type="submit" class="btn btn-outline-info btn-icon-text">Check-Out
+                                <i class="fas fa-money-check"></i></button>
+
+                        </div>
+                    </form>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+<!-- content-wrapper ends -->
+<!-- partial:../../partials/_footer.html -->
+{% include 'footer.html' %}
+<!-- partial -->
+</div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var selectedIds = []; // Initialize an array to store selected event IDs
+
+    function toggleSelectAll() {
+        var selectAllCheckbox = document.getElementById('select-all');
+        var selectRowCheckboxes = document.getElementsByClassName('select-row');
+
+        if (selectAllCheckbox.checked) {
+            // If "select-all" is checked, add all IDs to the selectedIds list
+            selectedIds = [];
+            for (var i = 0; i < selectRowCheckboxes.length; i++) {
+                selectRowCheckboxes[i].checked = true;
+                selectedIds.push(selectRowCheckboxes[i].value);
+            }
+        } else {
+            // If "select-all" is unchecked, remove all IDs from the selectedIds list
+            selectedIds = [];
+            for (var i = 0; i < selectRowCheckboxes.length; i++) {
+                selectRowCheckboxes[i].checked = false;
+            }
+        }
+        updateHiddenField();
+    }
+
+    $(document).on('change', '.select-row', function () {
+        var checkboxValue = $(this).val();
+        if ($(this).prop('checked')) {
+            // If checkbox is checked, add ID to the selectedIds list
+            selectedIds.push(checkboxValue);
+        } else {
+            // If checkbox is unchecked, remove ID from the selectedIds list
+            var index = selectedIds.indexOf(checkboxValue);
+            if (index !== -1) {
+                selectedIds.splice(index, 1);
+            }
+        }
+
+        updateHiddenField();
+    });
+
+    function updateHiddenField() {
+        // Update the hidden field with the selectedIds list separated by commas
+        var selectedIdsList = [];
+        var selectRowCheckboxes = document.getElementsByClassName('select-row');
+        for (var i = 0; i < selectRowCheckboxes.length; i++) {
+            if (selectRowCheckboxes[i].checked) {
+                selectedIdsList.push(selectRowCheckboxes[i].value);
+            }
+        }
+        document.getElementById('selected_id_list').value = selectedIdsList.join(',');
+    }
+
+
+
+</script>
+
+
+<script>
+    document.getElementById("approval-status-dropdown").addEventListener("change", function() {
+        var dropdown = document.getElementById("approval-status-dropdown");
+        var selectedValue = dropdown.value;
+        window.location.href = selectedValue;
+    });
+
+
+
+
+
+
+</script>
+
+<script>
+    // Function to update the sum of Shagun Amount for selected rows
+    function updateShagunSum() {
+        let sum = 0;
+        const selectRows = document.getElementsByClassName('select-row');
+        for (let i = 0; i < selectRows.length; i++) {
+            if (selectRows[i].checked) {
+                const shagunAmountCell = selectRows[i].parentNode.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling;
+                const shagunAmount = parseFloat(shagunAmountCell.textContent);
+                sum += shagunAmount;
+            }
+        }
+        document.getElementById('shagun-sum-label').textContent = 'Shagun Amount Total: ' + sum.toFixed(2);
+    }
+
+    // Event listener for checkbox changes
+    const selectAllCheckbox = document.getElementById('select-all');
+    selectAllCheckbox.addEventListener('change', function () {
+        const selectRows = document.getElementsByClassName('select-row');
+        for (let i = 0; i < selectRows.length; i++) {
+            selectRows[i].checked = selectAllCheckbox.checked;
+        }
+        updateShagunSum();
+    });
+
+    const individualCheckboxes = document.getElementsByClassName('select-row');
+    for (let i = 0; i < individualCheckboxes.length; i++) {
+        individualCheckboxes[i].addEventListener('change', function () {
+            updateShagunSum();
+        });
+    }
+
+
+
+
+
+
+</script>
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+
+<!-- endinject -->
+<!-- Custom js for this page-->
+<!-- End custom js for this page-->
+
+
+</body>
+
+</html>
+

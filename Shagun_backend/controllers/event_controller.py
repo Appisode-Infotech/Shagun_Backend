@@ -173,7 +173,6 @@ def event_settlement_by_id(event_id):
             print(amount)
             return {
                 "status": True,
-                # "msg": amount
                 "active_event": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
             }, 200
 

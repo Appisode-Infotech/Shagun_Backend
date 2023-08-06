@@ -40,6 +40,12 @@
     <!--    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">-->
     <!--    &lt;!&ndash; endinject &ndash;&gt;-->
     <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
+    <style>
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -81,18 +87,18 @@
                                     Event Type
                                 </th>
                                 <th>
-                                    Event Date
-                                </th>
-                                <th>
                                     created on
                                 </th>
                                 <th>
                                     Status
                                 </th>
+                                <th>
+                                    Set Status
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for req in req_list %}
+                            {% for req in response %}
                             <tr>
                                 <td>
                                     {{req.id}}
@@ -111,9 +117,6 @@
                                 </td>
                                 <td>
                                     {{req.event_type}}
-                                </td>
-                                <td>
-                                    {{req.event_date}}
                                 </td>
                                 <td>
                                     {{req.created_on}}
@@ -161,6 +164,39 @@
         </div>
 
     </div>
+</div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->

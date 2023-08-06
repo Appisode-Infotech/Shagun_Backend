@@ -599,3 +599,26 @@ class responseGenerator:
                     }
                 )
             return req_list
+
+        if controller_type == Transaction_DATA:
+            transaction_list = []
+            for trans in data:
+                transaction_list.append({
+                    "id": trans[0],
+                    "sender_uid": trans[1],
+                    "receiver_uid": trans[2],
+                    "transaction_amount": trans[3],
+                    "shagun_amount": trans[4],
+                    "greeting_card_id": trans[5],
+                    "transaction_fee": trans[6],
+                    "delivery_fee": trans[7],
+                    "transaction_id": trans[8],
+                    "payment_status": trans[9],
+                    "event_id": trans[10],
+                    "status": trans[11],
+                    "created_on": trans[12],
+                    "event_date": trans[13],
+                    "event_type": trans[14]
+                }
+                )
+            return transaction_list

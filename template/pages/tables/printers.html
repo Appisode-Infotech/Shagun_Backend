@@ -65,7 +65,10 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
     </style>
 </head>
 
@@ -136,22 +139,25 @@
                                     Id
                                 </th>
                                 <th>
-                                    Store Name
-                                </th>
-                                <th>
                                     Store Owner
                                 </th>
                                 <th>
                                     Contact No
                                 </th>
                                 <th>
-                                    GST no
+                                    Store Details
                                 </th>
                                 <th>
                                     City
                                 </th>
                                 <th>
                                     Status
+                                </th>
+                                <th>
+                                    Activate/Deactivate
+                                </th>
+                                <th>
+                                    Edit
                                 </th>
                            </tr>
                             </thead>
@@ -162,16 +168,16 @@
                                     {{printer.id}}
                                 </td>
                                 <td>
-                                    {{printer.store_name}}
-                                </td>
-                                <td>
                                     {{printer.store_owner}}
                                 </td>
                                 <td>
                                     {{printer.contact_number}}
                                 </td>
                                 <td>
-                                    {{printer.gst_no}}
+                                    <b>Store Name: </b>{{printer.store_name}}</br></br>
+                                    <b>Store GST: </b>{{printer.gst_no}}
+
+
                                 </td>
                                 <td>
                                     {{printer.city}}

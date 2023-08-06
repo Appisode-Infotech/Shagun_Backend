@@ -86,12 +86,10 @@
         .center-button button {
             margin-right: 10px;
         }
-
-
-
-
-
-
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
 
     </style>
 </head>
@@ -121,7 +119,8 @@
                                            placeholder="search......." value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -173,6 +172,12 @@
                                 </th>
                                 <th>
                                     status
+                                </th>
+                                <th>
+                                    Activate/Deactivate
+                                </th>
+                                <th>
+                                    Edit
                                 </th>
                             </tr>
                             </thead>
@@ -260,9 +265,9 @@
 
                                             <div class="center-button">
                                                 <button type="button" onclick="hidePopUpDiv()"
-                                                        class="btn btn-inverse-dark btn-fw">Cancel
+                                                        class="btn btn-outline-danger btn-fw">Cancel
                                                 </button>
-                                                <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                                <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
                                             </div>
                                         </form>
                                     </div>
@@ -356,6 +361,7 @@
         var popupDiv = document.getElementById("popupDiv");
         popupDiv.style.display = "none";
     }
+
 
 </script>
 </body>

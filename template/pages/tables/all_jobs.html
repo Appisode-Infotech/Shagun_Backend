@@ -53,7 +53,7 @@
         }
 
         .btn {
-            margin: 0;
+            margin: 20px;
         }
 
         .btn-icon-text {
@@ -64,11 +64,10 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-
-
-
-
-
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
     </style>
 </head>
 
@@ -100,6 +99,7 @@
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
                                 <th>Job Status</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -110,7 +110,8 @@
                                 <td>{{ job.event_type_name }}</td>
                                 <td>
                                     <b>Card Id</b> : {{ job.card_name }}</br></br>
-                                    <b>Event Date : </b> {{ job.event_date }}
+                                    <b>Event Date : </b> {{ job.event_date }} </br></br>
+                                    <b>Event ID : </b> {{ job.event_id }}
                                 </td>
                                 <td>{{ job.billing_amount }}</td>
                                 <td>

@@ -76,6 +76,7 @@ urlpatterns = [
     path('dashboard_search_printers_status/<str:status>/', dashboard_search_printers_status, name='dashboard_search_printers_status'),
     path('dashboard_search_greetings_status/<str:status>/', dashboard_search_greetings_status, name='dashboard_search_greetings_status'),
     path('dashboard_search_employee_status/<str:status>/', dashboard_search_employee_status, name='dashboard_search_employee_status'),
+    path('filtered_events_on_approval_status/<str:status>/', filtered_events_on_approval_status, name='filtered_events_on_approval_status'),
     path('transactions_settlement/<str:event_id>/', transactions_settlement, name='transactions_settlement'),
 
     path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location, name='activate_deactivate_location'),
@@ -133,7 +134,7 @@ urlpatterns = [
 
     path('add_ev', add_ev, name='add_ev'),
     path('test_view', test_view, name='test_view'),
-    path('filtered_events_on_approval_status/<str:status>/', filtered_events_on_approval_status, name='filtered_events_on_approval_status'),
+    path('next_page', next_page, name='next_page'),
 
 ]
 

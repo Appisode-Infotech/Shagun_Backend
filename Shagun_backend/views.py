@@ -87,6 +87,8 @@ def manage_location(request):
 def manage_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print("++++++++++++++++++++++++++++++++++++++")
+            print(request.POST)
             response, status_code = user_controller.get_kyc_data()
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
@@ -161,8 +163,10 @@ def manage_printers(request):
 def kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('KYC')
-        print(response)
-        return render(request, 'pages/tables/manage_kyc_request.html', response)
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/manage_kyc_request.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -170,7 +174,11 @@ def kyc_request(request):
 def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
-        return render(request, 'pages/tables/manage_event_request.html', response)
+        print(response)
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/manage_event_request.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -186,7 +194,6 @@ def get_settlement_for_event(request, status):
         return redirect('sign_up')
 
 
-
 def get_event_settlement_by_id(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement_by_id(event_id)
@@ -196,7 +203,6 @@ def get_event_settlement_by_id(request, event_id):
         return render(request, 'pages/tables/settlements.html', {"response": response})
     else:
         return redirect('sign_up')
-
 
 
 def all_printer_jobs(request):
@@ -223,7 +229,6 @@ def Open_printer_jobs(request):
         return redirect('sign_up')
 
 
-
 def closed_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [5]
@@ -236,21 +241,27 @@ def closed_printer_jobs(request):
         return redirect('sign_up')
 
 
-
-
 # I need the data from transaction history table (sender, reciever, total amount, shagun, amount, card amount,
 # created date, event date.... all details
 def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        status = [5]
-        response, status_code = store_controller.get_all_jobs(status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        return render(request, 'pages/tables/closed_jobs.html', {"response": response})
+        if request.method == 'POST':
+            print("===================================")
+            print(request.POST)
+            response, status_code = transactions_controller.get_transaction_list(event_id)
+            paginator = Paginator(response['transactions'], 250)
+            page = request.GET.get('page')
+            response = paginator.get_page(page)
+            return render(request, 'pages/tables/transactions_settlement.html', {"response": response, "event_id": event_id})
+        else:
+            response, status_code = transactions_controller.get_transaction_list(event_id)
+            print(response)
+            paginator = Paginator(response['transactions'], 250)
+            page = request.GET.get('page')
+            response = paginator.get_page(page)
+            return render(request, 'pages/tables/transactions_settlement.html', {"response": response, "event_id": event_id})
     else:
         return redirect('sign_up')
-
 
 
 def add_events(request):
@@ -704,6 +715,7 @@ def dashboard_search_greetings_status(request, status):
     page = request.GET.get('page')
     response = paginator.get_page(page)
     return render(request, 'pages/tables/printers.html', {'response': response, "status": status})
+
 
 #
 # def get_all_jobs(request):
@@ -1303,3 +1315,13 @@ def test_view(request):
 def add_ev(request):
     resp, status_code = event_controller.add()
     return JsonResponse(resp)
+
+
+def next_page(request):
+    print("============================================")
+    print(request.POST['selected_id_list'])
+    if request.method == 'POST':
+        selected_ids = request.POST['selected_id_list']
+        print("====================================")
+        print(selected_ids)
+        return redirect('manage_event')

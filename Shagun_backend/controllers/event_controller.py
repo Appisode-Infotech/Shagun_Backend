@@ -128,12 +128,11 @@ def event_settlement(status):
             event_settlement_query = f"""
                     SELECT e.* ,
                       IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
-                      IFNULL(SUM(CASE WHEN s.transaction_id IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
-                      IFNULL(SUM(CASE WHEN s.transaction_id IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS pending_shagun_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
                       et.event_type_name
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id
-                    LEFT JOIN settlements s ON th.id = s.transaction_id
                     LEFT JOIN events_type et ON e.event_type_id = et.id
                     WHERE e.status = '{status}'
                     GROUP BY e.id, e.event_date;
@@ -152,20 +151,21 @@ def event_settlement(status):
         return {"status": False, "message": str(e)}, 301
 
 
-def event_settlement_by_id(event_id):
+def search_event_settlement(search):
     try:
         with connection.cursor() as cursor:
             event_settlement_query = f"""
                     SELECT e.* ,
                       IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
-                      IFNULL(SUM(CASE WHEN s.transaction_id IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
-                      IFNULL(SUM(CASE WHEN s.transaction_id IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
                       et.event_type_name
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id
-                    LEFT JOIN settlements s ON th.id = s.transaction_id
                     LEFT JOIN events_type et ON e.event_type_id = et.id
-                    WHERE e.id = '{event_id}'
+                    WHERE e.id LIKE '%%{search}%%' OR et.event_type_name LIKE '%%{search}%%' 
+                                    OR LOWER(e.event_admin) LIKE LOWER('%%{search}%%') OR 
+                                    e.event_date LIKE '%%{search}%%'
                     GROUP BY e.id, e.event_date;
                     """
             cursor.execute(event_settlement_query)
@@ -173,7 +173,7 @@ def event_settlement_by_id(event_id):
             print(amount)
             return {
                 "status": True,
-                "active_event": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+                "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
             }, 200
 
     except pymysql.Error as e:

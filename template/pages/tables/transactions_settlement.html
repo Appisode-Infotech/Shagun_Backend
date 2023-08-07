@@ -127,6 +127,7 @@
                                     <th>Settlement Status</th>
                                     <th>Transaction Date</th>
                                     <th>Event Date</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -142,8 +143,8 @@
                                 </td>
                                     <td>{{ data.id }}</td>
                                     <td>{{ data.event_type }}</td>
-                                    <td>{{ data.sender_uid }}</td>
-                                    <td>{{ data.receiver_uid }}</td>
+                                    <td>{{ data.sender_name }}</td>
+                                    <td>{{ data.receiver_name }}</td>
                                     <td>
                                         <b>Transaction Amount : </b>{{ data.transaction_amount }}</br></br>
                                         <b>Shagun Amount: </b>{{ data.shagun_amount }}</br></br>

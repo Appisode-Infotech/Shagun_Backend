@@ -89,13 +89,13 @@ def manage_kyc(request):
         if request.method == 'POST':
             print("++++++++++++++++++++++++++++++++++++++")
             print(request.POST)
-            response, status_code = user_controller.get_kyc_data()
+            response, status_code = user_controller.get_kyc_data('%')
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
             response = paginator.get_page(page)
             return render(request, 'pages/tables/kyc.html', {"response": response})
         else:
-            response, status_code = user_controller.get_kyc_data()
+            response, status_code = user_controller.get_kyc_data('%')
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
             response = paginator.get_page(page)
@@ -105,9 +105,47 @@ def manage_kyc(request):
         return redirect('sign_up')
 
 
+def filter_kyc(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_kyc_data(status)
+        paginator = Paginator(response['kyc_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/kyc.html', {"response": response})
+
+    else:
+        return redirect('sign_up')
+
+
+def filter_bank(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+
+        response, status_code = user_controller.get_all_bank_data(status)
+        paginator = Paginator(response['kyc_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/bank_details.html', {"response": response})
+
+    else:
+        return redirect('sign_up')
+
+
+def filter_user(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+
+        response, status_code = user_controller.filter_users(status)
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/users.html', {"response": response})
+
+    else:
+        return redirect('sign_up')
+
+
 def manage_bank_details(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = user_controller.get_all_bank_data()
+        response, status_code = user_controller.get_all_bank_data('%')
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -194,13 +232,13 @@ def get_settlement_for_event(request, status):
         return redirect('sign_up')
 
 
-def get_event_settlement_by_id(request, event_id):
+def dashboard_search_event_settlement(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = event_controller.event_settlement_by_id(event_id)
+        response, status_code = event_controller.search_event_settlement(request.POST['search'])
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/settlements.html', {"response": response})
+        return render(request, 'pages/tables/settlements.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -259,13 +297,16 @@ def transactions_settlement(request, event_id):
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
-            return render(request, 'pages/tables/transactions_settlement.html', {"response": response, "event_id": event_id})
+            return render(request, 'pages/tables/transactions_settlement.html',
+                          {"response": response, "event_id": event_id})
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id)
+            print(response)
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
-            return render(request, 'pages/tables/transactions_settlement.html', {"response": response, "event_id": event_id})
+            return render(request, 'pages/tables/transactions_settlement.html',
+                          {"response": response, "event_id": event_id})
     else:
         return redirect('sign_up')
 
@@ -659,6 +700,38 @@ def dashboard_search_event(request):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/tables/events.html', {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_kyc(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.search_kyc_data(request.POST['search'])
+        paginator = Paginator(response['kyc_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/kyc.html', {"response": response})
+
+    else:
+        return redirect('sign_up')
+
+def dashboard_search_bank(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.dashboard_search_bank(request.POST['search'])
+        paginator = Paginator(response['bank_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/bank_details.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+def dashboard_search_user(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.dashboard_search_user('%')
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/users.html', {"response": response})
     else:
         return redirect('sign_up')
 

@@ -90,7 +90,21 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Open Events Settlements</h4>
+                        <div class="form-group">
+                            <form action="{% url 'dashboard_search_event_settlement' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input name="search" id="search" type="text" class="form-control"
+                                           placeholder="search......." value="{{search}}"
+                                           aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
 
                     <div class="table-responsive">
                         <table class="table table-hover">

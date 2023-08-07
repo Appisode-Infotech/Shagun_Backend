@@ -91,6 +91,24 @@ def get_all_users(kyc):
         return {"status": False, "message": str(e)}, 301
 
 
+def filter_users(status):
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 3 AND status LIKE '{status}' """
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def deactivate_user(uid, esstatus):
     try:
         with connection.cursor() as cursor:
@@ -230,7 +248,31 @@ def enable_disable_kyc(kyc_id, v_status):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_kyc_data():
+def get_kyc_data(status):
+    try:
+        with connection.cursor() as cursor:
+            kyc_data_query = f""" SELECT 
+                kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.address_line1, 
+                kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
+                kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
+                kyc.verification_status, users.profile_pic
+                FROM user_kyc AS kyc
+                INNER JOIN users ON kyc.uid = users.uid WHERE verification_status LIKE '{status}'"""
+
+            cursor.execute(kyc_data_query)
+            kyc_data = cursor.fetchall()
+            return {
+                "status": True,
+                "kyc_data": responsegenerator.responseGenerator.generateResponse(kyc_data, ALL_KYC_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def filter_kyc():
     try:
         with connection.cursor() as cursor:
             kyc_data_query = """ SELECT 
@@ -362,13 +404,13 @@ def get_bank_by_id(bnk_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_all_bank_data():
+def get_all_bank_data(status):
     try:
         with connection.cursor() as cursor:
-            bank_data_query = """ SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
+            bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
                 bnk.account_number, bnk.status, users.profile_pic
                 FROM bank_details AS bnk
-                LEFT JOIN users ON bnk.uid = users.uid """
+                LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.status LIKE '{status}'"""
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()
             return {
@@ -457,6 +499,7 @@ def get_all_employees():
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_all_employees():
     try:
         with connection.cursor() as cursor:
@@ -473,11 +516,13 @@ def get_all_employees():
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
 def dashboard_search_employee(search):
     try:
         with connection.cursor() as cursor:
             users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM users WHERE role = 2 AND ( id LIKE '%{search}%' OR name LIKE '%{search}%' OR phone LIKE '%{search}%' ) """
+                FROM users WHERE role = 2 AND ( id LIKE '%{search}%' OR name LIKE '%{search}%' OR phone LIKE '%{search}%') """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             print(user_data)
@@ -490,6 +535,7 @@ def dashboard_search_employee(search):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
 
 def dashboard_search_employee_status(status):
     try:
@@ -731,3 +777,67 @@ def get_user_requests(param):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
+def search_kyc_data(search):
+    try:
+        with connection.cursor() as cursor:
+            kyc_data_query = f""" SELECT 
+                kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.address_line1, 
+                kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
+                kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
+                kyc.verification_status, users.profile_pic
+                FROM user_kyc AS kyc
+                INNER JOIN users ON kyc.uid = users.uid WHERE ( full_name LIKE '%{search}%' OR 
+                identification_number1 LIKE '%{search}%' OR identification_number2 LIKE '%{search}%') """
+
+            cursor.execute(kyc_data_query)
+            kyc_data = cursor.fetchall()
+            return {
+                "status": True,
+                "kyc_data": responsegenerator.responseGenerator.generateResponse(kyc_data, ALL_KYC_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def dashboard_search_bank(search):
+    try:
+        with connection.cursor() as cursor:
+            bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
+                bnk.account_number, bnk.status, users.profile_pic
+                FROM bank_details AS bnk
+                LEFT JOIN users ON bnk.uid = users.uid WHERE ( ifsc_code LIKE '%{search}%' OR 
+                account_holder_name LIKE '%{search}%' OR account_number LIKE '%{search}%') """
+            cursor.execute(bank_data_query)
+            bank_data_query = cursor.fetchall()
+            return {
+                "status": True,
+                "bank_data": responsegenerator.responseGenerator.generateResponse(bank_data_query, ALL_BANK_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def dashboard_search_user(search):
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 3 AND ( name LIKE '%{search}%' OR 
+                email LIKE '%{search}%' OR phone LIKE '%{search}%') """
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

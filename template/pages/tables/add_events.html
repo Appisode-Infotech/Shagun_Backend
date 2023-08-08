@@ -81,9 +81,6 @@
         .show {display: block;}
 
 
-
-
-
     .event-row {
         display: flex;
         flex-wrap: wrap;
@@ -301,7 +298,7 @@
                                         </div>
                                     </div>
                                     <button type="button" id="addSubEventButton">Add Sub Event</button>
-                                    <button type="button" id="removeEventButton" style="display: none;">Remove Sub
+                                    <button type="button" id="removeEventButton" style="display: none; margin:5px;">Remove Sub
                                         Event
                                     </button>
 
@@ -417,8 +414,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         let eventAdminIndex = 1;
 
         function updateButtonVisibility() {
-            if (subEventIndex === 2) {
-                addSubEventButton.style.display = 'none';
+            if (subEventIndex > 1) {
+                addSubEventButton.style.display = 'block';
                 removeEventButton.style.display = 'block';
             } else {
                 addSubEventButton.style.display = 'block';

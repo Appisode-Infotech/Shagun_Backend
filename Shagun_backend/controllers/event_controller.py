@@ -23,6 +23,8 @@ def create_event(event_obj):
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id)
 
             cursor.execute(create_event_query, values)
+            generated_id = cursor.lastrowid
+            print(generated_id)
             return {
                 "status": True,
                 "message": "Event Created successfully"

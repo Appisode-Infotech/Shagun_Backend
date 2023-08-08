@@ -1388,14 +1388,41 @@ def track_order(request):
 
 
 def test_view(request):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = event_controller.get_all_event_list()
-        paginator = Paginator(response['event_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        return render(request, 'pages/tables/test.html', {'response': response})
-    else:
-        return redirect('sign_up')
+    import os
+    import qrcode
+    from django.conf import settings
+
+    # Replace this with your desired text
+    text = "http://santhuofficial123.pythonanywhere.com/34_9738505213"
+
+    # Generate QR code
+    qr = qrcode.QRCode(
+        version=1,  # QR code version (controls size)
+        error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
+        box_size=10,  # Size of each box in pixels
+        border=4,  # Border size in boxes
+    )
+
+    # Add data to the QR code
+    qr.add_data(text)
+    qr.make(fit=True)
+
+    # Create an image from the QR code instance with the desired fill color
+    fill_color = "#9925b9"
+    img = qr.make_image(fill_color=fill_color, back_color="white")
+
+    # Construct the path to save the image in the media directory
+    media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
+    os.makedirs(media_dir, exist_ok=True)
+    image_path = os.path.join(media_dir, '34_9738505213.png')
+
+    img.save(image_path)
+
+    # The relative URL to the saved image
+    image_url = os.path.join(settings.MEDIA_URL, 'images', 'qr_codes', 'qr_code.png')
+
+    print("QR code image saved at:", image_path)
+    print("Image URL:", image_url)
 
 
 @api_view(['POST'])

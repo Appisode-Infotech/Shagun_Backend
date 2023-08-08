@@ -63,6 +63,7 @@ urlpatterns = [
     path('filter_kyc/<str:status>/', filter_kyc, name='filter_kyc'),
     path('filter_bank/<str:status>/', filter_bank, name='filter_bank'),
     path('filter_user/<str:status>/', filter_user, name='filter_user'),
+    path('filter_transaction_lists/<int:event_id>/<int:status>/', filter_transaction_lists, name='filter_transaction_lists'),
     path('all_printer_jobs', all_printer_jobs, name='all_printer_jobs'),
     path('closed_printer_jobs', closed_printer_jobs, name='closed_printer_jobs'),
     path('Open_printer_jobs', Open_printer_jobs, name='Open_printer_jobs'),
@@ -84,7 +85,7 @@ urlpatterns = [
     path('dashboard_search_greetings_status/<str:status>/', dashboard_search_greetings_status, name='dashboard_search_greetings_status'),
     path('dashboard_search_employee_status/<str:status>/', dashboard_search_employee_status, name='dashboard_search_employee_status'),
     path('filtered_events_on_approval_status/<str:status>/', filtered_events_on_approval_status, name='filtered_events_on_approval_status'),
-    path('transactions_settlement/<str:event_id>/', transactions_settlement, name='transactions_settlement'),
+    path('transactions_settlement/<int:event_id>/', transactions_settlement, name='transactions_settlement'),
 
     path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location, name='activate_deactivate_location'),
     path('activate_deactivate_bank/<int:bank_id>/<int:status>/', activate_deactivate_bank, name='activate_deactivate_bank'),

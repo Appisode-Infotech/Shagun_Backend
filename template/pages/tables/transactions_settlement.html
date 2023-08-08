@@ -53,7 +53,7 @@
         }
 
         .btn {
-            margin: 0;
+            margin: 5px;
         }
 
         .btn-icon-text {
@@ -62,7 +62,7 @@
         }
 
         .btn-icon-text i {
-            margin-left: 5px;
+            margin-left: 0px;
         }
         .center-button {
           display: flex;
@@ -70,16 +70,43 @@
 
         }
         .center-button button {
-            margin: 10px;
+            margin: 5px;
         }
         #shagun-sum-label {
         font-weight: bold;
         color: #9925b9;
         }
+
+        #popupDiv {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid lightskyblue;
+            padding: 20px;
+            background-color: #fff;
+            z-index: 9999;
+            background-color: #f0f0f0;
+        }
+
+        .center-button {
+          display: flex;
+          justify-content: center;
+        }
+
         thead {
             background-color: #9925b9; /* Purple color (#9925b9) */
             color: white;
         }
+
+
+
+
+
+
+
 
     </style>
 </head>
@@ -100,16 +127,35 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Transaction_settlement</h4>
-                        <label id="shagun-sum-label" class="col-sm-3 col-form-label">Total Shagun Amount:
-                            0.0</label>
-                        <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'add_events' %}'">
-                            Settle All
+                        <h4 class="card-title">Transaction settlement</h4>
+                        <label id="shagun-sum-label" class="col-sm-3 col-form-label">Total Shagun Amount: 0.00</label>
+                        <div class="dropdown">
+                            <label> Filter on event status: </label>
+                            <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                {% if status is None %}
+                                All
+                                {% elif status == 0 %}
+                                Pending
+                                {% elif status == 1 %}
+                                Settled
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                <a class="dropdown-item"
+                                   href="{% url 'transactions_settlement' event_id %}">All</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_transaction_lists' event_id 1 %}">Settled</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_transaction_lists' event_id 0 %}">Pending</a>
+                            </div>
+
+                        </div>
+                        <button type="button" class="btn btn-outline-info btn-icon-text" >Settle All .
                             <i class="fas fa-money-check"></i>
                         </button>
                     </div>
-                    </br>
                     <form class="form-sample" action="/transactions_settlement/{{ event_id }}/" method="post"
                           id="myForm">
                         {% csrf_token %}
@@ -127,20 +173,19 @@
                                     <th>Settlement Status</th>
                                     <th>Transaction Date</th>
                                     <th>Event Date</th>
-                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for data in response %}
                                 <tr>
                                     <td>
-                                    {% if data.is_settled == 0 %}
-                                    <input type="checkbox" class="select-row" name="selected_ids"
+                                        {% if data.is_settled == 0 %}
+                                        <input type="checkbox" class="select-row" name="selected_ids"
                                                value="{{ data.id }}">
-                                    {% elif data.is_settled == 1 %}
+                                        {% elif data.is_settled == 1 %}
                                         <input type="checkbox" class="select-row" name="selected_ids" DISABLED>
-                                    {% endif %}
-                                </td>
+                                        {% endif %}
+                                    </td>
                                     <td>{{ data.id }}</td>
                                     <td>{{ data.event_type }}</td>
                                     <td>{{ data.sender_name }}</td>
@@ -156,7 +201,11 @@
                                         {{ data.shagun_amount }}
                                     </td>
                                     <td>
-                                        {{ data.is_settled }}
+                                        {% if data.is_settled == 0 %}
+                                        <label class="badge badge-danger">Pending</label>
+                                        {% elif data.is_settled == 1 %}
+                                        <label class="badge badge-success">Settled</label>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {{ data.created_on }}
@@ -165,6 +214,8 @@
                                         {{ data.event_date }}
                                     </td>
                                     <td><input type="hidden" name="selected_uid" value="{{data.receiver_uid}}"></td>
+                                    <td><input type="hidden" name="selected_amounts" value="{{data.shagun_amount}}">
+                                    </td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
@@ -172,10 +223,20 @@
                             </table>
                         </div>
                         <div class="center-button">
-                            <button type="submit" class="btn btn-outline-info btn-icon-text">Check-Out
-                                <i class="fas fa-money-check"></i></button>
-
+                            <button onclick="showPopUpDiv(event)" class="btn btn-outline-info btn-icon-text">Check-Out .
+                                <i class="fas fa-money-check"></i>
+                            </button>
                         </div>
+                        <div id="popupDiv" class="popup-div">
+                            <label id="shagun-sum-label1">Please confirm if you want to pay the amount: 0.00</label>
+                            <div class="center-button">
+                                <button type="button" onclick="hidePopUpDiv()" class="btn btn-outline-danger btn-fw">
+                                    Cancel
+                                </button>
+                                <input type="submit" class="btn btn-outline-info btn-icon-text">
+                            </div>
+                        </div>
+
                     </form>
                     </table>
                 </div>
@@ -287,9 +348,25 @@
         document.getElementById('selected_id_list').value = selectedIdsList.join(',');
     }
 
+
+
+
 </script>
 
+<script>
+    function showPopUpDiv(event) {
+        event.preventDefault();  // Prevent the form from submitting
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "block";
+    }
 
+    function hidePopUpDiv() {
+        var popupDiv = document.getElementById("popupDiv");
+        popupDiv.style.display = "none";
+    }
+
+
+</script>
 
 <script>
     document.getElementById("approval-status-dropdown").addEventListener("change", function() {
@@ -297,6 +374,10 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
+
+
 </script>
 <script>
     // Function to update the sum of Shagun Amount for selected rows
@@ -310,7 +391,8 @@
                 sum += shagunAmount;
             }
         }
-        document.getElementById('shagun-sum-label').textContent = 'Shagun Amount Total: ' + sum.toFixed(2);
+        document.getElementById('shagun-sum-label').textContent = 'Total Shagun Amount: ' + sum.toFixed(2);
+        document.getElementById('shagun-sum-label1').textContent = 'Please confirm if you want to pay the amount: ' + sum.toFixed(2);
     }
 
     // Event listener for checkbox changes
@@ -331,6 +413,13 @@
             updateShagunSum();
         });
     }
+
+
+
+
+
+
+
 
 </script>
 

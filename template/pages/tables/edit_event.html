@@ -124,7 +124,10 @@
             background-color: #f44336;
         }
 
-
+        #map {
+            height: 300px;
+            margin: 20px;
+        }
 
     </style>
 
@@ -249,13 +252,19 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div>
+                                        <input type="text" id="searchInput" style="width: 50%;"
+                                               placeholder="Search for a location">
+                                        <div id="map"></div>
+                                        <!--                                        <label id="event_lat_lng"></label>-->
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Lat Lng</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" value="{{event.event_data.event_lat_lng}}"
-                                                           id="event_lat_lng" name="event_lat_lng"/>
+                                                    <input type="text" id="event_lat_lng" style="width: 50%;" value="{{event.event_data.event_lat_lng}}"
+                                                           class="form-control" name="event_lat_lng" class="form-control" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -491,7 +500,80 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6O2CG9zBAksJH4SCgCZlbx3XRWVwzY1E&libraries=places&callback=initMap"
+        async defer></script>
+<script>
+        var map, marker, event_lat_lng, searchInput;
 
+        function initMap() {
+            var mapOptions = {
+                zoom: 8,
+            };
+
+            var mapDiv = document.getElementById('map');
+            map = new google.maps.Map(mapDiv, mapOptions);
+
+            event_lat_lng = document.getElementById('event_lat_lng');
+
+            var eventData = event_lat_lng.value.split(/: |, /); // Split the value into an array
+
+            var initialLatLng = {
+                lat: parseFloat(eventData[1]),
+                lng: parseFloat(eventData[3])
+            };
+
+            map.setCenter(initialLatLng);
+
+            marker = new google.maps.Marker({
+                position: initialLatLng,
+                map: map,
+                draggable: true,
+                title: 'Drag me to set the location',
+            });
+
+            google.maps.event.addListener(marker, 'dragend', function(event) {
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
+            });
+
+            event_lat_lng.value = 'Latitude: ' + initialLatLng.lat + ', Longitude: ' + initialLatLng.lng;
+
+            // Initialize Google Places Autocomplete for search
+            var autocomplete = new google.maps.places.Autocomplete(searchInput);
+            autocomplete.bindTo('bounds', map);
+
+            // Set listener to update map and marker on autocomplete selection
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+
+                map.setCenter(place.geometry.location);
+
+                if (!marker) {
+                    marker = new google.maps.Marker({
+                        position: place.geometry.location,
+                        map: map,
+                        draggable: true,
+                        title: 'Drag me to set the location',
+                    });
+                    google.maps.event.addListener(marker, 'dragend', function(event) {
+                        var lat = event.latLng.lat();
+                        var lng = event.latLng.lng();
+                        event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
+                    });
+                } else {
+                    marker.setPosition(place.geometry.location);
+                }
+
+                var lat = marker.getPosition().lat();
+                var lng = marker.getPosition().lng();
+                event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
+            });
+        }
+    </script>
 </body>
 
 </html>

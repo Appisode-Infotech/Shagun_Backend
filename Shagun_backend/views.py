@@ -111,7 +111,7 @@ def filter_kyc(request, status):
         paginator = Paginator(response['kyc_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/kyc.html', {"response": response, "status":status})
+        return render(request, 'pages/tables/kyc.html', {"response": response, "status": status})
 
     else:
         return redirect('sign_up')
@@ -124,7 +124,7 @@ def filter_bank(request, status):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/bank_details.html', {"response": response, "status":status})
+        return render(request, 'pages/tables/bank_details.html', {"response": response, "status": status})
 
     else:
         return redirect('sign_up')
@@ -137,7 +137,7 @@ def filter_user(request, status):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/users.html', {"response": response, "status":status})
+        return render(request, 'pages/tables/users.html', {"response": response, "status": status})
 
     else:
         return redirect('sign_up')
@@ -285,24 +285,18 @@ def closed_printer_jobs(request):
 def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print("===================================")
-            print(request.POST)
-            print(request.POST['selected_uid'])
-            print(request.POST['selected_ids'])
-            selected_uid_list = request.POST.getlist('selected_uid')
-            selected_ids_list = request.POST.getlist('selected_ids')
-            print(selected_uid_list)
-            print(selected_ids_list)
-            transactions_controller.settle_payment(selected_uid_list, selected_ids_list)
-            response, status_code = transactions_controller.get_transaction_list(event_id)
+            reciever_list = request.POST.getlist('selected_uid')
+            transaction_id = request.POST.getlist('selected_ids')
+            amount_list = request.POST.getlist('selected_amounts')
+            transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
+            response, status_code = transactions_controller.get_transaction_list(event_id, '%')
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
             return render(request, 'pages/tables/transactions_settlement.html',
                           {"response": response, "event_id": event_id})
         else:
-            response, status_code = transactions_controller.get_transaction_list(event_id)
-            print(response)
+            response, status_code = transactions_controller.get_transaction_list(event_id, '%')
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
@@ -666,6 +660,7 @@ def edit_event(request, event_id):
             event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
         else:
+            print(event_id)
             event_types, status_code = event_controller.get_event_type_list_for_user()
             location, status_code = event_controller.get_city_list_for_user()
             users_list, status_code = user_controller.get_all_users(1)
@@ -692,6 +687,15 @@ def filtered_events_on_approval_status(request, status):
     page = request.GET.get('page')
     response = paginator.get_page(page)
     return render(request, 'pages/tables/events.html', {'response': response, "status": status})
+
+
+def filter_transaction_lists(request, event_id, status):
+    response, status_code = transactions_controller.get_transaction_list(event_id, status)
+    paginator = Paginator(response['transactions'], 250)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/tables/transactions_settlement.html',
+                  {"response": response, "event_id": event_id, "status": status})
 
 
 def dashboard_search_event(request):
@@ -723,7 +727,8 @@ def dashboard_search_bank(request):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/bank_details.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/tables/bank_details.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 

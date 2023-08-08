@@ -12,13 +12,16 @@ def create_event(event_obj):
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
+
             create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
-                                    address_line2, event_lat_lng, created_on, sub_events, event_date, event_note, 
-                                    event_admin, is_approved,  status, printer_id, ) 
+                                        address_line2, event_lat_lng, created_on, sub_events, event_date, event_note, 
+                                        event_admin, is_approved, status, printer_id) 
                                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id)
+
             cursor.execute(create_event_query, values)
             return {
                 "status": True,
@@ -94,21 +97,21 @@ def enable_disable_event(e_id, et_status):
 
 def get_event_by_id(et_id):
     try:
+        print("event id in controller")
+        print(et_id)
         with connection.cursor() as cursor:
             get_event_query = f""" SELECT e.*, et.event_type_name,
             l.city_name, p.store_name FROM event e
             LEFT JOIN events_type et ON e.event_type_id = et.id
             LEFT JOIN locations l ON e.city_id = l.id
-            LEFT JOIN printer p ON e.printer_id = p.id;
-            WHERE id = '{et_id}'"""
+            LEFT JOIN printer p ON e.printer_id = p.id
+            WHERE e.id = '{et_id}'"""
             cursor.execute(get_event_query)
-            event = cursor.fetchone()
-            print(event)
-            if event is not None:
-                print(event)
+            event_data = cursor.fetchone()
+            if event_data is not None:
                 return {
                     "status": True,
-                    "event_data": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
+                    "event_data": responsegenerator.responseGenerator.generateResponse(event_data, EVENT_BY_ID)
                 }, 200
             else:
                 return {

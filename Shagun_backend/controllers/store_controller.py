@@ -4,6 +4,30 @@ from django.db import connection
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 
+def printer_login(uname, pwd):
+    print(pwd)
+    with connection.cursor() as cursor:
+        printer_login_query = f"""SELECT id,printer_user_name, printer_password FROM printer WHERE printer_user_name = '{uname}' """
+        cursor.execute(printer_login_query)
+        result = cursor.fetchone()
+        print(result)
+        if result is not None and result[2] == pwd:
+            return {
+                "msg": "Success",
+                "username": result[1],
+                "pwd": result[2],
+                "id": result[0],
+            }
+
+        if result is not None and result[2] != pwd:
+            return {
+                "msg": "wrong password",
+            }
+
+        else:
+            return {
+                "msg": "printer not exist, Please contact admin to register",
+            }
 
 def add_printer(store_obj):
     try:

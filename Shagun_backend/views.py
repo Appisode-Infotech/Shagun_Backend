@@ -12,10 +12,10 @@ import time
 
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller, test_controller
+    bank_controller, test_controller, vendor_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
-    gifts_transaction_model, request_callback_model, greeting_cards_model
+    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
 from Shagun_backend.util.constants import today
 
@@ -196,6 +196,31 @@ def manage_printers(request):
         return render(request, 'pages/tables/printers.html', {"response": response})
     else:
         return redirect('sign_up')
+
+
+def printer_login(request):
+    if request.method == 'POST':
+        response = store_controller.printer_login(request.POST['printer_user_name'], request.POST['printer_password'])
+        if response['msg'] == 'Success':
+            request.session['is_printer_logged_in'] = True
+            request.session['id'] = response['id']
+            request.session['printer_user_name'] = response['username']
+            return redirect('printer_home_page')
+        else:
+            messages.error(request, response['msg'])
+            return render(request, 'pages/tables/printer_login.html')
+    else:
+        return render(request, 'pages/tables/printer_login.html')
+
+
+def printer_home_page(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        response, status_code = event_controller.get_all_event_list()
+        paginator = Paginator(response['event_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/tables/events.html', {'response': response})
+    return redirect('printer_login')
 
 
 def kyc_request(request):
@@ -1329,6 +1354,19 @@ def get_greetings_by_id(request):
 
 
 @api_view(['POST'])
+def manage_vendor(request):
+    vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.data)
+    response, status_code = vendor_controller.add_vendor(vendor_obj)
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def enable_disable_vendor(request):
+    response, status_code = vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
 def track_order(request):
     token = request.headers.get('Authorization').split(' ')[1]
     try:
@@ -1436,12 +1474,12 @@ def test_view(request):
 def add_ev(request):
     resp, status_code = event_controller.add()
     return JsonResponse(resp)
+
+
 @api_view(['POST'])
 def event_admin(request):
     response, status_code = test_controller.event_admin(request.data['event_id'])
     return JsonResponse(response)
-
-
 
 # def next_page(request):
 #     print("============================================")

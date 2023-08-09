@@ -12,7 +12,7 @@ import time
 
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller
+    bank_controller, test_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model
@@ -1387,6 +1387,12 @@ def track_order(request):
 #         return redirect('sign_up')
 
 
+# def event_admin(request, event_id):
+#     response, status_code = test_controller.event_admin(event_id)
+#     print(response)
+#     return render(request, 'pages/tables/event.html', {"response": response, "event_id": event_id})
+
+
 def test_view(request):
     import os
     import qrcode
@@ -1419,23 +1425,29 @@ def test_view(request):
     img.save(image_path)
 
     # The relative URL to the saved image
-    image_url = os.path.join(settings.MEDIA_URL, 'images', 'qr_codes', 'qr_code.png')
+    image_url = 'images/qr_codes/qr_code.png'
 
     print("QR code image saved at:", image_path)
     print("Image URL:", image_url)
+    redirect('manage_event')
 
 
 @api_view(['POST'])
 def add_ev(request):
     resp, status_code = event_controller.add()
     return JsonResponse(resp)
+@api_view(['POST'])
+def event_admin(request):
+    response, status_code = test_controller.event_admin(request.data['event_id'])
+    return JsonResponse(response)
 
 
-def next_page(request):
-    print("============================================")
-    print(request.POST['selected_id_list'])
-    if request.method == 'POST':
-        selected_ids = request.POST['selected_id_list']
-        print("====================================")
-        print(selected_ids)
-        return redirect('manage_event')
+
+# def next_page(request):
+#     print("============================================")
+#     print(request.POST['selected_id_list'])
+#     if request.method == 'POST':
+#         selected_ids = request.POST['selected_id_list']
+#         print("====================================")
+#         print(selected_ids)
+#         return redirect('manage_event')

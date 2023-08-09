@@ -141,7 +141,8 @@ urlpatterns = [
 
     path('add_ev', add_ev, name='add_ev'),
     path('test_view', test_view, name='test_view'),
-    path('next_page', next_page, name='next_page'),
+    # path('next_page', next_page, name='next_page'),
+    path('event_admin', event_admin, name='event_admin'),
 
 ]
 

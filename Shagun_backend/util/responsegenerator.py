@@ -81,6 +81,12 @@ class responseGenerator:
                 )
             return event_list
 
+        if controller_type == EVENT_ADMIN:
+            return {
+                "admins": json.loads(data[0])
+
+            }
+
         if controller_type == ACTIVE_EVENT:
             active_event = []
             for events in data:

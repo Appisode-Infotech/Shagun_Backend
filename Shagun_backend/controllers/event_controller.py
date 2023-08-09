@@ -23,8 +23,55 @@ def create_event(event_obj):
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id)
 
             cursor.execute(create_event_query, values)
-            generated_id = cursor.lastrowid
-            print(generated_id)
+            event_id = cursor.lastrowid
+            event_admin_query = f"""SELECT event.event_admin FROM event
+                                    WHERE  id = '{event_id}'"""
+            cursor.execute(event_admin_query)
+            admin = cursor.fetchone()
+            event_admins = json.loads(admin[0])
+            for item in event_admins:
+                uid = item["uid"]
+                phone_query = f"""SELECT phone FROM users
+                                                    WHERE  uid = '{uid}'"""
+                cursor.execute(phone_query)
+                phone = cursor.fetchone()
+                import os
+                import qrcode
+                from django.conf import settings
+
+                # Replace this with your desired text
+                text = "http://santhuofficial123.pythonanywhere.com/"+str(event_id) + "_" + phone[0]
+
+                # Generate QR code
+                qr = qrcode.QRCode(
+                    version=1,  # QR code version (controls size)
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
+                    box_size=10,  # Size of each box in pixels
+                    border=4,  # Border size in boxes
+                )
+
+                # Add data to the QR code
+                qr.add_data(text)
+                qr.make(fit=True)
+
+                # Create an image from the QR code instance with the desired fill color
+                fill_color = "#9925b9"
+                img = qr.make_image(fill_color=fill_color, back_color="white")
+
+                # Construct the path to save the image in the media directory
+                media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
+                os.makedirs(media_dir, exist_ok=True)
+                image_path = os.path.join(media_dir, f"""{event_id}_{phone[0]}.png""")
+
+                img.save(image_path)
+
+                # The relative URL to the saved image
+                image_url = f"""images/qr_codes/{event_id}_{phone[0]}.png"""
+                print(image_url)
+                item["qr_code"] = image_url
+
+            update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
+            cursor.execute(update_qr_sql)
             return {
                 "status": True,
                 "message": "Event Created successfully"

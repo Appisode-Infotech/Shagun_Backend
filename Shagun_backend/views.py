@@ -1528,6 +1528,7 @@ def test_view(request, e_id):
     import csv
     from django.core.files.storage import FileSystemStorage
     if request.method == 'POST' and request.FILES['csv_file']:
+        print(request.POST)
         csv_file = request.FILES['csv_file']
         mob_numbers = []
 

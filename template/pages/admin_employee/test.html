@@ -108,7 +108,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Invite for event: {{e_id}}</h4>
-                                <div class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data">
+                                <form class="form-sample" action="/test_view/{{e_id}}/" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -116,25 +116,25 @@
                                                 <label class="col-sm-3 col-form-label">Invited by</label>
                                                 <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" readonly
+                                                    <input required type="text" id="name" name="invited_by" readonly
                                                            onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in admins.admins %}
                                                         <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="uid" name="uid">
+                                                    <input type="hidden" id="uid" name="invited_by_uid">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Invite Message</label>
-                                        <textarea class="form-control" id="event_note" rows="4"
+                                        <textarea class="form-control" id="invite_msg" rows="4"
                                                   name="event_note"></textarea>
                                     </div>
 
@@ -151,10 +151,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">CSV file</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="file" name="csv_file" accept=".csv" required
+                                                    <input type="file" name="csv_file" accept=".csv"
                                                            class="file-upload-default">
                                                     <div class="input-group col-xs-12">
-                                                        <input required type="text"
+                                                        <input type="text"
                                                                class="form-control file-upload-info"
                                                                disabled
                                                                placeholder="Upload Image">
@@ -166,8 +166,10 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="center-button">
+                                    <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                 </div>
+                                </form>
                                 {% if error_message %}
                                 <p>{{ error_message }}</p>
                                 {% endif %}
@@ -180,10 +182,7 @@
                                 </ul>
                                 {% endif %}
 
-                                <div class="center-button">
-                                    <input required type="submit" value="Submit" class="btn btn-primary mr-2">
-                                </div>
-                                </form>
+
                             </div>
                         </div>
                     </div>

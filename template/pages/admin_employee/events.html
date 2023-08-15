@@ -69,6 +69,7 @@
             color: white;
         }
 
+
     </style>
 </head>
 
@@ -97,7 +98,8 @@
                                            placeholder="search......." value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -147,6 +149,7 @@
                                 <th>Set Status</th>
                                 <th>Active</th>
                                 <th>Edit</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -219,6 +222,12 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </td>
+                                <td>
+                                    <button type="button" class="btn btn-social-icon btn-outline-facebook"
+                                    onclick="window.location.href='{% url 'test_view' event.event_id %}'">
+                                        <i class="fab fa-whatsapp"></i></button>
+
+                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -280,6 +289,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 </script>

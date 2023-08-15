@@ -198,6 +198,7 @@ def manage_printers(request):
     else:
         return redirect('sign_up')
 
+
 def manage_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.get_delivery_vendor()
@@ -442,6 +443,7 @@ def add_printer(request):
     else:
         return redirect('sign_up')
 
+
 def add_delivery_vendor(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
@@ -525,6 +527,7 @@ def activate_deactivate_printers(request, printer_id, status):
         return redirect('manage_printers')
     else:
         return redirect('sign_up')
+
 
 def activate_deactivate_delivery_vendors(request, printer_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -757,7 +760,8 @@ def dashboard_search_event(request):
         paginator = Paginator(response['event_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/events.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/events.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -768,7 +772,8 @@ def dashboard_search_kyc(request):
         paginator = Paginator(response['kyc_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/kyc.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/kyc.html',
+                      {"response": response, "search": request.POST['search']})
 
     else:
         return redirect('sign_up')
@@ -792,7 +797,8 @@ def dashboard_search_user(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/users.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/users.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -803,7 +809,8 @@ def dashboard_search_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/employees.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/employees.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -822,9 +829,11 @@ def dashboard_search_printers(request):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printing_vendor.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/printing_vendor.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
+
 
 def dashboard_search_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -832,7 +841,8 @@ def dashboard_search_delivery_vendors(request):
         paginator = Paginator(response['delivery_vendor_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/delivery_vendor.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/delivery_vendor.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -844,6 +854,7 @@ def dashboard_search_printers_status(request, status):
     page = request.GET.get('page')
     response = paginator.get_page(page)
     return render(request, 'pages/admin_employee/printing_vendor.html', {'response': response, "status": status})
+
 
 def dashboard_search_delivery_vendors_status(request, status):
     response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor_status(status)
@@ -1512,11 +1523,10 @@ def track_order(request):
 #     return render(request, 'pages/admin_employee/event.html', {"response": response, "event_id": event_id})
 
 
-def test_view(request):
+def test_view(request, e_id):
     import os
     import csv
     from django.core.files.storage import FileSystemStorage
-
     if request.method == 'POST' and request.FILES['csv_file']:
         csv_file = request.FILES['csv_file']
         mob_numbers = []
@@ -1535,14 +1545,17 @@ def test_view(request):
                         if cell.isdigit() and len(cell) == 10:
                             mob_numbers.append(cell)
 
-                print(mob_numbers)
+                return render(request, 'pages/admin_employee/test.html', {'mob_numbers': mob_numbers})
+
         except Exception as e:
             error_message = f"An error occurred while processing the CSV: {e}"
             return render(request, 'pages/admin_employee/test.html', {'error_message': error_message})
 
-        return render(request, 'pages/admin_employee/test.html', {'mob_numbers': mob_numbers})
-
-    return render(request, 'pages/admin_employee/test.html')
+    else:
+        print(e_id)
+        admins = event_controller.get_event_admins(e_id)
+        print(admins)
+        return render(request, 'pages/admin_employee/test.html', {"admins": admins, "e_id": e_id})
 
 
 @api_view(['POST'])

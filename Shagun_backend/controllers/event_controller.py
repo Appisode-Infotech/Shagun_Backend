@@ -735,6 +735,20 @@ def set_event_status(event_id, status):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def get_event_admins(e_id):
+    try:
+        with connection.cursor() as cursor:
+            active_events_query = f"""SELECT event_admin FROM event WHERE id = '{e_id}' """
+            cursor.execute(active_events_query)
+            admins = cursor.fetchone()
+            return {
+                "admins": json.loads(admins[0])
+            }
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 
 def add():
     try:
@@ -762,3 +776,4 @@ def add():
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+

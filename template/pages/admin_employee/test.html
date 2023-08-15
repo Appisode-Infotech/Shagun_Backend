@@ -1,25 +1,269 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>CSV Upload</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shagun Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+
+    <style>
+        .center-button {
+          display: flex;
+          justify-content: center;
+        }
+        .dropbtn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+          background-color: #3e8e41;
+        }
+
+        #myInput {
+          box-sizing: border-box;
+          background-image: url('searchicon.png');
+          background-position: 14px 12px;
+          background-repeat: no-repeat;
+          font-size: 16px;
+          padding: 14px 20px 12px 45px;
+          border: none;
+          border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f6f6f6;
+          min-width: 230px;
+          max-width: 300px;
+          overflow: auto;
+          border: 1px solid #ddd;
+          z-index: 1;
+          height:400px;
+        }
+
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+
+
+
+
+
+    </style>
+
 </head>
+
 <body>
-    <h1>Upload a CSV File</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="csv_file" accept=".csv" required>
-        <button type="submit">Upload CSV</button>
-    </form>
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
-    {% if mob_numbers %}
-        <h2>Extracted Mobile Numbers:</h2>
-        <ul>
-            {% for mob_number in mob_numbers %}
-                <li>{{ mob_number }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include 'app_bar.html' %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        {% include 'theme_setting.html' %}
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        {% include 'nav_bar.html' %}
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Invite for event: {{e_id}}</h4>
+                                <div class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Invited by</label>
+                                                <div class="col-sm-9">
+
+                                                    <input required type="text" id="name" readonly
+                                                           onclick="myFunction()"
+                                                           placeholder="Search.." class="form-control">
+
+                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
+                                                        <input required type="text" placeholder="Search.." id="myInput"
+                                                               onkeyup="filterFunction()" class="form-control">
+                                                        {% for users in admins.admins %}
+                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}</a>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <input required type="hidden" id="uid" name="uid">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Invite Message</label>
+                                        <textarea class="form-control" id="event_note" rows="4"
+                                                  name="event_note"></textarea>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">phone num</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="phone"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">CSV file</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="file" name="csv_file" accept=".csv" required
+                                                           class="file-upload-default">
+                                                    <div class="input-group col-xs-12">
+                                                        <input required type="text"
+                                                               class="form-control file-upload-info"
+                                                               disabled
+                                                               placeholder="Upload Image">
+                                                        <span class="input-group-append">
+                                                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                                </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                {% if error_message %}
+                                <p>{{ error_message }}</p>
+                                {% endif %}
+                                {% if mob_numbers %}
+                                <h2>Extracted Mobile Numbers:</h2>
+                                <ul>
+                                    {% for mob_number in mob_numbers %}
+                                    <li>{{ mob_number }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+
+                                <div class="center-button">
+                                    <input required type="submit" value="Submit" class="btn btn-primary mr-2">
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        const dropdown = document.getElementById("myDropdown");
+        dropdown.classList.toggle("show");
+    }
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    function setValue(value1, value2) {
+        document.getElementById("name").value = value1;
+        document.getElementById("uid").value = value2;
+        myFunction();
+    }
+
+    // Add an event listener to the document to close the dropdown when clicking outside
+    document.addEventListener("click", function(event) {
+        const dropdown = document.getElementById("myDropdown");
+        const nameInput = document.getElementById("name");
+        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+
+
+
+
+</script>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="{% static 'vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>
+<script src="{% static 'vendors/select2/select2.min.js' %}"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="{% static 'js/file-upload.js' %}"></script>
+<script src="{% static 'js/typeahead.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+
+<!-- End custom js for this page-->
+
 </body>
+
 </html>

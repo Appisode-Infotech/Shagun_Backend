@@ -13,7 +13,7 @@ import time
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller, test_controller, vendor_controller
+    bank_controller, test_controller, delivery_vendor_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model
@@ -194,7 +194,18 @@ def manage_printers(request):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printers.html', {"response": response})
+        return render(request, 'pages/admin_employee/printing_vendor.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+def manage_delivery_vendors(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = delivery_vendor_controller.get_delivery_vendor()
+        print(response)
+        paginator = Paginator(response['delivery_vendor_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/delivery_vendor.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -431,6 +442,18 @@ def add_printer(request):
     else:
         return redirect('sign_up')
 
+def add_delivery_vendor(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
+            delivery_vendor_controller.add_vendor(vendor_obj)
+            return redirect('manage_printers')
+        else:
+            location, status_code = event_controller.get_city_list_for_user()
+            return render(request, 'pages/admin_employee/add_delivery_vendor.html', location)
+    else:
+        return redirect('sign_up')
+
 
 def add_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -498,6 +521,13 @@ def activate_deactivate_employee(request, user_id, status):
 def activate_deactivate_printers(request, printer_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         store_controller.disable_printer(printer_id, status)
+        return redirect('manage_printers')
+    else:
+        return redirect('sign_up')
+
+def activate_deactivate_delivery_vendors(request, printer_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        delivery_vendor_controller.enable_disable_delivery_vendor(printer_id, status)
         return redirect('manage_printers')
     else:
         return redirect('sign_up')
@@ -791,7 +821,17 @@ def dashboard_search_printers(request):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printers.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/printing_vendor.html', {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+def dashboard_search_delivery_vendors(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor(request.POST['search'])
+        paginator = Paginator(response['delivery_vendor_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/delivery_vendor.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -802,7 +842,14 @@ def dashboard_search_printers_status(request, status):
     paginator = Paginator(response['printer_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/admin_employee/printers.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/printing_vendor.html', {'response': response, "status": status})
+
+def dashboard_search_delivery_vendors_status(request, status):
+    response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor_status(status)
+    paginator = Paginator(response['delivery_vendor_data'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/admin_employee/delivery_vendor.html', {'response': response, "status": status})
 
 
 def dashboard_search_greetings(request):
@@ -823,7 +870,7 @@ def dashboard_search_greetings_status(request, status):
     paginator = Paginator(response['all_greeting_cards'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/admin_employee/printers.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/printing_vendor.html', {'response': response, "status": status})
 
 
 def printer_all_jobs(request):
@@ -1389,13 +1436,13 @@ def get_greetings_by_id(request):
 @api_view(['POST'])
 def manage_vendor(request):
     vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.data)
-    response, status_code = vendor_controller.add_vendor(vendor_obj)
+    response, status_code = delivery_vendor_controller.add_vendor(vendor_obj)
     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
 def enable_disable_vendor(request):
-    response, status_code = vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
+    response, status_code = delivery_vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
 

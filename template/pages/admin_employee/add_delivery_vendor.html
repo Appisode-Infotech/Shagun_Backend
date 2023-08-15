@@ -59,26 +59,36 @@
         }
 
         .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f6f6f6;
-          min-width: 230px;
-          overflow: auto;
-          border: 1px solid #ddd;
-          z-index: 1;
-          height:400px;
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
         }
 
         .dropdown-content a {
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
+            display: block;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #000;
         }
 
-        .dropdown a:hover {background-color: #ddd;}
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
 
         .show {display: block;}
+
+        .toggle-password {
+          position: absolute;
+          top: 10px;
+          right: 30px;
+          cursor: pointer;
+        }
+
+
+
+
 
 
     </style>
@@ -103,17 +113,17 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Bank Account</h4>
-                                <form class="form-sample" action="/add_bank" method="post"
+                                <h4 class="card-title">Add New Delivery Vendor</h4>
+                                <form class="form-sample" action="/add_printer" method="post"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
-                                        Bank info
+                                        Printer info
                                     </p>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">User</label>
+                                                <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
 
                                                     <input required type="text" id="name" readonly onclick="myFunction()"
@@ -122,23 +132,19 @@
                                                     <div id="myDropdown" class="dropdown-content">
                                                         <input required type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
-                                                        {% for users in user.user_data %}
-                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
-                                                            {{users.phone}}</a>
+                                                        {% for city in city_list %}
+                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="uid" name="uid">
+                                                    <input required type="hidden" id="city" name="city">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Full Name</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" id="account_holder_name"
-                                                           name="account_holder_name"
-                                                           class="form-control"
-                                                           placeholder="username">
+                                                    <input required type="text" class="form-control" name="store_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,51 +152,50 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Select Bank</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Owner</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="bank_name">
-                                                        {% for banks in bank.bank_list %}
-                                                        <option>{{banks.bank_name}}</option>
-                                                        {% endfor %}
-                                                    </select>
+                                                    <input required type="text" class="form-control" name="store_owner"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Account Number</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input required class="form-control" placeholder="1234567890"
-                                                           id="account_number"
-                                                           name="account_number"/>
+                                                    <input required type="text" class="form-control" name="contact_number"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Address</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="address"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label"> Vendor GST</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="gst_no"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">IFSC CODE</label>
-                                                <div class="col-sm-9">
-                                                    <input required class="form-control" placeholder="ICICIXXXXXX"
-                                                           id="ifsc_code" name="ifsc_code"/>
-                                                </div>
-                                            </div>
+
+                                    <div class="center-button">
+                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
+                                            not match!
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
-                                                <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
-                                                    <input required type="hidden" id="added_by" name="added_by"
-                                                           value="{{ request.session.uid }}">
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                     <div class="center-button">
-                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2"
+                                               id="submitButton">
                                     </div>
                                 </form>
                             </div>
@@ -235,7 +240,7 @@
 
     function setValue(value1, value2) {
         document.getElementById("name").value = value1;
-        document.getElementById("uid").value = value2;
+        document.getElementById("city").value = value2;
         myFunction();
     }
 
@@ -243,12 +248,18 @@
     document.addEventListener("click", function(event) {
         const dropdown = document.getElementById("myDropdown");
         const nameInput = document.getElementById("name");
+        console.log(dropdown)
+        console.log(nameInput)
         if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
             dropdown.classList.remove("show");
         }
     });
 
+
+
+
 </script>
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

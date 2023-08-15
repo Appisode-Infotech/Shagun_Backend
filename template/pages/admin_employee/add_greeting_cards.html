@@ -128,7 +128,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Card Id</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="card_name"/>
+                                                    <input required type="text" class="form-control" name="card_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -136,7 +136,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Price</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="card_price"/>
+                                                    <input required type="text" class="form-control" name="card_price"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,19 +146,19 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select Printer</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="printer_name" readonly
+                                                    <input required type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown')"
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input required type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction('myDropdown')"
                                                                class="form-control">
                                                         {% for printers in printer_data %}
                                                         <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="printer_id" name="printer_id">
+                                                    <input required type="hidden" id="printer_id" name="printer_id">
                                                 </div>
                                             </div>
                                         </div>
@@ -167,7 +167,7 @@
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
-                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
+                                                    <input required type="hidden" id="created_by_uid" name="created_by_uid"
                                                            value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
@@ -179,11 +179,11 @@
                                                 <label class="col-sm-3 col-form-label">Greeting Card Design</label>
                                                 <div class="col-sm-9">
                                                     <img id="uploadedImage" src="{% static 'images/greeting_logo.png' %}" alt="Uploaded Image">
-                                                    <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
+                                                    <input required accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
                                                            name="greeting_card" id="card_image_url"
                                                            class="file-upload-default">
                                                     <div class="input-group col-xs-12">
-                                                        <input type="text" class="form-control file-upload-info"
+                                                        <input required type="text" class="form-control file-upload-info"
                                                                disabled
                                                                placeholder="Upload Image">
                                                         <span class="input-group-append">
@@ -199,7 +199,7 @@
 
                                     </div>
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
                                 </form>
                             </div>

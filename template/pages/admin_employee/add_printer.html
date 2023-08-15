@@ -122,17 +122,17 @@
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
 
-                                                    <input type="text" id="name" readonly onclick="myFunction()"
+                                                    <input required type="text" id="name" readonly onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input required type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for city in city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="city" name="city">
+                                                    <input required type="hidden" id="city" name="city">
                                                 </div>
                                             </div>
                                         </div>
@@ -140,7 +140,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="store_name"/>
+                                                    <input required type="text" class="form-control" name="store_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -150,7 +150,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="store_owner"/>
+                                                    <input required type="text" class="form-control" name="store_owner"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -158,7 +158,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="contact_number"/>
+                                                    <input required type="text" class="form-control" name="contact_number"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -168,7 +168,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address"/>
+                                                    <input required type="text" class="form-control" name="address"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -176,7 +176,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Geo Location</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="lat_lng"/>
+                                                    <input required type="text" class="form-control" name="lat_lng"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,7 +187,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label"> Store GST</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="gst_no"/>
+                                                    <input required type="text" class="form-control" name="gst_no"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -195,7 +195,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">User Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="email" class="form-control" name="printer_user_name"
+                                                    <input required type="email" class="form-control" name="printer_user_name"
                                                            placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
@@ -206,7 +206,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Password</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" id="password" name="printer_password"
+                                                    <input required type="password" id="password" name="printer_password"
                                                            class="form-control form-control-lg"
                                                            placeholder="password">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
@@ -218,7 +218,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Confirm Password</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" id="confirmPassword"
+                                                    <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
                                                            placeholder="password">
                                                     <i class="toggle-password"
@@ -235,7 +235,7 @@
 
                                     </div>
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2"
+                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton" disabled>
                                     </div>
                                 </form>

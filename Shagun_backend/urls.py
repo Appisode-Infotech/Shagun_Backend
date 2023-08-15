@@ -95,9 +95,9 @@ urlpatterns = [
     path('transactions_settlement/<int:event_id>/', transactions_settlement, name='transactions_settlement'),
 
     path('printer_home_page', printer_home_page, name='printer_home_page'),
-    path('printer_dashboard_all_jobs', printer_dashboard_all_jobs, name='printer_dashboard_all_jobs'),
-    path('printer_dashboard_open_jobs', printer_dashboard_open_jobs, name='printer_dashboard_open_jobs'),
-    path('printer_dashboard_closed_jobs', printer_dashboard_closed_jobs, name='printer_dashboard_closed_jobs'),
+    path('printer_all_jobs', printer_all_jobs, name='printer_all_jobs'),
+    path('printer_open_jobs', printer_open_jobs, name='printer_open_jobs'),
+    path('printer_closed_jobs', printer_closed_jobs, name='printer_closed_jobs'),
 
     path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location,
          name='activate_deactivate_location'),

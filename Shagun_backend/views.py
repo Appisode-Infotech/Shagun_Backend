@@ -825,7 +825,7 @@ def dashboard_search_greetings_status(request, status):
     return render(request, 'pages/admin_employee/printers.html', {'response': response, "status": status})
 
 
-def printer_dashboard_all_jobs(request):
+def printer_all_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1, 2, 3, 4, 5]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
@@ -837,7 +837,7 @@ def printer_dashboard_all_jobs(request):
         return redirect('sign_up')
 
 
-def printer_dashboard_open_jobs(request):
+def printer_open_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1, 2, 3, 4]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
@@ -849,7 +849,7 @@ def printer_dashboard_open_jobs(request):
         return redirect('sign_up')
 
 
-def printer_dashboard_closed_jobs(request):
+def printer_closed_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [5]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)

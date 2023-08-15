@@ -252,17 +252,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <input type="text" id="searchInput" style="width: 50%;"
-                                               placeholder="Search for a location">
+                                    <div class="col-md-12">
+                                        <div class="col-sm-12">
+                                            <input type="text" id="searchInput" style="width: 50%;"
+                                               placeholder="Search for a location" class="form-control">
+                                        </div>
                                         <div id="map"></div>
                                         <!--                                        <label id="event_lat_lng"></label>-->
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-10">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Event Lat Lng</label>
-                                                <div class="col-sm-9">
+                                                <label class="col-sm-2 col-form-label">Event Lat Lng</label>
+                                                <div class="col-sm-10">
                                                     <input type="text" id="event_lat_lng" style="width: 50%;" value="{{event.event_data.event_lat_lng}}"
                                                            class="form-control" name="event_lat_lng" class="form-control" readonly>
                                                 </div>

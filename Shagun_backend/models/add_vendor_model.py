@@ -20,8 +20,6 @@ class AddVendorModel:
     delivery_vendor_name: str
     city: str
     address: str
-    lat_lng: str
-    status: str
     gst_no: str
     delivery_vendor_owner: str
     contact_number: str
@@ -33,21 +31,17 @@ class AddVendorModel:
         delivery_vendor_name = from_str(obj.get("delivery_vendor_name"))
         city = from_str(obj.get("city"))
         address = from_str(obj.get("address"))
-        lat_lng = from_str(obj.get("lat_lng"))
-        status = from_str(obj.get("status"))
         gst_no = from_str(obj.get("gst_no"))
         delivery_vendor_owner = from_str(obj.get("delivery_vendor_owner"))
         contact_number = from_str(obj.get("contact_number"))
         created_by = from_str(obj.get("created_by"))
-        return AddVendorModel(delivery_vendor_name, city, address, lat_lng, status, gst_no, delivery_vendor_owner, contact_number, created_by)
+        return AddVendorModel(delivery_vendor_name, city, address, gst_no, delivery_vendor_owner, contact_number, created_by)
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["delivery_vendor_name"] = from_str(self.delivery_vendor_name)
         result["city"] = from_str(self.city)
         result["address"] = from_str(self.address)
-        result["lat_lng"] = from_str(self.lat_lng)
-        result["status"] = from_str(self.status)
         result["gst_no"] = from_str(self.gst_no)
         result["delivery_vendor_owner"] = from_str(self.delivery_vendor_owner)
         result["contact_number"] = from_str(self.contact_number)

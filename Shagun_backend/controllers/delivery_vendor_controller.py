@@ -8,12 +8,12 @@ from Shagun_backend.util.constants import ALL_PRINTERS_DATA
 def add_vendor(vendor_obj):
     try:
         with connection.cursor() as cursor:
-            add_printer_query = """INSERT INTO delivery_vendors (delivery_vendor_name, city, address, lat_lng, status, 
+            add_printer_query = """INSERT INTO delivery_vendors (delivery_vendor_name, city, address, 
                                    gst_no, delivery_vendor_owner, contact_number, created_by) 
-                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(add_printer_query, [vendor_obj.delivery_vendor_name, vendor_obj.city, vendor_obj.address,
-                                               vendor_obj.lat_lng, vendor_obj.status, vendor_obj.gst_no,
-                                               vendor_obj.delivery_vendor_owner, vendor_obj.contact_number, vendor_obj.created_by])
+                                               vendor_obj.gst_no, vendor_obj.delivery_vendor_owner,
+                                               vendor_obj.contact_number, vendor_obj.created_by])
             return {
                 "status": True,
                 "Vendor": "Vendor added successfully"

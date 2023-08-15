@@ -446,8 +446,9 @@ def add_delivery_vendor(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
-            delivery_vendor_controller.add_vendor(vendor_obj)
-            return redirect('manage_printers')
+            response = delivery_vendor_controller.add_vendor(vendor_obj)
+            print(response)
+            return redirect('manage_delivery_vendors')
         else:
             location, status_code = event_controller.get_city_list_for_user()
             return render(request, 'pages/admin_employee/add_delivery_vendor.html', location)
@@ -528,7 +529,7 @@ def activate_deactivate_printers(request, printer_id, status):
 def activate_deactivate_delivery_vendors(request, printer_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         delivery_vendor_controller.enable_disable_delivery_vendor(printer_id, status)
-        return redirect('manage_printers')
+        return redirect('manage_delivery_vendors')
     else:
         return redirect('sign_up')
 

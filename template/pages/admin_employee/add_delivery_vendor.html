@@ -114,7 +114,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Add New Delivery Vendor</h4>
-                                <form class="form-sample" action="/add_printer" method="post"
+                                <form class="form-sample" action="/add_delivery_vendor" method="post"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -130,7 +130,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content">
-                                                        <input required type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for city in city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
@@ -144,7 +144,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="store_name"/>
+                                                    <input required type="text" class="form-control" name="delivery_vendor_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +154,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Owner</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="store_owner"/>
+                                                    <input required type="text" class="form-control" name="delivery_vendor_owner"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -185,16 +185,18 @@
                                             </div>
                                         </div>
                                     </div>
-
-
-                                    <div class="center-button">
-                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
-                                            not match!
+                                    <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <div class="col-sm-9">
+                                                    <label class="form-control">{{ request.session.name }}</label>
+                                                    <input type="hidden" id="created_by" name="created_by"
+                                                           value="{{ request.session.uid }}">
+                                                </div>
+                                            </div>
                                         </div>
-
-                                    </div>
                                     <div class="center-button">
-                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2"
+                                        <input type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton">
                                     </div>
                                 </form>

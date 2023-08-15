@@ -32,7 +32,7 @@ def sign_up(request):
             return redirect('admin_dashboard')
         else:
             messages.error(request, response['msg'])
-    return render(request, 'pages/tables/login.html')
+    return render(request, 'pages/admin_employee/login.html')
 
 
 def logout(request):
@@ -54,7 +54,7 @@ def manage_event(request):
         paginator = Paginator(response['event_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/events.html', {'response': response})
+        return render(request, 'pages/admin_employee/events.html', {'response': response})
     else:
         return redirect('sign_up')
 
@@ -71,7 +71,7 @@ def manage_event_types(request):
         paginator = Paginator(response['events_type'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/event_type.html', {"response": response})
+        return render(request, 'pages/admin_employee/event_type.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -79,7 +79,7 @@ def manage_event_types(request):
 def manage_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_locations_list()
-        return render(request, 'pages/tables/location.html', response)
+        return render(request, 'pages/admin_employee/location.html', response)
     else:
         return redirect('sign_up')
 
@@ -93,13 +93,13 @@ def manage_kyc(request):
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
             response = paginator.get_page(page)
-            return render(request, 'pages/tables/kyc.html', {"response": response})
+            return render(request, 'pages/admin_employee/kyc.html', {"response": response})
         else:
             response, status_code = user_controller.get_kyc_data('%')
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
             response = paginator.get_page(page)
-            return render(request, 'pages/tables/kyc.html', {"response": response})
+            return render(request, 'pages/admin_employee/kyc.html', {"response": response})
 
     else:
         return redirect('sign_up')
@@ -111,7 +111,7 @@ def filter_kyc(request, status):
         paginator = Paginator(response['kyc_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/kyc.html', {"response": response, "status": status})
+        return render(request, 'pages/admin_employee/kyc.html', {"response": response, "status": status})
 
     else:
         return redirect('sign_up')
@@ -124,7 +124,7 @@ def filter_bank(request, status):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/bank_details.html', {"response": response, "status": status})
+        return render(request, 'pages/admin_employee/bank_details.html', {"response": response, "status": status})
 
     else:
         return redirect('sign_up')
@@ -137,7 +137,7 @@ def filter_user(request, status):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/users.html', {"response": response, "status": status})
+        return render(request, 'pages/admin_employee/users.html', {"response": response, "status": status})
 
     else:
         return redirect('sign_up')
@@ -149,7 +149,7 @@ def manage_bank_details(request):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/bank_details.html', {"response": response})
+        return render(request, 'pages/admin_employee/bank_details.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -160,7 +160,7 @@ def manage_greeting_cards(request):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/greeting_cards.html', {"response": response})
+        return render(request, 'pages/admin_employee/greeting_cards.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -171,7 +171,7 @@ def manage_users(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/users.html', {"response": response})
+        return render(request, 'pages/admin_employee/users.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -182,7 +182,7 @@ def manage_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/employees.html', {"response": response})
+        return render(request, 'pages/admin_employee/employees.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -193,7 +193,7 @@ def manage_printers(request):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/printers.html', {"response": response})
+        return render(request, 'pages/admin_employee/printers.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -208,18 +208,14 @@ def printer_login(request):
             return redirect('printer_home_page')
         else:
             messages.error(request, response['msg'])
-            return render(request, 'pages/tables/printer_login.html')
+            return render(request, 'pages/admin_employee/printer_login.html')
     else:
-        return render(request, 'pages/tables/printer_login.html')
+        return render(request, 'pages/admin_employee/printer_login.html')
 
 
 def printer_home_page(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
-        response, status_code = event_controller.get_all_event_list()
-        paginator = Paginator(response['event_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        return render(request, 'pages/tables/events.html', {'response': response})
+        return render(request, 'pages/printer/printer_dashbord.html')
     return redirect('printer_login')
 
 
@@ -229,7 +225,7 @@ def kyc_request(request):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/manage_kyc_request.html', {"response": response})
+        return render(request, 'pages/admin_employee/manage_kyc_request.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -241,7 +237,7 @@ def event_request(request):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/manage_event_request.html', {"response": response})
+        return render(request, 'pages/admin_employee/manage_event_request.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -252,7 +248,7 @@ def get_settlement_for_event(request, status):
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/settlements.html', {"response": response})
+        return render(request, 'pages/admin_employee/settlements.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -263,7 +259,7 @@ def dashboard_search_event_settlement(request):
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/settlements.html',
+        return render(request, 'pages/admin_employee/settlements.html',
                       {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
@@ -276,7 +272,7 @@ def all_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -288,7 +284,7 @@ def Open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -300,7 +296,7 @@ def closed_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/closed_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/closed_jobs.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -318,14 +314,14 @@ def transactions_settlement(request, event_id):
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
-            return render(request, 'pages/tables/transactions_settlement.html',
+            return render(request, 'pages/admin_employee/transactions_settlement.html',
                           {"response": response, "event_id": event_id})
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
-            return render(request, 'pages/tables/transactions_settlement.html',
+            return render(request, 'pages/admin_employee/transactions_settlement.html',
                           {"response": response, "event_id": event_id})
     else:
         return redirect('sign_up')
@@ -349,7 +345,7 @@ def add_events(request):
                 "users": users_list,
                 "printers": printers_list
             }
-            return render(request, 'pages/tables/add_events.html', context)
+            return render(request, 'pages/admin_employee/add_events.html', context)
 
     else:
         return redirect('sign_up')
@@ -361,7 +357,7 @@ def add_events_type(request):
             event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by_uid'])
             return redirect('manage_event_types')
         else:
-            return render(request, 'pages/tables/add_events_type.html')
+            return render(request, 'pages/admin_employee/add_events_type.html')
 
     else:
         return redirect('sign_up')
@@ -387,7 +383,7 @@ def add_kyc(request):
             return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_all_users('%')
-            return render(request, 'pages/tables/add_kyc.html', response)
+            return render(request, 'pages/admin_employee/add_kyc.html', response)
     else:
         return redirect('sign_up')
 
@@ -405,7 +401,7 @@ def add_bank(request):
                 "user": user,
                 "bank": bank
             }
-            return render(request, 'pages/tables/add_bank.html', context)
+            return render(request, 'pages/admin_employee/add_bank.html', context)
     else:
         return redirect('sign_up')
 
@@ -417,7 +413,7 @@ def add_employee(request):
             user_controller.add_employee(emp_obj)
             return redirect('manage_employee')
         else:
-            return render(request, 'pages/tables/add_employee.html')
+            return render(request, 'pages/admin_employee/add_employee.html')
     else:
         return redirect('sign_up')
 
@@ -430,7 +426,7 @@ def add_printer(request):
             return redirect('manage_printers')
         else:
             location, status_code = event_controller.get_city_list_for_user()
-            return render(request, 'pages/tables/add_printer.html', location)
+            return render(request, 'pages/admin_employee/add_printer.html', location)
     else:
         return redirect('sign_up')
 
@@ -451,7 +447,7 @@ def add_greeting_cards(request):
             return redirect('manage_greeting_cards')
         else:
             printers_list, status_code = store_controller.get_printers_by_status(1)
-            return render(request, 'pages/tables/add_greeting_cards.html', printers_list)
+            return render(request, 'pages/admin_employee/add_greeting_cards.html', printers_list)
 
     else:
         return redirect('sign_up')
@@ -546,7 +542,7 @@ def edit_kyc(request, kyc_id):
                 "kyc_data": kyc_data,
                 "user_list": users_list
             }
-            return render(request, 'pages/tables/edit_kyc.html', context)
+            return render(request, 'pages/admin_employee/edit_kyc.html', context)
     else:
         return redirect('sign_up')
 
@@ -605,7 +601,7 @@ def edit_bank(request, bank_id):
                 "bank_data": bank_data,
                 "bank_list": bank_list
             }
-            return render(request, 'pages/tables/edit_bank.html', context)
+            return render(request, 'pages/admin_employee/edit_bank.html', context)
     else:
         return redirect('sign_up')
 
@@ -618,7 +614,7 @@ def edit_employee(request, user_id):
             return redirect('manage_employee')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
-            return render(request, 'pages/tables/edit_employee.html', response)
+            return render(request, 'pages/admin_employee/edit_employee.html', response)
     else:
         return redirect('sign_up')
 
@@ -669,7 +665,7 @@ def edit_printer(request, printer_id):
                 "location": location
             }
 
-            return render(request, 'pages/tables/edit_printer.html', context)
+            return render(request, 'pages/admin_employee/edit_printer.html', context)
 
     else:
         return redirect('sign_up')
@@ -699,7 +695,7 @@ def edit_event(request, event_id):
                 "printers": printers_list,
                 "event": event_data
             }
-            return render(request, 'pages/tables/edit_event.html', context)
+            return render(request, 'pages/admin_employee/edit_event.html', context)
 
     else:
         return redirect('sign_up')
@@ -711,7 +707,7 @@ def filtered_events_on_approval_status(request, status):
     paginator = Paginator(response['event_list'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/tables/events.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/events.html', {'response': response, "status": status})
 
 
 def filter_transaction_lists(request, event_id, status):
@@ -719,7 +715,7 @@ def filter_transaction_lists(request, event_id, status):
     paginator = Paginator(response['transactions'], 250)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/tables/transactions_settlement.html',
+    return render(request, 'pages/admin_employee/transactions_settlement.html',
                   {"response": response, "event_id": event_id, "status": status})
 
 
@@ -729,7 +725,7 @@ def dashboard_search_event(request):
         paginator = Paginator(response['event_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/events.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/events.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -740,7 +736,7 @@ def dashboard_search_kyc(request):
         paginator = Paginator(response['kyc_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/kyc.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/kyc.html', {"response": response, "search": request.POST['search']})
 
     else:
         return redirect('sign_up')
@@ -752,7 +748,7 @@ def dashboard_search_bank(request):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/bank_details.html',
+        return render(request, 'pages/admin_employee/bank_details.html',
                       {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
@@ -764,7 +760,7 @@ def dashboard_search_user(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/users.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/users.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -775,7 +771,7 @@ def dashboard_search_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/employees.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/employees.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -785,7 +781,7 @@ def dashboard_search_employee_status(request, status):
     paginator = Paginator(response['user_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/tables/employees.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/employees.html', {'response': response, "status": status})
 
 
 def dashboard_search_printers(request):
@@ -794,7 +790,7 @@ def dashboard_search_printers(request):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/printers.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/printers.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -805,7 +801,7 @@ def dashboard_search_printers_status(request, status):
     paginator = Paginator(response['printer_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/tables/printers.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/printers.html', {'response': response, "status": status})
 
 
 def dashboard_search_greetings(request):
@@ -814,7 +810,7 @@ def dashboard_search_greetings(request):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/tables/greeting_cards.html',
+        return render(request, 'pages/admin_employee/greeting_cards.html',
                       {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
@@ -826,7 +822,43 @@ def dashboard_search_greetings_status(request, status):
     paginator = Paginator(response['all_greeting_cards'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/tables/printers.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/printers.html', {'response': response, "status": status})
+
+
+def printer_dashboard_all_jobs(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        status = [1, 2, 3, 4, 5]
+        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def printer_dashboard_open_jobs(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        status = [1, 2, 3, 4]
+        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/printer/printer_open_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def printer_dashboard_closed_jobs(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        status = [5]
+        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
 
 
 #
@@ -835,7 +867,7 @@ def dashboard_search_greetings_status(request, status):
 #     paginator = Paginator(response['jobs'], 25)
 #     page = request.GET.get('page')
 #     response = paginator.get_page(page)
-#     return render(request, 'pages/tables/test.html', {"response": response})
+#     return render(request, 'pages/admin_employee/test.html', {"response": response})
 
 #
 # def get_closed_jobs(request, status):
@@ -843,7 +875,7 @@ def dashboard_search_greetings_status(request, status):
 #     paginator = Paginator(response['jobs'], 25)
 #     page = request.GET.get('page')
 #     response = paginator.get_page(page)
-#     return render(request, 'pages/tables/test.html', {"response": response, "status": status})
+#     return render(request, 'pages/admin_employee/test.html', {"response": response, "status": status})
 
 
 # @api_view(['POST'])
@@ -1420,7 +1452,7 @@ def track_order(request):
 #         context = {
 #             'page_obj': page_obj
 #         }
-#         return render(request, 'pages/tables/test.html', context)
+#         return render(request, 'pages/admin_employee/test.html', context)
 #     else:
 #         return redirect('sign_up')
 
@@ -1428,7 +1460,7 @@ def track_order(request):
 # def event_admin(request, event_id):
 #     response, status_code = test_controller.event_admin(event_id)
 #     print(response)
-#     return render(request, 'pages/tables/event.html', {"response": response, "event_id": event_id})
+#     return render(request, 'pages/admin_employee/event.html', {"response": response, "event_id": event_id})
 
 
 def test_view(request):

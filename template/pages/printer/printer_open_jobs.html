@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shagun Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'js/select.dataTables.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <!--    &lt;!&ndash; Required meta tags &ndash;&gt;-->
+    <!--    <meta charset="utf-8">-->
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <!--    <title>Shagun Admin</title>-->
+    <!--    &lt;!&ndash; plugins:css &ndash;&gt;-->
+    <!--    {% load static%}-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">-->
+    <!--    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">-->
+
+    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
+    <!--    &lt;!&ndash; Plugin css for this page &ndash;&gt;-->
+    <!--    &lt;!&ndash; End plugin css for this page &ndash;&gt;-->
+    <!--    &lt;!&ndash; inject:css &ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">-->
+    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
+    <style>
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+
+        .btn {
+            margin: 0;
+        }
+
+        .btn-icon-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon-text i {
+            margin-left: 5px;
+        }
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include 'app_bar.html' %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        {% include 'theme_setting.html' %}
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        {% include 'printer_nav_bar.html' %}
+        <!-- partial -->
+        <div class="col-lg-10 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="header-container">
+                        <h4 class="card-title">Open Jobs</h4>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Job Id</th>
+                                <th>Event Name</th>
+                                <th>Job Details</th>
+                                <th>Billing Amount</th>
+                                <th>Job Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for job in response %}
+
+                            <tr>
+                                <td>{{ job.id }}</td>
+                                <td>{{ job.event_type_name }}</td>
+                                <td>
+                                    <b>Card Id</b> : {{ job.card_name }}</br></br>
+                                    <b>Event Date : </b> {{ job.event_date }}</br></br>
+                                    <b>Event ID : </b> {{ job.event_id }}
+                                </td>
+                                <td>{{ job.billing_amount }}</td>
+                                <td>
+                                    {% if job.status == 1 %}
+                                    <label class="badge badge-warning ">New</label>
+                                    {% elif job.status == 2 %}
+                                    <label class="badge badge-light">In Progress</label>
+                                    {% elif job.status == 3 %}
+                                    <label class="badge badge-secondary">Print Completed</label>
+                                    {% elif job.status == 4 %}
+                                    <label class="badge badge-info">Dispatched</label>
+                                    {% elif job.status == 5 %}
+                                    <label class="badge badge-success">Closed</label>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+<!-- content-wrapper ends -->
+<!-- partial:../../partials/_footer.html -->
+{% include 'footer.html' %}
+<!-- partial -->
+</div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script>
+    document.getElementById("approval-status-dropdown").addjobListener("change", function() {
+        var dropdown = document.getElementById("approval-status-dropdown");
+        var selectedValue = dropdown.value;
+        window.location.href = selectedValue;
+    });
+
+
+
+
+</script>
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+
+<!-- endinject -->
+<!-- Custom js for this page-->
+<!-- End custom js for this page-->
+
+
+</body>
+
+</html>

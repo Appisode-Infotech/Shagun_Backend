@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 import time
 
+from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
     bank_controller, test_controller, vendor_controller
@@ -1465,41 +1466,35 @@ def track_order(request):
 
 def test_view(request):
     import os
-    import qrcode
-    from django.conf import settings
+    import csv
+    from django.core.files.storage import FileSystemStorage
 
-    # Replace this with your desired text
-    text = "http://santhuofficial123.pythonanywhere.com/34_9738505213"
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+        mob_numbers = []
 
-    # Generate QR code
-    qr = qrcode.QRCode(
-        version=1,  # QR code version (controls size)
-        error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
-        box_size=10,  # Size of each box in pixels
-        border=4,  # Border size in boxes
-    )
+        # Extract mobile numbers from the CSV
+        try:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
+            print(fs)
+            filename = fs.save(csv_file.name, csv_file)
+            print(filename)
+            with open(fs.path(filename), 'r') as file:
+                reader = csv.reader(file)
+                print(reader)
+                for row in reader:
+                    for cell in row:
+                        if cell.isdigit() and len(cell) == 10:
+                            mob_numbers.append(cell)
 
-    # Add data to the QR code
-    qr.add_data(text)
-    qr.make(fit=True)
+                print(mob_numbers)
+        except Exception as e:
+            error_message = f"An error occurred while processing the CSV: {e}"
+            return render(request, 'pages/admin_employee/test.html', {'error_message': error_message})
 
-    # Create an image from the QR code instance with the desired fill color
-    fill_color = "#9925b9"
-    img = qr.make_image(fill_color=fill_color, back_color="white")
+        return render(request, 'pages/admin_employee/test.html', {'mob_numbers': mob_numbers})
 
-    # Construct the path to save the image in the media directory
-    media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
-    os.makedirs(media_dir, exist_ok=True)
-    image_path = os.path.join(media_dir, '34_9738505213.png')
-
-    img.save(image_path)
-
-    # The relative URL to the saved image
-    image_url = 'images/qr_codes/qr_code.png'
-
-    print("QR code image saved at:", image_path)
-    print("Image URL:", image_url)
-    redirect('manage_event')
+    return render(request, 'pages/admin_employee/test.html')
 
 
 @api_view(['POST'])

@@ -1,93 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Map with Pointer and Search</title>
-    <style>
-        #map {
-            height: 400px;
-        }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6O2CG9zBAksJH4SCgCZlbx3XRWVwzY1E&libraries=places&callback=initMap"
-        async defer></script>
-    <script>
-        var map, marker, event_lat_lng, searchInput;
-
-        function initMap() {
-            var mapOptions = {
-                zoom: 8,
-            };
-
-            var mapDiv = document.getElementById('map');
-            map = new google.maps.Map(mapDiv, mapOptions);
-
-            event_lat_lng = document.getElementById('event_lat_lng');
-            searchInput = document.getElementById('searchInput');
-
-            // Try to get the user's current position
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var userLatLng = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-
-                    map.setCenter(userLatLng);
-                    marker = new google.maps.Marker({
-                        position: userLatLng,
-                        map: map,
-                        draggable: true,
-                        title: 'Drag me to set the location',
-                    });
-
-                    google.maps.event.addListener(marker, 'dragend', function(event) {
-                        var lat = event.latLng.lat();
-                        var lng = event.latLng.lng();
-                        event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
-                    });
-
-                    event_lat_lng.value = 'Latitude: ' + userLatLng.lat + ', Longitude: ' + userLatLng.lng;
-                });
-            }
-
-            // Initialize Google Places Autocomplete for search
-            var autocomplete = new google.maps.places.Autocomplete(searchInput);
-            autocomplete.bindTo('bounds', map);
-
-            // Set listener to update map and marker on autocomplete selection
-            autocomplete.addListener('place_changed', function() {
-                var place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    return;
-                }
-
-                map.setCenter(place.geometry.location);
-
-                if (!marker) {
-                    marker = new google.maps.Marker({
-                        position: place.geometry.location,
-                        map: map,
-                        draggable: true,
-                        title: 'Drag me to set the location',
-                    });
-                    google.maps.event.addListener(marker, 'dragend', function(event) {
-                        var lat = event.latLng.lat();
-                        var lng = event.latLng.lng();
-                        event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
-                    });
-                } else {
-                    marker.setPosition(place.geometry.location);
-                }
-
-                var lat = marker.getPosition().lat();
-                var lng = marker.getPosition().lng();
-                event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
-            });
-        }
-    </script>
+    <title>CSV Upload</title>
 </head>
 <body>
-    <input type="text" id="searchInput" style="width: 50%;" placeholder="Search for a location">
-    <div id="map"></div>
-    <input type="text" id="event_lat_lng" style="width: 50%;" readonly>
+    <h1>Upload a CSV File</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit">Upload CSV</button>
+    </form>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    {% if mob_numbers %}
+        <h2>Extracted Mobile Numbers:</h2>
+        <ul>
+            {% for mob_number in mob_numbers %}
+                <li>{{ mob_number }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 </html>

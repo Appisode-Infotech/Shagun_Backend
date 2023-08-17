@@ -12,14 +12,66 @@ def create_event(event_obj):
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
-            create_event_query = "INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1, " \
-                                 "address_line2, event_lat_lng, created_on, sub_events, event_date," \
-                                 "event_note, event_admin, is_approved,  status, printer_id, ) " \
-                                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+            create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
+                                        address_line2, event_lat_lng, created_on, sub_events, event_date, event_note, 
+                                        event_admin, is_approved, status, printer_id) 
+                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id)
+
             cursor.execute(create_event_query, values)
+            event_id = cursor.lastrowid
+            event_admin_query = f"""SELECT event.event_admin FROM event
+                                    WHERE  id = '{event_id}'"""
+            cursor.execute(event_admin_query)
+            admin = cursor.fetchone()
+            event_admins = json.loads(admin[0])
+            for item in event_admins:
+                uid = item["uid"]
+                phone_query = f"""SELECT phone FROM users
+                                                    WHERE  uid = '{uid}'"""
+                cursor.execute(phone_query)
+                phone = cursor.fetchone()
+                import os
+                import qrcode
+                from django.conf import settings
+
+                # Replace this with your desired text
+                text = "http://santhuofficial123.pythonanywhere.com/"+str(event_id) + "_" + phone[0]
+
+                # Generate QR code
+                qr = qrcode.QRCode(
+                    version=1,  # QR code version (controls size)
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
+                    box_size=10,  # Size of each box in pixels
+                    border=4,  # Border size in boxes
+                )
+
+                # Add data to the QR code
+                qr.add_data(text)
+                qr.make(fit=True)
+
+                # Create an image from the QR code instance with the desired fill color
+                fill_color = "#9925b9"
+                img = qr.make_image(fill_color=fill_color, back_color="white")
+
+                # Construct the path to save the image in the media directory
+                media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
+                os.makedirs(media_dir, exist_ok=True)
+                image_path = os.path.join(media_dir, f"""{event_id}_{phone[0]}.png""")
+
+                img.save(image_path)
+
+                # The relative URL to the saved image
+                image_url = f"""images/qr_codes/{event_id}_{phone[0]}.png"""
+                print(image_url)
+                item["qr_code"] = image_url
+
+            update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
+            cursor.execute(update_qr_sql)
             return {
                 "status": True,
                 "message": "Event Created successfully"
@@ -94,21 +146,21 @@ def enable_disable_event(e_id, et_status):
 
 def get_event_by_id(et_id):
     try:
+        print("event id in controller")
+        print(et_id)
         with connection.cursor() as cursor:
             get_event_query = f""" SELECT e.*, et.event_type_name,
             l.city_name, p.store_name FROM event e
             LEFT JOIN events_type et ON e.event_type_id = et.id
             LEFT JOIN locations l ON e.city_id = l.id
-            LEFT JOIN printer p ON e.printer_id = p.id;
-            WHERE id = '{et_id}'"""
+            LEFT JOIN printer p ON e.printer_id = p.id
+            WHERE e.id = '{et_id}'"""
             cursor.execute(get_event_query)
-            event = cursor.fetchone()
-            print(event)
-            if event is not None:
-                print(event)
+            event_data = cursor.fetchone()
+            if event_data is not None:
                 return {
                     "status": True,
-                    "event_data": responsegenerator.responseGenerator.generateResponse(event, EVENT_BY_ID)
+                    "event_data": responsegenerator.responseGenerator.generateResponse(event_data, EVENT_BY_ID)
                 }, 200
             else:
                 return {
@@ -122,18 +174,17 @@ def get_event_by_id(et_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def get_active_event(status):
+def event_settlement(status):
     try:
         with connection.cursor() as cursor:
             event_settlement_query = f"""
                     SELECT e.* ,
                       IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
-                      IFNULL(SUM(CASE WHEN s.transaction_id IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
-                      IFNULL(SUM(CASE WHEN s.transaction_id IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS pending_shagun_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
                       et.event_type_name
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id
-                    LEFT JOIN settlements s ON th.id = s.transaction_id
                     LEFT JOIN events_type et ON e.event_type_id = et.id
                     WHERE e.status = '{status}'
                     GROUP BY e.id, e.event_date;
@@ -143,7 +194,58 @@ def get_active_event(status):
             return {
                 "status": True,
                 # "msg": amount
-                "active_event": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+                "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def search_event_settlement(search):
+    try:
+        with connection.cursor() as cursor:
+            event_settlement_query = f"""
+                    SELECT e.* ,
+                      IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                      et.event_type_name
+                    FROM event e
+                    LEFT JOIN transaction_history th ON e.id = th.event_id
+                    LEFT JOIN events_type et ON e.event_type_id = et.id
+                    WHERE e.id LIKE '%%{search}%%' OR et.event_type_name LIKE '%%{search}%%' 
+                                    OR LOWER(e.event_admin) LIKE LOWER('%%{search}%%') OR 
+                                    e.event_date LIKE '%%{search}%%'
+                    GROUP BY e.id, e.event_date;
+                    """
+            cursor.execute(event_settlement_query)
+            amount = cursor.fetchall()
+            print(amount)
+            return {
+                "status": True,
+                "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_event_by_approval_status(status):
+    try:
+        with connection.cursor() as cursor:
+            event_list_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id,
+                        event.is_approved, event.status FROM event 
+                        JOIN events_type ON event.event_type_id = events_type.id 
+                        WHERE event.is_approved LIKE '{status}'"""
+            cursor.execute(event_list_query)
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
             }, 200
 
     except pymysql.Error as e:
@@ -180,9 +282,9 @@ def gift_event(e_id, phone):
 def get_event_list(uid):
     try:
         with connection.cursor() as cursor:
-            event_list_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
-                               "event.is_approved, event.status FROM event JOIN events_type ON " \
-                               "event.event_type_id = events_type.id"
+            event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                                  event.is_approved, event.status FROM event JOIN events_type ON
+                                  event.event_type_id = events_type.id"""
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
@@ -540,10 +642,34 @@ def search_user_event(uid):
 def get_all_event_list():
     try:
         with connection.cursor() as cursor:
-            event_list_query = "SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id," \
-                               "event.is_approved, event.status FROM event JOIN events_type ON " \
-                               "event.event_type_id = events_type.id"
+            event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                                  event.is_approved, event.status FROM event JOIN events_type ON 
+                                  event.event_type_id = events_type.id"""
             cursor.execute(event_list_query)
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def dashboard_search_event(search):
+    try:
+        with connection.cursor() as cursor:
+            single_events_query = f"""
+                                    SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
+                                        event.is_approved, event.status
+                                    FROM event 
+                                    LEFT JOIN events_type ON event.event_type_id = events_type.id
+                                    WHERE event.id LIKE '%%{search}%%' OR events_type.event_type_name LIKE '%%{search}%%' 
+                                    OR LOWER(event.event_admin) LIKE LOWER('%%{search}%%') OR 
+                                    event.event_date LIKE '%%{search}%%' """
+            cursor.execute(single_events_query)
             events = cursor.fetchall()
             return {
                 "status": True,
@@ -608,3 +734,46 @@ def set_event_status(event_id, status):
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+def get_event_admins(e_id):
+    try:
+        with connection.cursor() as cursor:
+            active_events_query = f"""SELECT event_admin FROM event WHERE id = '{e_id}' """
+            cursor.execute(active_events_query)
+            admins = cursor.fetchone()
+            return {
+                "admins": json.loads(admins[0])
+            }
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def add():
+    try:
+        with connection.cursor() as cursor:
+            event_status_query = """
+                    INSERT INTO `event` 
+                        (`id`, `created_by_uid`, `event_type_id`, `city_id`, `address_line1`, `address_line2`, `event_lat_lng`,
+                         `created_on`, `sub_events`, `event_date`, `event_note`, `event_admin`, `is_approved`, `approved_by`,
+                         `printer_id`, `approved_date_time`, `status`)
+                    VALUES 
+                        (NULL, 'nkbhandari95@gmail.com', '11', '11', '4rd Cross', '#A148', '13.09876543-77.0987653', 
+                         '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', 
+                         '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 
+                         '0', '0', '15', '0000-00-00 00:00:00', '1');
+                    """
+            for i in range(50):
+                cursor.execute(event_status_query)
+            return {
+                "status": True,
+                "message": "Event Status changed successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+

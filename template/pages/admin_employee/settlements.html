@@ -64,7 +64,10 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
 
     </style>
 </head>
@@ -86,8 +89,22 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Open Events Settlements</h4>
+                        <h4 class="card-title">Events Settlements</h4>
+                        <div class="form-group">
+                            <form action="{% url 'dashboard_search_event_settlement' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input name="search" id="search" type="text" class="form-control"
+                                           placeholder="search......." value="{{search}}"
+                                           aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
 
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -99,10 +116,11 @@
                                 <th>Total Shagun Amount</th>
                                 <th>Settled Amount</th>
                                 <th>Balance Amount</th>
+                                <th>View Transactions</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for event in active_event %}
+                            {% for event in response %}
 
                             <tr>
                                 <td>{{ event.id }}</td>
@@ -118,9 +136,9 @@
                                 <td>{{event.balance_shagun_amount}}</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="">
-                                        Check Out
-                                        <i class="fas fa-credit-card"></i>
+                                            onclick="window.location.href='{% url 'transactions_settlement' event.id %}'">
+                                        View
+                                        <i class="fas fa-eye" style="color: #4876FF; cursor: pointer;"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -134,7 +152,39 @@
 
     </div>
 </div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
 
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
 {% include 'footer.html' %}

@@ -116,18 +116,18 @@
                                                 <label class="col-sm-3 col-form-label">User</label>
                                                 <div class="col-sm-9">
 
-                                                    <input type="text" id="name" readonly onclick="myFunction()"
+                                                    <input required type="text" id="name" readonly onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
-                                                    <div id="myDropdown" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
+                                                        <input required type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in user.user_data %}
                                                         <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
                                                             {{users.phone}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="uid" name="uid">
+                                                    <input required type="hidden" id="uid" name="uid">
                                                 </div>
                                             </div>
                                         </div>
@@ -135,7 +135,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="account_holder_name"
+                                                    <input required type="text" id="account_holder_name"
                                                            name="account_holder_name"
                                                            class="form-control"
                                                            placeholder="username">
@@ -160,7 +160,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Account Number</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="1234567890"
+                                                    <input required class="form-control" placeholder="1234567890"
                                                            id="account_number"
                                                            name="account_number"/>
                                                 </div>
@@ -173,7 +173,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">IFSC CODE</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="ICICIXXXXXX"
+                                                    <input required class="form-control" placeholder="ICICIXXXXXX"
                                                            id="ifsc_code" name="ifsc_code"/>
                                                 </div>
                                             </div>
@@ -183,14 +183,14 @@
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
-                                                    <input type="hidden" id="added_by" name="added_by"
+                                                    <input required type="hidden" id="added_by" name="added_by"
                                                            value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
                                 </form>
                             </div>

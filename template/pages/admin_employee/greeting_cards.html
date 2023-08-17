@@ -86,12 +86,10 @@
         .center-button button {
             margin-right: 10px;
         }
-
-
-
-
-
-
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
 
     </style>
 </head>
@@ -113,6 +111,43 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Greeting Cards</h4>
+                        <div class="form-group">
+                            <form action="{% url 'dashboard_search_greetings' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input name="search" id="search" type="text" class="form-control"
+                                           placeholder="search......." value="{{search}}"
+                                           aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="dropdown">
+                            <label> Greetings Filter </label>
+                            <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                {% if status is None %}
+                                All
+                                {% elif status == '0' %}
+                                Inactive
+                                {% elif status == '1' %}
+                                Active
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                <a class="dropdown-item"
+                                   href="{% url 'manage_greeting_cards'  %}">All</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'dashboard_search_greetings_status' 1 %}">Active</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'dashboard_search_greetings_status' 0 %}">Inactive</a>
+                            </div>
+
+                        </div>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_greeting_cards' %}'">
                             Greeting
@@ -130,7 +165,7 @@
                                     Card
                                 </th>
                                 <th>
-                                    Name
+                                    Card Id
                                 </th>
                                 <th>
                                     Price
@@ -138,10 +173,16 @@
                                 <th>
                                     status
                                 </th>
+                                <th>
+                                    Activate/Deactivate
+                                </th>
+                                <th>
+                                    Edit
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for greetings in all_greeting_cards %}
+                            {% for greetings in response %}
                             <tr>
                                 <td>
                                     {{greetings.card_id}}
@@ -201,7 +242,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group row">
-                                                        <label class="col-sm-3 col-form-label">Name</label>
+                                                        <label class="col-sm-3 col-form-label">Card Id</label>
                                                         <div class="col-sm-9">
                                                             <input id="name" type="text" class="form-control"
                                                                    name="card_name"/>
@@ -224,9 +265,9 @@
 
                                             <div class="center-button">
                                                 <button type="button" onclick="hidePopUpDiv()"
-                                                        class="btn btn-inverse-dark btn-fw">Cancel
+                                                        class="btn btn-outline-danger btn-fw">Cancel
                                                 </button>
-                                                <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                                <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
                                             </div>
                                         </form>
                                     </div>
@@ -241,6 +282,39 @@
         </div>
 
     </div>
+</div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
@@ -287,6 +361,7 @@
         var popupDiv = document.getElementById("popupDiv");
         popupDiv.style.display = "none";
     }
+
 
 </script>
 </body>

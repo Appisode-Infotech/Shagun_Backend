@@ -2,6 +2,7 @@ import jwt
 from datetime import datetime, timedelta
 
 from django.core.files.storage import default_storage
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,12 +10,13 @@ from django.http import JsonResponse
 from django.contrib import messages
 import time
 
+from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller
+    bank_controller, test_controller, delivery_vendor_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
-    gifts_transaction_model, request_callback_model, greeting_cards_model
+    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
 from Shagun_backend.util.constants import today
 
@@ -31,7 +33,7 @@ def sign_up(request):
             return redirect('admin_dashboard')
         else:
             messages.error(request, response['msg'])
-    return render(request, 'pages/tables/login.html')
+    return render(request, 'pages/admin_employee/login.html')
 
 
 def logout(request):
@@ -50,7 +52,10 @@ def admin_dashboard(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-        return render(request, 'pages/tables/events.html', response)
+        paginator = Paginator(response['event_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/events.html', {'response': response})
     else:
         return redirect('sign_up')
 
@@ -64,7 +69,10 @@ def manage_settlement(request):
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
-        return render(request, 'pages/tables/event_type.html', response)
+        paginator = Paginator(response['events_type'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/event_type.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -72,7 +80,7 @@ def manage_event_types(request):
 def manage_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_locations_list()
-        return render(request, 'pages/tables/location.html', response)
+        return render(request, 'pages/admin_employee/location.html', response)
     else:
         return redirect('sign_up')
 
@@ -80,13 +88,57 @@ def manage_location(request):
 def manage_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            data = request.POST
-            response, status_code = user_controller.get_kyc_data()
-            return render(request, 'pages/tables/kyc.html', response)
+            print("++++++++++++++++++++++++++++++++++++++")
+            print(request.POST)
+            response, status_code = user_controller.get_kyc_data('%')
+            paginator = Paginator(response['kyc_data'], 25)
+            page = request.GET.get('page')
+            response = paginator.get_page(page)
+            return render(request, 'pages/admin_employee/kyc.html', {"response": response})
         else:
-            response, status_code = user_controller.get_kyc_data()
-            return render(request, 'pages/tables/kyc.html', response)
+            response, status_code = user_controller.get_kyc_data('%')
+            paginator = Paginator(response['kyc_data'], 25)
+            page = request.GET.get('page')
+            response = paginator.get_page(page)
+            return render(request, 'pages/admin_employee/kyc.html', {"response": response})
 
+    else:
+        return redirect('sign_up')
+
+
+def filter_kyc(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_kyc_data(status)
+        paginator = Paginator(response['kyc_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/kyc.html', {"response": response, "status": status})
+
+    else:
+        return redirect('sign_up')
+
+
+def filter_bank(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+
+        response, status_code = user_controller.get_all_bank_data(status)
+        paginator = Paginator(response['bank_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/bank_details.html', {"response": response, "status": status})
+
+    else:
+        return redirect('sign_up')
+
+
+def filter_user(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+
+        response, status_code = user_controller.filter_users(status)
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/users.html', {"response": response, "status": status})
 
     else:
         return redirect('sign_up')
@@ -94,9 +146,11 @@ def manage_kyc(request):
 
 def manage_bank_details(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = user_controller.get_all_bank_data()
-
-        return render(request, 'pages/tables/bank_details.html', response)
+        response, status_code = user_controller.get_all_bank_data('%')
+        paginator = Paginator(response['bank_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/bank_details.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -104,7 +158,10 @@ def manage_bank_details(request):
 def manage_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
-        return render(request, 'pages/tables/greeting_cards.html', response)
+        paginator = Paginator(response['all_greeting_cards'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/greeting_cards.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -112,7 +169,10 @@ def manage_greeting_cards(request):
 def manage_users(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_users('%')
-        return render(request, 'pages/tables/users.html', response)
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/users.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -120,66 +180,185 @@ def manage_users(request):
 def manage_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_employees()
-        return render(request, 'pages/tables/employees.html', response)
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/employees.html', {"response": response})
     else:
         return redirect('sign_up')
 
 
 def manage_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = store_controller.get_all_printers('%')
-        print(response)
-        return render(request, 'pages/tables/printers.html', response)
+        response, status_code = store_controller.get_printers_by_status('%')
+        paginator = Paginator(response['printer_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/printing_vendor.html', {"response": response})
     else:
         return redirect('sign_up')
 
 
-def manage_kyc_request(request):
+def manage_delivery_vendors(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = delivery_vendor_controller.get_delivery_vendor()
+        print(response)
+        paginator = Paginator(response['delivery_vendor_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/delivery_vendor.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def printer_login(request):
+    if request.method == 'POST':
+        response = store_controller.printer_login(request.POST['printer_user_name'], request.POST['printer_password'])
+        if response['msg'] == 'Success':
+            request.session['is_printer_logged_in'] = True
+            request.session['id'] = response['id']
+            request.session['printer_user_name'] = response['username']
+            return redirect('printer_home_page')
+        else:
+            messages.error(request, response['msg'])
+            return render(request, 'pages/admin_employee/printer_login.html')
+    else:
+        return render(request, 'pages/admin_employee/printer_login.html')
+
+
+def printer_home_page(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        return render(request, 'pages/printer/printer_dashbord.html')
+    return redirect('printer_login')
+
+
+def kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('KYC')
-        print(response)
-        return render(request, 'pages/tables/manage_kyc_request.html', response)
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/manage_kyc_request.html', {"response": response})
     else:
         return redirect('sign_up')
 
 
-def manage_event_request(request):
+def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
-        return render(request, 'pages/tables/manage_event_request.html', response)
+        print(response)
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/manage_event_request.html', {"response": response})
     else:
         return redirect('sign_up')
 
 
 def get_settlement_for_event(request, status):
-    print(status)
-    response, status_code = event_controller.get_active_event(status)
-    print(response)
-    return render(request, 'pages/tables/settlements.html', response)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.event_settlement(status)
+        paginator = Paginator(response['event_settlement'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/settlements.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_event_settlement(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.search_event_settlement(request.POST['search'])
+        paginator = Paginator(response['event_settlement'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/settlements.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def all_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4, 5]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def Open_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def closed_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [5]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/closed_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+# I need the data from transaction history table (sender, reciever, total amount, shagun, amount, card amount,
+# created date, event date.... all details
+def transactions_settlement(request, event_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            reciever_list = request.POST.getlist('selected_uid')
+            transaction_id = request.POST.getlist('selected_ids')
+            amount_list = request.POST.getlist('selected_amounts')
+            transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
+            response, status_code = transactions_controller.get_transaction_list(event_id, '%')
+            paginator = Paginator(response['transactions'], 250)
+            page = request.GET.get('page')
+            response = paginator.get_page(page)
+            return render(request, 'pages/admin_employee/transactions_settlement.html',
+                          {"response": response, "event_id": event_id})
+        else:
+            response, status_code = transactions_controller.get_transaction_list(event_id, '%')
+            paginator = Paginator(response['transactions'], 250)
+            page = request.GET.get('page')
+            response = paginator.get_page(page)
+            return render(request, 'pages/admin_employee/transactions_settlement.html',
+                          {"response": response, "event_id": event_id})
+    else:
+        return redirect('sign_up')
 
 
 def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
-            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
-            print(event_obj)
-            print(event_controller.create_event(event_obj))
+            event_controller.create_event(event_obj)
             return redirect('manage_event')
         else:
             event_types, status_code = event_controller.get_event_type_list_for_user()
             location, status_code = event_controller.get_city_list_for_user()
             users_list, status_code = user_controller.get_all_users(1)
-            printers_list, status_code = store_controller.get_all_printers(1)
+            printers_list, status_code = store_controller.get_printers_by_status(1)
             context = {
                 "event_types": event_types,
                 "location": location,
                 "users": users_list,
                 "printers": printers_list
             }
-            return render(request, 'pages/tables/add_events.html', context)
+            return render(request, 'pages/admin_employee/add_events.html', context)
 
     else:
         return redirect('sign_up')
@@ -191,7 +370,7 @@ def add_events_type(request):
             event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by_uid'])
             return redirect('manage_event_types')
         else:
-            return render(request, 'pages/tables/add_events_type.html')
+            return render(request, 'pages/admin_employee/add_events_type.html')
 
     else:
         return redirect('sign_up')
@@ -202,7 +381,8 @@ def add_kyc(request):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
-                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1"
+                else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
                 identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
                 form_data = form_data.copy()
                 form_data[identification_doc_key] = file_name
@@ -216,7 +396,7 @@ def add_kyc(request):
             return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_all_users('%')
-            return render(request, 'pages/tables/add_kyc.html', response)
+            return render(request, 'pages/admin_employee/add_kyc.html', response)
     else:
         return redirect('sign_up')
 
@@ -234,7 +414,7 @@ def add_bank(request):
                 "user": user,
                 "bank": bank
             }
-            return render(request, 'pages/tables/add_bank.html', context)
+            return render(request, 'pages/admin_employee/add_bank.html', context)
     else:
         return redirect('sign_up')
 
@@ -246,7 +426,7 @@ def add_employee(request):
             user_controller.add_employee(emp_obj)
             return redirect('manage_employee')
         else:
-            return render(request, 'pages/tables/add_employee.html')
+            return render(request, 'pages/admin_employee/add_employee.html')
     else:
         return redirect('sign_up')
 
@@ -259,7 +439,21 @@ def add_printer(request):
             return redirect('manage_printers')
         else:
             location, status_code = event_controller.get_city_list_for_user()
-            return render(request, 'pages/tables/add_printer.html', location)
+            return render(request, 'pages/admin_employee/add_printer.html', location)
+    else:
+        return redirect('sign_up')
+
+
+def add_delivery_vendor(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
+            response = delivery_vendor_controller.add_vendor(vendor_obj)
+            print(response)
+            return redirect('manage_delivery_vendors')
+        else:
+            location, status_code = event_controller.get_city_list_for_user()
+            return render(request, 'pages/admin_employee/add_delivery_vendor.html', location)
     else:
         return redirect('sign_up')
 
@@ -279,8 +473,8 @@ def add_greeting_cards(request):
             greeting_cards_controller.add_greeting_card(grt_obj)
             return redirect('manage_greeting_cards')
         else:
-            printers_list, status_code = store_controller.get_all_printers(1)
-            return render(request, 'pages/tables/add_greeting_cards.html', printers_list)
+            printers_list, status_code = store_controller.get_printers_by_status(1)
+            return render(request, 'pages/admin_employee/add_greeting_cards.html', printers_list)
 
     else:
         return redirect('sign_up')
@@ -289,8 +483,7 @@ def add_greeting_cards(request):
 def add_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            response, status_code = event_controller.add_location(request.POST['city_name'],
-                                                                  request.POST['created_by_uid'])
+            event_controller.add_location(request.POST['city_name'], request.POST['created_by_uid'])
             return redirect('manage_location')
     else:
         return redirect('sign_up')
@@ -336,6 +529,14 @@ def activate_deactivate_printers(request, printer_id, status):
         return redirect('sign_up')
 
 
+def activate_deactivate_delivery_vendors(request, printer_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        delivery_vendor_controller.enable_disable_delivery_vendor(printer_id, status)
+        return redirect('manage_delivery_vendors')
+    else:
+        return redirect('sign_up')
+
+
 def activate_deactivate_event_type(request, event_type_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         event_controller.disable_events_type(event_type_id, status)
@@ -357,7 +558,8 @@ def edit_kyc(request, kyc_id):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
-                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1" else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
+                file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1"
+                else request.POST['identification_number2']}_{int(time.time())}_{str(file_obj)}"""
                 identification_doc_key = 'identification_doc1' if file_key == 'document1' else 'identification_doc2'
                 form_data = form_data.copy()
                 form_data[identification_doc_key] = file_name
@@ -366,7 +568,6 @@ def edit_kyc(request, kyc_id):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            print(kyc_obj)
             user_controller.edit_user_kyc(kyc_obj)
             return redirect('manage_kyc')
         else:
@@ -376,7 +577,7 @@ def edit_kyc(request, kyc_id):
                 "kyc_data": kyc_data,
                 "user_list": users_list
             }
-            return render(request, 'pages/tables/edit_kyc.html', context)
+            return render(request, 'pages/admin_employee/edit_kyc.html', context)
     else:
         return redirect('sign_up')
 
@@ -430,12 +631,12 @@ def edit_bank(request, bank_id):
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)
             bank_list, status_code = bank_controller.get_all_banks_list()
-            print(bank_data)
+            # print(bank_data)
             context = {
                 "bank_data": bank_data,
                 "bank_list": bank_list
             }
-            return render(request, 'pages/tables/edit_bank.html', context)
+            return render(request, 'pages/admin_employee/edit_bank.html', context)
     else:
         return redirect('sign_up')
 
@@ -448,7 +649,7 @@ def edit_employee(request, user_id):
             return redirect('manage_employee')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
-            return render(request, 'pages/tables/edit_employee.html', response)
+            return render(request, 'pages/admin_employee/edit_employee.html', response)
     else:
         return redirect('sign_up')
 
@@ -499,7 +700,7 @@ def edit_printer(request, printer_id):
                 "location": location
             }
 
-            return render(request, 'pages/tables/edit_printer.html', context)
+            return render(request, 'pages/admin_employee/edit_printer.html', context)
 
     else:
         return redirect('sign_up')
@@ -515,10 +716,11 @@ def edit_event(request, event_id):
             event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
         else:
+            print(event_id)
             event_types, status_code = event_controller.get_event_type_list_for_user()
             location, status_code = event_controller.get_city_list_for_user()
             users_list, status_code = user_controller.get_all_users(1)
-            printers_list, status_code = store_controller.get_all_printers(1)
+            printers_list, status_code = store_controller.get_printers_by_status(1)
             event_data, status_code = event_controller.get_event_by_id(event_id)
 
             context = {
@@ -528,11 +730,218 @@ def edit_event(request, event_id):
                 "printers": printers_list,
                 "event": event_data
             }
-            return render(request, 'pages/tables/edit_event.html', context)
+            return render(request, 'pages/admin_employee/edit_event.html', context)
 
     else:
         return redirect('sign_up')
 
+
+def filtered_events_on_approval_status(request, status):
+    # Get all events filtered by status
+    response, status_code = event_controller.get_event_by_approval_status(status)
+    paginator = Paginator(response['event_list'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/admin_employee/events.html', {'response': response, "status": status})
+
+
+def filter_transaction_lists(request, event_id, status):
+    response, status_code = transactions_controller.get_transaction_list(event_id, status)
+    paginator = Paginator(response['transactions'], 250)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/admin_employee/transactions_settlement.html',
+                  {"response": response, "event_id": event_id, "status": status})
+
+
+def dashboard_search_event(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.dashboard_search_event(request.POST['search'])
+        paginator = Paginator(response['event_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/events.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_kyc(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.search_kyc_data(request.POST['search'])
+        paginator = Paginator(response['kyc_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/kyc.html',
+                      {"response": response, "search": request.POST['search']})
+
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_bank(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.dashboard_search_bank(request.POST['search'])
+        paginator = Paginator(response['bank_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/bank_details.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_user(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.dashboard_search_user(request.POST['search'])
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/users.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_employee(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.dashboard_search_employee(request.POST['search'])
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/employees.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_employee_status(request, status):
+    response, status_code = user_controller.dashboard_search_employee_status(status)
+    paginator = Paginator(response['user_data'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/admin_employee/employees.html', {'response': response, "status": status})
+
+
+def dashboard_search_printers(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = store_controller.dashboard_search_printers(request.POST['search'])
+        paginator = Paginator(response['printer_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/printing_vendor.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_delivery_vendors(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor(request.POST['search'])
+        paginator = Paginator(response['delivery_vendor_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/delivery_vendor.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_printers_status(request, status):
+    # Get all printers filtered by status
+    response, status_code = store_controller.dashboard_search_printers_status(status)
+    paginator = Paginator(response['printer_data'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/admin_employee/printing_vendor.html', {'response': response, "status": status})
+
+
+def dashboard_search_delivery_vendors_status(request, status):
+    response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor_status(status)
+    paginator = Paginator(response['delivery_vendor_data'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/admin_employee/delivery_vendor.html', {'response': response, "status": status})
+
+
+def dashboard_search_greetings(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = greeting_cards_controller.dashboard_search_greetings(request.POST['search'])
+        paginator = Paginator(response['all_greeting_cards'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/greeting_cards.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def dashboard_search_greetings_status(request, status):
+    # Get all printers filtered by status
+    response, status_code = greeting_cards_controller.dashboard_search_greetings(status)
+    paginator = Paginator(response['all_greeting_cards'], 25)
+    page = request.GET.get('page')
+    response = paginator.get_page(page)
+    return render(request, 'pages/admin_employee/printing_vendor.html', {'response': response, "status": status})
+
+
+def printer_all_jobs(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        status = [1, 2, 3, 4, 5]
+        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def printer_open_jobs(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        status = [1, 2, 3, 4]
+        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/printer/printer_open_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def printer_closed_jobs(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        status = [5]
+        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+#
+# def get_all_jobs(request):
+#     response, status_code = store_controller.get_all_jobs()
+#     paginator = Paginator(response['jobs'], 25)
+#     page = request.GET.get('page')
+#     response = paginator.get_page(page)
+#     return render(request, 'pages/admin_employee/test.html', {"response": response})
+
+#
+# def get_closed_jobs(request, status):
+#     response, status_code = store_controller.get_closed_jobs(status)
+#     paginator = Paginator(response['jobs'], 25)
+#     page = request.GET.get('page')
+#     response = paginator.get_page(page)
+#     return render(request, 'pages/admin_employee/test.html', {"response": response, "status": status})
+
+
+# @api_view(['POST'])
+# def get_closed_jobs(request):
+#     response, status_code = store_controller.get_closed_jobs(request.data['status'])
+#     return JsonResponse(response, status=status_code)
 
 # @api_view(['POST'])
 # def add_employee(request):
@@ -579,6 +988,7 @@ def app_compatibility(request):
 
 # This API is used to verify the existence of a user. It checks if the provided user details or credentials match
 # any registered user in the backend system.
+
 @api_view(['POST'])
 def check_user(request):
     user, status_code = user_controller.check_user_exist(request.data.get('uid'), request.data['fcm_token'])
@@ -743,15 +1153,6 @@ def enable_disable_event(request):
     response, status_code = event_controller.enable_disable_event(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
-    # This API retrieves a list of registered events from the backend database. It provides comprehensive event information,
-    # including event titles, dates, locations, and other relevant data. Users can browse and access the available events
-    # through this API.
-    # @api_view(['POST'])
-    # def get_event_list(request):
-    response, status_code = event_controller.get_event_list(request.data['uid'])
-
-
-#     return JsonResponse(response, status=status_code)
 
 @api_view(['POST'])
 def active_event_settlement(request):
@@ -781,13 +1182,6 @@ def get_my_event_list(request):
 def get_event_by_id(request):
     response, status_code = event_controller.get_event_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
-
-
-#
-# @api_view(['POST'])
-# def get_settlement_for_event(request):
-#     response, status_code = event_controller.get_active_event(request.data['status'])
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -1052,6 +1446,19 @@ def get_greetings_by_id(request):
 
 
 @api_view(['POST'])
+def manage_vendor(request):
+    vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.data)
+    response, status_code = delivery_vendor_controller.add_vendor(vendor_obj)
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def enable_disable_vendor(request):
+    response, status_code = delivery_vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
 def track_order(request):
     token = request.headers.get('Authorization').split(' ')[1]
     try:
@@ -1069,6 +1476,7 @@ def track_order(request):
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
+
 # @api_view(['POST'])
 # def home(request):
 #     token = request.headers.get('Authorization').split(' ')[1]
@@ -1085,3 +1493,88 @@ def track_order(request):
 #         return JsonResponse({'message': 'Token has expired'}, status=401)
 #     except jwt.InvalidTokenError:
 #         return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
+# test done here
+
+# def test_view(request):
+#     # response['event_list']
+#     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+#         response, status_code = event_controller.get_all_event_list()
+#         paginator = Paginator(response['event_list'], 2)
+#
+#         # Get the current page number from the request's GET parameters
+#         page_number = request.GET.get('page')
+#
+#         # Get the Page object for the current page
+#         page_obj = paginator.get_page(page_number)
+#
+#         context = {
+#             'page_obj': page_obj
+#         }
+#         return render(request, 'pages/admin_employee/test.html', context)
+#     else:
+#         return redirect('sign_up')
+
+
+# def event_admin(request, event_id):
+#     response, status_code = test_controller.event_admin(event_id)
+#     print(response)
+#     return render(request, 'pages/admin_employee/event.html', {"response": response, "event_id": event_id})
+
+
+def test_view(request, e_id):
+    import os
+    import csv
+    from django.core.files.storage import FileSystemStorage
+    if request.method == 'POST' and request.FILES['csv_file']:
+        print(request.POST)
+        csv_file = request.FILES['csv_file']
+        mob_numbers = []
+
+        # Extract mobile numbers from the CSV
+        try:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
+            print(fs)
+            filename = fs.save(csv_file.name, csv_file)
+            print(filename)
+            with open(fs.path(filename), 'r') as file:
+                reader = csv.reader(file)
+                print(reader)
+                for row in reader:
+                    for cell in row:
+                        if cell.isdigit() and len(cell) == 10:
+                            mob_numbers.append(cell)
+
+                return render(request, 'pages/admin_employee/test.html', {'mob_numbers': mob_numbers})
+
+        except Exception as e:
+            error_message = f"An error occurred while processing the CSV: {e}"
+            return render(request, 'pages/admin_employee/test.html', {'error_message': error_message})
+
+    else:
+        print(e_id)
+        admins = event_controller.get_event_admins(e_id)
+        print(admins)
+        return render(request, 'pages/admin_employee/test.html', {"admins": admins, "e_id": e_id})
+
+
+@api_view(['POST'])
+def add_ev(request):
+    resp, status_code = event_controller.add()
+    return JsonResponse(resp)
+
+
+@api_view(['POST'])
+def event_admin(request):
+    response, status_code = test_controller.event_admin(request.data['event_id'])
+    return JsonResponse(response)
+
+# def next_page(request):
+#     print("============================================")
+#     print(request.POST['selected_id_list'])
+#     if request.method == 'POST':
+#         selected_ids = request.POST['selected_id_list']
+#         print("====================================")
+#         print(selected_ids)
+#         return redirect('manage_event')

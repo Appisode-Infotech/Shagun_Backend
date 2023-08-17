@@ -124,7 +124,10 @@
             background-color: #f44336;
         }
 
-
+        #map {
+            height: 300px;
+            margin: 20px;
+        }
 
     </style>
 
@@ -148,8 +151,8 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Event</h4>
-                                <form class="form-sample" action="/add_events" method="post"
+                                <h4 class="card-title">Edit Event</h4>
+                                <form class="form-sample" action="{% url 'edit_event' event.event_data.id %}" method="post"
                                       enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -160,20 +163,19 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select Event Type</label>
                                                 <div class="col-sm-9">
-
                                                     <input type="text" id="event_type_name" readonly
                                                            onclick="toggleDropdown('myDropdown1')"
-                                                           placeholder="Search.." class="form-control">
+                                                            value="{{event.event_data.event_type_name}}" class="form-control">
 
                                                     <div id="myDropdown1" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput1"
+                                                        <input type="text" value="{{event.event_data.event_type_id}}" id="myInput1"
                                                                onkeyup="filterFunction('myDropdown1')"
                                                                class="form-control">
                                                         {% for events_type in event_types.event_type_list %}
                                                         <a onclick="setValue('{{events_type.event_type_name}}', '{{events_type.id}}', 'event_type_name', 'event_type_id')">{{events_type.event_type_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="event_type_id" name="event_type_id">
+                                                    <input type="hidden" id="event_type_id" name="event_type_id" value="{{event.event_data.event_type_id}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -181,20 +183,19 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select City</label>
                                                 <div class="col-sm-9">
-
                                                     <input type="text" id="city_name" readonly
                                                            onclick="toggleDropdown('myDropdown2')"
-                                                           placeholder="Search.." class="form-control">
+                                                           value="{{event.event_data.city_name}}" class="form-control">
 
                                                     <div id="myDropdown2" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput2"
+                                                        <input type="text" value="{{event.event_data.city_id}}" id="myInput2"
                                                                onkeyup="filterFunction('myDropdown2')"
                                                                class="form-control">
                                                         {% for city in location.city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="city_id" name="city_id">
+                                                    <input type="hidden" id="city_id" name="city_id" value="{{event.event_data.city_id}}" >
                                                 </div>
                                             </div>
                                         </div>
@@ -207,7 +208,7 @@
 
                                                     <input type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown3')"
-                                                           placeholder="Search.." class="form-control">
+                                                           value="{{event.event_data.store_name}}" class="form-control">
 
                                                     <div id="myDropdown3" class="dropdown-content">
                                                         <input type="text" placeholder="Search.." id="myInput3"
@@ -217,7 +218,7 @@
                                                         <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input type="hidden" id="printer_id" name="printer_id">
+                                                    <input type="hidden" id="printer_id" name="printer_id" value="{{event.event_data.printer_id}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -228,7 +229,7 @@
                                                     <input type="datetime-local" id="event_date"
                                                            name="event_date"
                                                            class="form-control"
-                                                           placeholder="username">
+                                                           value="{{event.event_data.event_date}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -238,7 +239,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line1</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address_line1"/>
+                                                    <input type="text" class="form-control" name="address_line1" value="{{event.event_data.address_line1}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -246,18 +247,26 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line2</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address_line2"/>
+                                                    <input type="text" class="form-control" name="address_line2" value="{{event.event_data.address_line2}}"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="col-sm-12">
+                                            <input type="text" id="searchInput" style="width: 50%;"
+                                               placeholder="Search for a location" class="form-control">
+                                        </div>
+                                        <div id="map"></div>
+                                        <!--                                        <label id="event_lat_lng"></label>-->
+                                    </div>
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-10">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Event Lat Lng</label>
-                                                <div class="col-sm-9">
-                                                    <input class="form-control" placeholder="13.0916688-77.407799"
-                                                           id="event_lat_lng" name="event_lat_lng"/>
+                                                <label class="col-sm-2 col-form-label">Event Lat Lng</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="event_lat_lng" style="width: 50%;" value="{{event.event_data.event_lat_lng}}"
+                                                           class="form-control" name="event_lat_lng" class="form-control" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -265,9 +274,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
+                                                    <label class="form-control">{{event.event_data.created_by_uid}}</label>
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
-                                                           value="{{ request.session.uid }}">
+                                                           value={{event.event_data.created_by_uid}}>
                                                 </div>
                                             </div>
                                         </div>
@@ -275,34 +284,32 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note</label>
                                         <textarea class="form-control" id="event_note" rows="4"
-                                                  name="event_note"></textarea>
+                                                  name="event_note" >{{event.event_data.event_note}}</textarea>
                                     </div>
 
                                     <div id="sub-events-container">
                                         <label class="col-sm-3 col-form-label">Sub Events</label>
+                                        {% for sub_event in event.event_data.sub_events %}
                                         <div class="event-row">
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
-                                                   placeholder="Sub Event Name">
+                                                   value="{{sub_event.sub_event_name}}">
                                             <input class="event-input" type="datetime-local"
-                                                   name="sub_events[0][start]" placeholder="Start Time">
+                                                   name="sub_events[0][start]" value="{{sub_event.start_time}}">
                                             <input class="event-input" type="datetime-local" name="sub_events[0][end]"
-                                                   placeholder="End Time">
+                                                   value="{{sub_event.end_time}}">
                                         </div>
+                                        {% endfor %}
                                     </div>
-                                    <button type="button" id="addSubEventButton">Add Sub Event</button>
-                                    <button type="button" id="removeEventButton" style="display: none;">Remove Sub
-                                        Event
-                                    </button>
-
                                     <div id="event-admin-container">
                                         <label class="col-sm-3 col-form-label">Event Admins</label>
+                                        {% for admin in event.event_data.event_admin %}
                                         <div class="event-row">
                                             <input type="text" id="name"  name="event_admin[0][name]" readonly
                                                    onclick="toggleDropdown('myDropdown4')"
-                                                   placeholder="Search.." class="event-input">
+                                                   value="{{admin.name}}" class="event-input">
 
                                             <div id="myDropdown4" class="dropdown-content">
-                                                <input type="text" placeholder="Search.." id="myInput4"
+                                                <input type="text" value="{{admin.name}}" id="myInput"
                                                        onkeyup="filterFunction('myDropdown4')" class="form-control">
                                                 {% for users in users.user_data %}
                                                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}
@@ -310,16 +317,12 @@
                                                 {% endfor %}
                                             </div>
                                             <input class="event-input" type="text"
-                                                   name="event_admin[0][role]" placeholder="Bride, Groom etc ....">
+                                                   name="event_admin[0][role]" value="{{admin.role}}">
 
-                                            <input type="hidden" id="uid" name="event_admin[0][uid]">
+                                            <input type="hidden" id="uid" name="event_admin[0][uid]" value="{{admin.uid}}">
                                         </div>
+                                        {% endfor %}
                                     </div>
-                                    <button type="button" id="addEventAdminButton">Add Event Admin</button>
-                                    <button type="button" id="removeEventAdminButton" style="display: none;">Remove
-                                        Event Admin
-                                    </button>
-
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
@@ -354,7 +357,6 @@ function filterFunction(dropdownId) {
   input = document.getElementById("myInput" + dropdownId.slice(-1));
   filter = input.value.toUpperCase();
   div = document.getElementById(dropdownId);
-  console.log(input)
   a = div.getElementsByTagName("a");
   for (i = 0; i < a.length; i++) {
     txtValue = a[i].textContent || a[i].innerText;
@@ -374,7 +376,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
     console.log(value1)
     console.log(value2)
     document.getElementById(inputField2Id).value = value2;
-    // Optionally, you can hide the dropdown after selecting a value
     var dropdowns = document.getElementsByClassName("dropdown-content");
     for (var i = 0; i < dropdowns.length; i++) {
       dropdowns[i].classList.remove("show");
@@ -449,7 +450,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             eventAdminRow.innerHTML = `
             <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search.." class="event-input">
             <div id="myDropdown5" class="dropdown-content">
-                <input type="text" placeholder="Search.." id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
+                <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction('myDropdown5')" class="form-control">
                 {% for users in users.user_data %}
                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
                 {% endfor %}
@@ -501,7 +502,80 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6O2CG9zBAksJH4SCgCZlbx3XRWVwzY1E&libraries=places&callback=initMap"
+        async defer></script>
+<script>
+        var map, marker, event_lat_lng, searchInput;
 
+        function initMap() {
+            var mapOptions = {
+                zoom: 8,
+            };
+
+            var mapDiv = document.getElementById('map');
+            map = new google.maps.Map(mapDiv, mapOptions);
+
+            event_lat_lng = document.getElementById('event_lat_lng');
+
+            var eventData = event_lat_lng.value.split(/: |, /); // Split the value into an array
+
+            var initialLatLng = {
+                lat: parseFloat(eventData[1]),
+                lng: parseFloat(eventData[3])
+            };
+
+            map.setCenter(initialLatLng);
+
+            marker = new google.maps.Marker({
+                position: initialLatLng,
+                map: map,
+                draggable: true,
+                title: 'Drag me to set the location',
+            });
+
+            google.maps.event.addListener(marker, 'dragend', function(event) {
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
+            });
+
+            event_lat_lng.value = 'Latitude: ' + initialLatLng.lat + ', Longitude: ' + initialLatLng.lng;
+
+            // Initialize Google Places Autocomplete for search
+            var autocomplete = new google.maps.places.Autocomplete(searchInput);
+            autocomplete.bindTo('bounds', map);
+
+            // Set listener to update map and marker on autocomplete selection
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+
+                map.setCenter(place.geometry.location);
+
+                if (!marker) {
+                    marker = new google.maps.Marker({
+                        position: place.geometry.location,
+                        map: map,
+                        draggable: true,
+                        title: 'Drag me to set the location',
+                    });
+                    google.maps.event.addListener(marker, 'dragend', function(event) {
+                        var lat = event.latLng.lat();
+                        var lng = event.latLng.lng();
+                        event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
+                    });
+                } else {
+                    marker.setPosition(place.geometry.location);
+                }
+
+                var lat = marker.getPosition().lat();
+                var lng = marker.getPosition().lng();
+                event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -64,6 +64,10 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
+        }
 
 
     </style>
@@ -86,6 +90,47 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Events List</h4>
+                        <div class="form-group">
+                            <form action="{% url 'dashboard_search_event' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input name="search" id="search" type="text" class="form-control"
+                                           placeholder="search......." value="{{search}}"
+                                           aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="dropdown">
+                            <label> Filter on event status: </label>
+                            <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                {% if status == '%' or status is None %}
+                                All
+                                {% elif status == '0' %}
+                                Pending
+                                {% elif status == '1' %}
+                                Approved
+                                {% elif status == '2' %}
+                                Rejected
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                <a class="dropdown-item"
+                                   href="{% url 'manage_event'  %}">All</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filtered_events_on_approval_status' 0 %}">Pending</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filtered_events_on_approval_status' 1 %}">Approved</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filtered_events_on_approval_status' 2 %}">Rejected</a>
+                            </div>
+
+                        </div>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_events' %}'">
                             Event
@@ -100,14 +145,15 @@
                                 <th>Event Id</th>
                                 <th>Event Name</th>
                                 <th>Event Admins</th>
-                                <!--                                <th>Event Date</th>-->
                                 <th>Status</th>
                                 <th>Set Status</th>
                                 <th>Active</th>
+                                <th>Edit</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for event in event_list %}
+                            {% for event in response %}
 
                             <tr>
                                 <td>{{ event.event_id }}</td>
@@ -118,7 +164,6 @@
                                     {% endfor %}</br>
                                     <b>Date : </b> {{ event.event_date }}
                                 </td>
-                                <!--                                <td>{{ event.event_date }}</td>-->
                                 <td>
                                     {% if event.is_approved == 0 %}
                                     <label class="badge badge-info">Pending</label>
@@ -177,6 +222,12 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </td>
+                                <td>
+                                    <button type="button" class="btn btn-social-icon btn-outline-facebook"
+                                    onclick="window.location.href='{% url 'test_view' event.event_id %}'">
+                                        <i class="fab fa-whatsapp"></i></button>
+
+                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -187,6 +238,39 @@
         </div>
 
     </div>
+</div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
@@ -199,6 +283,16 @@
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
+<script>
+    document.getElementById("approval-status-dropdown").addEventListener("change", function() {
+        var dropdown = document.getElementById("approval-status-dropdown");
+        var selectedValue = dropdown.value;
+        window.location.href = selectedValue;
+    });
+
+
+
+</script>
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 
 <!-- endinject -->

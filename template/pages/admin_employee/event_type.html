@@ -52,7 +52,7 @@
         }
 
         .btn {
-            margin: 0;
+            margin: 20px;
         }
 
         .btn-icon-text {
@@ -84,8 +84,9 @@
           justify-content: center;
 
         }
-        .center-button button {
-            margin-right: 10px;
+        thead {
+            background-color: #9925b9; /* Purple color (#9925b9) */
+            color: white;
         }
 
 
@@ -140,9 +141,9 @@
                                 </div>
                                 <div class="center-button">
                                     <button type="button" onclick="hidePopUpDiv1()"
-                                            class="btn btn-inverse-dark btn-fw">Cancel
+                                            class="btn btn-outline-danger btn-fw">Cancel
                                     </button>
-                                    <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                    <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
                                 </div>
                             </form>
                         </div>
@@ -155,10 +156,11 @@
                                 <th>Event Type Name</th>
                                 <th>Status</th>
                                 <th>Activate/Deactivate</th>
+                                <th>Edit</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for event in events_type %}
+                            {% for event in response %}
 
                             <tr>
                                 <td>{{ event.event_type_id }}</td>
@@ -219,9 +221,9 @@
                                             </div>
                                             <div class="center-button">
                                                 <button type="button" onclick="hidePopUpDiv()"
-                                                        class="btn btn-inverse-dark btn-fw">Cancel
+                                                        class="btn btn-outline-danger btn-fw">Cancel
                                                 </button>
-                                                <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                                <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
                                             </div>
                                         </form>
                                     </div>
@@ -236,6 +238,39 @@
         </div>
 
     </div>
+</div>
+<div class="pagination justify-content-center">
+    <ul class="pagination">
+        {% if response.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in response.paginator.page_range %}
+        {% if num == response.number %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if response.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->

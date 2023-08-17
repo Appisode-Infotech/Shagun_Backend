@@ -81,6 +81,12 @@ class responseGenerator:
                 )
             return event_list
 
+        if controller_type == EVENT_ADMIN:
+            return {
+                "admins": json.loads(data[0])
+
+            }
+
         if controller_type == ACTIVE_EVENT:
             active_event = []
             for events in data:
@@ -475,6 +481,31 @@ class responseGenerator:
 
             }
 
+        if controller_type == ALL_JOBS:
+            jobs_data = []
+            for jobs in data:
+                jobs_data.append(
+                    {
+                        "id": jobs[0],
+                        "transaction_id": jobs[1],
+                        "printer_id": jobs[2],
+                        "card_id": jobs[3],
+                        "status": jobs[4],
+                        "created_on": jobs[5],
+                        "last_modified": jobs[6],
+                        "billing_amount": jobs[7],
+                        "event_id": jobs[8],
+                        "store_name": jobs[9],
+                        "event_type_name": jobs[10],
+                        "card_name": jobs[11],
+                        "card_image_url": jobs[12],
+                        "card_price": jobs[13],
+                        "event_date": jobs[14]
+
+                    }
+                )
+            return jobs_data
+
         if controller_type == INVITED_EVENT_LIST:
             events_invite_list = []
             for invites in data:
@@ -574,3 +605,30 @@ class responseGenerator:
                     }
                 )
             return req_list
+
+        if controller_type == Transaction_DATA:
+            transaction_list = []
+            for trans in data:
+                transaction_list.append({
+                    "id": trans[0],
+                    "sender_uid": trans[1],
+                    "receiver_uid": trans[2],
+                    "transaction_amount": trans[3],
+                    "shagun_amount": trans[4],
+                    "greeting_card_id": trans[5],
+                    "transaction_fee": trans[6],
+                    "delivery_fee": trans[7],
+                    "transaction_id": trans[8],
+                    "payment_status": trans[9],
+                    "event_id": trans[10],
+                    "status": trans[11],
+                    "is_settled": trans[12],
+                    "receiver_bank_id": trans[13],
+                    "created_on": trans[14],
+                    "event_date": trans[15],
+                    "event_type": trans[16],
+                    "sender_name": trans[17],
+                    "receiver_name": trans[18]
+                }
+                )
+            return transaction_list

@@ -167,7 +167,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown1" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput1"
+                                                        <input type="text" placeholder="Search.." id="myInput1"
                                                                onkeyup="filterFunction('myDropdown1')"
                                                                class="form-control">
                                                         {% for events_type in event_types.event_type_list %}
@@ -188,7 +188,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown2" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput2"
+                                                        <input type="text" placeholder="Search.." id="myInput2"
                                                                onkeyup="filterFunction('myDropdown2')"
                                                                class="form-control">
                                                         {% for city in location.city_list %}
@@ -211,7 +211,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown3" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput3"
+                                                        <input type="text" placeholder="Search.." id="myInput3"
                                                                onkeyup="filterFunction('myDropdown3')"
                                                                class="form-control">
                                                         {% for printers in printers.printer_data %}
@@ -311,7 +311,7 @@
                                                    placeholder="Search.." class="event-input">
 
                                             <div id="myDropdown4" class="dropdown-content">
-                                                <input required type="text" placeholder="Search.." id="myInput4"
+                                                <input type="text" placeholder="Search.." id="myInput4"
                                                        onkeyup="filterFunction('myDropdown4')" class="form-control">
                                                 {% for users in users.user_data %}
                                                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}

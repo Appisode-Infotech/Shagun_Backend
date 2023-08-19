@@ -126,7 +126,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for city in city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
@@ -174,9 +174,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Geo Location</label>
+                                                <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="lat_lng"/>
+                                                    <input required type="text" class="form-control" name="lat_lng" placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
                                         </div>

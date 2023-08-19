@@ -13,9 +13,9 @@ def add_transaction_history(transaction_obj):
             transaction_amount, shagun_amount,greeting_card_id, transaction_fee, delivery_fee, transaction_id, 
             payment_status, event_id, status, created_on) 
             VALUES ('{transaction_obj.sender_uid}', '{transaction_obj.receiver_uid}', 
-            '{transaction_obj.transaction_amount}, {transaction_obj.shagun_amount}, {transaction_obj.greeting_card_id},
-            '{transaction_obj.transaction_fee}, {transaction_obj.delivery_fee}, '{transaction_obj.transaction_id}',
-            '{transaction_obj.payment_status}', {transaction_obj.event_id}, '{transaction_obj.status}', '{today}')"""
+            '{transaction_obj.transaction_amount}, '{transaction_obj.shagun_amount}', '{transaction_obj.greeting_card_id}',
+            '{transaction_obj.transaction_fee}, '{transaction_obj.delivery_fee}', '{transaction_obj.transaction_id}',
+            '{transaction_obj.payment_status}', '{transaction_obj.event_id}', '{transaction_obj.status}', '{today}')"""
 
             cursor.execute(transaction_history_query)
 
@@ -25,7 +25,12 @@ def add_transaction_history(transaction_obj):
                 cursor.execute(greeting_card_query)
                 card_data = cursor.fetchone()
 
-                printer_jobs_query = """ INSERT INTO print_jobs( """
+                printer_jobs_query = f""" INSERT INTO print_jobs(transaction_id, printer_id, card_id, status,
+                 created_on, last_modified, billing_amount, event_id)
+                  VALUES('{transaction_obj.transaction_id}', '{card_data[0]}', '{transaction_obj.greeting_card_id}',
+                   1,'{today}', '{today}', '{card_data[1]}', '{transaction_obj.event_id}' )"""
+
+                cursor.execute(printer_jobs_query)
 
             return {
                 "status": True,

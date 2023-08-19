@@ -12,3 +12,6 @@ djangorestframework
 PyJWT
 mysqlclient
 requests
+pip~=23.1.2
+docutils~=0.15.2
+qrcode~=7.4.2

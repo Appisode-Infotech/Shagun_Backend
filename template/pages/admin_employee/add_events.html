@@ -520,7 +520,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
         function initMap() {
             var mapOptions = {
-                zoom: 8,
+                zoom: 14
             };
 
             var mapDiv = document.getElementById('map');
@@ -528,6 +528,12 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
             event_lat_lng = document.getElementById('event_lat_lng');
             searchInput = document.getElementById('searchInput');
+
+             var defaultCenter = {
+                 lat: 12.9716,
+                 lng: 77.5946
+             };
+             map.setCenter(defaultCenter);
 
             // Try to get the user's current position
             if (navigator.geolocation) {

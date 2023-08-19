@@ -156,7 +156,9 @@ def manage_bank_details(request):
 
 
 def manage_greeting_cards(request):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+    if (request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True) or (request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True):
+        # Your code here
+
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
@@ -459,7 +461,7 @@ def add_delivery_vendor(request):
 
 
 def add_greeting_cards(request):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+    if (request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True) or (request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True):
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
@@ -674,7 +676,7 @@ def edit_location(request):
 
 
 def edit_greeting_cards(request):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+    if (request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True) or (request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True):
         if request.method == 'POST':
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
             print(grt_obj)

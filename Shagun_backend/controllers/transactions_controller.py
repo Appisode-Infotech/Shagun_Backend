@@ -19,6 +19,12 @@ def add_transaction_history(transaction_obj):
 
             cursor.execute(transaction_history_query)
 
+            if transaction_obj.greeting_card_id is not None:
+                printer_job_query = """SELECT greeting_cards.printer_id, print_jobs.billing_amount FROM greeting_cards 
+                                        JOIN print_jobs ON WHERE id = transaction_obj.card_id"""
+                cursor.execute(printer_job_query)
+                cursor.fetchall()
+
             return {
                 "status": True,
                 "msg": "Transaction records added"

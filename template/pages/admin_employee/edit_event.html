@@ -98,23 +98,23 @@
     }
 
     #addSubEventButton,
-        #removeEventButton,
-        #addEventAdminButton,
-        #removeEventAdminButton {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            cursor: pointer;
-        }
+    #removeEventButton,
+    #addEventAdminButton,
+    #removeEventAdminButton {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+    }
 
-        #addSubEventButton {
-            background-color: #2196F3;
-        }
+    #addSubEventButton {
+        background-color: #2196F3;
+    }
 
-        #removeEventButton {
-            background-color: #f44336;
-        }
+    #removeEventButton {
+        background-color: #f44336;
+    }
 
         #addEventAdminButton {
             background-color: #2196F3;
@@ -258,7 +258,6 @@
                                                placeholder="Search for a location" class="form-control">
                                         </div>
                                         <div id="map"></div>
-                                        <!--                                        <label id="event_lat_lng"></label>-->
                                     </div>
                                     <div class="row">
                                         <div class="col-md-10">
@@ -300,6 +299,10 @@
                                         </div>
                                         {% endfor %}
                                     </div>
+                                    <button type="button" id="addSubEventButton">Add Sub Event</button>
+                                    <button type="button" id="removeEventButton" style="display: none; margin-top: 5px;">Remove Sub
+                                        Event
+                                    </button>
                                     <div id="event-admin-container">
                                         <label class="col-sm-3 col-form-label">Event Admins</label>
                                         {% for admin in event.event_data.event_admin %}
@@ -318,7 +321,6 @@
                                             </div>
                                             <input class="event-input" type="text"
                                                    name="event_admin[0][role]" value="{{admin.role}}">
-
                                             <input type="hidden" id="uid" name="event_admin[0][uid]" value="{{admin.uid}}">
                                         </div>
                                         {% endfor %}
@@ -393,6 +395,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 </script>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const addSubEventButton = document.getElementById('addSubEventButton');
@@ -405,8 +408,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         let eventAdminIndex = 1;
 
         function updateButtonVisibility() {
-            if (subEventIndex === 2) {
-                addSubEventButton.style.display = 'none';
+            if (subEventIndex > 1) {
+                addSubEventButton.style.display = 'block';
                 removeEventButton.style.display = 'block';
             } else {
                 addSubEventButton.style.display = 'block';
@@ -426,9 +429,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
             subEventRow.innerHTML = `
-                <input class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name">
-                <input class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time">
-                <input class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time">
+                <input required class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name">
+                <input required class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time">
+                <input required class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time">
             `;
             subEventsContainer.appendChild(subEventRow);
             subEventIndex++;
@@ -448,15 +451,15 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             const eventAdminRow = document.createElement('div');
             eventAdminRow.classList.add('event-row');
             eventAdminRow.innerHTML = `
-            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search.." class="event-input">
+            <input required type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search.." class="event-input">
             <div id="myDropdown5" class="dropdown-content">
-                <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction('myDropdown5')" class="form-control">
+                <input required type="text" placeholder="Search.." id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
                 {% for users in users.user_data %}
                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
                 {% endfor %}
             </div>
-            <input class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ....">
-            <input type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]">
+            <input required class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ....">
+            <input required type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]">
         `;
             eventAdminContainer.appendChild(eventAdminRow);
             eventAdminIndex++;
@@ -477,7 +480,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         addEventAdminButton.addEventListener('click', addEventAdmin);
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
-
 </script>
 
 <!-- container-scroller -->

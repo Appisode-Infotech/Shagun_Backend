@@ -24,15 +24,15 @@ def create_event(event_obj):
 
             cursor.execute(create_event_query, values)
             event_id = cursor.lastrowid
-            event_admin_query = f"""SELECT event.event_admin FROM event
-                                    WHERE  id = '{event_id}'"""
+            event_admin_query = f"""SELECT event_admin FROM event WHERE  id = '{event_id}'"""
             cursor.execute(event_admin_query)
             admin = cursor.fetchone()
             event_admins = json.loads(admin[0])
+            print("event_admin rerived==================================")
+            print(event_admins)
             for item in event_admins:
                 uid = item["uid"]
-                phone_query = f"""SELECT phone FROM users
-                                                    WHERE  uid = '{uid}'"""
+                phone_query = f"""SELECT phone FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
                 phone = cursor.fetchone()
                 import os
@@ -113,6 +113,7 @@ def edit_event(event_obj, event_id):
                 event_admin_json, event_id
             )
             cursor.execute(update_event_query, values)
+
             return {
                 "status": True,
                 "message": "Event Created successfully"

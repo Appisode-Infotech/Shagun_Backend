@@ -120,7 +120,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in user.user_data %}
                                                         <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}

@@ -593,7 +593,7 @@ def set_event_status(request, event_id, status):
 def set_KYC_request_status(request, req_id, cmpltd_by, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         request_controller.update_callback_request(req_id, cmpltd_by, status)
-        return redirect('manage_kyc_request')
+        return redirect('kyc_request')
     else:
         return redirect('sign_up')
 
@@ -601,7 +601,7 @@ def set_KYC_request_status(request, req_id, cmpltd_by, status):
 def set_event_request_status(request, req_id, cmpltd_by, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         request_controller.update_callback_request(req_id, cmpltd_by, status)
-        return redirect('manage_event_request')
+        return redirect('event_request')
     else:
         return redirect('sign_up')
 

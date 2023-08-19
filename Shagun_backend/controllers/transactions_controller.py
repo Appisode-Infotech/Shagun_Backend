@@ -25,7 +25,7 @@ def add_transaction_history(transaction_obj):
                 cursor.execute(greeting_card_query)
                 card_data = cursor.fetchone()
 
-                printer_jobs_query = """ INSERT INTO  """
+                printer_jobs_query = """ INSERT INTO print_jobs( """
 
             return {
                 "status": True,

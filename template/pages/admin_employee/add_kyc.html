@@ -119,14 +119,14 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in user_data %}
                                                         <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
                                                             {{users.phone}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="uid" name="uid">
+                                                    <input type="hidden" id="uid" name="uid">
                                                 </div>
                                             </div>
                                         </div>
@@ -213,15 +213,6 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <!--                                        <div class="col-md-6">-->
-                                        <!--                                            <div class="form-group row">-->
-                                        <!--                                                <label class="col-sm-3 col-form-label">Identification Doc1</label>-->
-                                        <!--                                                <div class="col-sm-9">-->
-                                        <!--                                                    <input required type="file" id="fileInput1" name="document1"-->
-                                        <!--                                                           accept=".jpg, .jpeg, .png, .gif, .pdf" class="file-upload-default">-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                        </div>-->
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Doc1</label>
@@ -256,15 +247,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--                                        <div class="col-md-6">-->
-                                        <!--                                            <div class="form-group row">-->
-                                        <!--                                                <label class="col-sm-3 col-form-label">Identification Doc2</label>-->
-                                        <!--                                                <div class="col-sm-9">-->
-                                        <!--                                                    <input required type="file" id="fileInput2" name="document2"-->
-                                        <!--                                                           accept=".jpg, .jpeg, .png, .gif, .pdf" class="form-control">-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                        </div>-->
                                     </div>
                                     <p class="card-description">
                                         Address
@@ -332,7 +314,7 @@
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
-                                                    <input required type="hidden" id="created_by_uid" name="created_by_uid"
+                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
                                                            value="{{ request.session.uid }}">
                                                 </div>
                                             </div>

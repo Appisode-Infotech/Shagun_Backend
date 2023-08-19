@@ -40,7 +40,7 @@ def user_register(reg_obj):
         with connection.cursor() as cursor:
             sql_query = """INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, 
                             fcm_token, city) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-            values = (reg_obj.name, reg_obj.email, reg_obj.phone, False, reg_obj.profile, reg_obj.uid, True,
+            values = (reg_obj.name, reg_obj.email, reg_obj.phone, False, 'images/profile_pic/profile.png', reg_obj.uid, True,
                       reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
             cursor.execute(sql_query, values)
             query = "SELECT * FROM users WHERE uid = %s;"

@@ -1,3 +1,5 @@
+import hashlib
+
 import pymysql
 from django.db import connection
 from Shagun_backend.util.constants import *
@@ -230,19 +232,81 @@ def settle_payment(receivers_list, transactions_list, amount_list):
     total_amount = sum(user_totals.values())
 
     for username, user_total in user_totals.items():
-        # python code to implement payment gfateway and sent the respective amount to respective users
+        import requests
+        import hmac
+        # python code to implement payment gateway and sent the respective amount to respective users
         print(f"Total amount for '{username}': {user_total:.2f}")
+        try:
+            with connection.cursor() as cursor:
+                track_order_query = " UPDATE transaction_history SET is_settled = 1 WHERE id IN ({})".format(
+                    ','.join(transactions_list))
+                cursor.execute(track_order_query)
+                return {
+                    "status": True,
+                    "msg": "done"
+                }, 200
 
-    try:
-        with connection.cursor() as cursor:
-            track_order_query = " UPDATE transaction_history SET is_settled = 1 WHERE id IN ({})".format(','.join(transactions_list))
-            cursor.execute(track_order_query)
-            return {
-                "status": True,
-                "msg": "done"
-            }, 200
+        except pymysql.Error as e:
+            return {"status": False, "message": str(e)}, 301
+        except Exception as e:
+            return {"status": False, "message": str(e)}, 301
 
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
+        # import requests
+        # import random, string;
+        # order_id = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(6))
+        #
+        # url = "https://sandbox.cashfree.com/pg/orders"
+        #
+        # payload = {
+        #     "customer_details": {
+        #         "customer_id": "7112AGAA812234",
+        #         "customer_email": "john@cashfree.com",
+        #         "customer_phone": "9738505213",
+        #         "customer_bank_account_number": "1518121112",
+        #         "customer_bank_ifsc": "CITI0000001",
+        #         "customer_bank_code": 3333
+        #     },
+        #     "order_meta": {
+        #         "return_url": "http://127.0.0.1:8000/order_id={order_id}",
+        #         "notify_url": "http://127.0.0.1:8000"
+        #     },
+        #     "order_tags": {"additionalProp": "string"},
+        #     "order_id": order_id,
+        #     "order_amount": 10.15,
+        #     "order_currency": "INR",
+        #     "order_expiry_time": "2023-08-29T00:00:00Z",
+        #     "order_note": "Test order",
+        # }
+        # headers = {
+        #     "accept": "application/json",
+        #     "x-client-id": "TEST37487412eaae6cfeadaf419081478473",
+        #     "x-client-secret": "TEST9a606fd25cb197a28767534be96a55e8aa19af5b",
+        #     "x-api-version": "2022-09-01",
+        #     "content-type": "application/json"
+        # }
+        #
+        # response = requests.post(url, json=payload, headers=headers)
+        #
+        # print(response.text)
+
+        # Parse the JSON response
+        # response_data = response.json()
+        # if response_data.get('status') == 'OK':
+        #     payment_link = response_data.get('paymentLink')
+        #     print(f"Payment success")
+        #     try:
+        #         with connection.cursor() as cursor:
+        #             track_order_query = " UPDATE transaction_history SET is_settled = 1 WHERE id IN ({})".format(
+        #                 ','.join(transactions_list))
+        #             cursor.execute(track_order_query)
+        #             return {
+        #                 "status": True,
+        #                 "msg": "done"
+        #             }, 200
+        #
+        #     except pymysql.Error as e:
+        #         return {"status": False, "message": str(e)}, 301
+        #     except Exception as e:
+        #         return {"status": False, "message": str(e)}, 301
+        # else:
+        #     print("Payment request failed.")

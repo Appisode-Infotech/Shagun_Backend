@@ -40,3 +40,23 @@ def event_admin(event_id):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+def save_event_guest_invite(invited_by, invited_to):
+    print(invited_by)
+    print(invited_to)
+    try:
+        with connection.cursor() as cursor:
+
+            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to) VALUES (%s, %s)"""
+            data_list = [(invited_by, invited_to) for invited_to in invited_to]
+            cursor.executemany(invite_query, data_list)
+            return {
+                "status": True,
+                "msg": "Inserted successfully"
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

@@ -108,6 +108,8 @@
 
 
 
+
+
     </style>
 </head>
 
@@ -152,7 +154,7 @@
                             </div>
 
                         </div>
-                        <button type="button" class="btn btn-outline-info btn-icon-text" >Settle All .
+                        <button type="button" class="btn btn-outline-info btn-icon-text">Settle All .
                             <i class="fas fa-money-check"></i>
                         </button>
                     </div>
@@ -173,6 +175,8 @@
                                     <th>Settlement Status</th>
                                     <th>Transaction Date</th>
                                     <th>Event Date</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -227,69 +231,61 @@
                                 <i class="fas fa-money-check"></i>
                             </button>
                         </div>
+                        <div id="error-message" class="alert alert-danger" style="display: none;">
+                            Please select the transaction to settle.
+                        </div>
                         <div id="popupDiv" class="popup-div">
                             <label id="shagun-sum-label1">Please confirm if you want to pay the amount: 0.00</label>
                             <div class="center-button">
                                 <button type="button" onclick="hidePopUpDiv()" class="btn btn-outline-danger btn-fw">
                                     Cancel
                                 </button>
-                                <input type="submit" class="btn btn-outline-info btn-icon-text">
+                                <input type="submit" class="btn btn-outline-info btn-icon-text" value="Confirm">
                             </div>
                         </div>
-
                     </form>
-                    </table>
                 </div>
             </div>
         </div>
     </div>
+    <div class="pagination justify-content-center">
+        <ul class="pagination">
+            {% if response.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; first</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+            </li>
+            {% endif %}
 
-</div>
-</div>
-<div class="pagination justify-content-center">
-    <ul class="pagination">
-        {% if response.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1">&laquo; first</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-        </li>
-        {% endif %}
+            {% for num in response.paginator.page_range %}
+            {% if num == response.number %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
 
-        {% for num in response.paginator.page_range %}
-        {% if num == response.number %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if response.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-        </li>
-        {% endif %}
-    </ul>
+            {% if response.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <!-- content-wrapper ends -->
+    <!-- partial:../../partials/_footer.html -->
+    {% include 'footer.html' %}
+    <!-- partial -->
 </div>
-<!-- content-wrapper ends -->
-<!-- partial:../../partials/_footer.html -->
-{% include 'footer.html' %}
-<!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
-</div>
-<!-- container-scroller -->
-<!-- plugins:js -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -351,22 +347,54 @@
 
 
 
+
+
 </script>
 
+
 <script>
+    var popupDiv = document.getElementById("popupDiv");
+    var errorMessage = document.getElementById("error-message");
+    var timeoutId; // Initialize a variable to hold the timeout ID
+
     function showPopUpDiv(event) {
         event.preventDefault();  // Prevent the form from submitting
-        var popupDiv = document.getElementById("popupDiv");
-        popupDiv.style.display = "block";
+
+        // Calculate the sum
+        updateShagunSum();
+
+        // Check if the sum is greater than 0
+        if (parseFloat(document.getElementById('shagun-sum-label1').textContent.split(':')[1].trim()) > 0) {
+            popupDiv.style.display = "block";
+
+            // Hide the error message if it's displayed
+            errorMessage.style.display = "none";
+
+            // Add a click event listener to the document body after a delay
+            timeoutId = setTimeout(function() {
+                document.body.addEventListener("click", hidePopUpDivOutsideClick);
+            }, 100); // Delay in milliseconds
+        } else {
+            // Show the error message
+            errorMessage.style.display = "block";
+        }
+    }
+
+    function hidePopUpDivOutsideClick(e) {
+        // Check if the click target is not within the popupDiv
+        if (!popupDiv.contains(e.target)) {
+            // If not, hide the popupDiv and remove the event listener
+            hidePopUpDiv();
+            document.body.removeEventListener("click", hidePopUpDivOutsideClick);
+        }
     }
 
     function hidePopUpDiv() {
-        var popupDiv = document.getElementById("popupDiv");
         popupDiv.style.display = "none";
     }
 
-
 </script>
+
 
 <script>
     document.getElementById("approval-status-dropdown").addEventListener("change", function() {
@@ -374,7 +402,6 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
-
 
 
 
@@ -413,12 +440,6 @@
             updateShagunSum();
         });
     }
-
-
-
-
-
-
 
 
 </script>

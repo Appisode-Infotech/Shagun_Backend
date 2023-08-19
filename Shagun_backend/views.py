@@ -1360,7 +1360,6 @@ def user_home_page(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
-            print(today.date(), today.now())
             response, status_code = user_home_page_controller.home_page_data(request.data['uid'])
             return JsonResponse(response, status=status_code)
 
@@ -1528,35 +1527,37 @@ def test_view(request, e_id):
     import csv
     from django.core.files.storage import FileSystemStorage
     if request.method == 'POST' and request.FILES['csv_file']:
-        print(request.POST)
+        print(request.POST['invited_by_uid'])
         csv_file = request.FILES['csv_file']
         mob_numbers = []
+        invited_by = request.POST['invited_by_uid']
 
         # Extract mobile numbers from the CSV
         try:
             fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
-            print(fs)
             filename = fs.save(csv_file.name, csv_file)
-            print(filename)
             with open(fs.path(filename), 'r') as file:
                 reader = csv.reader(file)
-                print(reader)
                 for row in reader:
                     for cell in row:
                         if cell.isdigit() and len(cell) == 10:
                             mob_numbers.append(cell)
 
-                return render(request, 'pages/admin_employee/test.html', {'mob_numbers': mob_numbers})
+            # call controllere(invited_by,mob_numbers)
+            respons = test_controller.save_event_guest_invite(invited_by, mob_numbers)
+            print(respons)
+
+            return render(request, 'pages/admin_employee/test.html', {'mob_numbers': mob_numbers})
 
         except Exception as e:
             error_message = f"An error occurred while processing the CSV: {e}"
             return render(request, 'pages/admin_employee/test.html', {'error_message': error_message})
 
     else:
-        print(e_id)
+        event_data, status_code = event_controller.get_event_by_id(e_id)
+        print(event_data)
         admins = event_controller.get_event_admins(e_id)
-        print(admins)
-        return render(request, 'pages/admin_employee/test.html', {"admins": admins, "e_id": e_id})
+        return render(request, 'pages/admin_employee/test.html', {"admins": admins, "event_data": event_data['event_data']})
 
 
 @api_view(['POST'])

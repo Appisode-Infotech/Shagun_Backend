@@ -180,8 +180,8 @@ def event_settlement(status):
             event_settlement_query = f"""
                     SELECT e.* ,
                       IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
-                      IFNULL(SUM(CASE WHEN th.is_settled IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS pending_shagun_amount,
-                      IFNULL(SUM(CASE WHEN th.is_settled IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                             IFNULL(SUM(CASE WHEN th.is_settled = 0 THEN th.shagun_amount ELSE 0 END), 0) AS pending_shagun_amount,
+       IFNULL(SUM(CASE WHEN th.is_settled = 1 THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
                       et.event_type_name
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id
@@ -209,8 +209,8 @@ def search_event_settlement(search):
             event_settlement_query = f"""
                     SELECT e.* ,
                       IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
-                      IFNULL(SUM(CASE WHEN th.is_settled IS NULL THEN th.shagun_amount ELSE 0 END), 0) AS total_shagun_amount,
-                      IFNULL(SUM(CASE WHEN th.is_settled IS NOT NULL THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                             IFNULL(SUM(CASE WHEN th.is_settled = 0 THEN th.shagun_amount ELSE 0 END), 0) AS pending_shagun_amount,
+       IFNULL(SUM(CASE WHEN th.is_settled = 1 THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
                       et.event_type_name
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id

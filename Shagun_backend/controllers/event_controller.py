@@ -1,6 +1,8 @@
 import pymysql
 from django.db import connection
 import json
+import os
+import qrcode
 
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
@@ -35,8 +37,7 @@ def create_event(event_obj):
                 phone_query = f"""SELECT phone FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
                 phone = cursor.fetchone()
-                import os
-                import qrcode
+
                 from django.conf import settings
 
                 # Replace this with your desired text

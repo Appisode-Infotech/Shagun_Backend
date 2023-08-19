@@ -82,8 +82,10 @@ def create_event(event_obj):
             }, 200
 
     except pymysql.Error as e:
+        print(str(e))
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
+        print(str(e))
         return {"status": False, "message": str(e)}, 301
 
 

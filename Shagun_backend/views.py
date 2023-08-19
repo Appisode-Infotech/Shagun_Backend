@@ -156,14 +156,22 @@ def manage_bank_details(request):
 
 
 def manage_greeting_cards(request):
-    if (request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True) or (request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True):
-        # Your code here
-
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/greeting_cards.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+def printer_manage_greeting_cards(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        response, status_code = greeting_cards_controller.get_all_greeting_cards()
+        paginator = Paginator(response['all_greeting_cards'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/printer/greeting_cards.html', {"response": response})
     else:
         return redirect('sign_up')
 
@@ -461,7 +469,7 @@ def add_delivery_vendor(request):
 
 
 def add_greeting_cards(request):
-    if (request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True) or (request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         form_data = request.POST
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
@@ -477,6 +485,28 @@ def add_greeting_cards(request):
         else:
             printers_list, status_code = store_controller.get_printers_by_status(1)
             return render(request, 'pages/admin_employee/add_greeting_cards.html', printers_list)
+
+    else:
+        return redirect('sign_up')
+
+
+def printer_add_greeting_cards(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        form_data = request.POST
+        if request.method == 'POST':
+            for file_key, file_obj in request.FILES.items():
+                file_name = f"""images/greeting_card/{int(time.time())}_{str(file_obj)}"""
+                form_data = form_data.copy()
+                form_data['card_image_url'] = file_name
+                with default_storage.open(file_name, 'wb+') as destination:
+                    for chunk in file_obj.chunks():
+                        destination.write(chunk)
+            grt_obj = greeting_cards_model.greeting_cards_model_from_dict(form_data)
+            greeting_cards_controller.add_greeting_card(grt_obj)
+            return redirect('printer_manage_greeting_cards')
+        else:
+            printers_list, status_code = store_controller.get_printers_by_status(1)
+            return render(request, 'pages/printer/add_greeting_cards.html', printers_list)
 
     else:
         return redirect('sign_up')
@@ -616,6 +646,14 @@ def activate_deactivate_greeting_cards(request, card_id, status):
         return redirect('sign_up')
 
 
+def printer_activate_deactivate_greeting_cards(request, card_id, status):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        greeting_cards_controller.disable_greeting_cards(card_id, status)
+        return redirect('manage_greeting_cards')
+    else:
+        return redirect('sign_up')
+
+
 def activate_deactivate_kyc(request, kyc_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         user_controller.enable_disable_kyc(kyc_id, status)
@@ -676,12 +714,21 @@ def edit_location(request):
 
 
 def edit_greeting_cards(request):
-    if (request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True) or (request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
             print(grt_obj)
             print(greeting_cards_controller.edit_greeting_cards(grt_obj))
             return redirect('manage_greeting_cards')
+    else:
+        return redirect('sign_up')
+def printer_edit_greeting_cards(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        if request.method == 'POST':
+            grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
+            print(grt_obj)
+            print(greeting_cards_controller.edit_greeting_cards(grt_obj))
+            return redirect('printer_manage_greeting_cards')
     else:
         return redirect('sign_up')
 

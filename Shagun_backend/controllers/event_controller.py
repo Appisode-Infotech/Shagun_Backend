@@ -30,7 +30,7 @@ def create_event(event_obj):
             cursor.execute(event_admin_query)
             admin = cursor.fetchone()
             event_admins = json.loads(admin[0])
-            print("event_admin rerived==================================")
+            print("event_admin received==================================")
             print(event_admins)
             for item in event_admins:
                 uid = item["uid"]
@@ -68,10 +68,13 @@ def create_event(event_obj):
 
                 # The relative URL to the saved image
                 image_url = f"""images/qr_codes/{event_id}_{phone[0]}.png"""
+                print("image url+++++++++++++++++++++++++++++++")
                 print(image_url)
                 item["qr_code"] = image_url
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
+            print("query===================================")
+            print(update_qr_sql)
             cursor.execute(update_qr_sql)
             return {
                 "status": True,

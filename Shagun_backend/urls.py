@@ -14,12 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path
+from django.urls import path, re_path
 
 from Shagun_backend.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    # re_path(r'^.*$', custom_404, name='catch-all'),
+
     path('api/app_compatibility', app_compatibility, name='app_compatibility'),
     # path('api/get_token', get_token, name='get_token'),
     path('api/check_user', check_user, name='check_user'),

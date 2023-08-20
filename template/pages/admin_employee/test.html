@@ -108,7 +108,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Invite for event: {{event_data.event_type_name}} - {{event_data.id}}</h4>
-                                <form class="form-sample" action="/test_view/{{e_id}}/" method="post" enctype="multipart/form-data">
+                                <form class="form-sample" action="/test_view/{{event_data.id}}/" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">

@@ -588,14 +588,16 @@ def get_my_event_list(uid):
             print(upcoming_events, "upcoming")
 
             invited_events_query = f"""
-                            SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status
-                            FROM event_guest_invite AS egi
-                            JOIN users AS u ON u.phone = egi.invited_to
-                            JOIN event AS e ON egi.event_id = e.id
-                            JOIN events_type AS et ON e.event_type_id = et.id
-                            WHERE egi.invited_to = '{phone}' ORDER BY egi.created_at DESC
-                            LIMIT 5
-                        """
+                        SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS invited_by_phone
+                        FROM event_guest_invite AS egi
+                        JOIN users AS u ON u.phone = egi.invited_to
+                        JOIN event AS e ON egi.event_id = e.id
+                        JOIN events_type AS et ON e.event_type_id = et.id
+                        LEFT JOIN users AS u_invited_by ON u_invited_by.uid = egi.invited_by
+                        WHERE egi.invited_to = '{phone}'
+                        ORDER BY egi.created_at DESC
+                        LIMIT 5
+                    """
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
 

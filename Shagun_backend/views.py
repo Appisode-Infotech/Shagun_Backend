@@ -1589,6 +1589,7 @@ def test_view(request, e_id):
         mob_numbers = []
         invited_by = request.POST['invited_by_uid']
         phone = request.POST['phone']
+        mob_numbers.append(phone)
         if 'csv_file' in request.FILES:
             csv_file = request.FILES['csv_file']
             # Extract mobile numbers from the CSV

@@ -41,15 +41,15 @@ def event_admin(event_id):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
-def save_event_guest_invite(invited_by, invited_to):
+def save_event_guest_invite(invited_by, invited_to, e_id):
     print(invited_by)
     print(invited_to)
     try:
         with connection.cursor() as cursor:
 
-            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to) VALUES (%s, %s)"""
+            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id) VALUES (%s, %s, %s)"""
             data_list = [(invited_by, invited_to) for invited_to in invited_to]
-            cursor.executemany(invite_query, data_list)
+            cursor.executemany(invite_query, data_list, e_id)
             return {
                 "status": True,
                 "msg": "Inserted successfully"

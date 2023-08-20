@@ -227,7 +227,8 @@ class responseGenerator:
                         "event_date": invites[1],
                         "event_id": invites[3],
                         "is_gifted": invites[4],
-                        "event_admins": json.loads(invites[2])
+                        "event_admins": json.loads(invites[2]),
+                        "invited_by": invites[5]
                     }
                 )
 

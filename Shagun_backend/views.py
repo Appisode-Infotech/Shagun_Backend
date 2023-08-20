@@ -1615,6 +1615,7 @@ def test_view(request, e_id):
 
         else:
             response = test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
+            print(response)
             return render(request, 'pages/admin_employee/test.html',
                           {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
 

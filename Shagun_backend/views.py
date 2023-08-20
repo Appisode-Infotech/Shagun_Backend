@@ -1602,8 +1602,7 @@ def test_view(request, e_id):
                             if cell.isdigit() and len(cell) == 10:
                                 mob_numbers.append(cell)
 
-                response = test_controller.save_event_guest_invite(invited_by,
-                                                                   mob_numbers)
+                response = test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
                 return render(request, 'pages/admin_employee/test.html',
                               {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
 
@@ -1614,7 +1613,7 @@ def test_view(request, e_id):
                                "admins": admins})
 
         else:
-            response = test_controller.save_event_guest_invite(invited_by, mob_numbers)
+            response = test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
             return render(request, 'pages/admin_employee/test.html',
                           {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
 

@@ -41,6 +41,11 @@ def logout(request):
     return redirect('sign_up')
 
 
+def custom_404(request):
+    request.session.clear()
+    return render(request, 'pages/admin_employee/error-404.html')
+
+
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
@@ -165,9 +170,10 @@ def manage_greeting_cards(request):
     else:
         return redirect('sign_up')
 
+
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
-        response, status_code = greeting_cards_controller.get_all_greeting_cards()
+        response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -721,6 +727,8 @@ def edit_greeting_cards(request):
             return redirect('manage_greeting_cards')
     else:
         return redirect('sign_up')
+
+
 def printer_edit_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         if request.method == 'POST':
@@ -1574,38 +1582,48 @@ def test_view(request, e_id):
     import os
     import csv
     from django.core.files.storage import FileSystemStorage
-    if request.method == 'POST' and request.FILES['csv_file']:
-        print(request.POST['invited_by_uid'])
-        csv_file = request.FILES['csv_file']
+    event_data, status_code = event_controller.get_event_by_id(e_id)
+    admins = event_controller.get_event_admins(e_id)
+
+    if request.method == 'POST':
         mob_numbers = []
         invited_by = request.POST['invited_by_uid']
+        phone = request.POST['phone']
+        if 'csv_file' in request.FILES:
+            csv_file = request.FILES['csv_file']
+            # Extract mobile numbers from the CSV
+            try:
+                fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
+                filename = fs.save(csv_file.name, csv_file)
+                with open(fs.path(filename), 'r') as file:
+                    reader = csv.reader(file)
+                    for row in reader:
+                        for cell in row:
+                            if cell.isdigit() and len(cell) == 10:
+                                mob_numbers.append(cell)
 
-        # Extract mobile numbers from the CSV
-        try:
-            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
-            filename = fs.save(csv_file.name, csv_file)
-            with open(fs.path(filename), 'r') as file:
-                reader = csv.reader(file)
-                for row in reader:
-                    for cell in row:
-                        if cell.isdigit() and len(cell) == 10:
-                            mob_numbers.append(cell)
+                response = test_controller.save_event_guest_invite(invited_by,
+                                                                   mob_numbers)
+                return render(request, 'pages/admin_employee/test.html',
+                              {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
 
-            # call controllere(invited_by,mob_numbers)
-            respons = test_controller.save_event_guest_invite(invited_by, mob_numbers)
-            print(respons)
+            except Exception as e:
+                error_message = f"An error occurred while processing the CSV: {e}"
+                return render(request, 'pages/admin_employee/test.html',
+                              {'error_message': error_message, "event_data": event_data['event_data'],
+                               "admins": admins})
 
-            return render(request, 'pages/admin_employee/test.html', {'mob_numbers': mob_numbers})
-
-        except Exception as e:
-            error_message = f"An error occurred while processing the CSV: {e}"
-            return render(request, 'pages/admin_employee/test.html', {'error_message': error_message})
+        else:
+            response = test_controller.save_event_guest_invite(invited_by, mob_numbers)
+            return render(request, 'pages/admin_employee/test.html',
+                          {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
 
     else:
-        event_data, status_code = event_controller.get_event_by_id(e_id)
-        print(event_data)
         admins = event_controller.get_event_admins(e_id)
-        return render(request, 'pages/admin_employee/test.html', {"admins": admins, "event_data": event_data['event_data']})
+        return render(request, 'pages/admin_employee/test.html',
+                      {"admins": admins, "event_data": event_data['event_data']})
+
+
 
 
 @api_view(['POST'])

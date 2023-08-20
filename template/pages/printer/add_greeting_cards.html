@@ -148,17 +148,9 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown')"
-                                                           placeholder="Search.." class="form-control">
+                                                           placeholder="Search.." class="form-control" value="{{request.session.printer_user_name}}">
 
-                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
-                                                        <input required type="text" placeholder="Search.." id="myInput"
-                                                               onkeyup="filterFunction('myDropdown')"
-                                                               class="form-control">
-                                                        {% for printers in printer_data %}
-                                                        <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
-                                                        {% endfor %}
-                                                    </div>
-                                                    <input required type="hidden" id="printer_id" name="printer_id">
+                                                    <input required type="hidden" id="printer_id" name="printer_id" value="{{request.session.id}}">
                                                 </div>
                                             </div>
                                         </div>

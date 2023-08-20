@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 07, 2023 at 06:50 PM
+-- Generation Time: Aug 15, 2023 at 06:35 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -184,6 +184,35 @@ INSERT INTO `bank_list` (`id`, `bank_name`, `bank_logo`, `status`, `created_on`)
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `delivery_vendors`
+--
+
+CREATE TABLE `delivery_vendors` (
+  `id` int(11) NOT NULL,
+  `delivery_vendor_name` varchar(255) NOT NULL,
+  `city` int(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `lat_lng` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `gst_no` varchar(255) NOT NULL,
+  `delivery_vendor_owner` varchar(255) NOT NULL,
+  `contact_number` varchar(255) NOT NULL,
+  `created_by` varchar(255) NOT NULL,
+  `created_on` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `delivery_vendors`
+--
+
+INSERT INTO `delivery_vendors` (`id`, `delivery_vendor_name`, `city`, `address`, `lat_lng`, `status`, `gst_no`, `delivery_vendor_owner`, `contact_number`, `created_by`, `created_on`) VALUES
+(1, 'Raj', 0, 'Address Line 1', '123.456, 78.910', 1, 'fwg567', 'Vikas', '9865432345', 'admin', '2023-08-09 11:10:12'),
+(2, 'Roop', 0, 'Address Line 2', '123.456, 78.910', 0, 'fwg567', 'Ashish', '9865982345', 'admin', '2023-08-09 11:16:17'),
+(3, 'Professional Courier', 11, '4rd Cross', '', 1, 'GSTIN09897564456', 'Hong Kong', '9090909090', 'admin@gmail.com', '2023-08-15 14:57:53');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `django_admin_log`
 --
 
@@ -278,7 +307,7 @@ CREATE TABLE `django_session` (
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
 ('cwkw9902rse7gl0d8mprxtsg8iw8p0e6', '.eJw1zE0OgjAQQOGrmFlTCiQuYOVNyEjHMtpOm_6kica7CwvX78v7AOfVBWvJrCywlFSpg8oGFpDXfUcxmHi-3qxHdv0WPHQg6OnsnDw6vPzVUWIKD3a0Rt4OsJcS86J1a60vO7EYRmmc6PzoFtUWpJAUXaMLaLKehnHW46AtCTlGZXKob1RT_4wWvj9_AzyC:1qNTZG:hJ2Us6bs2qdmg_HQVjtXvC2aInF68mxj9dbVK2khXJA', '2023-08-06 07:31:50.926448'),
 ('ezqjc2ykzgka5wj003r75xbs2amcow3z', 'eyJpc19sb2dnZWRfaW4iOnRydWV9:1qM3RA:c96TFYHd0QOBUpPJk2wUA1gESewXVRcpCWzcwiNxzdk', '2023-08-02 09:25:36.616398'),
-('seyc4s5nf9tugfbk8oiqxywvo4o19m73', '.eJw1izEOwjAMAP_iuUoYoKBM_CQKiWssxXbUpDAg_t4yMN6d7gPcYzUiLJEVwlg3nGDjAgFSEdY7SeLqsglMoEnwHw5sqy1cMTbOh32O0YL3uagzraz4xsdiOvpv9v1FnoXi5XS-zjfXlOC7A7MwKyw:1qSYIg:RROo35ikvsgktWsO4f3SzqJaF9MGhLw8QwB_JDiVyfw', '2023-08-20 07:35:42.486873');
+('seyc4s5nf9tugfbk8oiqxywvo4o19m73', '.eJw1izEOwjAMAP_iuUoYoKBM_CQKiWssxXbUpDAg_t4yMN6d7gPcYzUiLJEVwlg3nGDjAgFSEdY7SeLqsglMoEnwHw5sqy1cMTbOh32O0YL3uagzraz4xsdiOvpv9v1FnoXi5XS-zjfXlOC7A7MwKyw:1qVsHt:mtsA-8XWsMy28_TZnTzFgepWgV8Yt2DSNNT7LKN10Kc', '2023-08-29 11:32:37.116666');
 
 -- --------------------------------------------------------
 
@@ -321,7 +350,7 @@ INSERT INTO `event` (`id`, `created_by_uid`, `event_type_id`, `city_id`, `addres
 (41, 'nkbhandari95@gmail.com', 12, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:43:17', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-05 13:40:00\", \"end_time\": \"2023-08-05 13:40:00\"}]', '2023-08-05 13:40:00', 'dfghjk', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"user_data[0]\", \"qr_code\": \"qr code\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
 (42, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1),
 (43, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1),
-(44, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1),
+(44, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"name\": \"Roop\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"},{\"name\": \"Roop\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"Roop\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"44_9898989892\"}, {\"name\": \"Roop\", \"role\": \"test\", \"uid\": \"wertyuijhgfmn\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"44_9865231906\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1),
 (45, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 2, 0, 15, '0000-00-00 00:00:00', 1),
 (46, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:38:49', '[{\"sub_event_name\": \"cake cutting\", \"start_time\": \"2023-07-31 13:34:00\", \"end_time\": \"2023-07-31 13:34:00\"}]', '2023-07-31 13:33:00', 'wertyuiklkjhgfds', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"user_data[0]\", \"qr_code\": \"qr code\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
 (47, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:43:17', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-05 13:40:00\", \"end_time\": \"2023-08-05 13:40:00\"}]', '2023-08-05 13:40:00', 'dfghjk', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"user_data[0]\", \"qr_code\": \"qr code\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
@@ -489,7 +518,13 @@ INSERT INTO `event` (`id`, `created_by_uid`, `event_type_id`, `city_id`, `addres
 (208, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1),
 (209, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1),
 (210, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 1),
-(211, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 0);
+(211, 'nkbhandari95@gmail.com', 11, 11, '4rd Cross', '#A148', '13.09876543-77.0987653', '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 15, '0000-00-00 00:00:00', 0),
+(212, 'admin@gmail.com', 11, 11, '4rd Cross', '#A148', 'Latitude: 12.959723269238731, Longitude: 79.06150376093748', '2023-08-08 20:36:59', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-08 20:37:00\", \"end_time\": \"2023-08-08 20:37:00\"}]', '2023-08-08 20:37:00', 'event takes place at Latitude: 12.959723269238731, Longitude: 79.06150376093748', '[{\"name\": \"David Willey\", \"role\": \"Groom\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
+(213, 'admin@gmail.com', 12, 11, 'munnar, Kerala', 'Kerala, India', 'Latitude: 9.964520230664933, Longitude: 76.30696132343746', '2023-08-08 21:13:12', '[{\"sub_event_name\": \"cake cutting\", \"start_time\": \"2023-12-22 21:29:00\", \"end_time\": \"2023-12-22 21:29:00\"}]', '2023-12-22 21:28:00', 'My Birthday at muunar, find the lat lng Latitude: 10.0889333, Longitude: 77.05952479999999. Sorry sorry sorry!!! moved to Kochi Latitude: 9.964520230664933, Longitude: 76.30696132343746', '[{\"name\": \"john Doe\", \"role\": \"Birthday Boy\", \"uid\": \"wertyuijhgfmn\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
+(214, 'admin@gmail.com', 11, 11, '4rd Cross', '#A148', 'Latitude: 12.9141417, Longitude: 74.8559568', '2023-08-09 14:03:27', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-12-23 12:00:00\", \"end_time\": \"2023-12-23 14:30:00\"}]', '2023-12-22 11:00:00', 'Marriage', '[{\"name\": \"David Willey\", \"role\": \"Groom\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"214_9898989892\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
+(215, 'admin@gmail.com', 11, 11, '4rd Cross', '#A148', 'Latitude: 12.305163, Longitude: 76.65517489999999', '2023-08-09 14:03:27', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-10-12 10:15:00\", \"end_time\": \"2023-10-12 10:55:00\"}]', '2023-10-12 07:30:00', '', '[{\"name\": \"David Willey\", \"role\": \"Groom\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"215_9898989892\"}, {\"name\": \"john Doe\", \"role\": \"Bride\", \"uid\": \"wertyuijhgfmn\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"215_9865231906\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
+(216, 'admin@gmail.com', 11, 11, '4rd Cross', '#A148', 'Latitude: 12.305163, Longitude: 76.65517489999999', '2023-08-09 14:41:50', '[{\"sub_event_name\": \"muhartam\", \"start_time\": \"2023-10-12 11:00:00\", \"end_time\": \"2023-10-12 12:00:00\"}]', '2023-10-12 10:00:00', 'Maharaja Wedding at Mysuru Palace', '[{\"name\": \"David Willey\", \"role\": \"Groom\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"/media/images/qr_codes/qr_code.png\"}, {\"name\": \"john Doe\", \"role\": \"Bride\", \"uid\": \"wertyuijhgfmn\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"/media/images/qr_codes/qr_code.png\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1),
+(217, 'admin@gmail.com', 11, 11, '4rd Cross', '#A148', 'Latitude: 12.305163, Longitude: 76.65517489999999', '2023-08-09 15:09:25', '[{\"sub_event_name\": \"cake cutting\", \"start_time\": \"2023-10-01 11:00:00\", \"end_time\": \"2023-10-01 11:30:00\"}]', '2023-10-01 10:30:00', '25th Birthday', '[{\"name\": \"john Doe\", \"role\": \"Birthday Boy\", \"uid\": \"wertyuijhgfmn\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"images/qr_codes/217_9865231906.png\"}]', 0, 0, 14, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -644,10 +679,10 @@ CREATE TABLE `print_jobs` (
 
 INSERT INTO `print_jobs` (`id`, `transaction_id`, `printer_id`, `card_id`, `status`, `created_on`, `last_modified`, `billing_amount`, `event_id`) VALUES
 (2, '17', '14', '9', 5, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 34),
-(3, '17', '14', '9', 4, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 34),
-(4, '17', '14', '9', 3, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 34),
-(5, '17', '14', '9', 2, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 34),
-(6, '17', '14', '9', 1, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 36);
+(3, '17', '15', '9', 4, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 34),
+(4, '17', '15', '9', 3, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 34),
+(5, '17', '15', '9', 2, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 34),
+(6, '17', '15', '9', 1, '2023-08-04 13:13:01', '2023-08-04 15:12:12', 2000, 36);
 
 -- --------------------------------------------------------
 
@@ -689,7 +724,7 @@ CREATE TABLE `transaction_history` (
   `payment_status` tinyint(1) NOT NULL,
   `event_id` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `is_settled` tinyint(1) DEFAULT NULL,
+  `is_settled` tinyint(1) DEFAULT 0,
   `reciever_bank_id` varchar(255) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -699,43 +734,43 @@ CREATE TABLE `transaction_history` (
 --
 
 INSERT INTO `transaction_history` (`id`, `sender_uid`, `receiver_uid`, `transaction_amount`, `shagun_amount`, `greeting_card_id`, `transaction_fee`, `delivery_fee`, `transaction_id`, `payment_status`, `event_id`, `status`, `is_settled`, `reciever_bank_id`, `created_on`) VALUES
-(1, 'user123', 'user456', 100.5, 50, 0, 2.5, 5, 'txn987', 0, 45, 0, NULL, '', '2023-08-05 07:04:56'),
-(2, 'user789', 'user654', 75.25, 30, 0, 1.75, 3.5, 'txn654', 0, 78, 0, NULL, '', '2023-08-05 08:52:30'),
-(3, 'user555', 'user777', 200, 100, 0, 5, 7, 'txn333', 0, 105, 0, NULL, '', '2023-08-05 11:15:15'),
-(4, 'user222', 'user888', 50.75, 10, 0, 2, 4, 'txn444', 0, 129, 0, NULL, '', '2023-08-05 12:40:40'),
-(5, 'user999', 'user111', 300, 150, 0, 8.5, 9.5, 'txn555', 0, 189, 0, NULL, '', '2023-08-05 14:35:00'),
-(20, 'user123', 'user456', 1500.75, 750.5, 1234, 25.5, 30, 'txn987', 0, 45, 0, NULL, '', '2023-08-05 07:04:56'),
-(21, 'user789', 'user654', 3000.25, 1200.75, 5678, 17.5, 20, 'txn654', 0, 78, 0, NULL, '', '2023-08-05 08:52:30'),
-(22, 'user555', 'user777', 4500, 2200, 9012, 55, 60, 'txn333', 0, 105, 0, NULL, '', '2023-08-05 11:15:15'),
-(23, 'user222', 'user888', 1800.5, 350, 3456, 12, 15, 'txn444', 0, 129, 0, NULL, '', '2023-08-05 12:40:40'),
-(24, 'user999', 'user111', 6000, 3000, 7890, 85.5, 90, 'txn555', 0, 189, 0, NULL, '', '2023-08-05 14:35:00'),
-(25, 'user111', 'user222', 2500.25, 1200.5, 2345, 23.75, 25, 'txn777', 0, 176, 0, NULL, '', '2023-08-05 16:45:10'),
-(26, 'user666', 'user999', 4100.5, 2000.25, 6789, 40.5, 50, 'txn888', 0, 88, 0, NULL, '', '2023-08-05 18:15:20'),
-(27, 'user444', 'user777', 5600.75, 2800.5, 8901, 34.25, 40, 'txn999', 0, 167, 0, NULL, '', '2023-08-05 19:35:30'),
-(28, 'user555', 'user888', 7300.25, 3600.75, 4567, 52.75, 55, 'txn222', 0, 199, 0, NULL, '', '2023-08-05 21:50:45'),
-(29, 'user777', 'user999', 3200, 1500, 7890, 20, 22.5, 'txn333', 0, 201, 0, NULL, '', '2023-08-05 23:40:55'),
-(30, 'user123', 'wjkkjhgfdserty', 1500.75, 750.5, 1234, 25.5, 30, 'txn987', 0, 34, 0, NULL, '', '2023-08-05 07:04:56'),
-(31, 'user789', 'wjkkjhgfdserty', 3000.25, 1200.75, 5678, 17.5, 20, 'txn654', 0, 34, 0, NULL, '', '2023-08-05 08:52:30'),
-(32, 'user555', 'wjkkjhgfdserty', 4500, 2200, 9012, 55, 60, 'txn333', 0, 34, 0, NULL, '', '2023-08-05 11:15:15'),
-(33, 'user222', 'wjkkjhgfdserty', 1800.5, 350, 3456, 12, 15, 'txn444', 0, 34, 0, 1, '', '2023-08-05 12:40:40'),
-(34, 'user999', 'wjkkjhgfdserty', 6000, 3000, 7890, 85.5, 90, 'txn555', 0, 34, 0, NULL, '', '2023-08-05 14:35:00'),
-(35, 'user111', 'wjkkjhgfdserty', 2500.25, 1200.5, 2345, 23.75, 25, 'txn777', 0, 34, 0, 1, '', '2023-08-05 16:45:10'),
-(36, 'user666', 'wjkkjhgfdserty', 4100.5, 2000.25, 6789, 40.5, 50, 'txn888', 0, 34, 0, NULL, '', '2023-08-05 18:15:20'),
-(37, 'user444', 'wjkkjhgfdserty', 5600.75, 2800.5, 8901, 34.25, 40, 'txn999', 0, 34, 0, NULL, '', '2023-08-05 19:35:30'),
-(38, 'user555', 'wjkkjhgfdserty', 7300.25, 3600.75, 4567, 52.75, 55, 'txn222', 0, 34, 0, NULL, '', '2023-08-05 21:50:45'),
-(39, 'user777', 'wjkkjhgfdserty', 3200, 1500, 7890, 20, 22.5, 'txn333', 0, 34, 0, NULL, '', '2023-08-05 23:40:55'),
-(40, 'user333', 'wjkkjhgfdserty', 2200.5, 1100.25, 7890, 15.5, 20, 'txn444', 0, 34, 0, NULL, '', '2023-08-06 02:00:10'),
-(41, 'user888', 'wjkkjhgfdserty', 4000.25, 1800.5, 3456, 32.75, 35, 'txn555', 0, 34, 0, NULL, '', '2023-08-06 04:15:20'),
-(42, 'user444', 'wjkkjhgfdserty', 5800.75, 2700.5, 6789, 28.25, 30, 'txn666', 0, 34, 0, NULL, '', '2023-08-06 05:40:30'),
-(43, 'user999', 'wjkkjhgfdserty', 7100.25, 3400.75, 8901, 45.5, 50, 'txn777', 0, 34, 0, NULL, '', '2023-08-06 07:25:40'),
-(44, 'user555', 'wjkkjhgfdserty', 3200, 1600, 4567, 10, 12.5, 'txn888', 0, 34, 0, NULL, '', '2023-08-06 09:00:55'),
-(45, 'user777', 'wjkkjhgfdserty', 4500.5, 2100.25, 7890, 22.75, 25, 'txn999', 0, 34, 0, NULL, '', '2023-08-06 10:50:05'),
-(46, 'user333', 'wjkkjhgfdserty', 5800.25, 2700.5, 3456, 25.75, 30, 'txn111', 0, 34, 0, NULL, '', '2023-08-06 12:35:10'),
-(47, 'user888', 'wjkkjhgfdserty', 7800.75, 3600.5, 6789, 52.25, 55, 'txn222', 0, 34, 0, NULL, '', '2023-08-06 15:10:20'),
-(48, 'user444', 'wjkkjhgfdserty', 9100.25, 4400.75, 8901, 40.5, 45, 'txn333', 0, 34, 0, NULL, '', '2023-08-06 16:45:30'),
-(49, 'user999', 'wjkkjhgfdserty', 5200, 2500, 4567, 18, 20.5, 'txn444', 0, 34, 0, NULL, '', '2023-08-06 18:35:40'),
-(50, 'user333', 'wjkkjhgfdserty', 6400.5, 3200.25, 7890, 35.5, 40, 'txn555', 0, 34, 0, NULL, '', '2023-08-06 21:00:50'),
-(51, 'user777', 'wjkkjhgfdserty', 3200, 1500, 7890, 20, 22.5, 'testing1234', 0, 34, 0, NULL, '', '2023-08-05 23:40:55');
+(1, 'user123', 'user456', 100.5, 50, 0, 2.5, 5, 'txn987', 0, 45, 0, 0, '', '2023-08-05 07:04:56'),
+(2, 'user789', 'user654', 75.25, 30, 0, 1.75, 3.5, 'txn654', 0, 78, 0, 0, '', '2023-08-05 08:52:30'),
+(3, 'user555', 'user777', 200, 100, 0, 5, 7, 'txn333', 0, 105, 0, 0, '', '2023-08-05 11:15:15'),
+(4, 'user222', 'user888', 50.75, 10, 0, 2, 4, 'txn444', 0, 129, 0, 0, '', '2023-08-05 12:40:40'),
+(5, 'user999', 'user111', 300, 150, 0, 8.5, 9.5, 'txn555', 0, 189, 0, 0, '', '2023-08-05 14:35:00'),
+(20, 'user123', 'user456', 1500.75, 750.5, 1234, 25.5, 30, 'txn987', 0, 45, 0, 0, '', '2023-08-05 07:04:56'),
+(21, 'user789', 'user654', 3000.25, 1200.75, 5678, 17.5, 20, 'txn654', 0, 78, 0, 0, '', '2023-08-05 08:52:30'),
+(22, 'user555', 'user777', 4500, 2200, 9012, 55, 60, 'txn333', 0, 105, 0, 0, '', '2023-08-05 11:15:15'),
+(23, 'user222', 'user888', 1800.5, 350, 3456, 12, 15, 'txn444', 0, 129, 0, 0, '', '2023-08-05 12:40:40'),
+(24, 'user999', 'user111', 6000, 3000, 7890, 85.5, 90, 'txn555', 0, 189, 0, 0, '', '2023-08-05 14:35:00'),
+(25, 'user111', 'user222', 2500.25, 1200.5, 2345, 23.75, 25, 'txn777', 0, 176, 0, 0, '', '2023-08-05 16:45:10'),
+(26, 'user666', 'user999', 4100.5, 2000.25, 6789, 40.5, 50, 'txn888', 0, 88, 0, 0, '', '2023-08-05 18:15:20'),
+(27, 'user444', 'user777', 5600.75, 2800.5, 8901, 34.25, 40, 'txn999', 0, 167, 0, 0, '', '2023-08-05 19:35:30'),
+(28, 'user555', 'user888', 7300.25, 3600.75, 4567, 52.75, 55, 'txn222', 0, 199, 0, 0, '', '2023-08-05 21:50:45'),
+(29, 'user777', 'user999', 3200, 1500, 7890, 20, 22.5, 'txn333', 0, 201, 0, 0, '', '2023-08-05 23:40:55'),
+(30, 'user123', 'wjkkjhgfdserty', 1500.75, 750.5, 1234, 25.5, 30, 'txn987', 0, 34, 0, 1, '', '2023-08-05 07:04:56'),
+(31, 'user789', 'wjkkjhgfdserty', 3000.25, 1200.75, 5678, 17.5, 20, 'txn654', 0, 34, 0, 1, '', '2023-08-05 08:52:30'),
+(32, 'user555', 'wertyuijhgfmn', 4500, 2200, 9012, 55, 60, 'txn333', 0, 34, 0, 0, '', '2023-08-05 11:15:15'),
+(33, 'user222', 'wertyuijhgfmn', 1800.5, 350, 3456, 12, 15, 'txn444', 0, 34, 0, 0, '', '2023-08-05 12:40:40'),
+(34, 'user999', 'wjkkjhgfdserty', 6000, 3000, 7890, 85.5, 90, 'txn555', 0, 34, 0, 0, '', '2023-08-05 14:35:00'),
+(35, 'user111', 'wertyuijhgfmn', 2500.25, 1200.5, 2345, 23.75, 25, 'txn777', 0, 34, 0, 0, '', '2023-08-05 16:45:10'),
+(36, 'user666', 'wertyuijhgfmn', 4100.5, 2000.25, 6789, 40.5, 50, 'txn888', 0, 34, 0, 0, '', '2023-08-05 18:15:20'),
+(37, 'user444', 'wjkkjhgfdserty', 5600.75, 2800.5, 8901, 34.25, 40, 'txn999', 0, 34, 0, 0, '', '2023-08-05 19:35:30'),
+(38, 'user555', 'wertyuijhgfmn', 7300.25, 3600.75, 4567, 52.75, 55, 'txn222', 0, 34, 0, 0, '', '2023-08-05 21:50:45'),
+(39, 'user777', 'wertyuijhgfmn', 3200, 1500, 7890, 20, 22.5, 'txn333', 0, 34, 0, 0, '', '2023-08-05 23:40:55'),
+(40, 'user333', 'wjkkjhgfdserty', 2200.5, 1100.25, 7890, 15.5, 20, 'txn444', 0, 34, 0, 0, '', '2023-08-06 02:00:10'),
+(41, 'user888', 'wjkkjhgfdserty', 4000.25, 1800.5, 3456, 32.75, 35, 'txn555', 0, 34, 0, 0, '', '2023-08-06 04:15:20'),
+(42, 'user444', 'wjkkjhgfdserty', 5800.75, 2700.5, 6789, 28.25, 30, 'txn666', 0, 34, 0, 0, '', '2023-08-06 05:40:30'),
+(43, 'user999', 'wjkkjhgfdserty', 7100.25, 3400.75, 8901, 45.5, 50, 'txn777', 0, 34, 0, 0, '', '2023-08-06 07:25:40'),
+(44, 'user555', 'wjkkjhgfdserty', 3200, 1600, 4567, 10, 12.5, 'txn888', 0, 34, 0, 0, '', '2023-08-06 09:00:55'),
+(45, 'user777', 'wjkkjhgfdserty', 4500.5, 2100.25, 7890, 22.75, 25, 'txn999', 0, 34, 0, 0, '', '2023-08-06 10:50:05'),
+(46, 'user333', 'wjkkjhgfdserty', 5800.25, 2700.5, 3456, 25.75, 30, 'txn111', 0, 34, 0, 0, '', '2023-08-06 12:35:10'),
+(47, 'user888', 'wjkkjhgfdserty', 7800.75, 3600.5, 6789, 52.25, 55, 'txn222', 0, 34, 0, 0, '', '2023-08-06 15:10:20'),
+(48, 'user444', 'wjkkjhgfdserty', 9100.25, 4400.75, 8901, 40.5, 45, 'txn333', 0, 34, 0, 0, '', '2023-08-06 16:45:30'),
+(49, 'user999', 'wjkkjhgfdserty', 5200, 2500, 4567, 18, 20.5, 'txn444', 0, 34, 0, 0, '', '2023-08-06 18:35:40'),
+(50, 'user333', 'wjkkjhgfdserty', 6400.5, 3200.25, 7890, 35.5, 40, 'txn555', 0, 34, 0, 1, '', '2023-08-06 21:00:50'),
+(51, 'user777', 'wjkkjhgfdserty', 3200, 1500, 7890, 20, 22.5, 'testing1234', 0, 34, 0, 1, '', '2023-08-05 23:40:55');
 
 -- --------------------------------------------------------
 
@@ -766,7 +801,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, `status`, `role`, `fcm_token`, `city`, `password`) VALUES
 (29, 'admin@gmail.com', 'admin', 'admin@gmail.com', '9898989898', '', 0, 'http://cdn.onlinewebfonts.com/svg/img_504768.png', '2023-07-30 14:54:58', 1, 2, 'wertyuiop0987654ertkkjhgf', '', 'admin'),
-(32, 'wjkkjhgfdserty', 'admin', 'admin@gmail.com', '9898989892', '', 1, 'http://cdn.onlinewebfonts.com/svg/img_504768.png', '2023-07-30 14:54:58', 0, 3, 'wertyuiop0987654ertkkjhgf', '', 'admin');
+(32, 'wjkkjhgfdserty', 'David Willey', 'david@gmail.com', '9898989892', '', 1, 'http://cdn.onlinewebfonts.com/svg/img_504768.png', '2023-07-30 14:54:58', 0, 3, 'wertyuiop0987654ertkkjhgf', '', 'admin'),
+(33, 'wertyuijhgfmn', 'john Doe', 'john@gmail.com', '9865231906', '', 1, 'http://cdn.onlinewebfonts.com/svg/img_504768.png', '2023-07-30 14:54:58', 0, 3, 'wertyuiop0987654ertkkjhgf', '', 'admin');
 
 -- --------------------------------------------------------
 
@@ -917,6 +953,12 @@ ALTER TABLE `bank_details`
 -- Indexes for table `bank_list`
 --
 ALTER TABLE `bank_list`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `delivery_vendors`
+--
+ALTER TABLE `delivery_vendors`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1084,6 +1126,12 @@ ALTER TABLE `bank_list`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `delivery_vendors`
+--
+ALTER TABLE `delivery_vendors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `django_admin_log`
 --
 ALTER TABLE `django_admin_log`
@@ -1105,7 +1153,7 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT for table `event`
 --
 ALTER TABLE `event`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=212;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
 
 --
 -- AUTO_INCREMENT for table `events_type`
@@ -1159,7 +1207,7 @@ ALTER TABLE `transaction_history`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `user_callback_request`

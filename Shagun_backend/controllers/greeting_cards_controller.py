@@ -48,6 +48,25 @@ def get_all_greeting_cards():
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def get_printer_greeting_cards(p_id):
+    try:
+        with connection.cursor() as cursor:
+            greeting_cards_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards 
+                                        WHERE printer_id = '{p_id}'"""
+            cursor.execute(greeting_cards_query)
+            greeting_cards = cursor.fetchall()
+
+            return {
+                "status": True,
+                "all_greeting_cards": responseGenerator.generateResponse(greeting_cards, GREETING_CARDS)
+
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 def dashboard_search_greetings(search):
     try:
         with connection.cursor() as cursor:

@@ -73,7 +73,7 @@
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <div class="card card-tale">
                                     <div class="card-body">
-                                        <p class="mb-4">Today’s Transactions</p>
+                                        <p class="mb-4">Today’s Jobs</p>
                                         <p class="fs-30 mb-2">{{ todays_transactions }}</p>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <div class="card card-dark-blue">
                                     <div class="card-body">
-                                        <p class="mb-4">Total Transactions</p>
+                                        <p class="mb-4">Total Jobs</p>
                                         <p class="fs-30 mb-2">{{ total_transactions }}</p>
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                                 <div class="card card-light-blue">
                                     <div class="card-body">
-                                        <p class="mb-4">Today created events</p>
+                                        <p class="mb-4">Open Jobs</p>
                                         <p class="fs-30 mb-2">{{ today_created_events }}</p>
                                     </div>
                                 </div>
@@ -99,110 +99,8 @@
                             <div class="col-md-6 stretch-card transparent">
                                 <div class="card card-light-danger">
                                     <div class="card-body">
-                                        <p class="mb-4">Total Events</p>
+                                        <p class="mb-4">Pending Jobs</p>
                                         <p class="fs-30 mb-2">{{ total_events }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="card-title">Today Events</p>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="table-responsive">
-                                            <table class="display expandable-table" style="width:100%">
-                                                <thead>
-                                                <tr>
-                                                    <th>Event Id</th>
-                                                    <th>Event Name</th>
-                                                    <th>Event Admins</th>
-                                                    <th>Event Date</th>
-                                                    <th>Status</th>
-                                                    <th>Set Status</th>
-                                                    <th>Active</th>
-                                                    <th></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {% for event in events %}
-
-                                                <tr>
-                                                    <td>{{ event.event_id }}</td>
-                                                    <td>{{ event.event_name }}</td>
-                                                    <td>
-                                                        {% for admin in event.admins %}
-                                                        <b>{{ admin.role }}</b> : {{ admin.name }}</br></br>
-                                                        {% endfor %}
-                                                    </td>
-                                                    <td>{{ event.event_date }}</td>
-                                                    <td>
-                                                        {% if event.is_approved == 0 %}
-                                                        <label class="badge badge-info">Pending</label>
-                                                        {% elif event.is_approved == 1 %}
-                                                        <label class="badge badge-success">Approved</label>
-                                                        {% elif event.is_approved == 2 %}
-                                                        <label class="badge badge-danger">Rejected</label>
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button type="button"
-                                                                    class="btn btn-outline-info dropdown-toggle"
-                                                                    id="dropdownMenuIconButton1" data-toggle="dropdown"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false">
-                                                                {% if event.is_approved == 0 %}
-                                                                Pending
-                                                                {% elif event.is_approved == 1 %}
-                                                                Approved
-                                                                {% elif event.is_approved == 2 %}
-                                                                Rejected
-                                                                {% endif %}
-                                                            </button>
-                                                            <div class="dropdown-menu"
-                                                                 aria-labelledby="dropdownMenuIconButton3">
-                                                                <a class="dropdown-item" href="#">Pending</a>
-                                                                <a class="dropdown-item" href="#">Approved</a>
-                                                                <a class="dropdown-item" href="#">Rejected</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button type="button"
-                                                                    class="btn btn-outline-info dropdown-toggle"
-                                                                    id="dropdownMenuIconButton2" data-toggle="dropdown"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false">
-                                                                {% if event.status == 0 %}
-                                                                Inactive
-                                                                {% elif event.status == 1 %}
-                                                                Active
-                                                                {% endif %}
-                                                            </button>
-                                                            <div class="dropdown-menu"
-                                                                 aria-labelledby="dropdownMenuIconButton3">
-                                                                <a class="dropdown-item" href="#">Active</a>
-                                                                <a class="dropdown-item" href="#">Inactive</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-outline-info btn-fw">View
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

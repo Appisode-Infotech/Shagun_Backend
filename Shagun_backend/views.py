@@ -1418,7 +1418,6 @@ def user_home_page(request):
         if username == request.data.get('uid'):
             response, status_code = user_home_page_controller.home_page_data(request.data['uid'])
             return JsonResponse(response, status=status_code)
-
         else:
             return JsonResponse({'message': 'Invalid token for user'}, status=401)
 

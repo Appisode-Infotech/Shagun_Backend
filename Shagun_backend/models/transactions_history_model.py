@@ -10,14 +10,14 @@ def from_str(x: Any) -> str:
     return x
 
 
-def from_float(x: Any) -> float:
-    assert isinstance(x, (float, int)) and not isinstance(x, bool)
-    return float(x)
-
-
 def from_int(x: Any) -> int:
     assert isinstance(x, int) and not isinstance(x, bool)
     return x
+
+
+def from_float(x: Any) -> float:
+    assert isinstance(x, (float, int)) and not isinstance(x, bool)
+    return float(x)
 
 
 def from_bool(x: Any) -> bool:
@@ -37,47 +37,59 @@ def to_class(c: Type[T], x: Any) -> dict:
 
 @dataclass
 class TransactionsHistoryModel:
-    sender_uid: str
     receiver_uid: str
-    transaction_amount: float
-    shagun_amount: float
+    event_id: int
+    wish: str
     greeting_card_id: int
-    transaction_fee: float
-    delivery_fee: float
+    greeting_card_price: float
     transaction_id: str
     payment_status: str
-    event_id: int
+    delivery_fee: float
+    transaction_fee: float
+    service_charge: float
+    shagun_amount: float
+    transaction_amount: float
     status: bool
+    gifter_name: str
+    uid: str
 
     @staticmethod
     def from_dict(obj: Any) -> 'TransactionsHistoryModel':
         assert isinstance(obj, dict)
-        sender_uid = from_str(obj.get("sender_uid"))
         receiver_uid = from_str(obj.get("receiver_uid"))
-        transaction_amount = from_float(obj.get("transaction_amount"))
-        shagun_amount = from_float(obj.get("shagun_amount"))
+        event_id = from_int(obj.get("event_id"))
+        wish = from_str(obj.get("wish"))
         greeting_card_id = from_int(obj.get("greeting_card_id"))
-        transaction_fee = from_float(obj.get("transaction_fee"))
-        delivery_fee = from_float(obj.get("delivery_fee"))
+        greeting_card_price = from_float(obj.get("greeting_card_price"))
         transaction_id = from_str(obj.get("transaction_id"))
         payment_status = from_str(obj.get("payment_status"))
-        event_id = from_int(obj.get("event_id"))
+        delivery_fee = from_float(obj.get("delivery_fee"))
+        transaction_fee = from_float(obj.get("transaction_fee"))
+        service_charge = from_float(obj.get("service_charge"))
+        shagun_amount = from_float(obj.get("shagun_amount"))
+        transaction_amount = from_float(obj.get("transaction_amount"))
         status = from_bool(obj.get("status"))
-        return TransactionsHistoryModel(sender_uid, receiver_uid, transaction_amount, shagun_amount, greeting_card_id, transaction_fee, delivery_fee, transaction_id, payment_status, event_id, status)
+        gifter_name = from_str(obj.get("gifter_Name"))
+        uid = from_str(obj.get("uid"))
+        return TransactionsHistoryModel(receiver_uid, event_id, wish, greeting_card_id, greeting_card_price, transaction_id, payment_status, delivery_fee, transaction_fee, service_charge, shagun_amount, transaction_amount, status, gifter_name, uid)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["sender_uid"] = from_str(self.sender_uid)
         result["receiver_uid"] = from_str(self.receiver_uid)
-        result["transaction_amount"] = to_float(self.transaction_amount)
-        result["shagun_amount"] = to_float(self.shagun_amount)
+        result["event_id"] = from_int(self.event_id)
+        result["wish"] = from_str(self.wish)
         result["greeting_card_id"] = from_int(self.greeting_card_id)
-        result["transaction_fee"] = to_float(self.transaction_fee)
-        result["delivery_fee"] = to_float(self.delivery_fee)
+        result["greeting_card_price"] = to_float(self.greeting_card_price)
         result["transaction_id"] = from_str(self.transaction_id)
         result["payment_status"] = from_str(self.payment_status)
-        result["event_id"] = from_int(self.event_id)
+        result["delivery_fee"] = to_float(self.delivery_fee)
+        result["transaction_fee"] = to_float(self.transaction_fee)
+        result["service_charge"] = to_float(self.service_charge)
+        result["shagun_amount"] = to_float(self.shagun_amount)
+        result["transaction_amount"] = to_float(self.transaction_amount)
         result["status"] = from_bool(self.status)
+        result["gifter_Name"] = from_str(self.gifter_name)
+        result["uid"] = from_str(self.uid)
         return result
 
 

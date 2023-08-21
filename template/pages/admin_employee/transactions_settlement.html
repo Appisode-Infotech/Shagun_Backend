@@ -168,7 +168,7 @@
                                     <th><input type="checkbox" id="select-all" onclick="toggleSelectAll()"></th>
                                     <th>ID</th>
                                     <th>Event Name</th>
-                                    <th>Sender</th>
+                                    <th>Sender Details</th>
                                     <th>Receiver</th>
                                     <th>Transaction Details</th>
                                     <th>Shagun Amount</th>
@@ -192,7 +192,8 @@
                                     </td>
                                     <td>{{ data.id }}</td>
                                     <td>{{ data.event_type }}</td>
-                                    <td>{{ data.sender_name }}</td>
+                                    <td><b>Sent by:</b> {{ data.sender_name }}</br></br>
+                                        <b>Behalf of: </b>{{data.gifter_name}}</td>
                                     <td>{{ data.receiver_name }}</td>
                                     <td>
                                         <b>Transaction Amount : </b>{{ data.transaction_amount }}</br></br>

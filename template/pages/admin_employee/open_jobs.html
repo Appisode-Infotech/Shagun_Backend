@@ -95,6 +95,7 @@
                             <thead>
                             <tr>
                                 <th>Job Id</th>
+                                <th>Printer Id</th>
                                 <th>Event Name</th>
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
@@ -106,6 +107,7 @@
 
                             <tr>
                                 <td>{{ job.id }}</td>
+                                <td>{{ job.printer_id }}</td>
                                 <td>{{ job.event_type_name }}</td>
                                 <td>
                                     <b>Card Id</b> : {{ job.card_name }}</br></br>

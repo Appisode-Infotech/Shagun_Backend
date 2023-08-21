@@ -10,27 +10,26 @@ def add_transaction_history(transaction_obj):
     try:
         with connection.cursor() as cursor:
             transaction_history_query = f"""INSERT INTO transaction_history (sender_uid, receiver_uid, 
-            transaction_amount, shagun_amount,greeting_card_id, transaction_fee, delivery_fee, transaction_id, 
-            payment_status, event_id, status, created_on) 
-            VALUES ('{transaction_obj.sender_uid}', '{transaction_obj.receiver_uid}', 
-            '{transaction_obj.transaction_amount}, '{transaction_obj.shagun_amount}', '{transaction_obj.greeting_card_id}',
-            '{transaction_obj.transaction_fee}, '{transaction_obj.delivery_fee}', '{transaction_obj.transaction_id}',
-            '{transaction_obj.payment_status}', '{transaction_obj.event_id}', '{transaction_obj.status}', '{today}')"""
+            transaction_amount, shagun_amount, greeting_card_id, transaction_fee, delivery_fee, transaction_id, 
+            payment_status, event_id, status, created_on, gifter_name) 
+            VALUES ('{transaction_obj.uid}', '{transaction_obj.receiver_uid}', 
+            '{transaction_obj.transaction_amount}', '{transaction_obj.shagun_amount}', '{transaction_obj.greeting_card_id}',
+            '{transaction_obj.transaction_fee}', '{transaction_obj.delivery_fee}', '{transaction_obj.transaction_id}',
+            '{transaction_obj.payment_status}', '{transaction_obj.event_id}', {transaction_obj.status}, '{today}', '{transaction_obj.gifter_name}')"""
 
-            cursor.execute(transaction_history_query)
+            print(cursor.execute(transaction_history_query))
 
-            if transaction_obj.greeting_card_id is not None:
-                greeting_card_query = """SELECT printer_id, card_price FROM greeting_cards 
-                                     WHERE id = transaction_obj.card_id"""
-                cursor.execute(greeting_card_query)
-                card_data = cursor.fetchone()
+            printer_query = f"""SELECT printer_id FROM event 
+                                 WHERE id = '{transaction_obj.event_id}' """
+            cursor.execute(printer_query)
+            printer = cursor.fetchone()
 
-                printer_jobs_query = f""" INSERT INTO print_jobs(transaction_id, printer_id, card_id, status,
-                 created_on, last_modified, billing_amount, event_id)
-                  VALUES('{transaction_obj.transaction_id}', '{card_data[0]}', '{transaction_obj.greeting_card_id}',
-                   1,'{today}', '{today}', '{card_data[1]}', '{transaction_obj.event_id}' )"""
+            printer_jobs_query = f""" INSERT INTO print_jobs(transaction_id, printer_id, card_id, status,
+             created_on, last_modified, billing_amount, event_id, wish)
+              VALUES('{transaction_obj.transaction_id}', '{printer[0]}', '{transaction_obj.greeting_card_id}',
+               1,'{today}', '{today}', '{transaction_obj.greeting_card_price}', '{transaction_obj.event_id}', '{transaction_obj.wish}' )"""
 
-                cursor.execute(printer_jobs_query)
+            print(cursor.execute(printer_jobs_query))
 
             return {
                 "status": True,

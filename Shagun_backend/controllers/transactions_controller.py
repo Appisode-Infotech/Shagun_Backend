@@ -215,11 +215,12 @@ def get_transaction_list(event_id, status):
             FROM transaction_history AS th
             LEFT JOIN event As e ON th.event_id = e.id
             LEFT JOIN events_type As et ON e.event_type_id = et.id
-            LEFT JOIN users As sender ON th.sender_uid = sender.id
-            LEFT JOIN users As receiver ON th.receiver_uid = receiver.id
+            LEFT JOIN users As sender ON th.sender_uid = sender.uid
+            LEFT JOIN users As receiver ON th.receiver_uid = receiver.uid
             WHERE th.event_id = '{event_id}' AND is_settled LIKE '{status}' """
             cursor.execute(track_order_query)
             track = cursor.fetchall()
+            print(track)
             return {
                 "status": True,
                 "transactions": responseGenerator.generateResponse(track, Transaction_DATA)

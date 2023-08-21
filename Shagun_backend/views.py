@@ -704,6 +704,7 @@ def edit_employee(request, user_id):
 def edit_event_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
             event_controller.edit_events_type(request.POST['id'], request.POST['name'])
             return redirect('manage_event_types')
     else:

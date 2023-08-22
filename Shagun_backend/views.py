@@ -49,6 +49,7 @@ def custom_404(request):
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
+        print(response)
         return render(request, 'index.html', response)
     else:
         return redirect('sign_up')

@@ -74,11 +74,11 @@ def admin_dashboard(uid):
 
             return {
                 "status": True,
-                "todays_transactions": transaction_stats[0],
-                "total_transactions": transaction_stats[1],
-                "total_shagun": transaction_stats[2],
-                "total_fees": transaction_stats[3],
-                "today_shagun": transaction_stats[4],
+                "todays_transactions": round(transaction_stats[0], 2),
+                "total_transactions": round(transaction_stats[1], 2),
+                "total_shagun": round(transaction_stats[2], 2),
+                "total_fees": round(transaction_stats[3], 2),
+                "today_shagun": round(transaction_stats[4], 2),
                 "today_created_events": event_stats[1],
                 "events": responsegenerator.responseGenerator.generateResponse(today_event_stats, EVENT_LIST),
                 "new_jobs": job_stats[0],

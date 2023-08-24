@@ -206,12 +206,13 @@
                                         </div>
                                     </div>
                                 </td>
-<!--                                <td>-->
-<!--                                    <button type="button" class="btn btn-outline-info btn-fw" >-->
-<!--                                        Edit-->
-<!--                                        <i class="fas fa-edit"></i>-->
-<!--                                    </button>-->
-<!--                                </td>-->
+
+                                <td>
+                                    <button type="button" class="btn btn-outline-info btn-fw" onclick="window.location.href='{% url 'edit_delivery_vendors' delivery_vendor.id %}'">
+                                        Edit
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>

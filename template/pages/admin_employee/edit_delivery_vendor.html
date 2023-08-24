@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shagun Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+
+    <style>
+        .center-button {
+          display: flex;
+          justify-content: center;
+        }
+        .dropbtn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+          background-color: #3e8e41;
+        }
+
+        #myInput {
+          box-sizing: border-box;
+          background-image: url('searchicon.png');
+          background-position: 14px 12px;
+          background-repeat: no-repeat;
+          font-size: 16px;
+          padding: 14px 20px 12px 45px;
+          border: none;
+          border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {display: block;}
+
+        .toggle-password {
+          position: absolute;
+          top: 10px;
+          right: 30px;
+          cursor: pointer;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include 'app_bar.html' %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        {% include 'theme_setting.html' %}
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        {% include 'nav_bar.html' %}
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Edit Delivery Vendor</h4>
+                                <form class="form-sample" action="{% url 'edit_delivery_vendors' response.id %}"
+                                      method="post"
+                                      enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <p class="card-description">
+                                        Delivery Vendor info
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">City</label>
+                                                <div class="col-sm-9">
+                                                    {% for location in location %}
+                                                    <input required type="text" id="name" readonly
+                                                           onclick="myFunction()"
+                                                           class="form-control" value="{{location.city_name}}">
+                                                    <input required type="hidden" id="city" name="city"
+                                                           value="{{location.city_id}}">
+
+                                                    {% endfor %}
+
+                                                    <div id="myDropdown" class="dropdown-content"
+                                                         style="cursor: pointer;">
+                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                               onkeyup="filterFunction()" class="form-control">
+                                                        {% for city in location %}
+                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Vendor Name</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control"
+                                                           name="delivery_vendor_name"
+                                                           value="{{response.delivery_vendor_name}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Vendor Owner</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control"
+                                                           name="delivery_vendor_owner"
+                                                           value="{{response.delivery_vendor_owner}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Vendor Phone</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control"
+                                                           name="contact_number" value="{{response.contact_number}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Address</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="address"
+                                                           value="{{response.address}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label"> Vendor GST</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="gst_no"
+                                                           value="{{response.gst_no}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Added By</label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control">{{ request.session.name }}</label>
+                                                <input type="hidden" id="created_by" name="created_by"
+                                                       value="{{ request.session.uid }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="id" name="id"
+                                           value="{{ response.id }}">
+                                    <div class="center-button">
+                                        <input type="submit" value="Submit" class="btn btn-primary mr-2"
+                                               id="submitButton">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+
+
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        const dropdown = document.getElementById("myDropdown");
+        dropdown.classList.toggle("show");
+    }
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    function setValue(value1, value2) {
+        document.getElementById("name").value = value1;
+        document.getElementById("city").value = value2;
+        myFunction();
+    }
+
+    // Add an event listener to the document to close the dropdown when clicking outside
+    document.addEventListener("click", function(event) {
+        const dropdown = document.getElementById("myDropdown");
+        const nameInput = document.getElementById("name");
+        console.log(dropdown)
+        console.log(nameInput)
+        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+
+
+</script>
+
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="{% static 'vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>
+<script src="{% static 'vendors/select2/select2.min.js' %}"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="{% static 'js/file-upload.js' %}"></script>
+<script src="{% static 'js/typeahead.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+
+<!-- End custom js for this page-->
+
+</body>
+
+</html>

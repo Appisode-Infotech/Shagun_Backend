@@ -1096,7 +1096,7 @@ def whatsapp_invite(request, e_id):
                                 mob_numbers.append(cleaned_cell)
 
                 mob_numbers = list(set(mob_numbers))
-                if phone is not None:
+                if phone != '':
                     mob_numbers.append(phone)
                 test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
                 return redirect(reverse('whatsapp_invite', args=[e_id]))

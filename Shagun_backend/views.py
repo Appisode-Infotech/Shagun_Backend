@@ -201,16 +201,18 @@ def manage_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/employees.html', {"response": response, "role":2})
+        return render(request, 'pages/admin_employee/employees.html', {"response": response, "role": 2})
     else:
         return redirect('sign_up')
+
+
 def manage_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_admins()
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/admins.html', {"response": response, "role":1})
+        return render(request, 'pages/admin_employee/admins.html', {"response": response, "role": 1})
     else:
         return redirect('sign_up')
 
@@ -518,7 +520,7 @@ def add_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
-            user_controller.add_admin(admin_obj)
+            print(user_controller.add_admin(admin_obj))
             return redirect('manage_admin')
         else:
             return render(request, 'pages/admin_employee/add_admin.html')
@@ -955,7 +957,7 @@ def dashboard_search_employee(request):
 
 
 def dashboard_search_employee_status(request, status, role):
-    response, status_code = user_controller.dashboard_search_employee_status(status,role)
+    response, status_code = user_controller.dashboard_search_employee_status(status, role)
     paginator = Paginator(response['user_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)

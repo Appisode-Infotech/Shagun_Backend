@@ -198,15 +198,15 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
                                             <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_employee' user.id 1 %}">Active</a>
+                                               href="{% url 'activate_deactivate_employee' user.id 1 1 %}">Active</a>
                                             <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_employee' user.id 0 %}">Inactive</a>
+                                               href="{% url 'activate_deactivate_employee' user.id 0 1 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="window.location.href='{% url 'edit_admin' user.id%}'">
+                                            onclick="window.location.href='{% url 'edit_admin' user.id %}'">
                                         Edit
                                         <i class="fas fa-edit"></i>
                                     </button>

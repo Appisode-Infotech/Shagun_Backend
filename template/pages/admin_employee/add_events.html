@@ -63,11 +63,14 @@
           position: absolute;
           background-color: #f6f6f6;
           min-width: 230px;
-          overflow: auto;
+          max-width: 300px;
+          max-height: 400px; /* Limit the maximum height to 400px */
+          overflow-y: auto; /* Add a vertical scrollbar when needed */
           border: 1px solid #ddd;
           z-index: 1;
-          height:400px;
+          height: auto; /* Allow the height to wrap content */
         }
+
 
         .dropdown-content a {
           color: black;
@@ -443,6 +446,13 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             }
         }
 
+        function closeDropdown() {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(function (dropdown) {
+                dropdown.style.display = 'none';
+            });
+        }
+
         function addSubEvent() {
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
@@ -492,11 +502,17 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 updateButtonVisibility();
             }
         }
-
         addSubEventButton.addEventListener('click', addSubEvent);
         removeEventButton.addEventListener('click', removeSubEvent);
         addEventAdminButton.addEventListener('click', addEventAdmin);
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
+
+        document.addEventListener('mousedown', function (event) {
+            const eventAdminContainer = document.getElementById('event-admin-container');
+            if (!eventAdminContainer.contains(event.target)) {
+                closeDropdown();
+            }
+
     });
 
 

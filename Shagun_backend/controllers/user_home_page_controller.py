@@ -13,7 +13,7 @@ def home_page_data(uid):
             cursor.execute(phone_query)
             phone = cursor.fetchone()[0]
             sent_transactions_query = f"""
-                SELECT th.transaction_amount, et.event_type_name, u.name, e.id, u.profile_pic, 
+                SELECT th.shagun_amount, et.event_type_name, u.name, e.id, u.profile_pic, 
                 (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_amount
                 FROM transaction_history AS th
                 JOIN event AS e ON th.event_id = e.id
@@ -26,7 +26,7 @@ def home_page_data(uid):
             sent_transactions = cursor.fetchall()
 
             received_transactions_query = f"""
-                SELECT th.transaction_amount, et.event_type_name, u.name, e.id, u.profile_pic,
+                SELECT th.shagun_amount, et.event_type_name, u.name, e.id, u.profile_pic,
                 (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}') AS total_amount
                 FROM transaction_history AS th
                 JOIN event AS e ON th.event_id = e.id

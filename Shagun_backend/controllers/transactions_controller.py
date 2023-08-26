@@ -135,7 +135,7 @@ def get_received_gift(gift_data_obj):
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.sender_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
-                LEFT JOIN events_type AS et ON ev.id = et.id
+                LEFT JOIN events_type AS et ON ev.event_type_id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
                 WHERE th.receiver_uid = '{gift_data_obj.uid}' AND et.event_type_name LIKE '{gift_data_obj.type}' AND 

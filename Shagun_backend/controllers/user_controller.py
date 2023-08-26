@@ -76,10 +76,11 @@ def edit_user(edit_reg_obj):
 def get_all_users(kyc):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 3 AND kyc LIKE '{kyc}' """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
+            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -453,13 +454,9 @@ def add_admin(emp_obj):
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 3,
                       emp_obj.city, emp_obj.password)
             cursor.execute(add_emp_query, values)
-            # query = "SELECT * FROM users WHERE role = %s;"
-            # cursor.execute(query, 2)
-            # user_data = cursor.fetchone()
             return {
                 "status": True,
                 "message": "Employee added successfully"
-                # "user": responseGenerator.generateResponse(user_data, CHECK_USER)
             }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e), "user": None}, 301
@@ -524,7 +521,7 @@ def get_all_employees():
 def get_all_employees():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 2"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()

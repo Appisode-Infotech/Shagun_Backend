@@ -52,7 +52,6 @@ def event_settlement(event_id):
                 AS settled_amount,
                 SUM(shagun_amount) AS total_received_amount 
                 FROM transaction_history th
-                LEFT JOIN 
                 WHERE th.event_id = '{event_id}' ;
             """
             cursor.execute(event_settlement_query)
@@ -91,11 +90,10 @@ def get_sent_gift(gift_data_obj):
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{gift_data_obj.uid}')
                      AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
                 FROM transaction_history AS th
-                JOIN users As u ON th.receiver_uid = u.uid
-                JOIN event AS ev ON th.event_id = ev.id
-                JOIN events_type AS et ON ev.id = et.id
-                JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
-                LEFT JOIN bank_details AS bd ON st.receiver_bank_id = bd.id                
+                LEFT JOIN users As u ON th.receiver_uid = u.uid
+                LEFT JOIN event AS ev ON th.event_id = ev.id
+                LEFT JOIN events_type AS et ON ev.id = et.id
+                LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 WHERE th.sender_uid = '{gift_data_obj.uid}'AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
                 ({month_filter})"""
             cursor.execute(sent_gift_query)
@@ -136,11 +134,10 @@ def get_received_gift(gift_data_obj):
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{gift_data_obj.uid}') 
                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
                 FROM transaction_history AS th
-                JOIN users As u ON th.sender_uid = u.uid
-                JOIN event AS ev ON th.event_id = ev.id
-                JOIN events_type AS et ON ev.id = et.id
-                JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
-                LEFT JOIN bank_details AS bd ON st.receiver_bank_id = bd.id  
+                LEFT JOIN users As u ON th.sender_uid = u.uid
+                LEFT JOIN event AS ev ON th.event_id = ev.id
+                LEFT JOIN events_type AS et ON ev.id = et.id
+                LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 WHERE th.receiver_uid = '{gift_data_obj.uid}' AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
                 ({month_filter})"""
             cursor.execute(sent_gift_query)

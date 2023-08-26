@@ -94,6 +94,7 @@ class CreateEventModel:
     event_note: str
     event_admin: List[EventAdmin]
     printer_id: str
+    delivery_fee: str
     created_by_uid: Optional[str] = None
     event_type_id: Optional[str] = None
 
@@ -110,9 +111,10 @@ class CreateEventModel:
         event_date = from_str(obj.get("event_date"))
         printer_id = from_str(obj.get("printer_id"))
         event_note = from_str(obj.get("event_note"))
+        delivery_fee = from_str(obj.get("delivery_fee"))
         event_admin = from_list(EventAdmin.from_dict, obj.get("event_admin"))
         return CreateEventModel(city_id, address_line1, address_line2, event_lat_lng, sub_events, event_date,
-                                event_note, event_admin, printer_id, created_by_uid, event_type_id)
+                                event_note, event_admin, printer_id, delivery_fee, created_by_uid, event_type_id)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -121,6 +123,7 @@ class CreateEventModel:
         if self.event_type_id is not None:
             result["event_type_id"] = from_union([from_str, from_none], self.event_type_id)
         result["city_id"] = from_str(self.city_id)
+        result["delivery_fee"] = from_str(self.delivery_fee)
         result["address_line1"] = from_str(self.address_line1)
         result["address_line2"] = from_str(self.address_line2)
         result["event_lat_lng"] = from_str(self.event_lat_lng)

@@ -53,7 +53,6 @@ def event_admins(data):
 
 # Transform data to the desired JSON format
 def transform_data_to_json(data):
-    print(sub_events(data))
     result = {
         "created_by_uid": data['created_by_uid'],
         "event_type_id": data['event_type_id'],
@@ -65,6 +64,7 @@ def transform_data_to_json(data):
         "sub_events": sub_events(data),
         "event_date": convert_datetime(data['event_date']),
         "event_note": data['event_note'],
-        "event_admin": event_admins(data)
+        "event_admin": event_admins(data),
+        "delivery_fee": data['delivery_fee']
     }
     return result

@@ -58,7 +58,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Edit Admin</h4>
-                                <form class="form-sample" action="{% url 'edit_employee' emp.id %}" method="post">
+                                <form class="form-sample" action="{% url 'edit_admin' emp.id %}" method="post">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info

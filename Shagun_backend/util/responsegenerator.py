@@ -136,9 +136,10 @@ class responseGenerator:
                 "printer_id": data[14],
                 "approved_date_time": data[15],
                 "status": data[16],
-                "event_type_name": data[17],
-                "city_name": data[18],
-                "store_name": data[19]
+                "delivery_fee": data[17],
+                "event_type_name": data[18],
+                "city_name": data[19],
+                "store_name": data[20]
             }
 
         if controller_type == GIFT_EVENT:

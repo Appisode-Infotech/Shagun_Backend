@@ -186,6 +186,7 @@ def printer_manage_greeting_cards(request):
 def manage_users(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_users('%')
+        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -516,8 +517,8 @@ def add_employee(request):
 def add_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            emp_obj = employee_model.add_employee_model_from_dict(request.POST)
-            user_controller.add_admin(emp_obj)
+            admin_obj = employee_model.add_employee_model_from_dict(request.POST)
+            user_controller.add_admin(admin_obj)
             return redirect('manage_admin')
         else:
             return render(request, 'pages/admin_employee/add_admin.html')
@@ -781,7 +782,7 @@ def edit_admin(request, user_id):
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
             user_controller.edit_employee(emp_obj)
-            return redirect('manage_employee')
+            return redirect('manage_admin')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
             return render(request, 'pages/admin_employee/edit_employee.html', response)

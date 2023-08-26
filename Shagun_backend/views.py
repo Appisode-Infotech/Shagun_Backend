@@ -1091,9 +1091,9 @@ def whatsapp_invite(request, e_id):
                     reader = csv.reader(file)
                     for row in reader:
                         for cell in row:
-                            stripped_cell = cell.strip()
-                            if cell.isdigit() and len(cell) == 10:
-                                mob_numbers.append(stripped_cell)
+                            cleaned_cell = ''.join(filter(str.isdigit, cell))
+                            if cell.isdigit() and len(cleaned_cell) == 10:
+                                mob_numbers.append(cleaned_cell)
 
                 mob_numbers = list(set(mob_numbers))
                 if phone is not None:

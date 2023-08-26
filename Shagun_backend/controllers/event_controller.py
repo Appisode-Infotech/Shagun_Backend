@@ -3,6 +3,7 @@ from django.db import connection
 import json
 import os
 import qrcode
+from django.conf import settings
 
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
@@ -17,12 +18,12 @@ def create_event(event_obj):
 
             create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
                                         address_line2, event_lat_lng, created_on, sub_events, event_date, event_note, 
-                                        event_admin, is_approved, status, printer_id) 
-                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                        event_admin, is_approved, status, printer_id, delivery_fee) 
+                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
-                      event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id)
+                      event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id, event_obj.delivery_fee)
 
             cursor.execute(create_event_query, values)
             event_id = cursor.lastrowid
@@ -30,15 +31,11 @@ def create_event(event_obj):
             cursor.execute(event_admin_query)
             admin = cursor.fetchone()
             event_admins = json.loads(admin[0])
-            print("event_admin received==================================")
-            print(event_admins)
             for item in event_admins:
                 uid = item["uid"]
                 phone_query = f"""SELECT phone FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
                 phone = cursor.fetchone()
-
-                from django.conf import settings
 
                 # Replace this with your desired text
                 text = "http://santhuofficial123.pythonanywhere.com/" + str(event_id) + "_" + phone[0]
@@ -68,13 +65,9 @@ def create_event(event_obj):
 
                 # The relative URL to the saved image
                 image_url = f"""images/qr_codes/{event_id}_{phone[0]}.png"""
-                print("image url+++++++++++++++++++++++++++++++")
-                print(image_url)
                 item["qr_code"] = image_url
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
-            print("query===================================")
-            print(update_qr_sql)
             cursor.execute(update_qr_sql)
             return {
                 "status": True,
@@ -631,7 +624,7 @@ def search_user_event(uid):
                         LEFT JOIN events_type ON event.event_type_id = events_type.id
                         
                         WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}' 
-                        AND event.is_approved = 1"""
+                        AND event.is_approved = 1 and event.status = 1"""
             uid_json = json.dumps({'uid': uid})
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()

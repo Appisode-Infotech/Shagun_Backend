@@ -46,7 +46,7 @@ def home_page_data(uid):
                 JOIN event AS e ON egi.event_id = e.id
                 JOIN events_type AS et ON e.event_type_id = et.id
                 LEFT JOIN users AS u_invited_by ON u_invited_by.uid = egi.invited_by
-                WHERE egi.invited_to = '{phone}'
+                WHERE egi.invited_to = '{phone}' AND e.status = 1
                 ORDER BY egi.created_at DESC
                 LIMIT 5
             """

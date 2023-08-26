@@ -3,8 +3,6 @@ import json
 import pymysql
 from django.db import connection
 
-from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import EVENT_ADMIN
 
 
 def event_admin(event_id):
@@ -21,12 +19,7 @@ def event_admin(event_id):
                                         WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
                 phone = cursor.fetchone()
-                print(uid)
-                print(phone[0])
                 item["qr_code"] = str(event_id) + "_" + phone[0]
-                print(item)
-
-            print(event_admins)
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)
@@ -43,8 +36,6 @@ def event_admin(event_id):
 
 
 def save_event_guest_invite(invited_by, invited_to, e_id):
-    print(invited_by)
-    print(invited_to)
     try:
         with connection.cursor() as cursor:
             invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id) VALUES (%s, %s, %s)"""

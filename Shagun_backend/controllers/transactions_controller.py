@@ -72,10 +72,8 @@ def event_settlement(event_id):
 
 def get_sent_gift(gift_data_obj):
     if gift_data_obj.month != '1':
-        # Use the provided month in the query
         month_filter = f"DATE_FORMAT(th.created_on, '%Y-%m') = '{gift_data_obj.month}'"
     else:
-        # If 'month' is not provided, include all records (no filtering by month)
         month_filter = "1"
     try:
         with connection.cursor() as cursor:
@@ -95,10 +93,12 @@ def get_sent_gift(gift_data_obj):
                 LEFT JOIN events_type AS et ON ev.id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
-                WHERE th.sender_uid = '{gift_data_obj.uid}'AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
+                WHERE th.sender_uid = '{gift_data_obj.uid}' AND 
                 ({month_filter})"""
             cursor.execute(sent_gift_query)
             sent_gifts = cursor.fetchall()
+            print(sent_gifts)
+            print(sent_gift_query)
 
             events_list = responseGenerator.generateResponse(events_data, EVENT_TYPE_LIST)
             total_gift_sent, sent_gift_list = responseGenerator.generateResponse(sent_gifts, GIFT_SENT)

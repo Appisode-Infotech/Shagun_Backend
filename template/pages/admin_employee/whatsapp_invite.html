@@ -84,6 +84,9 @@
         .show {display: block;}
 
 
+
+
+
     </style>
 
 </head>
@@ -106,96 +109,82 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Bank Account</h4>
-                                <form class="form-sample" action="/add_bank" method="post"
-                                      enctype="multipart/form-data">
+                                <h4 class="card-title">Invite for event: {{event_data.event_type_name}} - {{event_data.id}}</h4>
+                                <form class="form-sample" action="/test_view/{{event_data.id}}/" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
-                                    <p class="card-description">
-                                        Bank info
-                                    </p>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">User</label>
+                                                <label class="col-sm-3 col-form-label">Invited by</label>
                                                 <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" readonly onclick="myFunction()"
+                                                    <input required type="text" id="name" name="invited_by" readonly
+                                                           onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
                                                         <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
-                                                        {% for users in user.user_data %}
-                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
-                                                            {{users.phone}}</a>
+                                                        {% for users in admins.admins %}
+                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="uid" name="uid">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Full Name</label>
-                                                <div class="col-sm-9">
-                                                    <input required type="text" id="account_holder_name"
-                                                           name="account_holder_name"
-                                                           class="form-control"
-                                                           placeholder="Enter Full Name">
+                                                    <input type="hidden" id="uid" name="invited_by_uid">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Select Bank</label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control" name="bank_name">
-                                                        {% for banks in bank.bank_list %}
-                                                        <option>{{banks.bank_name}}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Account Number</label>
-                                                <div class="col-sm-9">
-                                                    <input required class="form-control" placeholder="1234567890"
-                                                           id="account_number"
-                                                           name="account_number"/>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-form-label">Invite Message</label>
+                                        <textarea class="form-control" id="invite_msg" rows="4"
+                                                  name="event_note"></textarea>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">IFSC CODE</label>
+                                                <label class="col-sm-3 col-form-label">phone num</label>
                                                 <div class="col-sm-9">
-                                                    <input required class="form-control" placeholder="ICICIXXXXXX"
-                                                           id="ifsc_code" name="ifsc_code"/>
+                                                    <input type="text" class="form-control" name="phone"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <label class="col-sm-3 col-form-label">CSV file</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
-                                                    <input required type="hidden" id="added_by" name="added_by"
-                                                           value="{{ request.session.uid }}">
+                                                    <input type="file" name="csv_file" accept=".csv"
+                                                           class="file-upload-default">
+                                                    <div class="input-group col-xs-12">
+                                                        <input type="text"
+                                                               class="form-control file-upload-info"
+                                                               disabled
+                                                               placeholder="Upload Image">
+                                                        <span class="input-group-append">
+                                                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                                </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="center-button">
-                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2">
-                                    </div>
+                                    <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                </div>
                                 </form>
+                                {% if error_message %}
+                                <p>{{ error_message }}</p>
+                                {% endif %}
+                                {% if mob_numbers %}
+                                <h2>Extracted Mobile Numbers:</h2>
+                                <ul>
+                                    {% for mob_number in mob_numbers %}
+                                    <li>{{ mob_number }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+
+
                             </div>
                         </div>
                     </div>
@@ -210,8 +199,6 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-
-
 <script>
     /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
@@ -250,6 +237,9 @@
             dropdown.classList.remove("show");
         }
     });
+
+
+
 
 </script>
 <!-- container-scroller -->

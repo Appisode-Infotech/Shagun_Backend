@@ -631,10 +631,13 @@ def activate_deactivate_users(request, user_id, status):
         return redirect('sign_up')
 
 
-def activate_deactivate_employee(request, user_id, status):
+def activate_deactivate_employee(request, user_id, status, role):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         user_controller.enable_disable_employee(user_id, status)
-        return redirect('manage_employee')
+        if role == 2:
+            return redirect('manage_employee')
+        else:
+            return redirect('manage_admin')
     else:
         return redirect('sign_up')
 
@@ -787,7 +790,7 @@ def edit_admin(request, user_id):
             return redirect('manage_admin')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
-            return render(request, 'pages/admin_employee/edit_employee.html', response)
+            return render(request, 'pages/admin_employee/edit_admin.html', response)
     else:
         return redirect('sign_up')
 
@@ -1060,6 +1063,55 @@ def printer_closed_jobs(request):
         return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response})
     else:
         return redirect('sign_up')
+
+
+
+def whatsapp_invite(request, e_id):
+    import os
+    import csv
+    from django.core.files.storage import FileSystemStorage
+    event_data, status_code = event_controller.get_event_by_id(e_id)
+    admins = event_controller.get_event_admins(e_id)
+
+    if request.method == 'POST':
+        mob_numbers = []
+        invited_by = request.POST['invited_by_uid']
+        phone = request.POST['phone']
+        mob_numbers.append(phone)
+        if 'csv_file' in request.FILES:
+            csv_file = request.FILES['csv_file']
+            # Extract mobile numbers from the CSV
+            try:
+                fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
+                filename = fs.save(csv_file.name, csv_file)
+                with open(fs.path(filename), 'r') as file:
+                    reader = csv.reader(file)
+                    for row in reader:
+                        for cell in row:
+                            if cell.isdigit() and len(cell) == 10:
+                                mob_numbers.append(cell)
+                mob_numbers = list(set(mob_numbers))
+                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
+                return render(request, 'pages/admin_employee/whatsapp_invite.html',
+                              {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
+
+            except Exception as e:
+                error_message = f"An error occurred while processing the CSV: {e}"
+                return render(request, 'pages/admin_employee/whatsapp_invite.html',
+                              {'error_message': error_message, "event_data": event_data['event_data'],
+                               "admins": admins})
+
+        else:
+            mob_numbers = list(set(mob_numbers))
+            test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
+            return render(request, 'pages/admin_employee/whatsapp_invite.html',
+                          {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
+
+    else:
+        admins = event_controller.get_event_admins(e_id)
+        return render(request, 'pages/admin_employee/whatsapp_invite.html',
+                      {"admins": admins, "event_data": event_data['event_data']})
+
 
 
 #
@@ -1515,22 +1567,25 @@ def user_home_page(request):
 
 @api_view(['POST'])
 def gift_sent_list(request):
-    token = request.headers.get('Authorization').split(' ')[1]
-    try:
-        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-        username = decoded_token['username']
-        if username == request.data.get('uid'):
-            gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
-            response, status_code = transactions_controller.get_sent_gift(gift_data_obj)
-            return JsonResponse(response, status=status_code)
-
-        else:
-            return JsonResponse({'message': 'Invalid token for user'}, status=401)
-
-    except jwt.ExpiredSignatureError:
-        return JsonResponse({'message': 'Token has expired'}, status=401)
-    except jwt.InvalidTokenError:
-        return JsonResponse({'message': 'Invalid token'}, status=401)
+    gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
+    response, status_code = transactions_controller.get_sent_gift(gift_data_obj)
+    return JsonResponse(response, status=status_code)
+    # token = request.headers.get('Authorization').split(' ')[1]
+    # try:
+    #     decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+    #     username = decoded_token['username']
+    #     if username == request.data.get('uid'):
+    #         gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
+    #         response, status_code = transactions_controller.get_sent_gift(gift_data_obj)
+    #         return JsonResponse(response, status=status_code)
+    #
+    #     else:
+    #         return JsonResponse({'message': 'Invalid token for user'}, status=401)
+    #
+    # except jwt.ExpiredSignatureError:
+    #     return JsonResponse({'message': 'Token has expired'}, status=401)
+    # except jwt.InvalidTokenError:
+    #     return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 @api_view(['POST'])
@@ -1637,24 +1692,24 @@ def track_order(request):
 
 # test done here
 
-# def test_view(request):
-#     # response['event_list']
-#     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-#         response, status_code = event_controller.get_all_event_list()
-#         paginator = Paginator(response['event_list'], 2)
-#
-#         # Get the current page number from the request's GET parameters
-#         page_number = request.GET.get('page')
-#
-#         # Get the Page object for the current page
-#         page_obj = paginator.get_page(page_number)
-#
-#         context = {
-#             'page_obj': page_obj
-#         }
-#         return render(request, 'pages/admin_employee/test.html', context)
-#     else:
-#         return redirect('sign_up')
+def test_view(request):
+    # response['event_list']
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.get_all_event_list()
+        paginator = Paginator(response['event_list'], 2)
+
+        # Get the current page number from the request's GET parameters
+        page_number = request.GET.get('page')
+
+        # Get the Page object for the current page
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'page_obj': page_obj
+        }
+        return render(request, 'pages/admin_employee/test.html', context)
+    else:
+        return redirect('sign_up')
 
 
 # def event_admin(request, event_id):
@@ -1662,52 +1717,6 @@ def track_order(request):
 #     print(response)
 #     return render(request, 'pages/admin_employee/event.html', {"response": response, "event_id": event_id})
 
-
-def test_view(request, e_id):
-    import os
-    import csv
-    from django.core.files.storage import FileSystemStorage
-    event_data, status_code = event_controller.get_event_by_id(e_id)
-    admins = event_controller.get_event_admins(e_id)
-
-    if request.method == 'POST':
-        mob_numbers = []
-        invited_by = request.POST['invited_by_uid']
-        phone = request.POST['phone']
-        mob_numbers.append(phone)
-        if 'csv_file' in request.FILES:
-            csv_file = request.FILES['csv_file']
-            # Extract mobile numbers from the CSV
-            try:
-                fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
-                filename = fs.save(csv_file.name, csv_file)
-                with open(fs.path(filename), 'r') as file:
-                    reader = csv.reader(file)
-                    for row in reader:
-                        for cell in row:
-                            if cell.isdigit() and len(cell) == 10:
-                                mob_numbers.append(cell)
-                mob_numbers = list(set(mob_numbers))
-                response = test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
-                return render(request, 'pages/admin_employee/test.html',
-                              {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
-
-            except Exception as e:
-                error_message = f"An error occurred while processing the CSV: {e}"
-                return render(request, 'pages/admin_employee/test.html',
-                              {'error_message': error_message, "event_data": event_data['event_data'],
-                               "admins": admins})
-
-        else:
-            mob_numbers = list(set(mob_numbers))
-            response = test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
-            return render(request, 'pages/admin_employee/test.html',
-                          {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
-
-    else:
-        admins = event_controller.get_event_admins(e_id)
-        return render(request, 'pages/admin_employee/test.html',
-                      {"admins": admins, "event_data": event_data['event_data']})
 
 
 @api_view(['POST'])

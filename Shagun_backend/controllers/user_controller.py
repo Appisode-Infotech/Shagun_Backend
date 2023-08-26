@@ -538,7 +538,7 @@ def get_all_employees():
 def get_all_admins():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 1"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()

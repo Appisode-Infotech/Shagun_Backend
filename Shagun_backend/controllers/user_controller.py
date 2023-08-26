@@ -451,12 +451,12 @@ def add_admin(emp_obj):
         with connection.cursor() as cursor:
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 3,
+            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 1,
                       emp_obj.city, emp_obj.password)
             cursor.execute(add_emp_query, values)
             return {
                 "status": True,
-                "message": "Employee added successfully"
+                "message": "Admin added successfully"
             }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e), "user": None}, 301

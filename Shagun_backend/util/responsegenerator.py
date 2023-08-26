@@ -109,9 +109,9 @@ class responseGenerator:
                         "printer_id": events[14],
                         "approved_date_time": events[15],
                         "status": events[16],
-                        "total_received_amount": events[17],
-                        "balance_shagun_amount": events[18],
-                        "settled_amount": events[19],
+                        "total_received_amount": round(events[17], 2),
+                        "balance_shagun_amount": round(events[18], 2),
+                        "settled_amount": round(events[19], 2),
                         "event_type_name": events[20]
                     }
                 )
@@ -426,7 +426,8 @@ class responseGenerator:
                         "kyc": user[6],
                         "profile_pic": user[7],
                         "created_on": user[8],
-                        "status": user[9]
+                        "status": user[9],
+                        "role": user[10]
 
                     }
                 )
@@ -481,6 +482,21 @@ class responseGenerator:
                 "city_name": data[11]
 
             }
+        if controller_type == DELIVERY_VENDOR_DATA:
+                return {
+                    "id": data[0],
+                    "delivery_vendor_name": data[1],
+                    "city": data[2],
+                    "address": data[3],
+                    "lat_lng": data[4],
+                    "status": data[5],
+                    "gst_no": data[6],
+                    "delivery_vendor_owner": data[7],
+                    "contact_number": data[8],
+                    "created_by": data[9],
+                    "created_on": data[10]
+
+                }
 
         if controller_type == ALL_JOBS:
             jobs_data = []
@@ -496,12 +512,13 @@ class responseGenerator:
                         "last_modified": jobs[6],
                         "billing_amount": jobs[7],
                         "event_id": jobs[8],
-                        "store_name": jobs[9],
-                        "event_type_name": jobs[10],
-                        "card_name": jobs[11],
-                        "card_image_url": jobs[12],
-                        "card_price": jobs[13],
-                        "event_date": jobs[14]
+                        "wish": jobs[9],
+                        "store_name": jobs[10],
+                        "event_type_name": jobs[11],
+                        "card_name": jobs[12],
+                        "card_image_url": jobs[13],
+                        "card_price": jobs[14],
+                        "event_date": jobs[15]
 
                     }
                 )
@@ -587,6 +604,7 @@ class responseGenerator:
                 "event_id": data[10],
                 "admins": json.loads(data[1]),
                 "sub_events": json.loads(data[6]),
+                "delivery_fee": data[11],
             }
 
         if controller_type == REQUEST_LIST:

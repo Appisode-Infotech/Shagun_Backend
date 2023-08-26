@@ -445,6 +445,27 @@ def add_employee(emp_obj):
     except Exception as e:
         return {"status": False, "message": str(e), "user": None}, 301
 
+def add_admin(emp_obj):
+    try:
+        with connection.cursor() as cursor:
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 3,
+                      emp_obj.city, emp_obj.password)
+            cursor.execute(add_emp_query, values)
+            # query = "SELECT * FROM users WHERE role = %s;"
+            # cursor.execute(query, 2)
+            # user_data = cursor.fetchone()
+            return {
+                "status": True,
+                "message": "Employee added successfully"
+                # "user": responseGenerator.generateResponse(user_data, CHECK_USER)
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e), "user": None}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e), "user": None}, 301
+
 
 def edit_employee(emp_obj):
     try:
@@ -505,6 +526,23 @@ def get_all_employees():
         with connection.cursor() as cursor:
             users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
                 FROM users WHERE role = 2"""
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+def get_all_admins():
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+                FROM users WHERE role = 1"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shagun Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <style>
+        .center-button {
+          display: flex;
+          justify-content: center;
+        }
+
+        .toggle-password {
+          position: absolute;
+          top: 10px;
+          right: 30px;
+          cursor: pointer;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include 'app_bar.html' %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        {% include 'theme_setting.html' %}
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        {% include 'nav_bar.html' %}
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Add New Admin</h4>
+                                <form class="form-sample" action="/add_employee" method="post"
+                                      enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <p class="card-description">
+                                        Personal info
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Email</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" id="email" name="email"
+                                                           class="form-control"
+                                                           placeholder="username">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Full Name</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" id="name" name="name"
+                                                           class="form-control"
+                                                           placeholder="Full Name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Phone</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" id="phone" name="phone"
+                                                           class="form-control"
+                                                           placeholder="9876543210">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">City</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" id="city" name="city"
+                                                           class="form-control"
+                                                           placeholder="username">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Password</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="password" id="password" name="password"
+                                                           class="form-control form-control-lg"
+                                                           placeholder="password">
+                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Confirm Password</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="password" id="confirmPassword"
+                                                           class="form-control form-control-lg"
+                                                           placeholder="password">
+                                                    <i class="toggle-password"
+                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center-button">
+                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
+                                            not match!
+                                        </div>
+
+                                    </div>
+                                    <div class="center-button">
+                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2"
+                                               id="submitButton" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+
+<script>
+    function toggleVisibility(fieldId) {
+      var field = document.getElementById(fieldId);
+      if (field.type === 'password') {
+        field.type = 'text';
+      } else {
+        field.type = 'password';
+      }
+      validatePasswords(); // Validate passwords after toggling visibility
+    }
+
+    function validatePasswords() {
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+      var passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+      if (password === confirmPassword) {
+        // Passwords match, hide error message
+        passwordMatchMessage.style.display = 'none';
+        submitButton.disabled = false;
+
+      } else {
+        // Passwords do not match, show error message
+        passwordMatchMessage.style.display = 'block';
+        submitButton.disabled = true;
+
+      }
+    }
+
+    // Add event listeners to trigger validation when input changes
+    document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
+
+
+</script>
+
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="{% static 'vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>
+<script src="{% static 'vendors/select2/select2.min.js' %}"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="{% static 'js/file-upload.js' %}"></script>
+<script src="{% static 'js/typeahead.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+
+<!-- End custom js for this page-->
+
+</body>
+
+</html>

@@ -220,7 +220,6 @@ def get_transaction_list(event_id, status):
             WHERE th.event_id = '{event_id}' AND is_settled LIKE '{status}' """
             cursor.execute(track_order_query)
             track = cursor.fetchall()
-            print(track)
             return {
                 "status": True,
                 "transactions": responseGenerator.generateResponse(track, Transaction_DATA)

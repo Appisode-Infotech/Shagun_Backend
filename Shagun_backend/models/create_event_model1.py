@@ -18,6 +18,7 @@ def convert_datetime(dt_str):
 
 def sub_events(data):
     sub_events_count = sum(key.startswith('sub_events[') for key in data.keys())
+    print(sub_events_count)
     sub_events_count //= 3
     sub_events_list = []
     for i in range(sub_events_count):
@@ -52,6 +53,7 @@ def event_admins(data):
 
 # Transform data to the desired JSON format
 def transform_data_to_json(data):
+    print(sub_events(data))
     result = {
         "created_by_uid": data['created_by_uid'],
         "event_type_id": data['event_type_id'],

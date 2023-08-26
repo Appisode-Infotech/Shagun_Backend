@@ -29,15 +29,16 @@ def printer_login(uname, pwd):
                 "msg": "printer not exist, Please contact admin to register",
             }
 
+
 def add_printer(store_obj):
     try:
         with connection.cursor() as cursor:
             add_printer_query = """INSERT INTO printer (store_name, city, address, lat_lng, gst_no, store_owner,
                                  contact_number, printer_user_name, printer_password) 
                                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-            cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address, store_obj.lat_lng,
-                                   store_obj.gst_no, store_obj.store_owner, store_obj.contact_number,
-                                   store_obj.printer_user_name, store_obj.printer_password])
+            cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address,
+                                store_obj.lat_lng, store_obj.gst_no, store_obj.store_owner, store_obj.contact_number,
+                                store_obj.printer_user_name, store_obj.printer_password])
             return {
                 "status": True,
                 "user": "store added successfully"
@@ -46,6 +47,7 @@ def add_printer(store_obj):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
 
 def disable_printer(pid, pstatus):
     try:
@@ -165,9 +167,9 @@ def dashboard_search_printers_status(status):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_all_jobs(status):
     status_values_str = ', '.join(str(status_value) for status_value in status)
-    print(status_values_str)
 
     try:
         with connection.cursor() as cursor:
@@ -180,7 +182,39 @@ def get_all_jobs(status):
             WHERE pj.status IN ({status_values_str})"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
-            print(jobs)
+            if jobs is not None:
+                return {
+                      "status": True,
+                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "jobs": None
+                }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def filter_all_jobs(status, search):
+    status_values_str = ', '.join(str(status_value) for status_value in status)
+
+    try:
+        with connection.cursor() as cursor:
+            get_all_jobs_query = f""" 
+            SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
+            gc.card_price, e.event_date FROM print_jobs AS pj
+            LEFT JOIN printer AS p ON pj.printer_id = p.id
+            LEFT JOIN event AS e ON pj.event_id = e.id
+            LEFT JOIN events_type AS et ON e.event_type_id = et.id
+            LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
+            WHERE pj.status IN ({status_values_str}) AND  ( pj.event_id LIKE '%{search}%' OR 
+            pj.printer_id LIKE '%{search}%' OR gc.card_name LIKE '%{search}%' OR p.store_name LIKE '%{search}%') """
+            cursor.execute(get_all_jobs_query)
+            jobs = cursor.fetchall()
+            print(get_all_jobs_query)
             if jobs is not None:
                 return {
                       "status": True,
@@ -214,7 +248,6 @@ def get_printers_jobs(pid, status):
             WHERE pj.printer_id = '{pid}' AND pj.status IN ({status_values_str})"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
-            print(jobs)
             if jobs is not None:
                 return {
                       "status": True,
@@ -225,6 +258,22 @@ def get_printers_jobs(pid, status):
                     "status": False,
                     "jobs": None
                 }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def activate_deactivate_print_jobs(pid, status):
+    try:
+        with connection.cursor() as cursor:
+            query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{pid}' """
+            cursor.execute(query)
+            return {
+                "status": True,
+                "message": "Printer job status updated successfully"
+            }, 200
+
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:

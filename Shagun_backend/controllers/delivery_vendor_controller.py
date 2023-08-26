@@ -2,7 +2,7 @@ import pymysql
 from django.db import connection
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import ALL_PRINTERS_DATA
+from Shagun_backend.util.constants import ALL_PRINTERS_DATA, DELIVERY_VENDOR_DATA
 
 
 def add_vendor(vendor_obj):
@@ -38,7 +38,6 @@ def enable_disable_vendor(vendor_id, status):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
 
 
 def dashboard_search_delivery_vendor(search):
@@ -106,7 +105,6 @@ def get_delivery_vendor():
             LEFT JOIN locations AS l ON p.city = l.id"""
             cursor.execute(printers_data_query)
             delivery_vendor_data = cursor.fetchall()
-            print(delivery_vendor_data)
             return {
                 "status": True,
                 "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, ALL_PRINTERS_DATA)
@@ -118,6 +116,40 @@ def get_delivery_vendor():
         return {"status": False, "message": str(e)}, 301
 
 
+def edit_delivery_vendor(vendor_id):
+    try:
+        with connection.cursor() as cursor:
+            printers_data_query = f""" SELECT * FROM delivery_vendors WHERE id = '{vendor_id}' """
+            cursor.execute(printers_data_query)
+            delivery_vendor_data = cursor.fetchone()
+            return {
+                "status": True,
+                "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, DELIVERY_VENDOR_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
 
 
+def update_vendor(vendor_obj):
+    try:
+        with connection.cursor() as cursor:
+            update_vendor_query = f"""
+                        UPDATE  delivery_vendors SET delivery_vendor_name = '{vendor_obj.delivery_vendor_name}',
+                        city = '{vendor_obj.city}', address = '{vendor_obj.address}', gst_no = '{vendor_obj.gst_no}', 
+                        delivery_vendor_owner = '{vendor_obj.delivery_vendor_owner}', 
+                        contact_number = '{vendor_obj.contact_number}', created_by = '{vendor_obj.created_by}'
+                         WHERE id = '{vendor_obj.id}' 
+                        """
+            cursor.execute(update_vendor_query)
+            return {
+                "status": True,
+                "Vendor": "Vendor updated successfully"
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
 

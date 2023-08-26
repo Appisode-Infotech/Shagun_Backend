@@ -16,7 +16,7 @@ from Shagun_backend.controllers import user_controller, event_controller, app_da
     bank_controller, test_controller, delivery_vendor_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
-    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model
+    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model, bank_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
 from Shagun_backend.util.constants import today
 
@@ -49,6 +49,7 @@ def custom_404(request):
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
+        print(response)
         return render(request, 'index.html', response)
     else:
         return redirect('sign_up')
@@ -199,7 +200,16 @@ def manage_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/employees.html', {"response": response})
+        return render(request, 'pages/admin_employee/employees.html', {"response": response, "role":2})
+    else:
+        return redirect('sign_up')
+def manage_admin(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_all_admins()
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/admins.html', {"response": response, "role":1})
     else:
         return redirect('sign_up')
 
@@ -218,11 +228,32 @@ def manage_printers(request):
 def manage_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.get_delivery_vendor()
-        print(response)
         paginator = Paginator(response['delivery_vendor_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/delivery_vendor.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def edit_delivery_vendors(request, vid):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            print(request.POST)
+            vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
+            print("=========================================================")
+            print(vendor_obj)
+            print("=========================================================")
+
+            response = delivery_vendor_controller.update_vendor(vendor_obj)
+            print(response)
+            return redirect('manage_delivery_vendors')
+        else:
+            response, status_code = delivery_vendor_controller.edit_delivery_vendor(vid)
+            location, status_code = event_controller.get_city_list_for_user()
+            return render(request, 'pages/admin_employee/edit_delivery_vendor.html',
+                          {"response": response['delivery_vendor_data'], "location": location['city_list']})
+
     else:
         return redirect('sign_up')
 
@@ -262,7 +293,6 @@ def kyc_request(request):
 def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
-        print(response)
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -306,6 +336,18 @@ def all_printer_jobs(request):
         return redirect('sign_up')
 
 
+def filter_all_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4, 5]
+        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
 def Open_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4]
@@ -318,10 +360,34 @@ def Open_printer_jobs(request):
         return redirect('sign_up')
 
 
+def filter_Open_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4]
+        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
 def closed_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [5]
         response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/closed_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def filter_closed_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [5]
+        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -408,8 +474,7 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            print(kyc_obj)
-            print(user_controller.add_user_kyc(kyc_obj))
+            user_controller.add_user_kyc(kyc_obj)
             return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_all_users('%')
@@ -448,6 +513,18 @@ def add_employee(request):
         return redirect('sign_up')
 
 
+def add_admin(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            emp_obj = employee_model.add_employee_model_from_dict(request.POST)
+            user_controller.add_admin(emp_obj)
+            return redirect('manage_admin')
+        else:
+            return render(request, 'pages/admin_employee/add_admin.html')
+    else:
+        return redirect('sign_up')
+
+
 def add_printer(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
@@ -466,7 +543,6 @@ def add_delivery_vendor(request):
         if request.method == 'POST':
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
             response = delivery_vendor_controller.add_vendor(vendor_obj)
-            print(response)
             return redirect('manage_delivery_vendors')
         else:
             location, status_code = event_controller.get_city_list_for_user()
@@ -678,7 +754,6 @@ def edit_bank(request, bank_id):
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)
             bank_list, status_code = bank_controller.get_all_banks_list()
-            # print(bank_data)
             context = {
                 "bank_data": bank_data,
                 "bank_list": bank_list
@@ -689,6 +764,19 @@ def edit_bank(request, bank_id):
 
 
 def edit_employee(request, user_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            emp_obj = employee_model.add_employee_model_from_dict(request.POST)
+            user_controller.edit_employee(emp_obj)
+            return redirect('manage_employee')
+        else:
+            response, status_code = user_controller.get_employee_by_id(user_id)
+            return render(request, 'pages/admin_employee/edit_employee.html', response)
+    else:
+        return redirect('sign_up')
+
+
+def edit_admin(request, user_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
@@ -723,8 +811,7 @@ def edit_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
-            print(grt_obj)
-            print(greeting_cards_controller.edit_greeting_cards(grt_obj))
+            greeting_cards_controller.edit_greeting_cards(grt_obj)
             return redirect('manage_greeting_cards')
     else:
         return redirect('sign_up')
@@ -734,8 +821,7 @@ def printer_edit_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         if request.method == 'POST':
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
-            print(grt_obj)
-            print(greeting_cards_controller.edit_greeting_cards(grt_obj))
+            greeting_cards_controller.edit_greeting_cards(grt_obj)
             return redirect('printer_manage_greeting_cards')
     else:
         return redirect('sign_up')
@@ -744,10 +830,8 @@ def printer_edit_greeting_cards(request):
 def edit_printer(request, printer_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
             response, status_code = store_controller.edit_printer(store_obj)
-            print(response)
             return redirect('manage_printers')
         else:
             printer_data, status_code = store_controller.get_printer_by_id(printer_id)
@@ -766,14 +850,11 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
-            print(event_obj)
             event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
         else:
-            print(event_id)
             event_types, status_code = event_controller.get_event_type_list_for_user()
             location, status_code = event_controller.get_city_list_for_user()
             users_list, status_code = user_controller.get_all_users(1)
@@ -872,8 +953,8 @@ def dashboard_search_employee(request):
         return redirect('sign_up')
 
 
-def dashboard_search_employee_status(request, status):
-    response, status_code = user_controller.dashboard_search_employee_status(status)
+def dashboard_search_employee_status(request, status, role):
+    response, status_code = user_controller.dashboard_search_employee_status(status,role)
     paginator = Paginator(response['user_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
@@ -1176,7 +1257,6 @@ def get_kyc_by_id(request):
 @api_view(['POST'])
 def add_bank_details(request):
     bank_obj = bank_details_model.bank_details_model_from_dict(request.data)
-    print(bank_obj)
     response, status_code = user_controller.add_bank_details(bank_obj)
     return JsonResponse(response, status=status_code)
 
@@ -1272,7 +1352,6 @@ def get_single_event(request):
             event_id = request.data['event_id']
             phone = request.data['phone']
             response, status_code = event_controller.get_single_event(event_id, phone)
-            print(response)
             return JsonResponse(response, status=status_code)
 
         else:
@@ -1393,21 +1472,24 @@ def request_callback(request):
 
 @api_view(['POST'])
 def add_transaction_history(request):
-    token = request.headers.get('Authorization').split(' ')[1]
-    try:
-        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-        username = decoded_token['username']
-        if username == request.data.get('uid'):
-            transaction_obj = transactions_history_model.transactions_history_model_from_dict(request.data)
-            response, status_code = transactions_controller.add_transaction_history(transaction_obj)
-            return JsonResponse(response, status=status_code)
-        else:
-            return JsonResponse({'message': 'Invalid token for user'}, status=401)
-
-    except jwt.ExpiredSignatureError:
-        return JsonResponse({'message': 'Token has expired'}, status=401)
-    except jwt.InvalidTokenError:
-        return JsonResponse({'message': 'Invalid token'}, status=401)
+    transaction_obj = transactions_history_model.transactions_history_model_from_dict(request.data)
+    response, status_code = transactions_controller.add_transaction_history(transaction_obj)
+    return JsonResponse(response, status=status_code)
+    # token = request.headers.get('Authorization').split(' ')[1]
+    # try:
+    #     decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+    #     username = decoded_token['username']
+    #     if username == request.data.get('uid'):
+    #         transaction_obj = transactions_history_model.transactions_history_model_from_dict(request.data)
+    #         response, status_code = transactions_controller.add_transaction_history(transaction_obj)
+    #         return JsonResponse(response, status=status_code)
+    #     else:
+    #         return JsonResponse({'message': 'Invalid token for user'}, status=401)
+    #
+    # except jwt.ExpiredSignatureError:
+    #     return JsonResponse({'message': 'Token has expired'}, status=401)
+    # except jwt.InvalidTokenError:
+    #     return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 @api_view(['POST'])
@@ -1616,7 +1698,6 @@ def test_view(request, e_id):
         else:
             mob_numbers = list(set(mob_numbers))
             response = test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
-            print(response)
             return render(request, 'pages/admin_employee/test.html',
                           {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
 
@@ -1624,8 +1705,6 @@ def test_view(request, e_id):
         admins = event_controller.get_event_admins(e_id)
         return render(request, 'pages/admin_employee/test.html',
                       {"admins": admins, "event_data": event_data['event_data']})
-
-
 
 
 @api_view(['POST'])
@@ -1638,6 +1717,24 @@ def add_ev(request):
 def event_admin(request):
     response, status_code = test_controller.event_admin(request.data['event_id'])
     return JsonResponse(response)
+
+
+@api_view(['POST'])
+def add_bank_list(request):
+    response, status_code = bank_controller.add_bank_list(request.data['bank_name'], request.data['bank_logo'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def activate_deactivate_bank_list(request):
+    response, status_code = bank_controller.activate_deactivate_bank_list(request.data['id'], request.data['status'])
+    return JsonResponse(response, status=status_code)
+
+
+@api_view(['POST'])
+def activate_deactivate_print_jobs(request):
+    response, status_code = store_controller.activate_deactivate_print_jobs(request.data['id'], request.data['status'])
+    return JsonResponse(response, status=status_code)
 
 # def next_page(request):
 #     print("============================================")

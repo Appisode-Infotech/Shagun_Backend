@@ -90,7 +90,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Employee List</h4>
+                        <h4 class="card-title">Admins List</h4>
                         <div class="form-group">
                             <form action="{% url 'dashboard_search_employee' %}" method="POST">
                                 {% csrf_token %}
@@ -106,7 +106,7 @@
                             </form>
                         </div>
                         <div class="dropdown">
-                            <label> Employee Filter </label>
+                            <label> Admin Filter </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -120,7 +120,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
                                 <a class="dropdown-item"
-                                   href="{% url 'manage_employee'  %}">All</a>
+                                   href="{% url 'manage_admin'  %}">All</a>
                                 <a class="dropdown-item"
                                    href="{% url 'dashboard_search_employee_status' 1, {{role}} %}">Active</a>
                                 <a class="dropdown-item"
@@ -129,8 +129,8 @@
 
                         </div>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'add_employee' %}'">
-                            Employee
+                                onclick="window.location.href='{% url 'add_admin' %}'">
+                            Admin
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
                     </div>
@@ -206,7 +206,7 @@
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="window.location.href='{% url 'edit_employee' user.id%}'">
+                                            onclick="window.location.href='{% url 'edit_admin' user.id%}'">
                                         Edit
                                         <i class="fas fa-edit"></i>
                                     </button>

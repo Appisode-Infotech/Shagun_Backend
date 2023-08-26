@@ -69,7 +69,7 @@ class TransactionsHistoryModel:
         shagun_amount = from_float(obj.get("shagun_amount"))
         transaction_amount = from_float(obj.get("transaction_amount"))
         status = from_bool(obj.get("status"))
-        gifter_name = from_str(obj.get("gifter_Name"))
+        gifter_name = from_str(obj.get("gifter_name"))
         uid = from_str(obj.get("uid"))
         return TransactionsHistoryModel(receiver_uid, event_id, wish, greeting_card_id, greeting_card_price, transaction_id, payment_status, delivery_fee, transaction_fee, service_charge, shagun_amount, transaction_amount, status, gifter_name, uid)
 

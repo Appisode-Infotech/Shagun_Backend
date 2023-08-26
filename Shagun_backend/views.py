@@ -200,7 +200,16 @@ def manage_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/employees.html', {"response": response})
+        return render(request, 'pages/admin_employee/employees.html', {"response": response, "role":2})
+    else:
+        return redirect('sign_up')
+def manage_admin(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.get_all_admins()
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/admins.html', {"response": response, "role":1})
     else:
         return redirect('sign_up')
 
@@ -404,6 +413,7 @@ def transactions_settlement(request, event_id):
                           {"response": response, "event_id": event_id})
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
+            print(response)
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
@@ -499,6 +509,18 @@ def add_employee(request):
             return redirect('manage_employee')
         else:
             return render(request, 'pages/admin_employee/add_employee.html')
+    else:
+        return redirect('sign_up')
+
+
+def add_admin(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            emp_obj = employee_model.add_employee_model_from_dict(request.POST)
+            user_controller.add_admin(emp_obj)
+            return redirect('manage_admin')
+        else:
+            return render(request, 'pages/admin_employee/add_admin.html')
     else:
         return redirect('sign_up')
 
@@ -754,6 +776,19 @@ def edit_employee(request, user_id):
         return redirect('sign_up')
 
 
+def edit_admin(request, user_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            emp_obj = employee_model.add_employee_model_from_dict(request.POST)
+            user_controller.edit_employee(emp_obj)
+            return redirect('manage_employee')
+        else:
+            response, status_code = user_controller.get_employee_by_id(user_id)
+            return render(request, 'pages/admin_employee/edit_employee.html', response)
+    else:
+        return redirect('sign_up')
+
+
 def edit_event_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
@@ -918,8 +953,8 @@ def dashboard_search_employee(request):
         return redirect('sign_up')
 
 
-def dashboard_search_employee_status(request, status):
-    response, status_code = user_controller.dashboard_search_employee_status(status)
+def dashboard_search_employee_status(request, status, role):
+    response, status_code = user_controller.dashboard_search_employee_status(status,role)
     paginator = Paginator(response['user_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
@@ -1437,21 +1472,24 @@ def request_callback(request):
 
 @api_view(['POST'])
 def add_transaction_history(request):
-    token = request.headers.get('Authorization').split(' ')[1]
-    try:
-        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-        username = decoded_token['username']
-        if username == request.data.get('uid'):
-            transaction_obj = transactions_history_model.transactions_history_model_from_dict(request.data)
-            response, status_code = transactions_controller.add_transaction_history(transaction_obj)
-            return JsonResponse(response, status=status_code)
-        else:
-            return JsonResponse({'message': 'Invalid token for user'}, status=401)
-
-    except jwt.ExpiredSignatureError:
-        return JsonResponse({'message': 'Token has expired'}, status=401)
-    except jwt.InvalidTokenError:
-        return JsonResponse({'message': 'Invalid token'}, status=401)
+    transaction_obj = transactions_history_model.transactions_history_model_from_dict(request.data)
+    response, status_code = transactions_controller.add_transaction_history(transaction_obj)
+    return JsonResponse(response, status=status_code)
+    # token = request.headers.get('Authorization').split(' ')[1]
+    # try:
+    #     decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+    #     username = decoded_token['username']
+    #     if username == request.data.get('uid'):
+    #         transaction_obj = transactions_history_model.transactions_history_model_from_dict(request.data)
+    #         response, status_code = transactions_controller.add_transaction_history(transaction_obj)
+    #         return JsonResponse(response, status=status_code)
+    #     else:
+    #         return JsonResponse({'message': 'Invalid token for user'}, status=401)
+    #
+    # except jwt.ExpiredSignatureError:
+    #     return JsonResponse({'message': 'Token has expired'}, status=401)
+    # except jwt.InvalidTokenError:
+    #     return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 @api_view(['POST'])

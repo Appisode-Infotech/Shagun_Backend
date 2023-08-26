@@ -426,7 +426,8 @@ class responseGenerator:
                         "kyc": user[6],
                         "profile_pic": user[7],
                         "created_on": user[8],
-                        "status": user[9]
+                        "status": user[9],
+                        "role": user[10]
 
                     }
                 )

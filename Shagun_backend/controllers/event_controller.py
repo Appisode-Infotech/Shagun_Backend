@@ -827,3 +827,21 @@ def save_event_guest_invite(invited_by, invited_to, e_id):
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def get_invited_users_list(e_id):
+    try:
+        with connection.cursor() as cursor:
+            active_events_query = f"""SELECT invited_to, u.name, invite_message	, created_at 
+            FROM event_guest_invite AS eg
+            LEFT JOIN users AS u ON eg.invited_by = u.uid
+            WHERE event_id = '{e_id}' """
+            cursor.execute(active_events_query)
+            invited_users = cursor.fetchall()
+            return {
+                "invited_list": responsegenerator.responseGenerator.generateResponse(invited_users, INVITED_USERS_LIST)
+            }
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

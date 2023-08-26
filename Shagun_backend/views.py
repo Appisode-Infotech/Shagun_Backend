@@ -1,5 +1,9 @@
 import jwt
 from datetime import datetime, timedelta
+import os
+import csv
+from django.core.files.storage import FileSystemStorage
+import re
 
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
@@ -9,6 +13,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from django.contrib import messages
 import time
+
+from rest_framework.reverse import reverse
 
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
@@ -1067,20 +1073,17 @@ def printer_closed_jobs(request):
 
 
 def whatsapp_invite(request, e_id):
-    import os
-    import csv
-    from django.core.files.storage import FileSystemStorage
     event_data, status_code = event_controller.get_event_by_id(e_id)
     admins = event_controller.get_event_admins(e_id)
+    invited_list = event_controller.get_invited_users_list(e_id)
 
     if request.method == 'POST':
         mob_numbers = []
         invited_by = request.POST['invited_by_uid']
+        invite_message = request.POST['invite_msg']
         phone = request.POST['phone']
-        mob_numbers.append(phone)
         if 'csv_file' in request.FILES:
             csv_file = request.FILES['csv_file']
-            # Extract mobile numbers from the CSV
             try:
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
                 filename = fs.save(csv_file.name, csv_file)
@@ -1088,12 +1091,15 @@ def whatsapp_invite(request, e_id):
                     reader = csv.reader(file)
                     for row in reader:
                         for cell in row:
+                            stripped_cell = cell.strip()
                             if cell.isdigit() and len(cell) == 10:
-                                mob_numbers.append(cell)
+                                mob_numbers.append(stripped_cell)
+
                 mob_numbers = list(set(mob_numbers))
-                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
-                return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                              {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
+                if phone is not None:
+                    mob_numbers.append(phone)
+                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                return redirect(reverse('whatsapp_invite', args=[e_id]))
 
             except Exception as e:
                 error_message = f"An error occurred while processing the CSV: {e}"
@@ -1105,12 +1111,11 @@ def whatsapp_invite(request, e_id):
             mob_numbers = list(set(mob_numbers))
             test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
             return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                          {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
+                          {'invited_list': invited_list['invited_list'], "event_data": event_data['event_data'], "admins": admins})
 
     else:
-        admins = event_controller.get_event_admins(e_id)
         return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                      {"admins": admins, "event_data": event_data['event_data']})
+                      {'invited_list': invited_list['invited_list'], "admins": admins, "event_data": event_data['event_data']})
 
 
 

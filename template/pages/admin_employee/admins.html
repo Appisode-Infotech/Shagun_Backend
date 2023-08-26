@@ -53,7 +53,7 @@
         }
 
         .btn {
-            margin: 0px;
+            margin: 10px;
         }
 
         .btn-icon-text {
@@ -91,43 +91,6 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Admins List</h4>
-                        <div class="form-group">
-                            <form action="{% url 'dashboard_search_employee' %}" method="POST">
-                                {% csrf_token %}
-                                <div class="input-group">
-                                    <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
-                                           aria-label="Recipient's username">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="dropdown">
-                            <label> Admin Filter </label>
-                            <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                {% if status is None %}
-                                All
-                                {% elif status == '0' %}
-                                Inactive
-                                {% elif status == '1' %}
-                                Active
-                                {% endif %}
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                <a class="dropdown-item"
-                                   href="{% url 'manage_admin'  %}">All</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_employee_status' 1 role %}">Active</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_employee_status' 0 role %}">Inactive</a>
-                            </div>
-
-                        </div>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_admin' %}'">
                             Admin

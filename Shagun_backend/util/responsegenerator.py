@@ -655,3 +655,16 @@ class responseGenerator:
                 }
                 )
             return transaction_list
+
+        if controller_type == INVITED_USERS_LIST:
+            invited_users = []
+            for users in data:
+                invited_users.append(
+                    {
+                        "invited_to": users[0],
+                        "invited_by": users[1],
+                        "invite_msg": users[2],
+                        "invited_on": users[3]
+                    }
+                )
+            return invited_users

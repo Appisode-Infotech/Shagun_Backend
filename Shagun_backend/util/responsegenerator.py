@@ -604,6 +604,7 @@ class responseGenerator:
                 "event_id": data[10],
                 "admins": json.loads(data[1]),
                 "sub_events": json.loads(data[6]),
+                "delivery_fee": data[11],
             }
 
         if controller_type == REQUEST_LIST:

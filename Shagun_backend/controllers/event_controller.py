@@ -41,7 +41,7 @@ def create_event(event_obj):
                 from django.conf import settings
 
                 # Replace this with your desired text
-                text = "http://santhuofficial123.pythonanywhere.com/"+str(event_id) + "_" + phone[0]
+                text = "http://santhuofficial123.pythonanywhere.com/" + str(event_id) + "_" + phone[0]
 
                 # Generate QR code
                 qr = qrcode.QRCode(
@@ -311,14 +311,14 @@ def get_single_event(event_id, phone):
             single_event_query = f"""SELECT 
                                         event.event_date, event.event_admin, event.event_note, 
                                         event.address_line1, event.address_line2, event.event_lat_lng, 
-                                        event.sub_events, events_type.event_type_name, users.uid, users.name , event.id
+                                        event.sub_events, events_type.event_type_name, users.uid, users.name , event.id, 
+                                        event.delivery_fee
                                     FROM event
                                     JOIN events_type ON event.event_type_id = events_type.id
                                     LEFT JOIN users ON users.phone = '{phone}'
                                     WHERE event.id = '{event_id}'"""
             cursor.execute(single_event_query)
             events = cursor.fetchone()
-            print(responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT))
             return {
                 "status": True,
                 "event": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
@@ -744,6 +744,7 @@ def set_event_status(event_id, status):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_event_admins(e_id):
     try:
         with connection.cursor() as cursor:
@@ -785,4 +786,3 @@ def add():
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-

@@ -90,15 +90,13 @@ def get_sent_gift(gift_data_obj):
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.receiver_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
-                LEFT JOIN events_type AS et ON ev.id = et.id
+                LEFT JOIN events_type AS et ON ev.event_type_id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
-                WHERE th.sender_uid = '{gift_data_obj.uid}' AND 
+                WHERE th.sender_uid = '{gift_data_obj.uid}'AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
                 ({month_filter})"""
             cursor.execute(sent_gift_query)
             sent_gifts = cursor.fetchall()
-            print(sent_gifts)
-            print(sent_gift_query)
 
             events_list = responseGenerator.generateResponse(events_data, EVENT_TYPE_LIST)
             total_gift_sent, sent_gift_list = responseGenerator.generateResponse(sent_gifts, GIFT_SENT)

@@ -5,10 +5,26 @@ import os
 import qrcode
 from django.conf import settings
 
-
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
+
+import firebase_admin
+from firebase_admin import credentials, messaging
+
+cred = credentials.Certificate(
+    "media/firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json")
+firebase_admin.initialize_app(cred)
+
+
+def send_push_notification(device_token, title, message):
+    # Create a message
+    notification = messaging.Notification(title=title, body=message)
+    message = messaging.Message(notification=notification, token=device_token)
+
+    # Send the message
+    response = messaging.send(message)
+    print("Response from firebase:", response)
 
 
 def create_event(event_obj):
@@ -24,7 +40,8 @@ def create_event(event_obj):
 
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
-                      event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id, event_obj.delivery_fee)
+                      event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id,
+                      event_obj.delivery_fee)
 
             cursor.execute(create_event_query, values)
             event_id = cursor.lastrowid
@@ -147,8 +164,6 @@ def enable_disable_event(e_id, et_status):
 
 def get_event_by_id(et_id):
     try:
-        print("event id in controller")
-        print(et_id)
         with connection.cursor() as cursor:
             get_event_query = f""" SELECT e.*, et.event_type_name,
             l.city_name, p.store_name FROM event e
@@ -240,7 +255,7 @@ def get_event_by_approval_status(status):
         with connection.cursor() as cursor:
             event_list_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id,
                         event.is_approved, event.status FROM event 
-                        JOIN events_type ON event.event_type_id = events_type.id 
+                        LEFT JOIN events_type ON event.event_type_id = events_type.id 
                         WHERE event.is_approved LIKE '{status}'"""
             cursor.execute(event_list_query)
             events = cursor.fetchall()
@@ -284,7 +299,7 @@ def get_event_list(uid):
     try:
         with connection.cursor() as cursor:
             event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                                  event.is_approved, event.status FROM event JOIN events_type ON
+                                  event.is_approved, event.status FROM event LEFT JOIN events_type ON
                                   event.event_type_id = events_type.id"""
             cursor.execute(event_list_query)
             events = cursor.fetchall()
@@ -308,7 +323,7 @@ def get_single_event(event_id, phone):
                                         event.sub_events, events_type.event_type_name, users.uid, users.name , event.id, 
                                         event.delivery_fee
                                     FROM event
-                                    JOIN events_type ON event.event_type_id = events_type.id
+                                    LEFT JOIN events_type ON event.event_type_id = events_type.id
                                     LEFT JOIN users ON users.phone = '{phone}'
                                     WHERE event.id = '{event_id}'"""
             cursor.execute(single_event_query)
@@ -531,13 +546,13 @@ def get_my_event_list(uid):
                         total_amount.shagun_amount AS total_amount,
                         sender_count.sender_uid_count AS sender_count
                     FROM event
-                    LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id
-                    LEFT OUTER JOIN (
+                    LEFT OUTER LEFT JOIN events_type ON event.event_type_id = events_type.id
+                    LEFT OUTER LEFT JOIN (
                         SELECT event_id, SUM(shagun_amount) AS shagun_amount
                         FROM transaction_history
                         GROUP BY event_id
                     ) AS total_amount ON event.id = total_amount.event_id
-                    LEFT OUTER JOIN (
+                    LEFT OUTER LEFT JOIN (
                         SELECT event_id, COUNT(DISTINCT sender_uid) AS sender_uid_count
                         FROM transaction_history
                         GROUP BY event_id
@@ -553,13 +568,13 @@ def get_my_event_list(uid):
                             total_amount.shagun_amount AS total_amount,
                             sender_count.sender_uid_count AS sender_count
                         FROM event 
-                        LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id 
-                        LEFT OUTER JOIN (
+                        LEFT OUTER LEFT JOIN events_type ON event.event_type_id = events_type.id 
+                        LEFT OUTER LEFT JOIN (
                             SELECT event_id, SUM(shagun_amount) AS shagun_amount
                             FROM transaction_history
                             GROUP BY event_id
                         ) AS total_amount ON event.id = total_amount.event_id
-                        LEFT OUTER JOIN (
+                        LEFT OUTER LEFT JOIN (
                             SELECT event_id, COUNT(DISTINCT sender_uid) AS sender_uid_count
                             FROM transaction_history
                             GROUP BY event_id
@@ -584,9 +599,9 @@ def get_my_event_list(uid):
             invited_events_query = f"""
                         SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS invited_by_phone
                         FROM event_guest_invite AS egi
-                        JOIN users AS u ON u.phone = egi.invited_to
-                        JOIN event AS e ON egi.event_id = e.id
-                        JOIN events_type AS et ON e.event_type_id = et.id
+                        LEFT JOIN users AS u ON u.phone = egi.invited_to
+                        LEFT JOIN event AS e ON egi.event_id = e.id
+                        LEFT JOIN events_type AS et ON e.event_type_id = et.id
                         LEFT JOIN users AS u_invited_by ON u_invited_by.uid = egi.invited_by
                         WHERE egi.invited_to = '{phone}'
                         ORDER BY egi.created_at DESC
@@ -645,7 +660,7 @@ def get_all_event_list():
     try:
         with connection.cursor() as cursor:
             event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                                  event.is_approved, event.status FROM event JOIN events_type ON 
+                                  event.is_approved, event.status FROM event LEFT JOIN events_type ON 
                                   event.event_type_id = events_type.id"""
             cursor.execute(event_list_query)
             events = cursor.fetchall()
@@ -688,7 +703,7 @@ def get_all_active_events():
     try:
         with connection.cursor() as cursor:
             active_events_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-            event.is_approved, event.status  FROM event JOIN events_type ON event.event_type_id = events_type.id 
+            event.is_approved, event.status  FROM event LEFT JOIN events_type ON event.event_type_id = events_type.id 
             WHERE event.status= '{True}' """
             cursor.execute(active_events_query)
             events = cursor.fetchall()
@@ -811,12 +826,32 @@ def event_admin(event_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def save_event_guest_invite(invited_by, invited_to, e_id):
+def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
     try:
         with connection.cursor() as cursor:
-            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id) VALUES (%s, %s, %s)"""
-            data_list = [(invited_by, invited_to, e_id) for invited_to in invited_to]
+            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) 
+                              VALUES (%s, %s, %s, %s)"""
+            data_list = [(invited_by, invited_to, e_id, invite_message) for invited_to in invited_to]
             cursor.executemany(invite_query, data_list)
+
+            event_name_query = f"""SELECT et.event_type_name FROM event AS e
+                        LEFT JOIN events_type AS et ON e.event_type_id = et.id
+                        WHERE  e.id = '{e_id}'"""
+            cursor.execute(event_name_query)
+            event_name = cursor.fetchone()
+
+            # Query to get the name for the user with the specified UID (invited_by)
+            name_query = """SELECT name FROM users WHERE uid = %s"""
+            cursor.execute(name_query, (invited_by,))
+            user_name = cursor.fetchone()
+
+            # Query to get the list of fcm_token values for users with phone numbers in phone_list
+            fcm_query = """SELECT fcm_token FROM users WHERE phone IN %s"""
+            cursor.execute(fcm_query, (invited_to,))
+            fcm_tokens = [result[0] for result in cursor.fetchall()]
+
+            title = f"""{user_name} has invited you to {event_name[0]}"""
+            send_push_notification(fcm_tokens, title, invite_message)
             return {
                 "status": True,
                 "msg": "Inserted successfully"
@@ -853,9 +888,9 @@ def get_my_invited_event_list(uid):
             invited_events_query = f"""
                 SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS invited_by_phone
                 FROM event_guest_invite AS egi
-                JOIN users AS u ON u.phone = egi.invited_to
-                JOIN event AS e ON egi.event_id = e.id
-                JOIN events_type AS et ON e.event_type_id = et.id
+                LEFT JOIN users AS u ON u.phone = egi.invited_to
+                LEFT JOIN event AS e ON egi.event_id = e.id
+                LEFT JOIN events_type AS et ON e.event_type_id = et.id
                 LEFT JOIN users AS u_invited_by ON u_invited_by.uid = egi.invited_by
                 WHERE egi.invited_to = (SELECT phone FROM users WHERE uid = '{uid}') AND e.status = 1
                 ORDER BY egi.created_at DESC
@@ -864,7 +899,8 @@ def get_my_invited_event_list(uid):
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
             return {
-                "invited_list": responsegenerator.responseGenerator.generateResponse(invited_events, INVITED_EVENTS_LIST)
+                "invited_list": responsegenerator.responseGenerator.generateResponse(invited_events,
+                                                                                     INVITED_EVENTS_LIST)
             }, 200
 
     except pymysql.Error as e:

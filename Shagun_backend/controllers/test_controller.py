@@ -36,8 +36,6 @@ def event_admin(event_id):
 
 
 def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
-    print("controller=================")
-    print(invited_to)
     try:
         with connection.cursor() as cursor:
             invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) VALUES (%s, %s, %s, %s)"""

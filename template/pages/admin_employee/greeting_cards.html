@@ -91,6 +91,7 @@
             color: white;
         }
 
+
     </style>
 </head>
 
@@ -188,7 +189,9 @@
                                     {{greetings.card_id}}
                                 </td>
                                 <td class="py-1">
-                                    <img src="{{MEDIA_URL}}{{ greetings.card_image_url }}" alt="image"/>
+                                    <a href="{{MEDIA_URL}}{{ greetings.card_image_url }}" target="_blank">
+                                        <img src="{{MEDIA_URL}}{{ greetings.card_image_url }}" alt="image"/>
+                                    </a>
                                 </td>
 
                                 <td>
@@ -267,7 +270,8 @@
                                                 <button type="button" onclick="hidePopUpDiv()"
                                                         class="btn btn-outline-danger btn-fw">Cancel
                                                 </button>
-                                                <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
+                                                <input type="submit" value="Submit"
+                                                       class="btn btn-outline-info btn-icon-text">
                                             </div>
                                         </form>
                                     </div>
@@ -361,6 +365,7 @@
         var popupDiv = document.getElementById("popupDiv");
         popupDiv.style.display = "none";
     }
+
 
 
 </script>

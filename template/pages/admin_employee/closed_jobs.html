@@ -96,7 +96,7 @@
                     <div class="header-container">
                         <h4 class="card-title">jobs List</h4>
                         <div class="form-group">
-                            <form action="{% url 'filter_closed_printer_jobs' %}" method="POST">
+                            <form action="{% url 'search_closed_printer_jobs' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"

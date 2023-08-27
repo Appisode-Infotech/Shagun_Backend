@@ -668,3 +668,18 @@ class responseGenerator:
                     }
                 )
             return invited_users
+
+        if controller_type == INVITED_EVENTS_LIST:
+            invited_events_list = []
+            for invites in data:
+                invited_events_list.append(
+                    {
+                        "event_name": invites[0],
+                        "event_date": invites[1],
+                        "event_id": invites[3],
+                        "is_gifted": invites[4],
+                        "event_admins": json.loads(invites[2]),
+                        "invited_by": invites[5]
+                    }
+                )
+            return invited_events_list

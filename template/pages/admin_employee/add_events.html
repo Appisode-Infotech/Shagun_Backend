@@ -446,13 +446,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             }
         }
 
-        function closeDropdown() {
-            const dropdowns = document.querySelectorAll('.dropdown-content');
-            dropdowns.forEach(function (dropdown) {
-                dropdown.style.display = 'none';
-            });
-        }
-
         function addSubEvent() {
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
@@ -502,17 +495,11 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 updateButtonVisibility();
             }
         }
+
         addSubEventButton.addEventListener('click', addSubEvent);
         removeEventButton.addEventListener('click', removeSubEvent);
         addEventAdminButton.addEventListener('click', addEventAdmin);
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
-
-        document.addEventListener('mousedown', function (event) {
-            const eventAdminContainer = document.getElementById('event-admin-container');
-            if (!eventAdminContainer.contains(event.target)) {
-                closeDropdown();
-            }
-
     });
 
 

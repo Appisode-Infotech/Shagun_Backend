@@ -845,3 +845,29 @@ def get_invited_users_list(e_id):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def get_my_invited_event_list(uid):
+    try:
+        with connection.cursor() as cursor:
+            invited_events_query = f"""
+                SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS invited_by_phone
+                FROM event_guest_invite AS egi
+                JOIN users AS u ON u.phone = egi.invited_to
+                JOIN event AS e ON egi.event_id = e.id
+                JOIN events_type AS et ON e.event_type_id = et.id
+                LEFT JOIN users AS u_invited_by ON u_invited_by.uid = egi.invited_by
+                WHERE egi.invited_to = (SELECT phone FROM users WHERE uid = '{uid}') AND e.status = 1
+                ORDER BY egi.created_at DESC
+                LIMIT 5
+            """
+            cursor.execute(invited_events_query)
+            invited_events = cursor.fetchall()
+            return {
+                "invited_list": responsegenerator.responseGenerator.generateResponse(invited_events, INVITED_EVENTS_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

@@ -74,6 +74,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
     </style>
 </head>
 
@@ -95,7 +96,7 @@
                     <div class="header-container">
                         <h4 class="card-title">jobs List</h4>
                         <div class="form-group">
-                            <form action="{% url 'filter_open_printer_jobs' %}" method="POST">
+                            <form action="{% url 'search_open_printer_jobs' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
@@ -108,8 +109,37 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="dropdown">
+                            <label> Filter on event status: </label>
+                            <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                {% if status is None %}
+                                All
+                                {% elif status == 1 %}
+                                New
+                                {% elif status == 2 %}
+                                InProgress
+                                {% elif status == 3 %}
+                                Print Completed
+                                {% elif status == 4 %}
+                                Dispatched
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                <a class="dropdown-item"
+                                   href="{% url 'Open_printer_jobs'  %}">All</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_open_printer_jobs' 1 %}">New</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_open_printer_jobs' 2 %}">InProgress</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_open_printer_jobs' 3 %}">Print Completed</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_open_printer_jobs' 4 %}">Dispatched</a>
+                            </div>
+                        </div>
                     </div>
-
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -120,22 +150,23 @@
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
                                 <th>Job Status</th>
+                                <td></td>
                             </tr>
                             </thead>
                             <tbody>
                             {% for job in response %}
-
                             <tr>
                                 <td>{{ job.id }}</td>
                                 <td><b>ID: </b>{{ job.printer_id }}<br><br>
                                     <b>Name: </b>{{job.store_name}}
                                 </td>
-                                <td class="wish"  title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
-                                    <b>Wish: </b>{{job.wish}}</td>
+                                <td class="wish" title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
+                                    <b>Wish: </b>{{job.wish}}
+                                </td>
                                 <td>
                                 <td>
-                                    <b>Card Id</b> : {{ job.card_name }}</br></br>
-                                    <b>Event Date : </b> {{ job.event_date }}</br></br>
+                                    <b>Card Id</b> : {{ job.card_name }}<br><br>
+                                    <b>Event Date : </b> {{ job.event_date }}<br><br>
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
                                 <td>{{ job.billing_amount }}</td>
@@ -207,17 +238,7 @@
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
-<script>
-    document.getElementById("approval-status-dropdown").addjobListener("change", function() {
-        var dropdown = document.getElementById("approval-status-dropdown");
-        var selectedValue = dropdown.value;
-        window.location.href = selectedValue;
-    });
 
-
-
-
-</script>
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 
 <!-- endinject -->

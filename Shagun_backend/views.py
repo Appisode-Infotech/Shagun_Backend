@@ -345,10 +345,10 @@ def all_printer_jobs(request):
         return redirect('sign_up')
 
 
-def filter_all_printer_jobs(request):
+def search_all_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4, 5]
-        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -364,19 +364,41 @@ def Open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/open_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def search_open_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4]
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
     else:
         return redirect('sign_up')
 
 
-def filter_Open_printer_jobs(request):
+def filter_all_printer_jobs(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        status = [1, 2, 3, 4]
-        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        response, status_code = store_controller.filter_all_jobs(status)
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response, "status": status})
+    else:
+        return redirect('sign_up')
+
+
+def filter_open_printer_jobs(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = store_controller.filter_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/open_jobs.html', {"response": response, "status": status})
     else:
         return redirect('sign_up')
 
@@ -393,10 +415,10 @@ def closed_printer_jobs(request):
         return redirect('sign_up')
 
 
-def filter_closed_printer_jobs(request):
+def search_closed_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [5]
-        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1071,7 +1093,6 @@ def printer_closed_jobs(request):
         return redirect('sign_up')
 
 
-
 def whatsapp_invite(request, e_id):
     event_data, status_code = event_controller.get_event_by_id(e_id)
     admins = event_controller.get_event_admins(e_id)
@@ -1111,12 +1132,13 @@ def whatsapp_invite(request, e_id):
             mob_numbers = list(set(mob_numbers))
             test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
             return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                          {'invited_list': invited_list['invited_list'], "event_data": event_data['event_data'], "admins": admins})
+                          {'invited_list': invited_list['invited_list'], "event_data": event_data['event_data'],
+                           "admins": admins})
 
     else:
         return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                      {'invited_list': invited_list['invited_list'], "admins": admins, "event_data": event_data['event_data']})
-
+                      {'invited_list': invited_list['invited_list'], "admins": admins,
+                       "event_data": event_data['event_data']})
 
 
 #
@@ -1568,6 +1590,24 @@ def user_home_page(request):
 
 
 @api_view(['POST'])
+def get_my_all_invited_events(request):
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            response, status_code = event_controller.get_my_invited_event_list(request.data['uid'])
+            return JsonResponse(response, status=status_code)
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
+@api_view(['POST'])
 def gift_sent_list(request):
     token = request.headers.get('Authorization').split(' ')[1]
     try:
@@ -1589,25 +1629,22 @@ def gift_sent_list(request):
 
 @api_view(['POST'])
 def gift_received_list(request):
-    gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
-    response, status_code = transactions_controller.get_received_gift(gift_data_obj)
-    return JsonResponse(response, status=status_code)
-    # token = request.headers.get('Authorization').split(' ')[1]
-    # try:
-    #     decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-    #     username = decoded_token['username']
-    #     if username == request.data.get('uid'):
-    #         gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
-    #         response, status_code = transactions_controller.get_received_gift(gift_data_obj)
-    #         return JsonResponse(response, status=status_code)
-    #
-    #     else:
-    #         return JsonResponse({'message': 'Invalid token for user'}, status=401)
-    #
-    # except jwt.ExpiredSignatureError:
-    #     return JsonResponse({'message': 'Token has expired'}, status=401)
-    # except jwt.InvalidTokenError:
-    #     return JsonResponse({'message': 'Invalid token'}, status=401)
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
+            response, status_code = transactions_controller.get_received_gift(gift_data_obj)
+            return JsonResponse(response, status=status_code)
+
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 @api_view(['POST'])
@@ -1626,14 +1663,6 @@ def get_greeting_cards(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
-
-
-#
-# @api_view(['POST'])
-# def edit_greeting_cards(request):
-#     grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.data)
-#     response, status_code = greeting_cards_controller.edit_greeting_cards(grt_obj)
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -1674,24 +1703,6 @@ def track_order(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-# @api_view(['POST'])
-# def home(request):
-#     token = request.headers.get('Authorization').split(' ')[1]
-#     try:
-#         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-#         username = decoded_token['username']
-#         if username == request.data.get('uid'):
-#             return JsonResponse({'message': 'Welcome, {}'.format(username)})
-#
-#         else:
-#             return JsonResponse({'message': 'Invalid token for user'}, status=401)
-#
-#     except jwt.ExpiredSignatureError:
-#         return JsonResponse({'message': 'Token has expired'}, status=401)
-#     except jwt.InvalidTokenError:
-#         return JsonResponse({'message': 'Invalid token'}, status=401)
-
-
 # test done here
 
 def test_view(request):
@@ -1718,7 +1729,6 @@ def test_view(request):
 #     response, status_code = test_controller.event_admin(event_id)
 #     print(response)
 #     return render(request, 'pages/admin_employee/event.html', {"response": response, "event_id": event_id})
-
 
 
 @api_view(['POST'])

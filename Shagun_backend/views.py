@@ -1130,7 +1130,7 @@ def whatsapp_invite(request, e_id):
 
         else:
             mob_numbers = list(set(mob_numbers))
-            test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
+            test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
             return render(request, 'pages/admin_employee/whatsapp_invite.html',
                           {'invited_list': invited_list['invited_list'], "event_data": event_data['event_data'],
                            "admins": admins})

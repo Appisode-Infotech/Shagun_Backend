@@ -1129,11 +1129,10 @@ def whatsapp_invite(request, e_id):
                                "admins": admins})
 
         else:
-            mob_numbers = list(set(mob_numbers))
-            test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
-            return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                          {'invited_list': invited_list['invited_list'], "event_data": event_data['event_data'],
-                           "admins": admins})
+            if phone != '':
+                mob_numbers.append(phone)
+                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+            return redirect(reverse('whatsapp_invite', args=[e_id]))
 
     else:
         return render(request, 'pages/admin_employee/whatsapp_invite.html',

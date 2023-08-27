@@ -840,12 +840,10 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
             cursor.execute(event_name_query)
             event_name = cursor.fetchone()
 
-            # Query to get the name for the user with the specified UID (invited_by)
             name_query = """SELECT name FROM users WHERE uid = %s"""
             cursor.execute(name_query, (invited_by,))
             user_name = cursor.fetchone()
 
-            # Query to get the list of fcm_token values for users with phone numbers in phone_list
             fcm_query = """SELECT fcm_token FROM users WHERE phone IN %s"""
             cursor.execute(fcm_query, (invited_to,))
             fcm_tokens = [result[0] for result in cursor.fetchall()]

@@ -72,38 +72,30 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <div class="card card-tale">
                                     <div class="card-body">
                                         <p class="mb-4">Total Transactions</p>
                                         <p class="fs-30 mb-2">{{ total_transactions }}</p>
                                     </div>
-                                </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <div class="card card-tale">
                                     <div class="card-body">
                                         <p class="mb-4">Total Shagun Amount</p>
                                         <p class="fs-30 mb-2">{{ total_shagun }}</p>
                                     </div>
-                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <div class="card card-tale">
                                     <div class="card-body">
                                         <p class="mb-4">Today Transaction</p>
                                         <p class="fs-30 mb-2">{{ todays_transactions }}</p>
                                     </div>
-                                </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <div class="card card-tale">
                                     <div class="card-body">
                                         <p class="mb-4">Today's Shagun</p>
                                         <p class="fs-30 mb-2">{{ today_shagun }}</p>
                                     </div>
-                                </div>
                             </div>
                         </div>
                         <div class="icon-and-text-container">
@@ -180,13 +172,13 @@
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-md-6 mb-4  stretch-card transparent">
-                                <div class="card card-light-danger">
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                <a href="{% url 'filter_open_printer_jobs' 1 %}" class="card card-dark-blue">
                                     <div class="card-body">
                                         <p class="mb-4">New Jobs</p>
                                         <p class="fs-30 mb-2">{{ new_jobs }}</p>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                         <div class="icon-and-text-container">

@@ -655,3 +655,31 @@ class responseGenerator:
                 }
                 )
             return transaction_list
+
+        if controller_type == INVITED_USERS_LIST:
+            invited_users = []
+            for users in data:
+                invited_users.append(
+                    {
+                        "invited_to": users[0],
+                        "invited_by": users[1],
+                        "invite_msg": users[2],
+                        "invited_on": users[3]
+                    }
+                )
+            return invited_users
+
+        if controller_type == INVITED_EVENTS_LIST:
+            invited_events_list = []
+            for invites in data:
+                invited_events_list.append(
+                    {
+                        "event_name": invites[0],
+                        "event_date": invites[1],
+                        "event_id": invites[3],
+                        "is_gifted": invites[4],
+                        "event_admins": json.loads(invites[2]),
+                        "invited_by": invites[5]
+                    }
+                )
+            return invited_events_list

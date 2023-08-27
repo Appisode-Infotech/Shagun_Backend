@@ -70,6 +70,7 @@
             color: white;
         }
 
+
     </style>
 </head>
 
@@ -98,7 +99,8 @@
                                            placeholder="search......." value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -164,7 +166,7 @@
                                 <th>
                                     Edit
                                 </th>
-                           </tr>
+                            </tr>
                             </thead>
                             <tbody>
                             {% for bank in response %}
@@ -174,7 +176,9 @@
                                 </td>
 
                                 <td class="py-1">
-                                    <img src="{{MEDIA_URL}}{{ bank.profile_pic }}" alt="image"/>
+                                    <a href="{{MEDIA_URL}}{{ bank.profile_pic }}" target="_blank">
+                                        <img src="{{MEDIA_URL}}{{ bank.profile_pic }}" alt="image"/>
+                                    </a>
                                 </td>
                                 <td>
                                     {{bank.bank_name}}
@@ -207,8 +211,10 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_bank' bank.id 1 %}">Active</a>
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_bank' bank.id 0 %}">Inactive</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_bank' bank.id 1 %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_bank' bank.id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>

@@ -428,10 +428,10 @@ def get_all_bank_data(status):
 def add_employee(emp_obj):
     try:
         with connection.cursor() as cursor:
-            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 2,
-                      emp_obj.city, emp_obj.password)
+                      emp_obj.city, emp_obj.password, 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
             # cursor.execute(query, 2)
@@ -449,10 +449,10 @@ def add_employee(emp_obj):
 def add_admin(emp_obj):
     try:
         with connection.cursor() as cursor:
-            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 1,
-                      emp_obj.city, emp_obj.password)
+                      emp_obj.city, emp_obj.password, 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             return {
                 "status": True,

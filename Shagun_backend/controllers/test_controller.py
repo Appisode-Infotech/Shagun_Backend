@@ -35,11 +35,14 @@ def event_admin(event_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def save_event_guest_invite(invited_by, invited_to, e_id):
+def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
+    print("controller=================")
+    print(invited_to)
     try:
         with connection.cursor() as cursor:
-            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id) VALUES (%s, %s, %s)"""
-            data_list = [(invited_by, invited_to, e_id) for invited_to in invited_to]
+            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) VALUES (%s, %s, %s, %s)"""
+            data_list = [(invited_by, invited_to, e_id, invite_message) for invited_to in invited_to]
+            print(data_list)
             cursor.executemany(invite_query, data_list)
             return {
                 "status": True,

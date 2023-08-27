@@ -1,5 +1,9 @@
 import jwt
 from datetime import datetime, timedelta
+import os
+import csv
+from django.core.files.storage import FileSystemStorage
+import re
 
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
@@ -9,6 +13,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from django.contrib import messages
 import time
+
+from rest_framework.reverse import reverse
 
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
@@ -339,10 +345,10 @@ def all_printer_jobs(request):
         return redirect('sign_up')
 
 
-def filter_all_printer_jobs(request):
+def search_all_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4, 5]
-        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -358,19 +364,41 @@ def Open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/open_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def search_open_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1, 2, 3, 4]
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
     else:
         return redirect('sign_up')
 
 
-def filter_Open_printer_jobs(request):
+def filter_all_printer_jobs(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        status = [1, 2, 3, 4]
-        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        response, status_code = store_controller.filter_all_jobs(status)
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/all_jobs.html', {"response": response, "status": status})
+    else:
+        return redirect('sign_up')
+
+
+def filter_open_printer_jobs(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = store_controller.filter_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/open_jobs.html', {"response": response, "status": status})
     else:
         return redirect('sign_up')
 
@@ -387,10 +415,10 @@ def closed_printer_jobs(request):
         return redirect('sign_up')
 
 
-def filter_closed_printer_jobs(request):
+def search_closed_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [5]
-        response, status_code = store_controller.filter_all_jobs(status, request.POST['search'])
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1065,22 +1093,18 @@ def printer_closed_jobs(request):
         return redirect('sign_up')
 
 
-
 def whatsapp_invite(request, e_id):
-    import os
-    import csv
-    from django.core.files.storage import FileSystemStorage
     event_data, status_code = event_controller.get_event_by_id(e_id)
     admins = event_controller.get_event_admins(e_id)
+    invited_list = event_controller.get_invited_users_list(e_id)
 
     if request.method == 'POST':
         mob_numbers = []
         invited_by = request.POST['invited_by_uid']
+        invite_message = request.POST['invite_msg']
         phone = request.POST['phone']
-        mob_numbers.append(phone)
         if 'csv_file' in request.FILES:
             csv_file = request.FILES['csv_file']
-            # Extract mobile numbers from the CSV
             try:
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
                 filename = fs.save(csv_file.name, csv_file)
@@ -1088,12 +1112,15 @@ def whatsapp_invite(request, e_id):
                     reader = csv.reader(file)
                     for row in reader:
                         for cell in row:
-                            if cell.isdigit() and len(cell) == 10:
-                                mob_numbers.append(cell)
+                            cleaned_cell = ''.join(filter(str.isdigit, cell))
+                            if cell.isdigit() and len(cleaned_cell) == 10:
+                                mob_numbers.append(cleaned_cell)
+
                 mob_numbers = list(set(mob_numbers))
-                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
-                return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                              {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
+                if phone != '':
+                    mob_numbers.append(phone)
+                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                return redirect(reverse('whatsapp_invite', args=[e_id]))
 
             except Exception as e:
                 error_message = f"An error occurred while processing the CSV: {e}"
@@ -1105,13 +1132,13 @@ def whatsapp_invite(request, e_id):
             mob_numbers = list(set(mob_numbers))
             test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id)
             return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                          {'mob_numbers': mob_numbers, "event_data": event_data['event_data'], "admins": admins})
+                          {'invited_list': invited_list['invited_list'], "event_data": event_data['event_data'],
+                           "admins": admins})
 
     else:
-        admins = event_controller.get_event_admins(e_id)
         return render(request, 'pages/admin_employee/whatsapp_invite.html',
-                      {"admins": admins, "event_data": event_data['event_data']})
-
+                      {'invited_list': invited_list['invited_list'], "admins": admins,
+                       "event_data": event_data['event_data']})
 
 
 #
@@ -1563,6 +1590,24 @@ def user_home_page(request):
 
 
 @api_view(['POST'])
+def get_my_all_invited_events(request):
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            response, status_code = event_controller.get_my_invited_event_list(request.data['uid'])
+            return JsonResponse(response, status=status_code)
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
+@api_view(['POST'])
 def gift_sent_list(request):
     token = request.headers.get('Authorization').split(' ')[1]
     try:
@@ -1584,25 +1629,22 @@ def gift_sent_list(request):
 
 @api_view(['POST'])
 def gift_received_list(request):
-    gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
-    response, status_code = transactions_controller.get_received_gift(gift_data_obj)
-    return JsonResponse(response, status=status_code)
-    # token = request.headers.get('Authorization').split(' ')[1]
-    # try:
-    #     decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-    #     username = decoded_token['username']
-    #     if username == request.data.get('uid'):
-    #         gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
-    #         response, status_code = transactions_controller.get_received_gift(gift_data_obj)
-    #         return JsonResponse(response, status=status_code)
-    #
-    #     else:
-    #         return JsonResponse({'message': 'Invalid token for user'}, status=401)
-    #
-    # except jwt.ExpiredSignatureError:
-    #     return JsonResponse({'message': 'Token has expired'}, status=401)
-    # except jwt.InvalidTokenError:
-    #     return JsonResponse({'message': 'Invalid token'}, status=401)
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
+            response, status_code = transactions_controller.get_received_gift(gift_data_obj)
+            return JsonResponse(response, status=status_code)
+
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 @api_view(['POST'])
@@ -1621,14 +1663,6 @@ def get_greeting_cards(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
-
-
-#
-# @api_view(['POST'])
-# def edit_greeting_cards(request):
-#     grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.data)
-#     response, status_code = greeting_cards_controller.edit_greeting_cards(grt_obj)
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -1669,24 +1703,6 @@ def track_order(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-# @api_view(['POST'])
-# def home(request):
-#     token = request.headers.get('Authorization').split(' ')[1]
-#     try:
-#         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-#         username = decoded_token['username']
-#         if username == request.data.get('uid'):
-#             return JsonResponse({'message': 'Welcome, {}'.format(username)})
-#
-#         else:
-#             return JsonResponse({'message': 'Invalid token for user'}, status=401)
-#
-#     except jwt.ExpiredSignatureError:
-#         return JsonResponse({'message': 'Token has expired'}, status=401)
-#     except jwt.InvalidTokenError:
-#         return JsonResponse({'message': 'Invalid token'}, status=401)
-
-
 # test done here
 
 def test_view(request):
@@ -1713,7 +1729,6 @@ def test_view(request):
 #     response, status_code = test_controller.event_admin(event_id)
 #     print(response)
 #     return render(request, 'pages/admin_employee/event.html', {"response": response, "event_id": event_id})
-
 
 
 @api_view(['POST'])

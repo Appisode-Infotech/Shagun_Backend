@@ -198,7 +198,7 @@ def get_all_jobs(status):
         return {"status": False, "message": str(e)}, 301
 
 
-def filter_all_jobs(status, search):
+def search_all_jobs(status, search):
     status_values_str = ', '.join(str(status_value) for status_value in status)
 
     try:
@@ -212,6 +212,36 @@ def filter_all_jobs(status, search):
             LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
             WHERE pj.status IN ({status_values_str}) AND  ( pj.event_id LIKE '%{search}%' OR 
             pj.printer_id LIKE '%{search}%' OR gc.card_name LIKE '%{search}%' OR p.store_name LIKE '%{search}%') """
+            cursor.execute(get_all_jobs_query)
+            jobs = cursor.fetchall()
+            print(get_all_jobs_query)
+            if jobs is not None:
+                return {
+                      "status": True,
+                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "jobs": None
+                }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def filter_all_jobs(status):
+    try:
+        with connection.cursor() as cursor:
+            get_all_jobs_query = f""" 
+            SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
+            gc.card_price, e.event_date FROM print_jobs AS pj
+            LEFT JOIN printer AS p ON pj.printer_id = p.id
+            LEFT JOIN event AS e ON pj.event_id = e.id
+            LEFT JOIN events_type AS et ON e.event_type_id = et.id
+            LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
+            WHERE pj.status = '{status}' """
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
             print(get_all_jobs_query)

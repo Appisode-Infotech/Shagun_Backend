@@ -12,16 +12,15 @@ from Shagun_backend.util.responsegenerator import responseGenerator
 import firebase_admin
 from firebase_admin import credentials, messaging
 
-# cred = credentials.Certificate("media/firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json")
+# cred = credentials.Certificate(
+#     "media/firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json")
 # firebase_admin.initialize_app(cred)
 
 
-# Your Firebase credentials file path
 firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json"
 full_firebase_cred_path = os.path.join(settings.MEDIA_ROOT, firebase_cred_path)
 cred = credentials.Certificate(full_firebase_cred_path)
 firebase_admin.initialize_app(cred)
-
 
 def send_push_notification(device_token, title, message):
     # Create a message
@@ -552,13 +551,13 @@ def get_my_event_list(uid):
                         total_amount.shagun_amount AS total_amount,
                         sender_count.sender_uid_count AS sender_count
                     FROM event
-                    LEFT OUTER LEFT JOIN events_type ON event.event_type_id = events_type.id
-                    LEFT OUTER LEFT JOIN (
+                    LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id
+                    LEFT OUTER JOIN (
                         SELECT event_id, SUM(shagun_amount) AS shagun_amount
                         FROM transaction_history
                         GROUP BY event_id
                     ) AS total_amount ON event.id = total_amount.event_id
-                    LEFT OUTER LEFT JOIN (
+                    LEFT OUTER JOIN (
                         SELECT event_id, COUNT(DISTINCT sender_uid) AS sender_uid_count
                         FROM transaction_history
                         GROUP BY event_id
@@ -574,13 +573,13 @@ def get_my_event_list(uid):
                             total_amount.shagun_amount AS total_amount,
                             sender_count.sender_uid_count AS sender_count
                         FROM event 
-                        LEFT OUTER LEFT JOIN events_type ON event.event_type_id = events_type.id 
-                        LEFT OUTER LEFT JOIN (
+                        LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id 
+                        LEFT OUTER JOIN (
                             SELECT event_id, SUM(shagun_amount) AS shagun_amount
                             FROM transaction_history
                             GROUP BY event_id
                         ) AS total_amount ON event.id = total_amount.event_id
-                        LEFT OUTER LEFT JOIN (
+                        LEFT OUTER JOIN (
                             SELECT event_id, COUNT(DISTINCT sender_uid) AS sender_uid_count
                             FROM transaction_history
                             GROUP BY event_id
@@ -846,16 +845,17 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
             cursor.execute(event_name_query)
             event_name = cursor.fetchone()
 
-            name_query = """SELECT name FROM users WHERE uid = %s"""
-            cursor.execute(name_query, (invited_by,))
-            user_name = cursor.fetchone()
+            inviter_query = f"""SELECT name FROM users WHERE uid = '{invited_by}'"""
+            cursor.execute(inviter_query, invited_to)
+            inviter = cursor.fetchone()
 
-            fcm_query = """SELECT fcm_token FROM users WHERE phone IN %s"""
-            cursor.execute(fcm_query, (invited_to,))
-            fcm_tokens = [result[0] for result in cursor.fetchall()]
-
-            title = f"""{user_name} has invited you to {event_name[0]}"""
-            send_push_notification(fcm_tokens, title, invite_message)
+            user_query = "SELECT fcm_token FROM users WHERE phone IN (%s)"
+            cursor.execute(user_query, invited_to)
+            results = cursor.fetchall()
+            for row in results:
+                name, fcm_token = row
+                title = f"""{inviter[0]} has invited you to '{event_name[0]}'"""
+                send_push_notification(fcm_token, title, invite_message)
             return {
                 "status": True,
                 "msg": "Inserted successfully"

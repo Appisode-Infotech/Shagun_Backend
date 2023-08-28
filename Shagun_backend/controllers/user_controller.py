@@ -465,13 +465,12 @@ def add_admin(emp_obj):
 
 
 def edit_employee(emp_obj, user_id):
-    print(emp_obj)
     try:
         with connection.cursor() as cursor:
             edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
                                 phone = '{emp_obj.phone}', city = '{emp_obj.city}', 
                                 password = '{emp_obj.password}' WHERE id = '{user_id}'"""
-            print(cursor.execute(edit_emp_query))
+            cursor.execute(edit_emp_query)
             return {
                 "status": True,
                 "message": "Employee edited successfully"

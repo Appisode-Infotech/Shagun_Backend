@@ -13,10 +13,15 @@ import firebase_admin
 from firebase_admin import credentials, messaging
 
 # cred = credentials.Certificate("media/firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json")
+# firebase_admin.initialize_app(cred)
 
+
+# Your Firebase credentials file path
 firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json"
-cred = credentials.Certificate(settings.MEDIA_URL + firebase_cred_path)
+full_firebase_cred_path = os.path.join(settings.MEDIA_ROOT, firebase_cred_path)
+cred = credentials.Certificate(full_firebase_cred_path)
 firebase_admin.initialize_app(cred)
+
 
 def send_push_notification(device_token, title, message):
     # Create a message

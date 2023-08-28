@@ -800,8 +800,9 @@ def edit_bank(request, bank_id):
 def edit_employee(request, user_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
-            user_controller.edit_employee(emp_obj)
+            user_controller.edit_employee(emp_obj, user_id)
             return redirect('manage_employee')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)

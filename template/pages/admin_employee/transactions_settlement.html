@@ -130,7 +130,9 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Transaction settlement</h4>
+                        {% if request.session.role == 1 %}
                         <label id="shagun-sum-label" class="col-sm-3 col-form-label">Total Shagun Amount: 0.00</label>
+                        {% endif %}
                         <div class="dropdown">
                             <label> Filter on event status: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
@@ -154,9 +156,6 @@
                             </div>
 
                         </div>
-<!--                        <button type="button" class="btn btn-outline-info btn-icon-text">Settle All .-->
-<!--                            <i class="fas fa-money-check"></i>-->
-<!--                        </button>-->
                     </div>
                     <form class="form-sample" action="/transactions_settlement/{{ event_id }}/" method="post"
                           id="myForm">
@@ -165,7 +164,9 @@
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
+                                    {% if request.session.role == 1 %}
                                     <th><input type="checkbox" id="select-all" onclick="toggleSelectAll()"></th>
+                                    {% endif %}
                                     <th>ID</th>
                                     <th>Event Name</th>
                                     <th>Sender Details</th>
@@ -182,6 +183,7 @@
                                 <tbody>
                                 {% for data in response %}
                                 <tr>
+                                    {% if request.session.role == 1 %}
                                     <td>
                                         {% if data.is_settled == 0 %}
                                         <input type="checkbox" class="select-row" name="selected_ids"
@@ -190,6 +192,7 @@
                                         <input type="checkbox" class="select-row" name="selected_ids" DISABLED>
                                         {% endif %}
                                     </td>
+                                    {% endif %}
                                     <td>{{ data.id }}</td>
                                     <td>{{ data.event_type }}</td>
                                     <td><b>Sent by:</b> {{ data.sender_name }}</br></br>
@@ -227,11 +230,13 @@
 
                             </table>
                         </div>
+                        {% if request.session.role == 1 %}
                         <div class="center-button">
                             <button onclick="showPopUpDiv(event)" class="btn btn-outline-info btn-icon-text">Check-Out .
                                 <i class="fas fa-money-check"></i>
                             </button>
                         </div>
+                        {% endif %}
                         <div id="error-message" class="alert alert-danger" style="display: none;">
                             Please select the transaction to settle.
                         </div>

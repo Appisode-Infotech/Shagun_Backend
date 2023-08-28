@@ -35,6 +35,7 @@ def sign_up(request):
             request.session['is_logged_in'] = True
             request.session['uid'] = data['username']
             request.session['name'] = response['name']
+            request.session['role'] = response['role']
             request.session['profile_pic'] = response['profile_pic']
             return redirect('admin_dashboard')
         else:

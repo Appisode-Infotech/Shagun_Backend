@@ -592,7 +592,7 @@ def dashboard_search_employee_status(status):
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        emp_login_query = "SELECT password, name, profile_pic FROM users WHERE uid = %s AND ( role = 2 OR role = 1 );"
+        emp_login_query = "SELECT password, name, profile_pic, role FROM users WHERE uid = %s AND ( role = 2 OR role = 1 );"
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
         if result is not None and result[0] == pwd:
@@ -600,7 +600,8 @@ def employee_login(uname, pwd):
                 "msg": "Success",
                 "data": result[0],
                 "name": result[1],
-                "profile_pic": result[2]
+                "profile_pic": result[2],
+                "role": result[3]
             }
 
         if result is not None and result[0] != pwd:

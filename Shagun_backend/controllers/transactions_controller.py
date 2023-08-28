@@ -94,7 +94,7 @@ def get_sent_gift(gift_data_obj):
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
                 WHERE th.sender_uid = '{gift_data_obj.uid}'AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
-                ({month_filter})"""
+                ({month_filter}) ORDER BY th.created_on DESC"""
             cursor.execute(sent_gift_query)
             sent_gifts = cursor.fetchall()
 
@@ -139,7 +139,7 @@ def get_received_gift(gift_data_obj):
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
                 WHERE th.receiver_uid = '{gift_data_obj.uid}' AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
-                ({month_filter})"""
+                ({month_filter}) ORDER BY th.created_on DESC"""
             cursor.execute(sent_gift_query)
             received_gifts = cursor.fetchall()
             events_list = responseGenerator.generateResponse(events_data, EVENT_TYPE_LIST)

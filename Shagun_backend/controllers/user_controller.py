@@ -464,14 +464,13 @@ def add_admin(emp_obj):
         return {"status": False, "message": str(e), "user": None}, 301
 
 
-def edit_employee(emp_obj):
+def edit_employee(emp_obj, user_id):
     try:
         with connection.cursor() as cursor:
-            edit_emp_query = """UPDATE users SET name = %s, email = %s, phone = %s, status = %s, city = %s, 
-                                password = %s WHERE uid = %s"""
-            values = (
-                emp_obj.name, emp_obj.email, emp_obj.phone, True, emp_obj.city, emp_obj.password, emp_obj.email)
-            cursor.execute(edit_emp_query, values)
+            edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
+                                phone = '{emp_obj.phone}', city = '{emp_obj.city}', 
+                                password = '{emp_obj.password}' WHERE id = '{user_id}'"""
+            cursor.execute(edit_emp_query)
             return {
                 "status": True,
                 "message": "Employee edited successfully"

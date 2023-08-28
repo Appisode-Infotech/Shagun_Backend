@@ -189,7 +189,7 @@ urlpatterns = [
     # path('update_callback_request', update_callback_request, name='update_callback_request'),
 
     path('add_ev', add_ev, name='add_ev'),
-    path('test_view/<str:e_id>/', test_view, name='test_view'),
+    # path('test_view', test_view, name='test_view'),
     # path('next_page', next_page, name='next_page'),
     path('event_admin', event_admin, name='event_admin'),
     path('manage_vendor', manage_vendor, name='manage_vendor'),

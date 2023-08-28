@@ -92,6 +92,34 @@
             background-color: #9925b9; /* Purple color (#9925b9) */
             color: white;
         }
+
+
+.messages-container {
+  background-color: #ffe6e6; /* Light pink background color */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  display: none;
+}
+
+/* Style the error messages */
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  color: #b30000; /* Dark red text color for error messages */
+  background-color: #ffd9d9; /* Light red background color for error messages */
+  border: 1px solid #ff8080; /* Dark red border for error messages */
+  padding: 10px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+
+
     </style>
 
 </head>
@@ -117,7 +145,7 @@
                                 <h4 class="card-title">Invite for event: {{event_data.event_type_name}} -
                                     {{event_data.id}}</h4>
                                 <form class="form-sample" action="/whatsapp_invite/{{event_data.id}}/" method="post"
-                                      enctype="multipart/form-data">
+                                      enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -125,7 +153,7 @@
                                                 <label class="col-sm-3 col-form-label">Invited by</label>
                                                 <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" name="invited_by" readonly
+                                                    <input type="text" id="name" name="invited_by" readonly
                                                            onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
@@ -144,7 +172,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Invite Message</label>
-                                        <textarea class="form-control" id="invite_msg" rows="4"
+                                        <textarea required class="form-control" id="invite_msg" rows="4"
                                                   name="invite_msg"></textarea>
                                     </div>
 
@@ -153,7 +181,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">phone num</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="phone"/>
+                                                    <input type="text" class="form-control" name="phone" id="phone"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -167,7 +195,7 @@
                                                         <input type="text"
                                                                class="form-control file-upload-info"
                                                                disabled
-                                                               placeholder="Upload Image">
+                                                               placeholder="Upload contact csv file">
                                                         <span class="input-group-append">
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                 </span>
@@ -180,6 +208,14 @@
                                         <input type="submit" value="Submit" class="btn btn-primary mb-4">
                                     </div>
                                 </form>
+                                <div class="messages-container">
+                                    <ul class="messages">
+                                        <li>
+                                            <div id="error-message"> Invited by and phone or contact file is mandatory
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                                 {% if error_message %}
                                 <p>{{ error_message }}</p>
                                 {% endif %}
@@ -280,9 +316,21 @@
 
 
 
-
-
 </script>
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var phone = document.getElementById("phone").value;
+            var csvFile = document.querySelector('input[type="file"]').value;
+            var uidInput = document.getElementById("uid");
+
+            if (uidInput.value.trim() === "" || (phone === "" && csvFile === "")) {
+                var errorContainer = document.querySelector('.messages-container');
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+        });
+    </script>
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

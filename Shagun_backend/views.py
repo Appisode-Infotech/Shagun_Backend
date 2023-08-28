@@ -1119,7 +1119,7 @@ def whatsapp_invite(request, e_id):
                 mob_numbers = list(set(mob_numbers))
                 if phone != '':
                     mob_numbers.append(phone)
-                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
                 return redirect(reverse('whatsapp_invite', args=[e_id]))
 
             except Exception as e:
@@ -1131,7 +1131,7 @@ def whatsapp_invite(request, e_id):
         else:
             if phone != '':
                 mob_numbers.append(phone)
-                test_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                resp = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
             return redirect(reverse('whatsapp_invite', args=[e_id]))
 
     else:
@@ -1704,30 +1704,12 @@ def track_order(request):
 
 # test done here
 
-def test_view(request):
-    # response['event_list']
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = event_controller.get_all_event_list()
-        paginator = Paginator(response['event_list'], 2)
-
-        # Get the current page number from the request's GET parameters
-        page_number = request.GET.get('page')
-
-        # Get the Page object for the current page
-        page_obj = paginator.get_page(page_number)
-
-        context = {
-            'page_obj': page_obj
-        }
-        return render(request, 'pages/admin_employee/test.html', context)
-    else:
-        return redirect('sign_up')
-
-
-# def event_admin(request, event_id):
-#     response, status_code = test_controller.event_admin(event_id)
-#     print(response)
-#     return render(request, 'pages/admin_employee/event.html', {"response": response, "event_id": event_id})
+# def test_view(request):
+#     message = "The message goes here"
+#     title = "This is Title"
+#     token = "dc4RiYjoSIGhLsIqdy_yxh:APA91bEvioV_cHtk1CsaD6NnPQzCQIftJ1sNfAaEzmCYk7Jy3AJ-WNfHM_ZBO3kAMDp5-G-f81n92LBG6abYv0PY3Eniu02-rbqEl2xN-qkCeFPpCtTxtimxlT1VQQTnuUEjh1kOJ_yc"
+#     resp = event_controller.send_push_notification(token, title, message)
+#     return JsonResponse({"msg": resp})
 
 
 @api_view(['POST'])

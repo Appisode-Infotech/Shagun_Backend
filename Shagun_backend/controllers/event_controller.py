@@ -18,8 +18,6 @@ firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696
 cred = credentials.Certificate(settings.MEDIA_URL + firebase_cred_path)
 firebase_admin.initialize_app(cred)
 
-
-
 def send_push_notification(device_token, title, message):
     # Create a message
     notification = messaging.Notification(title=title, body=message)

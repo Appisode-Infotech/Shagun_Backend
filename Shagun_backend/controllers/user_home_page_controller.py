@@ -19,7 +19,7 @@ def home_page_data(uid):
                 JOIN event AS e ON th.event_id = e.id
                 JOIN events_type AS et ON e.event_type_id = et.id
                 JOIN users AS u ON th.receiver_uid = u.uid
-                WHERE th.sender_uid = '{uid}' ORDER BY th.created_on DESC
+                WHERE th.sender_uid = '{uid}' ORDER BY th.created_on DESC 
                 LIMIT 5
             """
             cursor.execute(sent_transactions_query)

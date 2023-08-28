@@ -12,8 +12,7 @@ from Shagun_backend.util.responsegenerator import responseGenerator
 import firebase_admin
 from firebase_admin import credentials, messaging
 
-cred = credentials.Certificate(
-    "media/firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json")
+cred = credentials.Certificate("media/firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json")
 firebase_admin.initialize_app(cred)
 
 

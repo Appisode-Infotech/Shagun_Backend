@@ -548,7 +548,7 @@ def add_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
-            print(user_controller.add_admin(admin_obj))
+            user_controller.add_admin(admin_obj)
             return redirect('manage_admin')
         else:
             return render(request, 'pages/admin_employee/add_admin.html')

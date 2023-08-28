@@ -167,7 +167,9 @@
                                     {{user.id}}
                                 </td>
                                 <td class="py-1">
-                                    <img src="{{ user.profile_pic }}" alt="image"/>
+                                    <a href="{{MEDIA_URL}}{{ user.profile_pic }}" target="_blank">
+                                        <img src="{{MEDIA_URL}}{{ user.profile_pic }}" alt="image"/>
+                                    </a>
                                 </td>
                                 <td>
                                     {{user.name}}

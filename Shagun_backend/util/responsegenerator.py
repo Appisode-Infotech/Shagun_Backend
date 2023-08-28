@@ -109,10 +109,10 @@ class responseGenerator:
                         "printer_id": events[14],
                         "approved_date_time": events[15],
                         "status": events[16],
-                        "total_received_amount": round(events[17], 2),
-                        "balance_shagun_amount": round(events[18], 2),
-                        "settled_amount": round(events[19], 2),
-                        "event_type_name": events[20]
+                        "total_received_amount": round(events[18], 2),
+                        "balance_shagun_amount": round(events[19], 2),
+                        "settled_amount": round(events[20], 2),
+                        "event_type_name": events[21]
                     }
                 )
             return active_event

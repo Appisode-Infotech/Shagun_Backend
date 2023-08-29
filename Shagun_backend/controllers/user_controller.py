@@ -95,10 +95,11 @@ def get_all_users(kyc):
 def filter_users(status):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 3 AND status LIKE '{status}' """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
+            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -137,7 +138,6 @@ def get_users_by_name_or_phone(search):
                         AND ('{search}' <> ''); """
             cursor.execute(sql_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user": responseGenerator.generateResponse(user_data, GET_USERS_BY_NAME_OR_PHONE)
@@ -592,7 +592,7 @@ def dashboard_search_employee_status(status):
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        emp_login_query = "SELECT password, name, profile_pic FROM users WHERE uid = %s AND ( role = 2 OR role = 1 );"
+        emp_login_query = "SELECT password, name, profile_pic, role FROM users WHERE uid = %s AND ( role = 2 OR role = 1 );"
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
         if result is not None and result[0] == pwd:
@@ -600,7 +600,8 @@ def employee_login(uname, pwd):
                 "msg": "Success",
                 "data": result[0],
                 "name": result[1],
-                "profile_pic": result[2]
+                "profile_pic": result[2],
+                "role": result[3]
             }
 
         if result is not None and result[0] != pwd:

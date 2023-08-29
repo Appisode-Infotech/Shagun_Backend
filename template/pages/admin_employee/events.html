@@ -158,11 +158,16 @@
                             <tr>
                                 <td>{{ event.event_id }}</td>
                                 <td>{{ event.event_name }}</td>
+
                                 <td>
                                     {% for admin in event.admins %}
-                                    <b>{{ admin.role }}</b> : {{ admin.name }}</br></br>
-                                    {% endfor %}</br>
-                                    <b>Date : </b> {{ event.event_date }}
+                                            <b>{{ admin.role }}</b> : {{ admin.name }} &nbsp;
+
+                                            <a href="{{ MEDIA_URL }}{{ admin.qr_code }}" target="_blank">
+                                                <i class="fas fa-qrcode" style="color: blue; cursor: pointer;"></i>
+                                            </a><br><br>
+                                    {% endfor %}
+                                    <br><b>Date : </b> {{ event.event_date }}
                                 </td>
                                 <td>
                                     {% if event.is_approved == 0 %}

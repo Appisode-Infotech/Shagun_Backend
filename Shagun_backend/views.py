@@ -56,7 +56,6 @@ def custom_404(request):
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
-        print(response)
         return render(request, 'index.html', response)
     else:
         return redirect('sign_up')
@@ -101,8 +100,6 @@ def manage_location(request):
 def manage_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print("++++++++++++++++++++++++++++++++++++++")
-            print(request.POST)
             response, status_code = user_controller.get_kyc_data('%')
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
@@ -148,7 +145,6 @@ def filter_user(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
 
         response, status_code = user_controller.filter_users(status)
-        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -194,7 +190,6 @@ def printer_manage_greeting_cards(request):
 def manage_users(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_users('%')
-        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -250,14 +245,8 @@ def manage_delivery_vendors(request):
 def edit_delivery_vendors(request, vid):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
-            print("=========================================================")
-            print(vendor_obj)
-            print("=========================================================")
-
-            response = delivery_vendor_controller.update_vendor(vendor_obj)
-            print(response)
+            delivery_vendor_controller.update_vendor(vendor_obj)
             return redirect('manage_delivery_vendors')
         else:
             response, status_code = delivery_vendor_controller.edit_delivery_vendor(vid)
@@ -446,7 +435,6 @@ def transactions_settlement(request, event_id):
                           {"response": response, "event_id": event_id})
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
-            print(response)
             paginator = Paginator(response['transactions'], 250)
             page = request.GET.get('page')
             response = paginator.get_page(page)
@@ -1743,11 +1731,4 @@ def activate_deactivate_print_jobs(request):
     response, status_code = store_controller.activate_deactivate_print_jobs(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
-# def next_page(request):
-#     print("============================================")
-#     print(request.POST['selected_id_list'])
-#     if request.method == 'POST':
-#         selected_ids = request.POST['selected_id_list']
-#         print("====================================")
-#         print(selected_ids)
-#         return redirect('manage_event')
+

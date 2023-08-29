@@ -29,7 +29,6 @@ def send_push_notification(device_token, title, message):
 
     # Send the message
     response = messaging.send(message)
-    print("Response from firebase:", response)
 
 
 def create_event(event_obj):
@@ -61,7 +60,7 @@ def create_event(event_obj):
                 phone = cursor.fetchone()
 
                 # Replace this with your desired text
-                text = "http://santhuofficial123.pythonanywhere.com/" + str(event_id) + "_" + phone[0]
+                text = "https://shagunmobile.page.link/qrScanner/" + str(event_id) + "_" + phone[0]
 
                 # Generate QR code
                 qr = qrcode.QRCode(
@@ -98,10 +97,8 @@ def create_event(event_obj):
             }, 200
 
     except pymysql.Error as e:
-        print(str(e))
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
-        print(str(e))
         return {"status": False, "message": str(e)}, 301
 
 
@@ -142,10 +139,8 @@ def edit_event(event_obj, event_id):
             }, 200
 
     except pymysql.Error as e:
-        print(str(e))
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
-        print(str(e))
         return {"status": False, "message": str(e)}, 301
 
 
@@ -243,7 +238,6 @@ def search_event_settlement(search):
                     """
             cursor.execute(event_settlement_query)
             amount = cursor.fetchall()
-            print(amount)
             return {
                 "status": True,
                 "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
@@ -283,7 +277,6 @@ def gift_event(e_id, phone):
             cursor.execute(gift_event_query)
             event = cursor.fetchone()
             if event is not None:
-                print(event)
                 return {
                     "status": True,
                     "gift_event": responsegenerator.responseGenerator.generateResponse(event, GIFT_EVENT)
@@ -594,12 +587,10 @@ def get_my_event_list(uid):
             # Execute the first query for past events
             cursor.execute(sql_query_past_events, {'uid_json': uid_json})
             past_events = cursor.fetchall()
-            print(past_events, "past")
 
             # Execute the second query for upcoming events
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()
-            print(upcoming_events, "upcoming")
 
             invited_events_query = f"""
                         SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS invited_by_phone

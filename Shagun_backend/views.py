@@ -148,6 +148,7 @@ def filter_user(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
 
         response, status_code = user_controller.filter_users(status)
+        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)

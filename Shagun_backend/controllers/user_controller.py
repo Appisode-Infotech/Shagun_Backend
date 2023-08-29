@@ -95,10 +95,11 @@ def get_all_users(kyc):
 def filter_users(status):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 3 AND status LIKE '{status}' """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
+            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -137,7 +138,6 @@ def get_users_by_name_or_phone(search):
                         AND ('{search}' <> ''); """
             cursor.execute(sql_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user": responseGenerator.generateResponse(user_data, GET_USERS_BY_NAME_OR_PHONE)

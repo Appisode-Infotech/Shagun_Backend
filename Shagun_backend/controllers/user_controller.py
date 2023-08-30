@@ -40,8 +40,9 @@ def user_register(reg_obj):
         with connection.cursor() as cursor:
             sql_query = """INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, 
                             fcm_token, city) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-            values = (reg_obj.name, reg_obj.email, reg_obj.phone, False, 'images/profile_pic/profile.png', reg_obj.uid, True,
-                      reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
+            values = (
+            reg_obj.name, reg_obj.email, reg_obj.phone, False, 'images/profile_pic/profile.png', reg_obj.uid, True,
+            reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
             cursor.execute(sql_query, values)
             query = "SELECT * FROM users WHERE uid = %s;"
             cursor.execute(query, [reg_obj.uid])
@@ -77,7 +78,7 @@ def get_all_users(kyc):
     try:
         with connection.cursor() as cursor:
             users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 3 AND kyc LIKE '{kyc}' """
+                FROM users WHERE role = 3 AND kyc LIKE '{kyc}' ORDER BY created_on DESC  """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             print(user_data)
@@ -96,7 +97,7 @@ def filter_users(status):
     try:
         with connection.cursor() as cursor:
             users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 3 AND status LIKE '{status}' """
+                FROM users WHERE role = 3 AND status LIKE '{status}' ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             print(user_data)
@@ -135,7 +136,7 @@ def get_users_by_name_or_phone(search):
             sql_query = f""" SELECT * FROM users
                         WHERE (role = 3)
                         AND (name LIKE '%{search}%' OR phone LIKE '%{search}%')
-                        AND ('{search}' <> ''); """
+                        AND ('{search}' <> ''); ORDER BY created_on DESC"""
             cursor.execute(sql_query)
             user_data = cursor.fetchall()
             return {
@@ -238,9 +239,9 @@ def enable_disable_kyc(kyc_id, v_status):
                 WHERE uk.id = '{kyc_id}' """
             cursor.execute(sql_query)
             return {''
-                "status": True,
-                "message": "User Kyc status changed successfully"
-            }, 200
+                    "status": True,
+                    "message": "User Kyc status changed successfully"
+                    }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -258,7 +259,8 @@ def get_kyc_data(status):
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
                 kyc.verification_status, users.profile_pic
                 FROM user_kyc AS kyc
-                INNER JOIN users ON kyc.uid = users.uid WHERE verification_status LIKE '{status}'"""
+                INNER JOIN users ON kyc.uid = users.uid WHERE verification_status LIKE '{status}' ORDER BY 
+                kyc.created_on DESC """
 
             cursor.execute(kyc_data_query)
             kyc_data = cursor.fetchall()
@@ -282,7 +284,7 @@ def filter_kyc():
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
                 kyc.verification_status, users.profile_pic
                 FROM user_kyc AS kyc
-                INNER JOIN users ON kyc.uid = users.uid """
+                INNER JOIN users ON kyc.uid = users.uid ORDER BY kyc.created_on DESC"""
 
             cursor.execute(kyc_data_query)
             kyc_data = cursor.fetchall()
@@ -411,7 +413,7 @@ def get_all_bank_data(status):
             bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
                 bnk.account_number, bnk.status, users.profile_pic
                 FROM bank_details AS bnk
-                LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.status LIKE '{status}'"""
+                LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.status LIKE '{status}' ORDER BY bnk.created_on DESC """
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()
             return {
@@ -445,6 +447,7 @@ def add_employee(emp_obj):
         return {"status": False, "message": str(e), "user": None}, 301
     except Exception as e:
         return {"status": False, "message": str(e), "user": None}, 301
+
 
 def add_admin(emp_obj):
     try:
@@ -503,7 +506,7 @@ def get_all_employees():
     try:
         with connection.cursor() as cursor:
             users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM users WHERE role = 2"""
+                FROM users WHERE role = 2 ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -516,29 +519,12 @@ def get_all_employees():
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
-
-def get_all_employees():
-    try:
-        with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 2"""
-            cursor.execute(users_data_query)
-            user_data = cursor.fetchall()
-            return {
-                "status": True,
-                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
-            }, 200
-
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
 
 def get_all_admins():
     try:
         with connection.cursor() as cursor:
             users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 1"""
+                FROM users WHERE role = 1 ORDER BY created_on DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -556,7 +542,8 @@ def dashboard_search_employee(search):
     try:
         with connection.cursor() as cursor:
             users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM users WHERE role = 2 AND ( id LIKE '%{search}%' OR name LIKE '%{search}%' OR phone LIKE '%{search}%') """
+                FROM users WHERE role = 2 AND ( id LIKE '%{search}%' OR name LIKE '%{search}%' OR phone 
+                LIKE '%{search}%') ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             print(user_data)
@@ -575,7 +562,7 @@ def dashboard_search_employee_status(status):
     try:
         with connection.cursor() as cursor:
             users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
-                FROM users WHERE role = 2 AND status = '{status}' """
+                FROM users WHERE role = 2 AND status = '{status}' ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             print(user_data)
@@ -797,7 +784,7 @@ def get_user_requests(param):
                             LEFT JOIN
                                 locations AS l ON ucr.city = l.id
                             WHERE
-                                ucr.type = '{param}' AND u.role = 3;
+                                ucr.type = '{param}' AND u.role = 3 ORDER BY ucr.created_on DESC ;
                         """
 
             cursor.execute(request_query)
@@ -811,6 +798,7 @@ def get_user_requests(param):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
 
 def search_user_requests(param, search):
     try:
@@ -828,7 +816,7 @@ def search_user_requests(param, search):
                                 locations AS l ON ucr.city = l.id
                             WHERE
                                 ucr.type = '{param}' AND u.role = 3 AND ( u.name LIKE '%{search}%' OR 
-                                u.phone LIKE '%{search}%' OR u.email LIKE '%{search}%') ;
+                                u.phone LIKE '%{search}%' OR u.email LIKE '%{search}%') ORDER BY ucr.created_on DESC;
                         """
 
             cursor.execute(request_query)
@@ -859,7 +847,8 @@ def filter_user_requests(param, status):
                             LEFT JOIN
                                 locations AS l ON ucr.city = l.id
                             WHERE
-                                ucr.type = '{param}' AND u.role = 3 AND ucr.status = '{status}' ;
+                                ucr.type = '{param}' AND u.role = 3 AND ucr.status = '{status}' 
+                                ORDER BY ucr.created_on DESC;
                         """
 
             cursor.execute(request_query)
@@ -885,7 +874,8 @@ def search_kyc_data(search):
                 kyc.verification_status, users.profile_pic
                 FROM user_kyc AS kyc
                 INNER JOIN users ON kyc.uid = users.uid WHERE ( full_name LIKE '%{search}%' OR 
-                identification_number1 LIKE '%{search}%' OR identification_number2 LIKE '%{search}%') """
+                identification_number1 LIKE '%{search}%' OR identification_number2 LIKE '%{search}%') 
+                ORDER BY kyc.created_on DESC"""
 
             cursor.execute(kyc_data_query)
             kyc_data = cursor.fetchall()
@@ -907,7 +897,7 @@ def dashboard_search_bank(search):
                 bnk.account_number, bnk.status, users.profile_pic
                 FROM bank_details AS bnk
                 LEFT JOIN users ON bnk.uid = users.uid WHERE ( ifsc_code LIKE '%{search}%' OR 
-                account_holder_name LIKE '%{search}%' OR account_number LIKE '%{search}%') """
+                account_holder_name LIKE '%{search}%' OR account_number LIKE '%{search}%') ORDER BY bnk.created_on DESC"""
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()
             return {
@@ -926,7 +916,7 @@ def dashboard_search_user(search):
         with connection.cursor() as cursor:
             users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
                 FROM users WHERE role = 3 AND ( name LIKE '%{search}%' OR 
-                email LIKE '%{search}%' OR phone LIKE '%{search}%') """
+                email LIKE '%{search}%' OR phone LIKE '%{search}%') ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {

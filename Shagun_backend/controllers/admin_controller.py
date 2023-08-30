@@ -32,7 +32,7 @@ def admin_dashboard(uid):
                             SELECT event.event_date, event.event_admin, et.event_type_name, event.id,
                             event.is_approved, event.status FROM event
                             LEFT JOIN events_type AS et ON event.event_type_id = et.id
-                             WHERE DATE(event_date) = '{today.date()}';
+                             WHERE DATE(event_date) = '{today.date()}' ORDER BY event.created_on DESC;
                             """
             cursor.execute(today_events_query)
             today_event_stats = cursor.fetchall()

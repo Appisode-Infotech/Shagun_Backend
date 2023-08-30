@@ -47,7 +47,7 @@ def dashboard_search_delivery_vendor(search):
             p.delivery_vendor_owner, p.contact_number FROM delivery_vendors AS p
             LEFT JOIN locations AS l ON p.city = l.id 
             WHERE (p.id LIKE '%{search}%' OR delivery_vendor_name LIKE '%{search}%' OR delivery_vendor_owner LIKE '%{search}%'
-            OR contact_number LIKE '%{search}%' )"""
+            OR contact_number LIKE '%{search}%' ) ORDER BY p.id DESC"""
             cursor.execute(delivery_vendor_data_query)
             delivery_vendor_data = cursor.fetchall()
             return {
@@ -66,7 +66,7 @@ def dashboard_search_delivery_vendor_status(status):
         with connection.cursor() as cursor:
             delivery_vendor_status_query = f""" SELECT p.id, p.delivery_vendor_name, l.city_name, p.address, p.status, p.gst_no, 
             p.delivery_vendor_owner, p.contact_number FROM delivery_vendors AS p
-            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}'"""
+            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}' ORDER BY p.id DESC"""
             cursor.execute(delivery_vendor_status_query)
             delivery_vendor_data = cursor.fetchall()
             return {
@@ -102,7 +102,7 @@ def get_delivery_vendor():
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.delivery_vendor_name, l.city_name, p.address, p.status, p.gst_no, 
             p.delivery_vendor_owner, p.contact_number FROM delivery_vendors AS p
-            LEFT JOIN locations AS l ON p.city = l.id"""
+            LEFT JOIN locations AS l ON p.city = l.id ORDER BY p.created_on DESC """
             cursor.execute(printers_data_query)
             delivery_vendor_data = cursor.fetchall()
             return {

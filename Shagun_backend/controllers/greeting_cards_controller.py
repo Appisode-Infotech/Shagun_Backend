@@ -13,6 +13,7 @@ def get_greeting_cards(event_id):
                                     SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status
                                     FROM greeting_cards gc
                                     INNER JOIN event e ON e.printer_id = gc.printer_id AND e.id = '{event_id}'
+                                    ORDER BY gc.created_on DESC
                                 """
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
@@ -33,7 +34,8 @@ def get_greeting_cards(event_id):
 def get_all_greeting_cards():
     try:
         with connection.cursor() as cursor:
-            greeting_cards_query = """SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards"""
+            greeting_cards_query = """SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards 
+                                        ORDER BY created_on DESC """
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
 
@@ -52,7 +54,7 @@ def get_printer_greeting_cards(p_id):
     try:
         with connection.cursor() as cursor:
             greeting_cards_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards 
-                                        WHERE printer_id = '{p_id}'"""
+                                        WHERE printer_id = '{p_id}' ORDER BY created_on DESC"""
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
 
@@ -71,7 +73,7 @@ def dashboard_search_greetings(search):
     try:
         with connection.cursor() as cursor:
             search_greeting_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards
-             WHERE (id LIKE '%{search}%' OR card_name LIKE '%{search}%') """
+             WHERE (id LIKE '%{search}%' OR card_name LIKE '%{search}%') ORDER BY created_on DESC"""
             cursor.execute(search_greeting_query)
             greeting_cards = cursor.fetchall()
             print(greeting_cards)
@@ -89,7 +91,7 @@ def dashboard_search_greetings_status(status):
     try:
         with connection.cursor() as cursor:
             search_greeting_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards
-             WHERE status = '{status}' """
+             WHERE status = '{status}' ORDER BY created_on DESC"""
             cursor.execute(search_greeting_query)
             greeting_cards = cursor.fetchall()
             print(greeting_cards)

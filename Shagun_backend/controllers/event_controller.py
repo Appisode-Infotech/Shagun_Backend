@@ -203,7 +203,7 @@ def event_settlement(status):
                     LEFT JOIN transaction_history th ON e.id = th.event_id
                     LEFT JOIN events_type et ON e.event_type_id = et.id
                     WHERE e.status = '{status}'
-                    GROUP BY e.id, e.event_date;
+                    GROUP BY e.id, e.event_date ORDER BY e.created_on DESC ;
                     """
             cursor.execute(event_settlement_query)
             amount = cursor.fetchall()
@@ -234,7 +234,7 @@ def search_event_settlement(search):
                     WHERE e.id LIKE '%%{search}%%' OR et.event_type_name LIKE '%%{search}%%' 
                                     OR LOWER(e.event_admin) LIKE LOWER('%%{search}%%') OR 
                                     e.event_date LIKE '%%{search}%%'
-                    GROUP BY e.id, e.event_date;
+                    GROUP BY e.id, e.event_date ORDER BY e.created_on DESC;
                     """
             cursor.execute(event_settlement_query)
             amount = cursor.fetchall()
@@ -255,7 +255,7 @@ def get_event_by_approval_status(status):
             event_list_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id,
                         event.is_approved, event.status FROM event 
                         LEFT JOIN events_type ON event.event_type_id = events_type.id 
-                        WHERE event.is_approved LIKE '{status}'"""
+                        WHERE event.is_approved LIKE '{status}' ORDER BY event.created_on DESC"""
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
@@ -298,7 +298,7 @@ def get_event_list(uid):
         with connection.cursor() as cursor:
             event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
                                   event.is_approved, event.status FROM event LEFT JOIN events_type ON
-                                  event.event_type_id = events_type.id"""
+                                  event.event_type_id = events_type.id ORDER BY event.created_on DESC"""
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
@@ -502,7 +502,7 @@ def get_location_by_id(loc_id):
 def get_event_type_list_for_admin():
     try:
         with connection.cursor() as cursor:
-            event_type_for_admin_query = "SELECT id, event_type_name, status FROM events_type"
+            event_type_for_admin_query = "SELECT id, event_type_name, status FROM events_type "
             cursor.execute(event_type_for_admin_query)
             events = cursor.fetchall()
             return {
@@ -556,7 +556,7 @@ def get_my_event_list(uid):
                         GROUP BY event_id
                     ) AS sender_count ON event.id = sender_count.event_id
                     WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.date()}'
-                    AND event.is_approved = 1
+                    AND event.is_approved = 1 ORDER BY event.created_on DESC
                 """
 
             # SQL query for events with event_date greater than today
@@ -578,7 +578,7 @@ def get_my_event_list(uid):
                             GROUP BY event_id
                         ) AS sender_count ON event.id = sender_count.event_id
                         WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}'
-                        AND event.is_approved = 1
+                        AND event.is_approved = 1 ORDER BY event.created_on DESC
                     """
 
             # UID JSON data
@@ -635,7 +635,7 @@ def search_user_event(uid):
                         FROM event 
                         LEFT JOIN events_type ON event.event_type_id = events_type.id
                         WHERE JSON_CONTAINS(event_admin, %(uid_json)s) 
-                        AND event.is_approved = 1 and event.status = 1"""
+                        AND event.is_approved = 1 and event.status = 1 ORDER BY event.created_on DESC"""
             uid_json = json.dumps({'uid': uid})
             cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
             upcoming_events = cursor.fetchall()
@@ -657,7 +657,7 @@ def get_all_event_list():
         with connection.cursor() as cursor:
             event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
                                   event.is_approved, event.status FROM event LEFT JOIN events_type ON 
-                                  event.event_type_id = events_type.id"""
+                                  event.event_type_id = events_type.id ORDER BY event.created_on DESC """
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
@@ -681,7 +681,7 @@ def dashboard_search_event(search):
                                     LEFT JOIN events_type ON event.event_type_id = events_type.id
                                     WHERE event.id LIKE '%%{search}%%' OR events_type.event_type_name LIKE '%%{search}%%' 
                                     OR LOWER(event.event_admin) LIKE LOWER('%%{search}%%') OR 
-                                    event.event_date LIKE '%%{search}%%' """
+                                    event.event_date LIKE '%%{search}%%' ORDER BY event.created_on DESC"""
             cursor.execute(single_events_query)
             events = cursor.fetchall()
             return {
@@ -700,7 +700,7 @@ def get_all_active_events():
         with connection.cursor() as cursor:
             active_events_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
             event.is_approved, event.status  FROM event LEFT JOIN events_type ON event.event_type_id = events_type.id 
-            WHERE event.status= '{True}' """
+            WHERE event.status= '{True}' ORDER BY event.created_on DESC"""
             cursor.execute(active_events_query)
             events = cursor.fetchall()
             return {
@@ -764,34 +764,6 @@ def get_event_admins(e_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def add():
-    try:
-        with connection.cursor() as cursor:
-            event_status_query = """
-                    INSERT INTO `event` 
-                        (`id`, `created_by_uid`, `event_type_id`, `city_id`, `address_line1`, `address_line2`, `event_lat_lng`,
-                         `created_on`, `sub_events`, `event_date`, `event_note`, `event_admin`, `is_approved`, `approved_by`,
-                         `printer_id`, `approved_date_time`, `status`)
-                    VALUES 
-                        (NULL, 'nkbhandari95@gmail.com', '11', '11', '4rd Cross', '#A148', '13.09876543-77.0987653', 
-                         '2023-07-31 13:44:02', '[{\"sub_event_name\": \"ring exchange\", \"start_time\": \"2023-08-01 13:45:00\", \"end_time\": \"2023-08-01 13:45:00\"}]', 
-                         '2023-07-31 13:44:00', 'Final Test', '[{\"name\": \"admin\", \"role\": \"test\", \"uid\": \"wjkkjhgfdserty\", \"profile\": \"http://cdn.onlinewebfonts.com/svg/img_504768.png\", \"qr_code\": \"qr code\"}]', 
-                         '0', '0', '15', '0000-00-00 00:00:00', '1');
-                    """
-            for i in range(50):
-                cursor.execute(event_status_query)
-            return {
-                "status": True,
-                "message": "Event Status changed successfully"
-            }, 200
-
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
-
-
 def event_admin(event_id):
     try:
         with connection.cursor() as cursor:
@@ -813,7 +785,6 @@ def event_admin(event_id):
             return {
                 "status": True,
                 "msg": event_admins
-                # "event_admin": responsegenerator.responseGenerator.generateResponse(admin, EVENT_ADMIN)
             }, 200
 
     except pymysql.Error as e:
@@ -865,7 +836,7 @@ def get_invited_users_list(e_id):
             active_events_query = f"""SELECT invited_to, u.name, invite_message	, created_at 
             FROM event_guest_invite AS eg
             LEFT JOIN users AS u ON eg.invited_by = u.uid
-            WHERE event_id = '{e_id}' """
+            WHERE eg.event_id = '{e_id}' ORDER BY eg.created_at DESC"""
             cursor.execute(active_events_query)
             invited_users = cursor.fetchall()
             return {

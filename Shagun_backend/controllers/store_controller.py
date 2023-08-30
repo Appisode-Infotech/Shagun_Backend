@@ -112,7 +112,7 @@ def get_printers_by_status(status):
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
             p.store_owner, p.contact_number FROM printer AS p
-            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status LIKE '{status}'"""
+            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status LIKE '{status}' ORDER BY p.id DESC """
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
             return {
@@ -133,7 +133,7 @@ def dashboard_search_printers(search):
             p.store_owner, p.contact_number FROM printer AS p
             LEFT JOIN locations AS l ON p.city = l.id 
             WHERE (p.id LIKE '%{search}%' OR store_name LIKE '%{search}%' OR store_owner LIKE '%{search}%'
-            OR contact_number LIKE '%{search}%' OR printer_user_name LIKE '%{search}%' )"""
+            OR contact_number LIKE '%{search}%' OR printer_user_name LIKE '%{search}%' ) ORDER BY p.id DESC"""
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
             print(printer_data)
@@ -153,7 +153,7 @@ def dashboard_search_printers_status(status):
         with connection.cursor() as cursor:
             printers_status_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
             p.store_owner, p.contact_number FROM printer AS p
-            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}'"""
+            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}' ORDER BY p.id DESC"""
             cursor.execute(printers_status_query)
             printer_data = cursor.fetchall()
             print(printer_data)
@@ -179,7 +179,7 @@ def get_all_jobs(status):
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
             LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
-            WHERE pj.status IN ({status_values_str})"""
+            WHERE pj.status IN ({status_values_str}) ORDER BY pj.created_on DESC """
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
             if jobs is not None:
@@ -211,7 +211,8 @@ def search_all_jobs(status, search):
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
             LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
             WHERE pj.status IN ({status_values_str}) AND  ( pj.event_id LIKE '%{search}%' OR 
-            pj.printer_id LIKE '%{search}%' OR gc.card_name LIKE '%{search}%' OR p.store_name LIKE '%{search}%') """
+            pj.printer_id LIKE '%{search}%' OR gc.card_name LIKE '%{search}%' OR p.store_name LIKE '%{search}%') 
+            ORDER BY pj.created_on DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
             print(get_all_jobs_query)
@@ -241,7 +242,7 @@ def filter_all_jobs(status):
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
             LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
-            WHERE pj.status = '{status}' """
+            WHERE pj.status = '{status}' ORDER BY pj.created_on DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
             print(get_all_jobs_query)
@@ -262,11 +263,7 @@ def filter_all_jobs(status):
 
 
 def get_printers_jobs(pid, status):
-    print(pid)
-    print(status)
     status_values_str = ', '.join(str(status_value) for status_value in status)
-    print(status_values_str)
-
     try:
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
@@ -275,7 +272,7 @@ def get_printers_jobs(pid, status):
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
             LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
-            WHERE pj.printer_id = '{pid}' AND pj.status IN ({status_values_str})"""
+            WHERE pj.printer_id = '{pid}' AND pj.status IN ({status_values_str}) ORDER BY pj.created_on DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
             if jobs is not None:

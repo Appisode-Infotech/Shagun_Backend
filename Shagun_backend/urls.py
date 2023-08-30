@@ -20,8 +20,7 @@ from Shagun_backend.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    # re_path(r'^.*$', custom_404, name='catch-all'),
-
+    path('<str:slug>/', custom_404, name='catch-all'),
     path('api/app_compatibility', app_compatibility, name='app_compatibility'),
     # path('api/get_token', get_token, name='get_token'),
     path('api/check_user', check_user, name='check_user'),
@@ -48,6 +47,8 @@ urlpatterns = [
     path('manage_event', manage_event, name='manage_event'),
     path('kyc_request', kyc_request, name='kyc_request'),
     path('event_request', event_request, name='event_request'),
+    path('search_kyc_request', search_kyc_request, name='search_kyc_request'),
+    path('search_event_request', search_event_request, name='search_event_request'),
     path('whatsapp_invite/<str:e_id>/', whatsapp_invite, name='whatsapp_invite'),
     path('dashboard_search_event', dashboard_search_event, name='dashboard_search_event'),
     path('dashboard_search_kyc', dashboard_search_kyc, name='dashboard_search_kyc'),
@@ -59,7 +60,7 @@ urlpatterns = [
     path('dashboard_search_employee', dashboard_search_employee, name='dashboard_search_employee'),
     path('dashboard_search_event_settlement', dashboard_search_event_settlement,
          name='dashboard_search_event_settlement'),
-    path('add_events', add_events, name='add_events'),
+    path('manage_event/add_events', add_events, name='add_events'),
     path('manage_event_types', manage_event_types, name='manage_event_types'),
     path('manage_location', manage_location, name='manage_location'),
     path('manage_kyc', manage_kyc, name='manage_kyc'),
@@ -72,6 +73,8 @@ urlpatterns = [
     path('filter_kyc/<str:status>/', filter_kyc, name='filter_kyc'),
     path('filter_bank/<str:status>/', filter_bank, name='filter_bank'),
     path('filter_user/<str:status>/', filter_user, name='filter_user'),
+    path('filter_kyc_request/<str:status>/', filter_kyc_request, name='filter_kyc_request'),
+    path('filter_event_request/<str:status>/', filter_event_request, name='filter_event_request'),
     path('filter_transaction_lists/<int:event_id>/<int:status>/', filter_transaction_lists,
          name='filter_transaction_lists'),
     path('all_printer_jobs', all_printer_jobs, name='all_printer_jobs'),

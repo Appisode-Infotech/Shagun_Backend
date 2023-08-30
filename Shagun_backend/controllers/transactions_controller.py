@@ -52,7 +52,7 @@ def event_settlement(event_id):
                 AS settled_amount,
                 SUM(shagun_amount) AS total_received_amount 
                 FROM transaction_history th
-                WHERE th.event_id = '{event_id}' ;
+                WHERE th.event_id = '{event_id}' ORDER BY th.created_on DESC;
             """
             cursor.execute(event_settlement_query)
             amount = cursor.fetchone()
@@ -189,32 +189,9 @@ def get_transaction_list(event_id, status):
             FROM transaction_history AS th
             LEFT JOIN event As e ON th.event_id = e.id
             LEFT JOIN events_type As et ON e.event_type_id = et.id
-            LEFT JOIN users As sender ON th.sender_uid = sender.id
-            LEFT JOIN users As receiver ON th.receiver_uid = receiver.id
-            WHERE th.event_id = '{event_id}' """
-            cursor.execute(track_order_query)
-            track = cursor.fetchall()
-            return {
-                "status": True,
-                "transactions": responseGenerator.generateResponse(track, Transaction_DATA)
-            }, 200
-
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
-
-
-def get_transaction_list(event_id, status):
-    try:
-        with connection.cursor() as cursor:
-            track_order_query = f""" SELECT th.*, e.event_date, et.event_type_name,sender.name, receiver.name
-            FROM transaction_history AS th
-            LEFT JOIN event As e ON th.event_id = e.id
-            LEFT JOIN events_type As et ON e.event_type_id = et.id
             LEFT JOIN users As sender ON th.sender_uid = sender.uid
             LEFT JOIN users As receiver ON th.receiver_uid = receiver.uid
-            WHERE th.event_id = '{event_id}' AND is_settled LIKE '{status}' """
+            WHERE th.event_id = '{event_id}' AND is_settled LIKE '{status}' ORDER BY th.created_on DESC """
             cursor.execute(track_order_query)
             track = cursor.fetchall()
             return {

@@ -15,7 +15,8 @@
             </a>
             <div class="collapse" id="event-management">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="/manage_event">Event</a>
+                    <li class="nav-item {% if 'manage_event' in request.path %}active{% endif %}">
+                        <a class="nav-link" href="/manage_event">Event</a>
                     </li>
                     <li class="nav-item"><a class="nav-link"
                                             href="/manage_event_types">Event Type</a></li>
@@ -87,13 +88,13 @@
             </a>
             <div class="collapse" id="request-management">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="/kyc_request">New KYC Request</a> </li>
+                    <li class="nav-item"><a class="nav-link" href="/kyc_request">New KYC Request</a></li>
                     <li class="nav-item"><a class="nav-link" href="/event_request">New Event Request </a></li>
                 </ul>
             </div>
         </li>
 
-        <li class="nav-item" >
+        <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#settlement-management" aria-expanded="false"
                aria-controls="settlement-management">
                 <i class="icon-layout menu-icon"></i>

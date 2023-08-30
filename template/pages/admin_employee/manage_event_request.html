@@ -63,7 +63,50 @@
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Event Request List</h4>
+                    <div class="header-container">
+                        <h4 class="card-title">Event Request List</h4>
+                        <div class="form-group">
+                            <form action="{% url 'search_event_request' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input name="search" id="search" type="text" class="form-control"
+                                           placeholder="search......." value="{{search}}"
+                                           aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="dropdown">
+                            <label> KYC Filter: </label>
+                            <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                {% if status is None %}
+                                All
+                                {% elif status == '0' %}
+                                Pending
+                                {% elif status == '1' %}
+                                Completed
+                                {% elif status == '2' %}
+                                Rejected
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                <a class="dropdown-item"
+                                   href="{% url 'event_request' %}">All</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_event_request' 0%}">Pending</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_event_request' 1 %}">Completed</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'filter_event_request' 2 %}">Rejected</a>
+                            </div>
+
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -79,6 +122,9 @@
                                 </th>
                                 <th>
                                     Phone
+                                </th>
+                                <th>
+                                    Email
                                 </th>
                                 <th>
                                     Type
@@ -111,6 +157,9 @@
                                 </td>
                                 <td>
                                     {{req.phone}}
+                                </td>
+                                <td>
+                                    {{req.email}}
                                 </td>
                                 <td>
                                     {{req.type}}

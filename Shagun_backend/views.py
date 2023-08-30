@@ -48,9 +48,11 @@ def logout(request):
     return redirect('sign_up')
 
 
-def custom_404(request):
-    request.session.clear()
-    return render(request, 'pages/admin_employee/error-404.html')
+def custom_404(request, slug=None):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        return render(request, 'pages/admin_employee/error-404.html')
+    else:
+        return redirect('sign_up')
 
 
 def admin_dashboard(request):
@@ -178,7 +180,7 @@ def manage_greeting_cards(request):
 
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
-        response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
+        response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('role'))
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -290,6 +292,28 @@ def kyc_request(request):
         return redirect('sign_up')
 
 
+def search_kyc_request(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.search_user_requests('KYC', request.POST['search'])
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/manage_kyc_request.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def filter_kyc_request(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.filter_user_requests('KYC', status)
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/manage_kyc_request.html', {"response": response, "status": status})
+    else:
+        return redirect('sign_up')
+
+
 def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
@@ -299,6 +323,29 @@ def event_request(request):
         return render(request, 'pages/admin_employee/manage_event_request.html', {"response": response})
     else:
         return redirect('sign_up')
+
+
+def search_event_request(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.search_user_requests('event', request.POST['search'])
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/manage_event_request.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
+def filter_event_request(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.filter_user_requests('event', status)
+        paginator = Paginator(response['req_list'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/manage_kyc_request.html', {"response": response, "status": status})
+    else:
+        return redirect('sign_up')
+
 
 
 def get_settlement_for_event(request, status):
@@ -496,7 +543,7 @@ def add_kyc(request):
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
             user_controller.add_user_kyc(kyc_obj)
-            return redirect('manage_kyc')
+            return redirect('add_bank')
         else:
             response, status_code = user_controller.get_all_users('%')
             return render(request, 'pages/admin_employee/add_kyc.html', response)
@@ -523,7 +570,8 @@ def add_bank(request):
 
 
 def add_employee(request):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+    if request.session.get('is_logged_in') is not None and request.session.get(
+            'is_logged_in') is True and request.session.get('role'):
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
             user_controller.add_employee(emp_obj)
@@ -535,7 +583,8 @@ def add_employee(request):
 
 
 def add_admin(request):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+    if request.session.get('is_logged_in') is not None and request.session.get(
+            'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
             user_controller.add_admin(admin_obj)
@@ -788,7 +837,8 @@ def edit_bank(request, bank_id):
 
 
 def edit_employee(request, user_id):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+    if request.session.get('is_logged_in') is not None and request.session.get(
+            'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
             user_controller.edit_employee(emp_obj, user_id)
@@ -801,7 +851,8 @@ def edit_employee(request, user_id):
 
 
 def edit_admin(request, user_id):
-    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+    if request.session.get('is_logged_in') is not None and request.session.get(
+            'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
             user_controller.edit_employee(emp_obj, user_id)
@@ -1050,7 +1101,7 @@ def dashboard_search_greetings_status(request, status):
 def printer_all_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1, 2, 3, 4, 5]
-        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        response, status_code = store_controller.get_printers_jobs(request.session.get('role'), status)
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1062,7 +1113,7 @@ def printer_all_jobs(request):
 def printer_open_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1, 2, 3, 4]
-        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        response, status_code = store_controller.get_printers_jobs(request.session.get('role'), status)
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1074,7 +1125,7 @@ def printer_open_jobs(request):
 def printer_closed_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [5]
-        response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
+        response, status_code = store_controller.get_printers_jobs(request.session.get('role'), status)
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1730,5 +1781,3 @@ def activate_deactivate_bank_list(request):
 def activate_deactivate_print_jobs(request):
     response, status_code = store_controller.activate_deactivate_print_jobs(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
-

@@ -623,6 +623,7 @@ class responseGenerator:
                         "event_date": req[7],
                         "event_type": req[8],
                         "city_name": req[9],
+                        "email": req[10],
                     }
                 )
             return req_list

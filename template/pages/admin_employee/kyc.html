@@ -157,9 +157,11 @@
                                 <th>
                                     Verification Status
                                 </th>
+                                {% if request.session.role == 1 %}
                                 <th>
                                     Activate/Deactivate
                                 </th>
+                                {% endif %}
                                 <th>
                                     Edit
                                 </th>
@@ -218,7 +220,7 @@
                                     <label class="badge badge-danger">Inactive</label>
                                     {% endif %}
                                 </td>
-
+                                {% if request.session.role == 1 %}
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
@@ -238,6 +240,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                {% endif%}
                                 <td>
                                     <button type="button" class="btn btn-outline-info btn-fw"
                                             onclick="window.location.href='{% url 'edit_kyc' kyc.id %}'">

@@ -91,11 +91,13 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Admins List</h4>
+                        {% if request.session.role == 1 %}
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_admin' %}'">
                             Admin
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
+                        {% endif %}
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -120,7 +122,9 @@
                                     User Status
                                 </th>
                                 <th>Activate/Deactivate</th>
+                                {% if request.session.role == 1 %}
                                 <th>Edit</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -169,6 +173,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                {% if request.session.role == 1 %}
                                 <td>
                                     <button type="button" class="btn btn-outline-info btn-fw"
                                             onclick="window.location.href='{% url 'edit_admin' user.id %}'">
@@ -176,6 +181,7 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                             </tbody>

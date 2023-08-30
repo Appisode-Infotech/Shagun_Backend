@@ -165,7 +165,7 @@ def add_user_kyc(kyc_obj):
                 values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.adress1,
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
-                          'pending', today, kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
+                          0, today, kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
                           kyc_obj.postcode, kyc_obj.country, today, kyc_obj.created_by_uid, kyc_obj.created_by_uid)
                 cursor.execute(sql_query, values)
                 return {
@@ -237,7 +237,7 @@ def enable_disable_kyc(kyc_id, v_status):
                 SET uk.verification_status = '{v_status}', u.kyc = '{v_status}'
                 WHERE uk.id = '{kyc_id}' """
             cursor.execute(sql_query)
-            return {
+            return {''
                 "status": True,
                 "message": "User Kyc status changed successfully"
             }, 200
@@ -789,7 +789,7 @@ def get_user_requests(param):
                             SELECT
                                 u.name, u.phone, u.profile_pic, ucr.type,
                                 ucr.status, ucr.created_on, ucr.id,
-                                ucr.event_date, ucr.event_type, l.city_name
+                                ucr.event_date, ucr.event_type, l.city_name, u.email
                             FROM
                                 user_callback_request AS ucr
                             LEFT JOIN
@@ -798,6 +798,68 @@ def get_user_requests(param):
                                 locations AS l ON ucr.city = l.id
                             WHERE
                                 ucr.type = '{param}' AND u.role = 3;
+                        """
+
+            cursor.execute(request_query)
+            request_list = cursor.fetchall()
+            return {
+                "status": True,
+                "req_list": responsegenerator.responseGenerator.generateResponse(request_list, REQUEST_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+def search_user_requests(param, search):
+    try:
+        with connection.cursor() as cursor:
+            request_query = f"""
+                            SELECT
+                                u.name, u.phone, u.profile_pic, ucr.type,
+                                ucr.status, ucr.created_on, ucr.id,
+                                ucr.event_date, ucr.event_type, l.city_name, u.email
+                            FROM
+                                user_callback_request AS ucr
+                            LEFT JOIN
+                                users AS u ON ucr.uid = u.uid
+                            LEFT JOIN
+                                locations AS l ON ucr.city = l.id
+                            WHERE
+                                ucr.type = '{param}' AND u.role = 3 AND ( u.name LIKE '%{search}%' OR 
+                                u.phone LIKE '%{search}%' OR u.email LIKE '%{search}%') ;
+                        """
+
+            cursor.execute(request_query)
+            request_list = cursor.fetchall()
+            return {
+                "status": True,
+                "req_list": responsegenerator.responseGenerator.generateResponse(request_list, REQUEST_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def filter_user_requests(param, status):
+    try:
+        with connection.cursor() as cursor:
+            request_query = f"""
+                            SELECT
+                                u.name, u.phone, u.profile_pic, ucr.type,
+                                ucr.status, ucr.created_on, ucr.id,
+                                ucr.event_date, ucr.event_type, l.city_name, u.email
+                            FROM
+                                user_callback_request AS ucr
+                            LEFT JOIN
+                                users AS u ON ucr.uid = u.uid
+                            LEFT JOIN
+                                locations AS l ON ucr.city = l.id
+                            WHERE
+                                ucr.type = '{param}' AND u.role = 3 AND ucr.status = '{status}' ;
                         """
 
             cursor.execute(request_query)

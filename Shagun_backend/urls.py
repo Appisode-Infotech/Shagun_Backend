@@ -112,6 +112,7 @@ urlpatterns = [
     path('filtered_events_on_approval_status/<str:status>/', filtered_events_on_approval_status,
          name='filtered_events_on_approval_status'),
     path('transactions_settlement/<int:event_id>/', transactions_settlement, name='transactions_settlement'),
+    path('search_transactions_settlement/<int:event_id>/', search_transactions_settlement, name='search_transactions_settlement'),
     path('filter_all_printer_jobs/<int:status>/', filter_all_printer_jobs, name='filter_all_printer_jobs'),
     path('filter_open_printer_jobs/<int:status>/', filter_open_printer_jobs, name='filter_open_printer_jobs'),
 

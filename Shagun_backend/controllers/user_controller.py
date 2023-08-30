@@ -505,7 +505,7 @@ def enable_disable_employee(uid, status):
 def get_all_employees():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 2 ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()

@@ -204,6 +204,29 @@ def get_transaction_list(event_id, status):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def search_transaction_list(event_id, search):
+    try:
+        with connection.cursor() as cursor:
+            track_order_query = f""" SELECT th.*, e.event_date, et.event_type_name,sender.name, receiver.name
+            FROM transaction_history AS th
+            LEFT JOIN event As e ON th.event_id = e.id
+            LEFT JOIN events_type As et ON e.event_type_id = et.id
+            LEFT JOIN users As sender ON th.sender_uid = sender.uid
+            LEFT JOIN users As receiver ON th.receiver_uid = receiver.uid
+            WHERE th.event_id = '{event_id}' AND (th.transaction_id LIKE '%%{search}%%' OR th.gifter_name LIKE '%%{search}%%' 
+                                    OR th.id LIKE LOWER('%%{search}%%')) ORDER BY th.created_on DESC """
+            cursor.execute(track_order_query)
+            track = cursor.fetchall()
+            return {
+                "status": True,
+                "transactions": responseGenerator.generateResponse(track, Transaction_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 
 def settle_payment(receivers_list, transactions_list, amount_list):
     user_totals = {}

@@ -53,7 +53,7 @@
         }
 
         .btn {
-            margin: 5px;
+            margin: 0px;
         }
 
         .btn-icon-text {
@@ -110,6 +110,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -156,6 +157,20 @@
                             </div>
 
                         </div>
+                        <div class="form-group">
+                            <form action="{% url 'search_transactions_settlement' event_id %}" method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input name="search" id="search" type="text" class="form-control"
+                                           placeholder="search......." value="{{search}}"
+                                           aria-label="Recipient's username">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <form class="form-sample" action="/transactions_settlement/{{ event_id }}/" method="post"
                           id="myForm">
@@ -196,7 +211,8 @@
                                     <td>{{ data.id }}</td>
                                     <td>{{ data.event_type }}</td>
                                     <td><b>Sent by:</b> {{ data.sender_name }}</br></br>
-                                        <b>Behalf of: </b>{{data.gifter_name}}</td>
+                                        <b>Behalf of: </b>{{data.gifter_name}}
+                                    </td>
                                     <td>{{ data.receiver_name }}</td>
                                     <td>
                                         <b>Transaction Amount : </b>{{ data.transaction_amount }}</br></br>
@@ -355,6 +371,7 @@
 
 
 
+
 </script>
 
 
@@ -399,6 +416,7 @@
         popupDiv.style.display = "none";
     }
 
+
 </script>
 
 
@@ -408,6 +426,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 </script>
 <script>
     // Function to update the sum of Shagun Amount for selected rows
@@ -443,6 +462,7 @@
             updateShagunSum();
         });
     }
+
 
 
 </script>

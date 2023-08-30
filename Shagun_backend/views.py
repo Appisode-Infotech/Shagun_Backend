@@ -203,6 +203,7 @@ def manage_users(request):
 def manage_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_employees()
+        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -347,7 +348,6 @@ def filter_event_request(request, status):
         return redirect('sign_up')
 
 
-
 def get_settlement_for_event(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement(status)
@@ -465,8 +465,6 @@ def search_closed_printer_jobs(request):
         return redirect('sign_up')
 
 
-# I need the data from transaction history table (sender, reciever, total amount, shagun, amount, card amount,
-# created date, event date.... all details
 def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
@@ -487,6 +485,18 @@ def transactions_settlement(request, event_id):
             response = paginator.get_page(page)
             return render(request, 'pages/admin_employee/transactions_settlement.html',
                           {"response": response, "event_id": event_id})
+    else:
+        return redirect('sign_up')
+
+
+def search_transactions_settlement(request, event_id):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = transactions_controller.search_transaction_list(event_id, request.POST['search'])
+        paginator = Paginator(response['transactions'], 250)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/transactions_settlement.html',
+                      {"response": response, "event_id": event_id})
     else:
         return redirect('sign_up')
 

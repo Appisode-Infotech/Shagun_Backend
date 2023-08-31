@@ -19,7 +19,6 @@ def admin_dashboard(uid):
                 """
             cursor.execute(transaction_stats_query)
             transaction_stats = cursor.fetchone()
-            print(transaction_stats)
             event_stats_query = f"""
                 SELECT 
                     COUNT(*) AS total_events,
@@ -28,7 +27,6 @@ def admin_dashboard(uid):
                 """
             cursor.execute(event_stats_query)
             event_stats = cursor.fetchone()
-            print(event_stats)
 
             today_events_query = f"""
                             SELECT event.event_date, event.event_admin, et.event_type_name, event.id,
@@ -38,7 +36,6 @@ def admin_dashboard(uid):
                             """
             cursor.execute(today_events_query)
             today_event_stats = cursor.fetchall()
-            print(today_event_stats)
 
             jobs_sql = """
                     SELECT
@@ -52,7 +49,6 @@ def admin_dashboard(uid):
 
             cursor.execute(jobs_sql)
             job_stats = cursor.fetchone()
-            print(job_stats)
 
             events_sql = """
                         SELECT
@@ -65,7 +61,6 @@ def admin_dashboard(uid):
                         """
             cursor.execute(events_sql)
             events_stat = cursor.fetchone()
-            print(events_stat)
 
             vendors_sql = """
                         SELECT
@@ -76,7 +71,6 @@ def admin_dashboard(uid):
                         """
             cursor.execute(vendors_sql)
             vendors_stat = cursor.fetchone()
-            print(vendors_stat)
 
             return {
                 "status": True,

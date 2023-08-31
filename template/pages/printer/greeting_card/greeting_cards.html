@@ -112,7 +112,7 @@
                     <div class="header-container">
                         <h4 class="card-title">Greeting Cards</h4>
                         <div class="form-group">
-                            <form action="{% url 'dashboard_search_greetings' %}" method="POST">
+                            <form action="{% url 'printer_search_greetings' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
@@ -132,9 +132,9 @@
                                     aria-expanded="false">
                                 {% if status is None %}
                                 All
-                                {% elif status == '0' %}
+                                {% elif status == 0 %}
                                 Inactive
-                                {% elif status == '1' %}
+                                {% elif status == 1 %}
                                 Active
                                 {% endif %}
                             </button>
@@ -142,9 +142,9 @@
                                 <a class="dropdown-item"
                                    href="{% url 'printer_manage_greeting_cards'  %}">All</a>
                                 <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_greetings_status' 1 %}">Active</a>
+                                   href="{% url 'printer_filter_greetings_cards' 1 %}">Active</a>
                                 <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_greetings_status' 0 %}">Inactive</a>
+                                   href="{% url 'printer_filter_greetings_cards' 0 %}">Inactive</a>
                             </div>
 
                         </div>

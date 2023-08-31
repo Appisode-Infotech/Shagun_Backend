@@ -214,7 +214,7 @@ def search_transaction_list(event_id, search):
             LEFT JOIN users As sender ON th.sender_uid = sender.uid
             LEFT JOIN users As receiver ON th.receiver_uid = receiver.uid
             WHERE th.event_id = '{event_id}' AND (th.transaction_id LIKE '%%{search}%%' OR th.gifter_name LIKE '%%{search}%%' 
-                                    OR th.id LIKE LOWER('%%{search}%%')) ORDER BY th.created_on DESC """
+                                    OR LOWER(sender.name) LIKE LOWER('%%{search}%%')) ORDER BY th.created_on DESC """
             cursor.execute(track_order_query)
             track = cursor.fetchall()
             return {

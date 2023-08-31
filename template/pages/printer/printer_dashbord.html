@@ -4,6 +4,7 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Shagun Admin</title>
     <!-- plugins:css -->
@@ -23,17 +24,32 @@
     <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
     <!-- endinject -->
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <style>
+        .icon-and-text-container {
+          display: flex;
+        }
+
+        .icon-and-text-container i {
+          color: #7da0fa;
+          margin-right: 10px;
+        }
+
+
+
+
+
+    </style>
 </head>
 <body>
 <div class="container-scroller">
-    <!-- partial:partials/_navbar.html -->
+    <!-- partial:../../partials/_navbar.html -->
     {% include 'printer_app_bar.html' %}
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_settings-panel.html -->
+        <!-- partial:../../partials/_settings-panel.html -->
         {% include 'theme_setting.html' %}
         <!-- partial -->
-        <!-- partial:partials/_sidebar.html -->
+        <!-- partial:../../partials/_sidebar.html -->
         {% include 'printer_nav_bar.html' %}
         <!-- partial -->
         <div class="main-panel">
@@ -42,67 +58,86 @@
                     <div class="col-md-12 grid-margin">
                         <div class="row">
                             <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 class="font-weight-bold">Welcome {{ request.session.name }}</h3>
+                                <h3 class="font-weight-bold">Welcome {{ request.session.store_name }}</h3>
                             </div>
 
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 grid-margin stretch-card">
-                        <div class="card tale-bg">
-                            <div class="card-people mt-auto">
-                                <img src="{% static 'images/dashboard/people.svg' %}" alt="people">
-                                <div class="weather-info">
-                                    <div class="d-flex">
-                                        <div>
-                                            <h2 class="mb-0 font-weight-normal"><i
-                                                    class="icon-sun mr-2"></i>31<sup>C</sup></h2>
-                                        </div>
-                                        <div class="ml-2">
-                                            <h4 class="location font-weight-normal">Bangalore</h4>
-                                            <h6 class="font-weight-normal">India</h6>
-                                        </div>
+                    <div class="col-md-6 grid-margin transparent">
+                        <div class="icon-and-text-container">
+                            <i class="fas fa-money-check-alt"></i>
+                            <p>Billing Stats</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                    <div class="card-body">
+                                        <p class="mb-4">Total Billing Amount</p>
+                                        <p class="fs-30 mb-2">{{ total_amount }}</p>
                                     </div>
-                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                    <div class="card-body">
+                                        <p class="mb-4">Completed Job Billing Amount</p>
+                                        <p class="fs-30 mb-2">{{ work_done_amount }}</p>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                    <div class="card-body">
+                                        <p class="mb-4">In Progress Job Billing Amount</p>
+                                        <p class="fs-30 mb-2">{{ in_progress_amount }}</p>
+                                    </div>
+                            </div>
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                    <div class="card-body">
+                                        <p class="mb-4">New Job Billing Amount</p>
+                                        <p class="fs-30 mb-2">{{ new_amount }}</p>
+                                    </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 grid-margin transparent">
+                        <div class="icon-and-text-container">
+                            <i class="fas fa-print" style="color:#4747a1;"></i>
+                            <p>Printing Vendors Jobs</p>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <div class="card card-tale">
-                                    <div class="card-body">
-                                        <p class="mb-4">Today’s Jobs</p>
-                                        <p class="fs-30 mb-2">{{ todays_transactions }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-4 stretch-card transparent">
-                                <div class="card card-dark-blue">
+                                <a href="{% url 'printer_all_jobs' %}" class="card card-dark-blue">
                                     <div class="card-body">
                                         <p class="mb-4">Total Jobs</p>
-                                        <p class="fs-30 mb-2">{{ total_transactions }}</p>
+                                        <p class="fs-30 mb-2">{{ total_jobs }}</p>
                                     </div>
-                                </div>
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                <a href="{% url 'printer_open_jobs' %}" class="card card-dark-blue">
+                                    <div class="card-body">
+                                        <p class="mb-4">Open Jobs</p>
+                                        <p class="fs-30 mb-2">{{ open_jobs }}</p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-                                <div class="card card-light-blue">
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                <a href="{% url 'printer_closed_jobs' %}" class="card card-dark-blue">
                                     <div class="card-body">
-                                        <p class="mb-4">Open Jobs</p>
-                                        <p class="fs-30 mb-2">{{ today_created_events }}</p>
+                                        <p class="mb-4">Completed Jobs</p>
+                                        <p class="fs-30 mb-2">{{ completed }}</p>
                                     </div>
-                                </div>
+                                </a>
                             </div>
-                            <div class="col-md-6 stretch-card transparent">
-                                <div class="card card-light-danger">
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                <a href="{% url 'printer_new_jobs' %}" class="card card-dark-blue">
                                     <div class="card-body">
-                                        <p class="mb-4">Pending Jobs</p>
-                                        <p class="fs-30 mb-2">{{ total_events }}</p>
+                                        <p class="mb-4">New Jobs</p>
+                                        <p class="fs-30 mb-2">{{ new_jobs }}</p>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>

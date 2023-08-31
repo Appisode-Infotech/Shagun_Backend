@@ -394,7 +394,7 @@ def get_bank_by_id(bnk_id):
             if bank_data is not None:
                 return {
                     "status": True,
-                    "bank": responsegenerator.responseGenerator.generateResponse(bank_data, BANK_DETAILS_BY_ID)
+                    "banks": responsegenerator.responseGenerator.generateResponse(bank_data, BANK_DETAILS_BY_ID)
                 }, 200
             else:
                 return {

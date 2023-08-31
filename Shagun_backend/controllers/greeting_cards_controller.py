@@ -69,14 +69,13 @@ def get_printer_greeting_cards(p_id):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
-def dashboard_search_greetings(search):
+def dashboard_search_greetings(status):
     try:
         with connection.cursor() as cursor:
             search_greeting_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards
-             WHERE (id LIKE '%{search}%' OR card_name LIKE '%{search}%') ORDER BY created_on DESC"""
+             WHERE status= '{status}' ORDER BY created_on DESC"""
             cursor.execute(search_greeting_query)
             greeting_cards = cursor.fetchall()
-            print(greeting_cards)
             return {
                 "status": True,
                 "all_greeting_cards": responsegenerator.responseGenerator.generateResponse(greeting_cards, GREETING_CARDS)

@@ -2,7 +2,7 @@ import pymysql
 from django.db import connection
 from Shagun_backend.util import responsegenerator
 
-from Shagun_backend.util.constants import today, EVENT_LIST
+from Shagun_backend.util.constants import *
 
 
 def admin_dashboard(uid):
@@ -86,7 +86,7 @@ def admin_dashboard(uid):
                 "total_fees": round(transaction_stats[3], 2),
                 "today_shagun": round(transaction_stats[4], 2),
                 "today_created_events": event_stats[1],
-                "events": [],
+                "events": responsegenerator.responseGenerator.generateResponse(today_event_stats, DASHBOARD_EVENT_LIST),
                 "new_jobs": job_stats[0],
                 "open_jobs": job_stats[1],
                 "completed": job_stats[2],

@@ -50,6 +50,21 @@ class responseGenerator:
                 )
             return event_list
 
+        if controller_type == DASHBOARD_EVENT_LIST:
+            event_list = []
+            for events in data:
+                event_list.append(
+                    {
+                        "event_date": events[0],
+                        "event_name": events[2],
+                        "admins": json.loads(events[1]),
+                        "event_id": events[3],
+                        "is_approved": events[4],
+                        "status": events[5]
+                    }
+                )
+            return event_list
+
         if controller_type == SEARCH_EVENT_LIST:
             event_list = []
             for events in data:
@@ -484,20 +499,19 @@ class responseGenerator:
 
             }
         if controller_type == DELIVERY_VENDOR_DATA:
-                return {
-                    "id": data[0],
-                    "delivery_vendor_name": data[1],
-                    "city": data[2],
-                    "address": data[3],
-                    "lat_lng": data[4],
-                    "status": data[5],
-                    "gst_no": data[6],
-                    "delivery_vendor_owner": data[7],
-                    "contact_number": data[8],
-                    "created_by": data[9],
-                    "created_on": data[10]
-
-                }
+            return {
+                "id": data[0],
+                "delivery_vendor_name": data[1],
+                "city": data[2],
+                "address": data[3],
+                "lat_lng": data[4],
+                "status": data[5],
+                "gst_no": data[6],
+                "delivery_vendor_owner": data[7],
+                "contact_number": data[8],
+                "created_by": data[9],
+                "created_on": data[10]
+            }
 
         if controller_type == ALL_JOBS:
             jobs_data = []

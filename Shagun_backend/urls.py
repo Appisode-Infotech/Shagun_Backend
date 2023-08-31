@@ -60,7 +60,7 @@ urlpatterns = [
     path('dashboard_search_employee', dashboard_search_employee, name='dashboard_search_employee'),
     path('dashboard_search_event_settlement', dashboard_search_event_settlement,
          name='dashboard_search_event_settlement'),
-    path('manage_event/add_events', add_events, name='add_events'),
+    path('add_events', add_events, name='add_events'),
     path('manage_event_types', manage_event_types, name='manage_event_types'),
     path('manage_location', manage_location, name='manage_location'),
     path('manage_kyc', manage_kyc, name='manage_kyc'),

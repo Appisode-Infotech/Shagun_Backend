@@ -239,9 +239,6 @@
                                                     <th>Event Admins</th>
                                                     <th>Event Date</th>
                                                     <th>Status</th>
-                                                    <th>Set Status</th>
-                                                    <th>Active</th>
-                                                    <th></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -264,53 +261,6 @@
                                                         {% elif event.is_approved == 2 %}
                                                         <label class="badge badge-danger">Rejected</label>
                                                         {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button type="button"
-                                                                    class="btn btn-outline-info dropdown-toggle"
-                                                                    id="dropdownMenuIconButton1" data-toggle="dropdown"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false">
-                                                                {% if event.is_approved == 0 %}
-                                                                Pending
-                                                                {% elif event.is_approved == 1 %}
-                                                                Approved
-                                                                {% elif event.is_approved == 2 %}
-                                                                Rejected
-                                                                {% endif %}
-                                                            </button>
-                                                            <div class="dropdown-menu"
-                                                                 aria-labelledby="dropdownMenuIconButton3">
-                                                                <a class="dropdown-item" href="#">Pending</a>
-                                                                <a class="dropdown-item" href="#">Approved</a>
-                                                                <a class="dropdown-item" href="#">Rejected</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button type="button"
-                                                                    class="btn btn-outline-info dropdown-toggle"
-                                                                    id="dropdownMenuIconButton2" data-toggle="dropdown"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false">
-                                                                {% if event.status == 0 %}
-                                                                Inactive
-                                                                {% elif event.status == 1 %}
-                                                                Active
-                                                                {% endif %}
-                                                            </button>
-                                                            <div class="dropdown-menu"
-                                                                 aria-labelledby="dropdownMenuIconButton3">
-                                                                <a class="dropdown-item" href="#">Active</a>
-                                                                <a class="dropdown-item" href="#">Inactive</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-outline-info btn-fw">View
-                                                        </button>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}

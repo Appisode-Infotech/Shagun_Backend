@@ -648,7 +648,7 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            user_controller.add_user_kyc(kyc_obj)
+            resp = user_controller.add_user_kyc(kyc_obj)
             return redirect('add_bank')
         else:
             response, status_code = user_controller.get_all_users('%')

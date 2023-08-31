@@ -914,7 +914,7 @@ def dashboard_search_bank(search):
 def dashboard_search_user(search):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 3 AND ( name LIKE '%{search}%' OR 
                 email LIKE '%{search}%' OR phone LIKE '%{search}%') ORDER BY created_on DESC"""
             cursor.execute(users_data_query)

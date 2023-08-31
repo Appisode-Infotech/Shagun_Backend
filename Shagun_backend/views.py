@@ -218,7 +218,7 @@ def manage_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'event_management/event_management/employees.html', {"response": response, "role": 2})
+        return render(request, 'pages/admin_employee/employee_management/employee/employees.html', {"response": response, "role": 2})
     else:
         return redirect('sign_up')
 
@@ -427,7 +427,7 @@ def printer_search_all_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'template/pages/printer/printer_all_jobs.html', {"response": response})
+        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -462,7 +462,7 @@ def printer_search_open_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'template/pages/printer/printer_all_jobs.html', {"response": response})
+        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -473,7 +473,7 @@ def printer_search_closed_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'template/pages/printer/printer_closed_jobs.html', {"response": response})
+        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 def printer_search_new_jobs(request):
@@ -483,7 +483,7 @@ def printer_search_new_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'template/pages/printer/printer_new_jobs.html', {"response": response})
+        return render(request, 'pages/printer/printer_new_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -1144,7 +1144,7 @@ def dashboard_search_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'event_management/event_management/employees.html',
+        return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
                       {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
@@ -1155,7 +1155,7 @@ def dashboard_search_employee_status(request, status, role):
     paginator = Paginator(response['user_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'event_management/event_management/employees.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/employee_management/employee/employees.html', {'response': response, "status": status})
 
 
 def dashboard_search_printers(request):
@@ -1244,7 +1244,7 @@ def printer_search_greetings(request):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'template/pages/printer/greeting_card/greeting_cards.html',
+        return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')

@@ -112,13 +112,17 @@ urlpatterns = [
     path('filtered_events_on_approval_status/<str:status>/', filtered_events_on_approval_status,
          name='filtered_events_on_approval_status'),
     path('transactions_settlement/<int:event_id>/', transactions_settlement, name='transactions_settlement'),
+    path('search_transactions_settlement/<int:event_id>/', search_transactions_settlement, name='search_transactions_settlement'),
     path('filter_all_printer_jobs/<int:status>/', filter_all_printer_jobs, name='filter_all_printer_jobs'),
     path('filter_open_printer_jobs/<int:status>/', filter_open_printer_jobs, name='filter_open_printer_jobs'),
+    path('printer_filter_all_jobs/<int:status>/', printer_filter_all_jobs, name='printer_filter_all_jobs'),
+    path('printer_filter_open_jobs/<int:status>/', printer_filter_open_jobs, name='printer_filter_open_jobs'),
 
     path('printer_home_page', printer_home_page, name='printer_home_page'),
     path('printer_all_jobs', printer_all_jobs, name='printer_all_jobs'),
     path('printer_open_jobs', printer_open_jobs, name='printer_open_jobs'),
     path('printer_closed_jobs', printer_closed_jobs, name='printer_closed_jobs'),
+    path('printer_new_jobs', printer_new_jobs, name='printer_new_jobs'),
 
     path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location,
          name='activate_deactivate_location'),

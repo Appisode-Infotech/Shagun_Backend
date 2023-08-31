@@ -7,7 +7,8 @@ from Shagun_backend.util.constants import *
 def printer_login(uname, pwd):
     print(pwd)
     with connection.cursor() as cursor:
-        printer_login_query = f"""SELECT id,printer_user_name, printer_password FROM printer WHERE printer_user_name = '{uname}' """
+        printer_login_query = f"""SELECT id,printer_user_name, printer_password, store_name FROM printer 
+                                    WHERE printer_user_name = '{uname}' """
         cursor.execute(printer_login_query)
         result = cursor.fetchone()
         print(result)
@@ -16,6 +17,7 @@ def printer_login(uname, pwd):
                 "msg": "Success",
                 "username": result[1],
                 "pwd": result[2],
+                "store_name": result[3],
                 "id": result[0],
             }
 
@@ -262,6 +264,36 @@ def filter_all_jobs(status):
         return {"status": False, "message": str(e)}, 301
 
 
+def printer_filter_jobs(status, pid):
+    try:
+        with connection.cursor() as cursor:
+            get_all_jobs_query = f""" 
+            SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
+            gc.card_price, e.event_date FROM print_jobs AS pj
+            LEFT JOIN printer AS p ON pj.printer_id = p.id
+            LEFT JOIN event AS e ON pj.event_id = e.id
+            LEFT JOIN events_type AS et ON e.event_type_id = et.id
+            LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
+            WHERE pj.status = '{status}' AND pj.printer_id = '{pid}' ORDER BY pj.created_on DESC"""
+            cursor.execute(get_all_jobs_query)
+            jobs = cursor.fetchall()
+            print(get_all_jobs_query)
+            if jobs is not None:
+                return {
+                      "status": True,
+                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                }, 200
+            else:
+                return {
+                    "status": False,
+                    "jobs": None
+                }, 301
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def get_printers_jobs(pid, status):
     status_values_str = ', '.join(str(status_value) for status_value in status)
     try:
@@ -291,7 +323,7 @@ def get_printers_jobs(pid, status):
         return {"status": False, "message": str(e)}, 301
 
 
-def activate_deactivate_print_jobs(pid, status):
+def change_print_jobs_status(pid, status):
     try:
         with connection.cursor() as cursor:
             query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{pid}' """
@@ -301,6 +333,104 @@ def activate_deactivate_print_jobs(pid, status):
                 "message": "Printer job status updated successfully"
             }, 200
 
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def printer_dashboard(pid):
+    try:
+        with connection.cursor() as cursor:
+            transaction_stats_query = f"""
+                                    SELECT 
+                                        SUM(CASE WHEN `status` IN (1, 2, 3, 4, 5) THEN `billing_amount` ELSE 0 END) AS total_amount,
+                                        SUM(CASE WHEN `status` = 5 THEN `billing_amount` ELSE 0 END) AS work_done_amount,
+                                        SUM(CASE WHEN `status` IN (2, 3, 4) THEN `billing_amount` ELSE 0 END) AS in_progress_amount,
+                                        SUM(CASE WHEN `status` = 1 THEN `billing_amount` ELSE 0 END) AS new_amount
+                                    FROM 
+                                        print_jobs
+                                    WHERE printer_id = '{pid}'
+                                    """
+            cursor.execute(transaction_stats_query)
+            transaction_stats = cursor.fetchone()
+            event_stats_query = f"""
+                SELECT 
+                    COUNT(*) AS total_events,
+                    CAST(SUM(DATE(event_date) = '{today.date()}') AS SIGNED) AS events_created_today
+                FROM event;
+                """
+            cursor.execute(event_stats_query)
+            event_stats = cursor.fetchone()
+
+            today_events_query = f"""
+                            SELECT event.event_date, event.event_admin, et.event_type_name, event.id,
+                            event.is_approved, event.status FROM event
+                            LEFT JOIN events_type AS et ON event.event_type_id = et.id
+                             WHERE DATE(event_date) = '{today.date()}' ORDER BY event.created_on DESC;
+                            """
+            cursor.execute(today_events_query)
+            today_event_stats = cursor.fetchall()
+
+            jobs_sql = f"""
+                    SELECT
+                        SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS new_count,
+                        SUM(CASE WHEN `status` IN (2, 3, 4) THEN 1 ELSE 0 END) AS in_progress_count,
+                        SUM(CASE WHEN `status` = 5 THEN 1 ELSE 0 END) AS completed_count,
+                        COUNT(*) AS total_jobs
+                    FROM
+                        print_jobs
+                    WHERE
+                        printer_id = '{pid}'
+                    """
+
+            cursor.execute(jobs_sql)
+            job_stats = cursor.fetchone()
+
+            events_sql = """
+                        SELECT
+                            SUM(CASE WHEN is_approved = 0 THEN 1 ELSE 0 END) AS pending_events,
+                            SUM(CASE WHEN is_approved = 1 THEN 1 ELSE 0 END) AS approved_events,
+                            SUM(CASE WHEN is_approved = 2 THEN 1 ELSE 0 END) AS rejected_events,
+                            COUNT(*) AS total_events
+                        FROM
+                            event
+                        """
+            cursor.execute(events_sql)
+            events_stat = cursor.fetchone()
+
+            vendors_sql = """
+                        SELECT
+                            (SELECT COUNT(*) FROM printer WHERE status = 1) AS active_printers,
+                            (SELECT COUNT(*) FROM printer WHERE status = 0) AS inactive_printers,
+                            (SELECT COUNT(*) FROM delivery_vendors WHERE status = 1) AS active_delivery_vendors,
+                            (SELECT COUNT(*) FROM delivery_vendors WHERE status = 0) AS inactive_delivery_vendors;
+                        """
+            cursor.execute(vendors_sql)
+            vendors_stat = cursor.fetchone()
+
+            return {
+                "status": True,
+                "total_amount": round(transaction_stats[0], 2),
+                "work_done_amount": round(transaction_stats[1], 2),
+                "in_progress_amount": round(transaction_stats[2], 2),
+                "new_amount": round(transaction_stats[3], 2),
+                # "today_created_events": event_stats[1],
+                # "events": responsegenerator.responseGenerator.generateResponse(today_event_stats, EVENT_LIST),
+                "new_jobs": job_stats[0],
+                "open_jobs": job_stats[1],
+                "completed": job_stats[2],
+                "total_jobs": job_stats[3],
+                # "pending_events": events_stat[0],
+                # "approved_events": events_stat[1],
+                # "rejected_events": events_stat[2],
+                # "total_events": events_stat[3],
+                # "active_printers": vendors_stat[0],
+                # "inactive_printers": vendors_stat[1],
+                # "active_delivery_vendors": vendors_stat[2],
+                # "inactive_delivery_vendors": vendors_stat[3]
+
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:

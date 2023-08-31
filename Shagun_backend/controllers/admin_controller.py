@@ -40,7 +40,7 @@ def admin_dashboard(uid):
             jobs_sql = """
                     SELECT
                         SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS new_count,
-                        SUM(CASE WHEN `status` IN (1,2, 3, 4) THEN 1 ELSE 0 END) AS in_progress_count,
+                        SUM(CASE WHEN `status` IN (2, 3, 4) THEN 1 ELSE 0 END) AS in_progress_count,
                         SUM(CASE WHEN `status` = 5 THEN 1 ELSE 0 END) AS completed_count,
                         COUNT(*) AS total_jobs
                     FROM

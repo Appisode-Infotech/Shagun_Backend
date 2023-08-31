@@ -394,7 +394,7 @@ def get_bank_by_id(bnk_id):
             if bank_data is not None:
                 return {
                     "status": True,
-                    "bank": responsegenerator.responseGenerator.generateResponse(bank_data, BANK_DETAILS_BY_ID)
+                    "banks": responsegenerator.responseGenerator.generateResponse(bank_data, BANK_DETAILS_BY_ID)
                 }, 200
             else:
                 return {
@@ -505,7 +505,7 @@ def enable_disable_employee(uid, status):
 def get_all_employees():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 2 ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()

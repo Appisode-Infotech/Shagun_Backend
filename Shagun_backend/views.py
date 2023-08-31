@@ -59,6 +59,7 @@ def custom_404(request, slug=None):
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
+        print(response)
         return render(request, 'index.html', response)
     else:
         return redirect('sign_up')
@@ -1085,7 +1086,6 @@ def dashboard_search_bank(request):
 def dashboard_search_user(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_user(request.POST['search'])
-        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)

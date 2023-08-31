@@ -123,6 +123,12 @@ urlpatterns = [
     path('printer_open_jobs', printer_open_jobs, name='printer_open_jobs'),
     path('printer_closed_jobs', printer_closed_jobs, name='printer_closed_jobs'),
     path('printer_new_jobs', printer_new_jobs, name='printer_new_jobs'),
+    path('printer_search_all_jobs', printer_search_all_jobs, name='printer_search_all_jobs'),
+    path('printer_search_greetings', printer_search_greetings, name='printer_search_greetings'),
+    path('printer_search_open_jobs', printer_search_open_jobs, name='printer_search_open_jobs'),
+    path('printer_search_closed_jobs', printer_search_closed_jobs, name='printer_search_closed_jobs'),
+    path('printer_search_new_jobs', printer_search_new_jobs, name='printer_search_new_jobs'),
+    path('printer_filter_greetings_cards/<int:status>/', printer_filter_greetings_cards, name='printer_filter_greetings_cards'),
 
     path('activate_deactivate_location/<int:location_id>/<int:status>/', activate_deactivate_location,
          name='activate_deactivate_location'),

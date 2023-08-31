@@ -102,8 +102,8 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Bank Account {{ bank_data.bank.id}}</h4>
-                                <form class="form-sample" action="{% url 'edit_bank' bank_data.bank.id %}" method="post" >
+                                <h4 class="card-title">Edit Bank Account </h4>
+                                <form class="form-sample" action="{% url 'edit_bank' bank_data.banks.id %}" method="post" >
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Bank info
@@ -114,9 +114,9 @@
                                                 <label class="col-sm-3 col-form-label">User</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="name" readonly onclick="myFunction()"
-                                                           value="{{bank_data.bank.name}}" class="form-control">
+                                                           value="{{bank_data.banks.name}}" class="form-control">
                                                     <input type="hidden" id="uid" name="uid"
-                                                           value="{{bank_data.bank.uid}}">
+                                                           value="{{bank_data.banks.uid}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -127,7 +127,7 @@
                                                     <input type="text" id="account_holder_name"
                                                            name="account_holder_name"
                                                            class="form-control"
-                                                           value="{{bank_data.bank.account_holder_name}}">
+                                                           value="{{bank_data.banks.account_holder_name}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -139,10 +139,10 @@
                                                 <div class="col-sm-9">
                                                     <select class="form-control" name="bank_name">
                                                         {% for bank in bank_list.bank_list %}
-                                                        {% if bank.bank_name == bank_data.bank.bank_name %}
-                                                        <option selected>{{ bank.bank_name }}</option>
+                                                        {% if banks.bank_name == bank_data.banks.bank_name %}
+                                                        <option selected>{{ banks.bank_name }}</option>
                                                         {% else %}
-                                                        <option>{{ bank.bank_name }}</option>
+                                                        <option>{{ banks.bank_name }}</option>
                                                         {% endif %}
                                                         {% endfor %}
                                                     </select>
@@ -154,7 +154,7 @@
                                                 <label class="col-sm-3 col-form-label">Account Number</label>
                                                 <div class="col-sm-9">
                                                     <input class="form-control"
-                                                           value="{{bank_data.bank.account_number}}"
+                                                           value="{{bank_data.banks.account_number}}"
                                                            id="account_number"
                                                            name="account_number"/>
                                                 </div>
@@ -166,7 +166,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">IFSC CODE</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" value="{{bank_data.bank.ifsc_code}}"
+                                                    <input class="form-control" value="{{bank_data.banks.ifsc_code}}"
                                                            id="ifsc_code" name="ifsc_code"/>
                                                 </div>
                                             </div>
@@ -181,18 +181,18 @@
                                                                 id="dropdownMenuIconButton2" data-toggle="dropdown"
                                                                 aria-haspopup="true"
                                                                 aria-expanded="false">
-                                                            {% if bank_data.bank.status == 0 %}
+                                                            {% if bank_data.banks.status == 0 %}
                                                             Inactive
-                                                            {% elif bank_data.bank.status == 1 %}
+                                                            {% elif bank_data.banks.status == 1 %}
                                                             Active
                                                             {% endif %}
                                                         </button>
                                                         <div class="dropdown-menu"
                                                              aria-labelledby="dropdownMenuIconButton3">
                                                             <a class="dropdown-item"
-                                                               href="{% url 'activate_deactivate_bank' bank_data.bank.id 1 %}">Active</a>
+                                                               href="{% url 'activate_deactivate_bank' bank_data.banks.id 1 %}">Active</a>
                                                             <a class="dropdown-item"
-                                                               href="{% url 'activate_deactivate_bank' bank_data.bank.id 0 %}">Inactive</a>
+                                                               href="{% url 'activate_deactivate_bank' bank_data.banks.id 0 %}">Inactive</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -205,7 +205,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Created By</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{bank_data.bank.added_by}}</label>
+                                                    <label class="form-control">{{bank_data.banks.added_by}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -213,7 +213,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Created On</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{bank_data.bank.created_on}}</label>
+                                                    <label class="form-control">{{bank_data.banks.created_on}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,7 +224,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Last Modified By</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{bank_data.bank.modified_by}}</label>
+                                                    <label class="form-control">{{bank_data.banks.modified_by}}</label>
                                                     <input type="hidden" id="modified_by" name="modified_by"
                                                            value="{{ request.session.uid }}">
                                                 </div>
@@ -234,7 +234,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Last Modified On</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{bank_data.bank.modified_on}}</label>
+                                                    <label class="form-control">{{bank_data.banks.modified_on}}</label>
                                                 </div>
                                             </div>
                                         </div>

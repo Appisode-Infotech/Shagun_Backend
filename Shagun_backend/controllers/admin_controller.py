@@ -86,7 +86,7 @@ def admin_dashboard(uid):
                 "total_fees": round(transaction_stats[3], 2),
                 "today_shagun": round(transaction_stats[4], 2),
                 "today_created_events": event_stats[1],
-                "events": responsegenerator.responseGenerator.generateResponse(today_event_stats, EVENT_LIST),
+                "events": [],
                 "new_jobs": job_stats[0],
                 "open_jobs": job_stats[1],
                 "completed": job_stats[2],
@@ -99,7 +99,6 @@ def admin_dashboard(uid):
                 "inactive_printers": vendors_stat[1],
                 "active_delivery_vendors": vendors_stat[2],
                 "inactive_delivery_vendors": vendors_stat[3]
-
             }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

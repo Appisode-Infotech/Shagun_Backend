@@ -852,7 +852,8 @@ def get_my_invited_event_list(uid):
     try:
         with connection.cursor() as cursor:
             invited_events_query = f"""
-                SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS invited_by_phone
+                SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS 
+                invited_by_phone
                 FROM event_guest_invite AS egi
                 LEFT JOIN users AS u ON u.phone = egi.invited_to
                 LEFT JOIN event AS e ON egi.event_id = e.id

@@ -171,7 +171,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown1" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput1"
+                                                        <input required type="text" placeholder="Search.." id="myInput1"
                                                                onkeyup="filterFunction('myDropdown1')"
                                                                class="form-control">
                                                         {% for events_type in event_types.event_type_list %}
@@ -210,7 +210,7 @@
                                                 <label class="col-sm-3 col-form-label">Printing Vendor</label>
                                                 <div class="col-sm-9">
 
-                                                    <input type="text" id="printer_name" readonly
+                                                    <input  type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown3')"
                                                            placeholder="Search.." class="form-control">
 
@@ -230,7 +230,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Date</label>
                                                 <div class="col-sm-9">
-                                                    <input type="datetime-local" id="event_date"
+                                                    <input required type="datetime-local" id="event_date"
                                                            name="event_date"
                                                            class="form-control"
                                                            placeholder="username">
@@ -243,7 +243,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line1</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address_line1"/>
+                                                    <input required type="text" class="form-control" name="address_line1"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -251,7 +251,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line2</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="address_line2"/>
+                                                    <input required type="text" class="form-control" name="address_line2"/>
                                                 </div>
                                             </div>
                                         </div>

@@ -90,9 +90,12 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="phone" name="phone"
-                                                           class="form-control"
-                                                           value="{{emp.phone}}">
+<!--                                                    <input type="text" id="phone" name="phone"-->
+<!--                                                           class="form-control"-->
+<!--                                                           value="{{emp.phone}}">-->
+                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
+                                                           class="form-control" value="{{emp.phone}}"
+                                                           title="Please enter a 10-digit phone number" required>
                                                 </div>
                                             </div>
                                         </div>

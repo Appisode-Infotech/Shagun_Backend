@@ -691,6 +691,11 @@ def disable_bank(bank_id, status):
     try:
         with connection.cursor() as cursor:
             disable_bank_query = "UPDATE bank_details SET status = %s WHERE id = %s"
+
+            if status == 1:
+                cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
+                               (bank_id,))
+
             values = (status, bank_id)
             cursor.execute(disable_bank_query, values)
             return {

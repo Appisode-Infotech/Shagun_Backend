@@ -68,7 +68,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="email" name="email"
+                                                    <input required type="text" id="email" name="email"
                                                            class="form-control"
                                                            value="{{emp.email}}">
                                                 </div>
@@ -78,7 +78,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="name" name="name"
+                                                    <input required type="text" id="name" name="name"
                                                            class="form-control"
                                                            value="{{emp.name}}">
                                                 </div>
@@ -90,9 +90,13 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="phone" name="phone"
-                                                           class="form-control"
-                                                           value="{{emp.phone}}">
+<!--                                                    <input type="text" id="phone" name="phone"-->
+<!--                                                           class="form-control"-->
+<!--                                                           value="{{emp.phone}}">-->
+                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
+                                                           class="form-control" value="{{emp.phone}}"
+                                                           title="Please enter a 10-digit phone number" required>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -100,7 +104,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="city" name="city"
+                                                    <input required type="text" id="city" name="city"
                                                            class="form-control"
                                                            value="{{emp.city}}">
                                                 </div>
@@ -112,7 +116,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Password</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" id="password" name="password"
+                                                    <input required type="password" id="password" name="password"
                                                            class="form-control form-control-lg"
                                                            value="{{emp.password}}">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
@@ -124,7 +128,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Confirm Password</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" id="confirmPassword"
+                                                    <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
                                                            value="{{emp.password}}">
                                                     <i class="toggle-password"

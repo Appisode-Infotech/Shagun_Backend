@@ -128,7 +128,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Card Id</label>
+                                                <label class="col-sm-3 col-form-label">Card Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="card_name"/>
                                                 </div>
@@ -160,7 +160,7 @@
                                                         <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="printer_id" name="printer_id">
+                                                    <input type="hidden" id="printer_id" name="printer_id">
                                                 </div>
                                             </div>
                                         </div>
@@ -169,7 +169,7 @@
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
-                                                    <input required type="hidden" id="created_by_uid" name="created_by_uid"
+                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
                                                            value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
@@ -185,7 +185,7 @@
                                                            name="greeting_card" id="card_image_url"
                                                            class="file-upload-default">
                                                     <div class="input-group col-xs-12">
-                                                        <input required type="text" class="form-control file-upload-info"
+                                                        <input type="text" class="form-control file-upload-info"
                                                                disabled
                                                                placeholder="Upload Image">
                                                         <span class="input-group-append">

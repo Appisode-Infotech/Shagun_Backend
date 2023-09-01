@@ -209,6 +209,6 @@ urlpatterns = [
     path('enable_disable_vendor', enable_disable_vendor, name='enable_disable_vendor'),
     path('add_bank_list', add_bank_list, name='add_bank_list'),
     path('activate_deactivate_bank_list', activate_deactivate_bank_list, name='activate_deactivate_bank_list'),
-    path('activate_deactivate_print_jobs', activate_deactivate_print_jobs, name='activate_deactivate_print_jobs'),
+    path('change_printer_jobs_status/<int:pjid>/<int:status>/<str:from_page>', change_printer_jobs_status, name='change_printer_jobs_status'),
 
 ]

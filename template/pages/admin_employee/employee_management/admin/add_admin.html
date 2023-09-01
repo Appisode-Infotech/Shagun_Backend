@@ -91,9 +91,12 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" id="phone" name="phone"
-                                                           class="form-control"
-                                                           placeholder="9876543210">
+<!--                                                    <input required type="text" id="phone" name="phone"-->
+<!--                                                           class="form-control"-->
+<!--                                                           placeholder="9876543210">-->
+                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
+                                                           class="form-control" placeholder="Phone No"
+                                                           title="Please enter a 10-digit phone number" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -103,7 +106,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="city" name="city"
                                                            class="form-control"
-                                                           placeholder="username">
+                                                           placeholder="username" >
                                                 </div>
                                             </div>
                                         </div>

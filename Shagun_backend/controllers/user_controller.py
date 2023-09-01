@@ -387,7 +387,8 @@ def edit_bank_details(bank_obj):
 def get_bank_by_id(bnk_id):
     try:
         with connection.cursor() as cursor:
-            bank_data_query = f""" SELECT bd.* ,u.name  FROM bank_details AS bd LEFT JOIN users AS u ON bd.uid = u.uid
+            bank_data_query = f""" SELECT bd.* ,u.name  FROM bank_details AS bd 
+            LEFT JOIN users AS u ON bd.uid = u.uid
              WHERE bd.id = '{bnk_id}'"""
             cursor.execute(bank_data_query)
             bank_data = cursor.fetchone()

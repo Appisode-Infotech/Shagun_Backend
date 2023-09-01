@@ -296,8 +296,7 @@ def printer_login(request):
 def printer_home_page(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = store_controller.printer_dashboard(request.session.get('id'))
-        print(response)
-        return render(request, 'pages/printer/printer_dashbord.html', response)
+        return render(request, 'pages/printer/dashboard/printer_dashbord.html', response)
     return redirect('printer_login')
 
 
@@ -427,7 +426,7 @@ def printer_search_all_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response})
+        return render(request, 'pages/printer/print_job/printer_all_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -462,7 +461,7 @@ def printer_search_open_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response})
+        return render(request, 'pages/printer/print_job/printer_open_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -483,7 +482,7 @@ def printer_search_new_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_new_jobs.html', {"response": response})
+        return render(request, 'pages/printer/print_job/printer_new_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -506,7 +505,7 @@ def printer_filter_all_jobs(request, status):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response, "status": status})
+        return render(request, 'pages/printer/print_job/printer_all_jobs.html', {"response": response, "status": status})
     else:
         return redirect('printer_login')
 
@@ -517,7 +516,7 @@ def printer_filter_open_jobs(request, status):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_open_jobs.html',
+        return render(request, 'pages/printer/print_job/printer_open_jobs.html',
                       {"response": response, "status": status})
     else:
         return redirect('printer_login')
@@ -1256,7 +1255,7 @@ def printer_all_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_all_jobs.html', {"response": response})
+        return render(request, 'pages/printer/print_job/printer_all_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -1268,7 +1267,7 @@ def printer_new_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_new_jobs.html', {"response": response})
+        return render(request, 'pages/printer/print_job/printer_new_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -1280,7 +1279,7 @@ def printer_open_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_open_jobs.html', {"response": response})
+        return render(request, 'pages/printer/print_job/printer_open_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 
@@ -1292,7 +1291,7 @@ def printer_closed_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response})
+        return render(request, 'pages/printer/print_job/printer_closed_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
 

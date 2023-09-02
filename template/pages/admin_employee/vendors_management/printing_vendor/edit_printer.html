@@ -124,14 +124,6 @@
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
                                                            value="{{printer_data.store.city_name}}" class="form-control">
-
-                                                    <div id="myDropdown" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput"
-                                                               onkeyup="filterFunction()" class="form-control" >
-                                                        {% for city in location.city_list %}
-                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
-                                                        {% endfor %}
-                                                    </div>
                                                     <input type="hidden" id="city" name="city" value="{{printer_data.store.city}}">
                                                     <input type="hidden" id="id" name="store_id" value="{{printer_data.store.id}}">
                                                 </div>
@@ -161,8 +153,6 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Phone</label>
                                                 <div class="col-sm-9">
-<!--                                                    <input type="text" class="form-control" name="contact_number" -->
-<!--                                                           value="{{printer_data.store.contact_number}}"/>-->
                                                     <input type="tel"  name="contact_number" pattern="[0-9]{10}"
                                                            class="form-control" value="{{printer_data.store.contact_number}}"
                                                            title="Please enter a 10-digit phone number" required>

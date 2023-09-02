@@ -84,6 +84,36 @@
         .show {display: block;}
 
 
+.messages-container {
+  background-color: #ffe6e6;
+  display: none;
+}
+
+/* Style the error messages */
+.messages {
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  color: #b30000; /* Dark red text color for error messages */
+  background-color: #ffd9d9; /* Light red background color for error messages */
+  border: 1px solid #ff8080; /* Dark red border for error messages */
+  padding: 5px;
+  border-radius: 3px;
+  margin: 3px;
+}
+
+
+
+
+
+
+
+
+
     </style>
 
 </head>
@@ -108,7 +138,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Add New Bank Account</h4>
                                 <form class="form-sample" action="/add_bank" method="post"
-                                      enctype="multipart/form-data">
+                                      enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Bank info
@@ -119,18 +149,27 @@
                                                 <label class="col-sm-3 col-form-label">User</label>
                                                 <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" readonly onclick="myFunction()"
+                                                    <input type="text" id="name" readonly onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
-                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
-                                                        <input  type="text" placeholder="Search.." id="myInput"
+                                                    <div id="myDropdown" class="dropdown-content"
+                                                         style="cursor: pointer;">
+                                                        <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in user.user_data %}
                                                         <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
                                                             {{users.phone}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="uid" name="uid">
+                                                    <div class="messages-container">
+                                                        <ul class="messages">
+                                                            <li>
+                                                                <div id="error-message"> Please select user
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <input type="hidden" id="uid" name="uid">
                                                 </div>
                                             </div>
                                         </div>
@@ -251,6 +290,25 @@
         }
     });
 
+
+
+
+
+
+
+
+</script>
+
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var name = document.getElementById("name").value;
+            var errorContainer = document.querySelector('.messages-container');
+
+            if (name === "") {
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+        });
 </script>
 <!-- container-scroller -->
 <!-- plugins:js -->

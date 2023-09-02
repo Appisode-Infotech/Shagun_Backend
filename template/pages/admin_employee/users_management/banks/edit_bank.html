@@ -138,13 +138,7 @@
                                                 <label class="col-sm-3 col-form-label">Select Bank</label>
                                                 <div class="col-sm-9">
                                                     <select class="form-control" name="bank_name" required>
-                                                        {% for bank in bank_list.bank_list %}
-                                                        {% if banks.bank_name == bank_data.banks.bank_name %}
-                                                        <option selected>{{ banks.bank_name }}</option>
-                                                        {% else %}
-                                                        <option>{{ banks.bank_name }}</option>
-                                                        {% endif %}
-                                                        {% endfor %}
+                                                        <option>{{bank_data.banks.bank_name }}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -153,7 +147,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Account Number</label>
                                                 <div class="col-sm-9">
-                                                    <input required class="form-control"
+                                                    <input required readonly class="form-control"
                                                            value="{{bank_data.banks.account_number}}"
                                                            id="account_number"
                                                            name="account_number"/>

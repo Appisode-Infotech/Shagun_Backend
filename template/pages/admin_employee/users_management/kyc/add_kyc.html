@@ -83,6 +83,32 @@
 
         .show {display: block;}
 
+
+.messages-container {
+  background-color: #ffe6e6; /* Light pink background color */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  display: none;
+}
+
+/* Style the error messages */
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  color: #b30000; /* Dark red text color for error messages */
+  background-color: #ffd9d9; /* Light red background color for error messages */
+  border: 1px solid #ff8080; /* Dark red border for error messages */
+  padding: 10px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+
     </style>
 
 </head>
@@ -106,7 +132,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Add New Kyc</h4>
-                                <form class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data">
+                                <form class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data"
+                                      id="myForm">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -117,10 +144,12 @@
                                                 <label class="col-sm-3 col-form-label">User</label>
                                                 <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" readonly onclick="myFunction()"
+                                                    <input type="text" id="name" readonly
+                                                           onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
-                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
+                                                    <div id="myDropdown" class="dropdown-content"
+                                                         style="cursor: pointer;">
                                                         <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in user_data %}
@@ -159,7 +188,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Date of Birth</label>
                                                 <div class="col-sm-9">
-                                                    <input required class="form-control" placeholder="dd/mm/yyyy" id="dob"
+                                                    <input required class="form-control" placeholder="dd/mm/yyyy"
+                                                           id="dob"
                                                            name="dob"/>
                                                 </div>
                                             </div>
@@ -219,12 +249,13 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Doc1</label>
                                                 <div class="col-sm-9">
-                                                    <input required accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
+                                                    <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
                                                            name="document1" class="file-upload-default">
                                                     <div class="input-group col-xs-12">
-                                                        <input required type="text" class="form-control file-upload-info"
+                                                        <input type="text"
+                                                               class="form-control file-upload-info"
                                                                disabled
-                                                               placeholder="Upload Document">
+                                                               placeholder="Upload Document" id="doc1">
                                                         <span class="input-group-append">
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                 </span>
@@ -236,12 +267,12 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Doc2</label>
                                                 <div class="col-sm-9">
-                                                    <input required accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
+                                                    <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
                                                            name="document2" class="file-upload-default">
                                                     <div class="input-group col-xs-12">
                                                         <input type="text" class="form-control file-upload-info"
                                                                disabled
-                                                               placeholder="Upload Document">
+                                                               placeholder="Upload Document" id="doc2">
                                                         <span class="input-group-append">
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                 </span>
@@ -322,6 +353,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="messages-container">
+                                        <ul class="messages">
+                                            <li>
+                                                <div id="error-message"> Please select user
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
@@ -381,6 +420,30 @@
         }
     });
 
+
+
+</script>
+
+
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var name = document.getElementById("name").value;
+            var doc1 = document.getElementById("doc1").value;
+            var doc2 = document.getElementById("doc2").value;
+            var errorContainer = document.querySelector('.messages-container');
+            var errorMessage = document.getElementById('error-message');
+
+            if (name === "") {
+                errorMessage.textContent = "Please select a name";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!doc1 || !doc2) {
+                errorMessage.textContent = "Please upload both the document";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+        });
 </script>
 <!-- container-scroller -->
 <!-- plugins:js -->

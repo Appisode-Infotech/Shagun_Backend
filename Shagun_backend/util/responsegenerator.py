@@ -510,7 +510,8 @@ class responseGenerator:
                 "delivery_vendor_owner": data[7],
                 "contact_number": data[8],
                 "created_by": data[9],
-                "created_on": data[10]
+                "created_on": data[10],
+                "city_name": data[11]
             }
 
         if controller_type == ALL_JOBS:

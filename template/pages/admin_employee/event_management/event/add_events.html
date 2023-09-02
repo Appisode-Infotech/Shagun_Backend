@@ -127,10 +127,18 @@
         height: 300px;
         margin: 20px;
     }
-
-
-
-
+    .calendar-container {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .calendar {
+            display: inline-block;
+            margin: 10px;
+        }
     </style>
 
 </head>
@@ -231,9 +239,7 @@
                                                 <label class="col-sm-3 col-form-label">Event Date</label>
                                                 <div class="col-sm-9">
                                                     <input required type="datetime-local" id="event_date"
-                                                           name="event_date"
-                                                           class="form-control"
-                                                           placeholder="username">
+                                                           name="event_date" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -307,9 +313,9 @@
                                         <label class="col-sm-3 col-form-label">Sub Events</label>
                                         <div class="event-row">
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
-                                                   placeholder="Sub Event Name">
+                                                   placeholder="Sub Event Name" id="sub_event_start_date">
                                             <input class="event-input" type="datetime-local"
-                                                   name="sub_events[0][start]" placeholder="Start Time">
+                                                   name="sub_events[0][start]" placeholder="Start Time" id="sub_event_end_date">
                                             <input class="event-input" type="datetime-local" name="sub_events[0][end]"
                                                    placeholder="End Time">
                                         </div>
@@ -506,9 +512,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
 
-
-
-
 </script>
 
 <!-- container-scroller -->
@@ -585,6 +588,44 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
             });
         }
+    </script>
+
+<script>
+        const datePicker = document.getElementById('datePicker');
+        const calendarContainer = document.getElementById('calendarContainer');
+        const dateTimePicker = document.getElementById('dateTimePicker');
+
+        datePicker.addEventListener('click', () => {
+            calendarContainer.style.display = 'block';
+        });
+
+        dateTimePicker.addEventListener('change', () => {
+            const selectedDate = new Date(dateTimePicker.value);
+            const currentDate = new Date();
+
+            if (selectedDate < currentDate) {
+                alert('Please select a future date and time.');
+                dateTimePicker.value = '';
+            } else {
+                datePicker.value = dateTimePicker.value;
+                calendarContainer.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (event.target !== datePicker && event.target !== calendarContainer) {
+                calendarContainer.style.display = 'none';
+            }
+        });
+    </script>
+<script>
+        // Get the current date and time in ISO format
+        const currentDate = new Date().toISOString().slice(0, 16);
+
+        // Set the min attribute of the input field to the current date and time
+        document.getElementById("event_date").min = currentDate;
+        document.getElementById("sub_event_start_date").min = currentDate;
+        document.getElementById("sub_event_end_date").min = currentDate;
     </script>
 </body>
 

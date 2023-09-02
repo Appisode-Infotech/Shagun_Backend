@@ -119,7 +119,9 @@ def get_delivery_vendor():
 def edit_delivery_vendor(vendor_id):
     try:
         with connection.cursor() as cursor:
-            printers_data_query = f""" SELECT * FROM delivery_vendors WHERE id = '{vendor_id}' """
+            printers_data_query = f""" SELECT d.*, l.city_name FROM delivery_vendors AS d
+            LEFT JOIN locations AS l ON d.city = l.id
+            WHERE d.id = '{vendor_id}' """
             cursor.execute(printers_data_query)
             delivery_vendor_data = cursor.fetchone()
             return {

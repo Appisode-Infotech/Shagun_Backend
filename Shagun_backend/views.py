@@ -256,7 +256,9 @@ def edit_delivery_vendors(request, vid):
             return redirect('manage_delivery_vendors')
         else:
             response, status_code = delivery_vendor_controller.edit_delivery_vendor(vid)
+            print(response)
             location, status_code = event_controller.get_city_list_for_user()
+
             return render(request,
                           'pages/admin_employee/vendors_management/delivery_vendor/edit_delivery_vendor.html',
                           {"response": response['delivery_vendor_data'], "location": location['city_list']})

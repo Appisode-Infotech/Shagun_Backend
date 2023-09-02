@@ -117,6 +117,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -166,7 +167,7 @@
                                                     <div class="messages-container">
                                                         <ul class="messages">
                                                             <li>
-                                                                <div id="error-message"> Please select user
+                                                                <div id="error-message"> Please select city
                                                                 </div>
                                                             </li>
                                                         </ul>
@@ -254,7 +255,7 @@
                                                     <input required type="password" id="password"
                                                            name="printer_password"
                                                            class="form-control form-control-lg"
-                                                           placeholder="password">
+                                                           placeholder="password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -266,19 +267,16 @@
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
-                                                           placeholder="password">
+                                                           placeholder="confirm password" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
-
+                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
+                                                        Passwords do
+                                                        not match!
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="center-button">
-                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
-                                            not match!
-                                        </div>
-
                                     </div>
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mr-2"
@@ -342,6 +340,7 @@
         }
     });
 
+
 </script>
 
 
@@ -353,7 +352,7 @@
       } else {
         field.type = 'password';
       }
-      validatePasswords(); // Validate passwords after toggling visibility
+      validatePasswords();
     }
 
     function validatePasswords() {
@@ -377,8 +376,6 @@
     // Add event listeners to trigger validation when input changes
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
 
-
-
 </script>
 
 
@@ -391,6 +388,7 @@
                 e.preventDefault();
             }
         });
+
 </script>
 
 <!-- container-scroller -->

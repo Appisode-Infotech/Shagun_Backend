@@ -36,6 +36,9 @@
 
 
 
+
+
+
     </style>
 </head>
 
@@ -90,9 +93,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Phone</label>
                                                 <div class="col-sm-9">
-<!--                                                    <input type="text" id="phone" name="phone"-->
-<!--                                                           class="form-control"-->
-<!--                                                           value="{{emp.phone}}">-->
+                                                    <!--                                                    <input type="text" id="phone" name="phone"-->
+                                                    <!--                                                           class="form-control"-->
+                                                    <!--                                                           value="{{emp.phone}}">-->
                                                     <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
                                                            class="form-control" value="{{emp.phone}}"
                                                            title="Please enter a 10-digit phone number" required>
@@ -104,7 +107,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
-                                                    <input  type="text" id="city" name="city"
+                                                    <input type="text" id="city" name="city"
                                                            class="form-control"
                                                            value="{{emp.city}}" required>
                                                 </div>
@@ -118,7 +121,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="password" name="password"
                                                            class="form-control form-control-lg"
-                                                           value="{{emp.password}}">
+                                                           value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -130,17 +133,15 @@
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
-                                                           value="{{emp.password}}">
+                                                           value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
-
+                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
+                                                        Passwords do not match!
+                                                    </div>
                                                 </div>
+
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="center-button">
-                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
-                                            not match!
                                         </div>
                                     </div>
                                     <div class="row">
@@ -207,6 +208,9 @@
 
     // Add event listeners to trigger validation when input changes
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
+
+
+
 
 
 </script>

@@ -36,6 +36,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -114,7 +115,7 @@
                                                 <div class="col-sm-9">
                                                     <input type="password" id="password" name="password"
                                                            class="form-control form-control-lg"
-                                                           value="{{emp.password}}">
+                                                           value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -126,17 +127,15 @@
                                                 <div class="col-sm-9">
                                                     <input type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
-                                                           value="{{emp.password}}">
+                                                           value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
-
+                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
+                                                        Passwords do
+                                                        not match!
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="center-button">
-                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
-                                            not match!
                                         </div>
                                     </div>
                                     <div class="row">
@@ -154,7 +153,7 @@
                                     </div>
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2"
-                                               id="submitButton" >
+                                               id="submitButton">
                                     </div>
                                 </form>
                             </div>
@@ -203,6 +202,7 @@
 
     // Add event listeners to trigger validation when input changes
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
+
 
 
 </script>

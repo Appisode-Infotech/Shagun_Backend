@@ -313,11 +313,11 @@
                                         <label class="col-sm-3 col-form-label">Sub Events</label>
                                         <div class="event-row">
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
-                                                   placeholder="Sub Event Name" id="sub_event_start_date">
+                                                   placeholder="Sub Event Name" required>
                                             <input class="event-input" type="datetime-local"
-                                                   name="sub_events[0][start]" placeholder="Start Time" id="sub_event_end_date">
+                                                   name="sub_events[0][start]" placeholder="Start Time" id="sub_event_start_date" required>
                                             <input class="event-input" type="datetime-local" name="sub_events[0][end]"
-                                                   placeholder="End Time">
+                                                   placeholder="End Time" id="sub_event_end_date" required>
                                         </div>
                                     </div>
                                     <button type="button" id="addSubEventButton">Add Sub Event</button>
@@ -341,7 +341,7 @@
                                                     {{users.phone}}</a>
                                                 {% endfor %}
                                             </div>
-                                            <input class="event-input" type="text"
+                                            <input required class="event-input" type="text"
                                                    name="event_admin[0][role]" placeholder="Bride, Groom etc ....">
 
                                             <input type="hidden" id="uid" name="event_admin[0][uid]">
@@ -460,11 +460,16 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
             subEventRow.innerHTML = `
-                <input class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name">
-                <input class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time">
-                <input class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time">
+                <input class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
+                <input class="event-input sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" required>
+                <input class="event-input sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" required>
             `;
             subEventsContainer.appendChild(subEventRow);
+            const currentDate = new Date().toISOString().slice(0, 16);
+            const startInput = subEventRow.querySelector(".sub-event-start");
+            const endInput = subEventRow.querySelector(".sub-event-end");
+            startInput.min = currentDate;
+            endInput.min = currentDate;
             subEventIndex++;
             updateButtonVisibility();
         }
@@ -489,7 +494,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
                 {% endfor %}
             </div>
-            <input class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ....">
+            <input class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ...." required>
             <input type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]">
         `;
             eventAdminContainer.appendChild(eventAdminRow);

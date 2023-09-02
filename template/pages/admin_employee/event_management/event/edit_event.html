@@ -128,7 +128,29 @@
             height: 300px;
             margin: 20px;
         }
+        .messages-container {
+      background-color: #ffe6e6; /* Light pink background color */
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: none;
+    }
 
+    /* Style the error messages */
+    .messages {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .messages li {
+      color: #b30000; /* Dark red text color for error messages */
+      background-color: #ffd9d9; /* Light red background color for error messages */
+      border: 1px solid #ff8080; /* Dark red border for error messages */
+      padding: 10px;
+      border-radius: 3px;
+      margin-bottom: 5px;
+    }
 
 
     </style>
@@ -248,7 +270,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line1</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="address_line1"
+                                                    <input required type="text" class="form-control"
+                                                           name="address_line1"
                                                            value="{{event.event_data.address_line1}}"/>
                                                 </div>
                                             </div>
@@ -257,7 +280,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line2</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="address_line2"
+                                                    <input required type="text" class="form-control"
+                                                           name="address_line2"
                                                            value="{{event.event_data.address_line2}}"/>
                                                 </div>
                                             </div>
@@ -306,7 +330,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note</label>
-                                        <textarea class="form-control" id="event_note" rows="4"
+                                        <textarea required class="form-control" id="event_note" rows="4"
                                                   name="event_note">{{event.event_data.event_note}}</textarea>
                                     </div>
 
@@ -315,13 +339,13 @@
 
                                         {% for sub_event in event.event_data.sub_events %}
                                         <div class="event-row">
-                                            <input class="event-input" type="text"
+                                            <input required class="event-input" type="text"
                                                    name="sub_events[{{ forloop.counter0 }}][sub_event_name]"
                                                    value="{{sub_event.sub_event_name}}">
-                                            <input class="event-input" type="datetime-local"
+                                            <input required class="event-input" type="datetime-local"
                                                    name="sub_events[{{ forloop.counter0 }}][start]"
                                                    value="{{sub_event.start_time}}">
-                                            <input class="event-input" type="datetime-local"
+                                            <input required class="event-input" type="datetime-local"
                                                    name="sub_events[{{ forloop.counter0 }}][end]"
                                                    value="{{sub_event.end_time}}">
                                         </div>
@@ -338,19 +362,27 @@
                                         <label class="col-sm-3 col-form-label">Event Admins</label>
                                         {% for admin in event.event_data.event_admin %}
                                         <div class="event-row">
-                                            <input readonly type="text" id="name" name="event_admin[0][name]" readonly
+                                            <input readonly type="text" id="name" name="event_admin[0][name]"
                                                    onclick="toggleDropdown('myDropdown4')"
                                                    value="{{admin.name}}" class="event-input">
 
-                                            <input class="event-input" type="text"
+                                            <input required class="event-input" type="text"
                                                    name="event_admin[0][role]" value="{{admin.role}}">
                                             <input type="hidden" id="uid" name="event_admin[0][uid]"
                                                    value="{{admin.uid}}">
                                         </div>
                                         {% endfor %}
                                     </div>
+                                    <div class="messages-container">
+                                        <ul class="messages">
+                                            <li>
+                                                <div id="error-message"> Please select user
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input type="submit" value="Update" class="btn btn-primary mr-2">
                                     </div>
                                 </form>
                             </div>
@@ -419,6 +451,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
 </script>
 
 
@@ -457,11 +490,16 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
             subEventRow.innerHTML = `
-                <input required class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name">
-                <input required class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time">
-                <input required class="event-input" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time">
+                <input class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
+                <input class="event-input sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" required>
+                <input class="event-input sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" required>
             `;
             subEventsContainer.appendChild(subEventRow);
+            const currentDate = new Date().toISOString().slice(0, 16);
+            const startInput = subEventRow.querySelector(".sub-event-start");
+            const endInput = subEventRow.querySelector(".sub-event-end");
+            startInput.min = currentDate;
+            endInput.min = currentDate;
             subEventIndex++;
             updateButtonVisibility();
         }
@@ -508,6 +546,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         addEventAdminButton.addEventListener('click', addEventAdmin);
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
+
 
 
 </script>
@@ -608,6 +647,58 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             });
         }
 
+
+
+</script>
+
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var event_type_name = document.getElementById("event_type_name").value;
+            var city_name = document.getElementById("city_name").value;
+            var printer_name = document.getElementById("printer_name").value;
+            var event_lat_lng = document.getElementById("event_lat_lng").value;
+            var name = document.getElementById("name").value;
+            var errorContainer = document.querySelector('.messages-container');
+            var errorMessage = document.getElementById('error-message');
+
+            if (!event_type_name) {
+                errorMessage.textContent = "Please select the type of event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!city_name) {
+                errorMessage.textContent = "Please select the city for event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!printer_name) {
+                errorMessage.textContent = "Please select the printing vendor for event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!event_lat_lng) {
+                errorMessage.textContent = "Please select the event location on map";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!name) {
+                errorMessage.textContent = "Please select the admin for the event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+
+
+        });
+
+</script>
+<script>
+        // Get the current date and time in ISO format
+        const currentDate = new Date().toISOString().slice(0, 16);
+
+        // Set the min attribute of the input field to the current date and time
+        document.getElementById("event_date").min = currentDate;
+        document.getElementById("sub_event_start_date").min = currentDate;
+        document.getElementById("sub_event_end_date").min = currentDate;
 
 </script>
 </body>

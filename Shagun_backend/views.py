@@ -207,7 +207,8 @@ def manage_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/employee_management/employee/employees.html', {"response": response, "role": 2})
+        return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
+                      {"response": response, "role": 2})
     else:
         return redirect('sign_up')
 
@@ -405,7 +406,7 @@ def search_all_printer_jobs(request):
 
 def Open_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        status = [1, 2, 3, 4]
+        status = [2, 3, 4]
         response, status_code = store_controller.get_all_jobs(status)
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
@@ -1037,11 +1038,13 @@ def dashboard_search_employee(request):
 
 
 def dashboard_search_employee_status(request, status, role):
-    response, status_code = user_controller.dashboard_search_employee_status(status, role)
+    response, status_code = user_controller.dashboard_search_employee_status(status)
+    print(response)
     paginator = Paginator(response['user_data'], 25)
     page = request.GET.get('page')
     response = paginator.get_page(page)
-    return render(request, 'pages/admin_employee/employee_management/employee/employees.html', {'response': response, "status": status})
+    return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
+                  {'response': response, "status": status, "role": role})
 
 
 def dashboard_search_printers(request):
@@ -1113,7 +1116,8 @@ def dashboard_search_greetings_status(request, status):
 
 def printer_search_greetings(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
-        response, status_code = greeting_cards_controller.printer_search_greetings(request.POST['search'], request.session.get('id'))
+        response, status_code = greeting_cards_controller.printer_search_greetings(request.POST['search'],
+                                                                                   request.session.get('id'))
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1175,7 +1179,6 @@ def whatsapp_invite(request, e_id):
                        "event_data": event_data['event_data']})
 
 
-
 # Printer view functions
 
 def printer_home_page(request):
@@ -1183,6 +1186,7 @@ def printer_home_page(request):
         response, status_code = store_controller.printer_dashboard(request.session.get('id'))
         return render(request, 'pages/printer/dashboard/printer_dashbord.html', response)
     return redirect('printer_login')
+
 
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
@@ -1193,10 +1197,13 @@ def printer_manage_greeting_cards(request):
         return render(request, 'pages/printer/greeting_card/greeting_cards.html', {"response": response})
     else:
         return redirect('printer_login')
+
+
 def printer_search_all_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1, 2, 3, 4, 5]
-        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'], request.session.get('id'))
+        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
+                                                                         request.session.get('id'))
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1204,10 +1211,12 @@ def printer_search_all_jobs(request):
     else:
         return redirect('printer_login')
 
+
 def printer_search_open_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [2, 3, 4]
-        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'], request.session.get('id'))
+        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
+                                                                         request.session.get('id'))
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1215,33 +1224,41 @@ def printer_search_open_jobs(request):
     else:
         return redirect('printer_login')
 
+
 def printer_search_closed_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [5]
-        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'], request.session.get('id'))
+        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
+                                                                         request.session.get('id'))
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
+
+
 def printer_search_new_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1]
-        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'], request.session.get('id'))
+        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
+                                                                         request.session.get('id'))
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/printer/print_job/printer_new_jobs.html', {"response": response})
     else:
         return redirect('printer_login')
+
+
 def printer_filter_all_jobs(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = store_controller.printer_filter_jobs(status, request.session.get('id'))
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_all_jobs.html', {"response": response, "status": status})
+        return render(request, 'pages/printer/print_job/printer_all_jobs.html',
+                      {"response": response, "status": status})
     else:
         return redirect('printer_login')
 
@@ -1256,6 +1273,7 @@ def printer_filter_open_jobs(request, status):
                       {"response": response, "status": status})
     else:
         return redirect('printer_login')
+
 
 def printer_add_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
@@ -1277,12 +1295,15 @@ def printer_add_greeting_cards(request):
 
     else:
         return redirect('printer_login')
+
+
 def printer_activate_deactivate_greeting_cards(request, card_id, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         greeting_cards_controller.disable_greeting_cards(card_id, status)
         return redirect('printer_manage_greeting_cards')
     else:
         return redirect('printer_login')
+
 
 def printer_filter_greetings_cards(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
@@ -1295,6 +1316,7 @@ def printer_filter_greetings_cards(request, status):
                       {'response': response, "status": status})
     else:
         return redirect('printer_login')
+
 
 def printer_all_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
@@ -1938,4 +1960,3 @@ def add_bank_list(request):
 def activate_deactivate_bank_list(request):
     response, status_code = bank_controller.activate_deactivate_bank_list(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
-

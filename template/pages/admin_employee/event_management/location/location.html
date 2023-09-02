@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
@@ -195,6 +196,7 @@
                                 <td>
                                     <button onclick="showPopUpDiv('{{location.location_id}}', '{{location.location_name}}')"
                                             class="btn btn-outline-info btn-fw">Edit
+
                                     </button>
                                     <div id="popupDiv">
                                         <form class="form-sample" action="/edit_location" method="post">

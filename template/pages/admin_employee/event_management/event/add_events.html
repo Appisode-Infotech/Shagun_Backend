@@ -127,18 +127,32 @@
         height: 300px;
         margin: 20px;
     }
-    .calendar-container {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        .calendar {
-            display: inline-block;
-            margin: 10px;
-        }
+
+    .messages-container {
+      background-color: #ffe6e6; /* Light pink background color */
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    /* Style the error messages */
+    .messages {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .messages li {
+      color: #b30000; /* Dark red text color for error messages */
+      background-color: #ffd9d9; /* Light red background color for error messages */
+      border: 1px solid #ff8080; /* Dark red border for error messages */
+      padding: 10px;
+      border-radius: 3px;
+      margin-bottom: 5px;
+    }
+
+
     </style>
 
 </head>
@@ -163,7 +177,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Add New Event</h4>
                                 <form class="form-sample" action="/add_events" method="post"
-                                      enctype="multipart/form-data">
+                                      enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Event info
@@ -179,7 +193,7 @@
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown1" class="dropdown-content">
-                                                        <input required type="text" placeholder="Search.." id="myInput1"
+                                                        <input type="text" placeholder="Search.." id="myInput1"
                                                                onkeyup="filterFunction('myDropdown1')"
                                                                class="form-control">
                                                         {% for events_type in event_types.event_type_list %}
@@ -218,7 +232,7 @@
                                                 <label class="col-sm-3 col-form-label">Printing Vendor</label>
                                                 <div class="col-sm-9">
 
-                                                    <input  type="text" id="printer_name" readonly
+                                                    <input type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown3')"
                                                            placeholder="Search.." class="form-control">
 
@@ -249,7 +263,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line1</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="address_line1"/>
+                                                    <input required type="text" class="form-control"
+                                                           name="address_line1"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -257,7 +272,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address Line2</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="address_line2"/>
+                                                    <input required type="text" class="form-control"
+                                                           name="address_line2"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -275,7 +291,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">Event Lat Lng</label>
                                                 <div class="col-sm-10">
-                                                    <input required type="text" id="event_lat_lng" style="width: 50%;"
+                                                    <input type="text" id="event_lat_lng" style="width: 50%;"
                                                            name="event_lat_lng" class="form-control" readonly>
                                                 </div>
                                             </div>
@@ -305,7 +321,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note</label>
-                                        <textarea class="form-control" id="event_note" rows="4"
+                                        <textarea required class="form-control" id="event_note" rows="4"
                                                   name="event_note"></textarea>
                                     </div>
 
@@ -315,7 +331,8 @@
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
                                                    placeholder="Sub Event Name" required>
                                             <input class="event-input" type="datetime-local"
-                                                   name="sub_events[0][start]" placeholder="Start Time" id="sub_event_start_date" required>
+                                                   name="sub_events[0][start]" placeholder="Start Time"
+                                                   id="sub_event_start_date" required>
                                             <input class="event-input" type="datetime-local" name="sub_events[0][end]"
                                                    placeholder="End Time" id="sub_event_end_date" required>
                                         </div>
@@ -351,7 +368,14 @@
                                     <button type="button" id="removeEventAdminButton" style="display: none;">Remove
                                         Event Admin
                                     </button>
-
+                                    <div class="messages-container">
+                                        <ul class="messages">
+                                            <li>
+                                                <div id="error-message"> Please select user
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
@@ -421,6 +445,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             dropdown.classList.remove("show");
         }
     });
+
 
 
 
@@ -517,6 +542,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
 
+
 </script>
 
 <!-- container-scroller -->
@@ -542,7 +568,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6O2CG9zBAksJH4SCgCZlbx3XRWVwzY1E&libraries=places&callback=initMap"
         async defer></script>
-    <script>
+<script>
         var map, marker, event_lat_lng, searchInput;
 
         function initMap() {
@@ -593,7 +619,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 event_lat_lng.value = 'Latitude: ' + lat + ', Longitude: ' + lng;
             });
         }
-    </script>
+
+</script>
 
 <script>
         const datePicker = document.getElementById('datePicker');
@@ -622,7 +649,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 calendarContainer.style.display = 'none';
             }
         });
-    </script>
+
+</script>
 <script>
         // Get the current date and time in ISO format
         const currentDate = new Date().toISOString().slice(0, 16);
@@ -631,7 +659,51 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("event_date").min = currentDate;
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
-    </script>
+
+</script>
+
+
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var event_type_name = document.getElementById("event_type_name").value;
+            var city_name = document.getElementById("city_name").value;
+            var printer_name = document.getElementById("printer_name").value;
+            var event_lat_lng = document.getElementById("event_lat_lng").value;
+            var name = document.getElementById("name").value;
+            var errorContainer = document.querySelector('.messages-container');
+            var errorMessage = document.getElementById('error-message');
+
+            if (!event_type_name) {
+                errorMessage.textContent = "Please select the type of event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!city_name) {
+                errorMessage.textContent = "Please select the city for event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!printer_name) {
+                errorMessage.textContent = "Please select the printing vendor for event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!event_lat_lng) {
+                errorMessage.textContent = "Please select the event location on map";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!name) {
+                errorMessage.textContent = "Please select the admin for the event";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+
+
+        });
+
+</script>
+
 </body>
 
 </html>

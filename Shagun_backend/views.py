@@ -1930,12 +1930,16 @@ def track_order(request):
 
 # test done here
 
-# def test_view(request):
-#     message = "The message goes here"
-#     title = "This is Title"
-#     token = "dc4RiYjoSIGhLsIqdy_yxh:APA91bEvioV_cHtk1CsaD6NnPQzCQIftJ1sNfAaEzmCYk7Jy3AJ-WNfHM_ZBO3kAMDp5-G-f81n92LBG6abYv0PY3Eniu02-rbqEl2xN-qkCeFPpCtTxtimxlT1VQQTnuUEjh1kOJ_yc"
-#     resp = event_controller.send_push_notification(token, title, message)
-#     return JsonResponse({"msg": resp})
+def test_view(request):
+    if request.method == 'POST':
+        print(request.POST)
+        import time
+        # Sleep for 10 seconds
+        time.sleep(3)
+        response_data = {"success": True, "message": "Messages sent successfully."}
+        return JsonResponse(response_data)
+    else:
+        return render(request, 'pages/admin_employee/event_management/test.html')
 
 
 @api_view(['POST'])

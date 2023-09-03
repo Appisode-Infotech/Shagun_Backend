@@ -100,6 +100,34 @@
             max-height: 200px%;
             margin: 20px auto;
         }
+
+
+.messages-container {
+  background-color: #ffe6e6; /* Light pink background color */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  display: none;
+}
+
+/* Style the error messages */
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  color: #b30000; /* Dark red text color for error messages */
+  background-color: #ffd9d9; /* Light red background color for error messages */
+  border: 1px solid #ff8080; /* Dark red border for error messages */
+  padding: 10px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+
+
     </style>
 
 </head>
@@ -123,12 +151,13 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Add Greeting Card</h4>
-                                <form class="form-sample" action="/add_greeting_cards" method="post" enctype="multipart/form-data">
+                                <form class="form-sample" action="/add_greeting_cards" method="post"
+                                      enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Card Id</label>
+                                                <label class="col-sm-3 col-form-label">Card Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="card_name"/>
                                                 </div>
@@ -152,7 +181,8 @@
                                                            onclick="toggleDropdown('myDropdown')"
                                                            placeholder="Search.." class="form-control">
 
-                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
+                                                    <div id="myDropdown" class="dropdown-content"
+                                                         style="cursor: pointer;">
                                                         <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction('myDropdown')"
                                                                class="form-control">
@@ -160,7 +190,7 @@
                                                         <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="printer_id" name="printer_id">
+                                                    <input type="hidden" id="printer_id" name="printer_id">
                                                 </div>
                                             </div>
                                         </div>
@@ -169,7 +199,7 @@
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
-                                                    <input required type="hidden" id="created_by_uid" name="created_by_uid"
+                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
                                                            value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
@@ -180,14 +210,16 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Greeting Card Design</label>
                                                 <div class="col-sm-9">
-                                                    <img id="uploadedImage" src="{% static 'images/greeting_logo.png' %}" alt="Uploaded Image">
-                                                    <input required accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
+                                                    <img id="uploadedImage"
+                                                         src="{% static 'images/greeting_logo.png' %}"
+                                                         alt="Uploaded Image">
+                                                    <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
                                                            name="greeting_card" id="card_image_url"
                                                            class="file-upload-default">
                                                     <div class="input-group col-xs-12">
-                                                        <input required type="text" class="form-control file-upload-info"
+                                                        <input type="text" class="form-control file-upload-info"
                                                                disabled
-                                                               placeholder="Upload Image">
+                                                               placeholder="Upload Image" id="img">
                                                         <span class="input-group-append">
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                 </span>
@@ -197,11 +229,16 @@
                                         </div>
 
                                     </div>
-                                    <div class="row">
-
+                                    <div class="messages-container">
+                                        <ul class="messages">
+                                            <li>
+                                                <div id="error-message">
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <div class="center-button">
-                                        <input required type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input required type="submit" value="Submit" class="btn btn-primary mt-2">
                                     </div>
                                 </form>
                             </div>
@@ -232,7 +269,9 @@
                 reader.readAsDataURL(file);
             }
         });
-    </script>
+
+
+</script>
 
 
 <script>
@@ -278,6 +317,30 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             dropdown.classList.remove("show");
         }
     });
+
+
+</script>
+
+
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var img = document.getElementById("img").value;
+            var printer_name = document.getElementById("printer_name").value;
+            var errorContainer = document.querySelector('.messages-container');
+            var errorMessage = document.getElementById('error-message');
+
+            if (!printer_name) {
+                errorMessage.textContent = "Please select printing vendor";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+            else if (!img) {
+                errorMessage.textContent = "Please upload the greeting card design";
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+        });
+
 </script>
 <!-- container-scroller -->
 <!-- plugins:js -->

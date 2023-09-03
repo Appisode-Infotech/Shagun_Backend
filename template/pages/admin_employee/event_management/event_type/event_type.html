@@ -88,6 +88,27 @@
             background-color: #9925b9; /* Purple color (#9925b9) */
             color: white;
         }
+        .custom-alert-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000; /* Ensure the overlay is on top of other content */
+      }
+
+      .custom-alert {
+        background-color: #f2f2f2;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      }
+
 
 
     </style>
@@ -115,37 +136,40 @@
                             Event Type
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
-                        <div id="popupDiv1">
-                            <form class="form-sample" action="/add_events_type" method="post">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Event Type Name </label>
-                                            <div class="col-sm-9">
-                                                <input id="event_type_name" name="event_type_name" type="text"
-                                                       class="form-control"/>
+                        <div id="customAlertOverlay" class="custom-alert-overlay">
+                            <div class="custom-alert">
+                                <form class="form-sample" action="/add_events_type" method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Event Type Name </label>
+                                                <div class="col-sm-9">
+                                                    <input required id="event_type_name" name="event_type_name"
+                                                           type="text"
+                                                           class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Created By</label>
+                                                <div class="col-sm-9">
+                                                    <label class="form-control">{{ request.session.name }}</label>
+                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
+                                                           value="{{ request.session.uid }}">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Created By</label>
-                                            <div class="col-sm-9">
-                                                <label class="form-control">{{ request.session.name }}</label>
-                                                <input type="hidden" id="created_by_uid" name="created_by_uid"
-                                                       value="{{ request.session.uid }}">
-                                            </div>
-                                        </div>
+                                    <div class="center-button">
+                                        <button type="button" onclick="hidePopUpDiv1()"
+                                                class="btn btn-outline-danger btn-fw">Cancel
+                                        </button>
+                                        <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
                                     </div>
-                                </div>
-                                <div class="center-button">
-                                    <button type="button" onclick="hidePopUpDiv1()"
-                                            class="btn btn-outline-danger btn-fw">Cancel
-                                    </button>
-                                    <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -195,37 +219,41 @@
                                     <button onclick="showPopUpDiv('{{event.event_type_id}}', '{{event.event_type_name}}')"
                                             class="btn btn-outline-info btn-fw">Edit
                                     </button>
-                                    <div id="popupDiv">
-                                        <form class="form-sample" action="/edit_event_type" method="post">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-3 col-form-label">Event ID </label>
-                                                        <div class="col-sm-9">
-                                                            <input readonly id="event_type_id" name="id" type="text"
-                                                                   class="form-control"/>
+                                    <div id="customAlertOverlay1" class="custom-alert-overlay">
+                                        <div class="custom-alert">
+                                            <form class="form-sample" action="/edit_event_type" method="post">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-3 col-form-label">Event ID </label>
+                                                            <div class="col-sm-9">
+                                                                <input readonly id="event_type_id" name="id" type="text"
+                                                                       class="form-control"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-3 col-form-label">Name</label>
+                                                            <div class="col-sm-9">
+                                                                <input required id="name" type="text"
+                                                                       class="form-control"
+                                                                       name="name"
+                                                                       value="{{ event.event_type_name }}"/>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-3 col-form-label">Name</label>
-                                                        <div class="col-sm-9">
-                                                            <input id="name" type="text" class="form-control"
-                                                                   name="name"
-                                                                   value="{{ event.event_type_name }}"/>
-                                                        </div>
-                                                    </div>
+                                                <div class="center-button">
+                                                    <button type="button" onclick="hidePopUpDiv()"
+                                                            class="btn btn-outline-danger btn-fw">Cancel
+                                                    </button>
+                                                    <input type="submit" value="Submit"
+                                                           class="btn btn-outline-info btn-icon-text">
                                                 </div>
-                                            </div>
-                                            <div class="center-button">
-                                                <button type="button" onclick="hidePopUpDiv()"
-                                                        class="btn btn-outline-danger btn-fw">Cancel
-                                                </button>
-                                                <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
-                                            </div>
-                                        </form>
+                                            </form>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -303,29 +331,30 @@
 
 <script>
     function showPopUpDiv(val1, val2) {
-        // Display the popup by changing its style to "display: block"
-        var popupDiv = document.getElementById("popupDiv");
-        popupDiv.style.display = "block";
+        var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
+        customAlertOverlay1.style.display = "flex";
 
-        // Set the values for the fields in the popup form
         document.getElementById("event_type_id").value = val1;
         document.getElementById("name").value = val2;
     }
 
     function hidePopUpDiv() {
-        var popupDiv = document.getElementById("popupDiv");
-        popupDiv.style.display = "none";
+        var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
+        customAlertOverlay1.style.display = "none";
     }
 
     function showPopUpDiv1() {
-        var popupDiv1 = document.getElementById("popupDiv1");
-        popupDiv1.style.display = "block";
+        var customAlertOverlay = document.getElementById("customAlertOverlay");
+        customAlertOverlay.style.display = "flex";
     }
 
     function hidePopUpDiv1() {
-        var popupDiv1 = document.getElementById("popupDiv1");
-        popupDiv1.style.display = "none";
+        var customAlertOverlay = document.getElementById("customAlertOverlay");
+        customAlertOverlay.style.display = "none";
     }
+
+
+
 </script>
 <script>
         function toggleForm() {
@@ -346,6 +375,9 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
+
+
 </script>
 
 </body>

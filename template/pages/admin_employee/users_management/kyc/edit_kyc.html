@@ -53,12 +53,6 @@
 
         #myInput:focus {outline: 3px solid #ddd;}
 
-
-
-
-
-
-
     </style>
 
 </head>
@@ -106,7 +100,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="full_name" name="full_name"
+                                                    <input required type="text" id="full_name" name="full_name"
                                                            class="form-control"
                                                            value="{{kyc_data.kyc.full_name}}">
                                                 </div>
@@ -118,7 +112,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Gender</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="gender">
+                                                    <select class="form-control" name="gender" required>
                                                         {% if kyc_data.kyc.gender == "Male" %}
                                                         <option selected>Male</option>
                                                         <option>Female</option>
@@ -134,7 +128,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Date of Birth</label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" value="{{kyc_data.kyc.dob}}" id="dob"
+                                                    <input required class="form-control" value="{{kyc_data.kyc.dob}}" id="dob"
                                                            name="dob"/>
                                                 </div>
                                             </div>
@@ -145,7 +139,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Proof1</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="identification_proof1">
+                                                    <select class="form-control" name="identification_proof1" required>
                                                         {% if kyc_data.kyc.identification_proof1 == "Aadhar Card" %}
                                                         <option selected>Aadhar Card</option>
                                                         <option>Driving License</option>
@@ -175,7 +169,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Number1</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="identification_number1"
+                                                    <input required type="text" id="identification_number1"
                                                            name="identification_number1"
                                                            class="form-control"
                                                            value="{{kyc_data.kyc.identification_number1}}">
@@ -188,7 +182,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Proof2</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="identification_proof2">
+                                                    <select class="form-control" name="identification_proof2" required>
                                                         <option>PAN CARD</option>
                                                     </select>
                                                 </div>
@@ -198,7 +192,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Number2</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="identification_number2"
+                                                    <input required type="text" id="identification_number2"
                                                            name="identification_number2"
                                                            class="form-control"
                                                            value="{{kyc_data.kyc.identification_number2}}">
@@ -214,7 +208,7 @@
                                                     <input accept=".jpg, .jpeg, .png, .gif, .pdf" type="file"
                                                            name="document1" class="file-upload-default">
                                                     <div class="input-group col-xs-12">
-                                                        <input type="text" class="form-control file-upload-info"
+                                                        <input required type="text" class="form-control file-upload-info"
                                                                disabled value="{{kyc_data.kyc.identification_doc1}}">
                                                         <span class="input-group-append">
                                                             <button class="file-upload-browse btn btn-primary"
@@ -233,7 +227,7 @@
                                                            name="document2" class="file-upload-default"
                                                            value="{{kyc_data.kyc.identification_doc2}}">
                                                     <div class="input-group col-xs-12">
-                                                        <input type="text" class="form-control file-upload-info"
+                                                        <input required type="text" class="form-control file-upload-info"
                                                                disabled
                                                                value="{{kyc_data.kyc.identification_doc2}}">
                                                         <span class="input-group-append">
@@ -243,15 +237,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--                                        <div class="col-md-6">-->
-                                        <!--                                            <div class="form-group row">-->
-                                        <!--                                                <label class="col-sm-3 col-form-label">Identification Doc2</label>-->
-                                        <!--                                                <div class="col-sm-9">-->
-                                        <!--                                                    <input type="file" id="fileInput2" name="document2"-->
-                                        <!--                                                           accept=".jpg, .jpeg, .png, .gif, .pdf" class="form-control">-->
-                                        <!--                                                </div>-->
-                                        <!--                                            </div>-->
-                                        <!--                                        </div>-->
                                     </div>
                                     <p class="card-description">
                                         Address
@@ -261,7 +246,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address 1</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="adress1"
+                                                    <input required type="text" class="form-control" name="adress1"
                                                            value="{{kyc_data.kyc.address_line1}}"/>
                                                 </div>
                                             </div>
@@ -270,7 +255,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">State</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="state"
+                                                    <input required type="text" class="form-control" name="state"
                                                            value="{{kyc_data.kyc.state}}"/>
                                                 </div>
                                             </div>
@@ -281,7 +266,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address 2</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="adress2"
+                                                    <input required type="text" class="form-control" name="adress2"
                                                            value="{{kyc_data.kyc.address_line2}}"/>
                                                 </div>
                                             </div>
@@ -290,7 +275,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Postcode</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="postcode"
+                                                    <input required type="text" class="form-control" name="postcode"
                                                            value="{{kyc_data.kyc.postcode}}"/>
                                                 </div>
                                             </div>
@@ -301,7 +286,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="city"
+                                                    <input required type="text" class="form-control" name="city"
                                                            value="{{kyc_data.kyc.city}}"/>
                                                 </div>
                                             </div>
@@ -355,26 +340,6 @@
                                             </div>
                                         </div>
                                     </div>
-<!--                                    <div class="row">-->
-<!--                                        <div class="col-md-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label class="col-sm-3 col-form-label">Approved by</label>-->
-<!--                                                <div class="col-sm-9">-->
-<!--                                                    <input disabled type="text" class="form-control" name="adress2"-->
-<!--                                                           value="{{kyc_data.kyc.approved_by}}"/>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-md-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label class="col-sm-3 col-form-label">Approved on</label>-->
-<!--                                                <div class="col-sm-9">-->
-<!--                                                    <input disabled type="text" class="form-control" name="postcode"-->
-<!--                                                           value="{{kyc_data.kyc.approved_on}}"/>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">

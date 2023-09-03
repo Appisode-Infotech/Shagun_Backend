@@ -122,23 +122,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
-                                                    {% for location in location %}
-                                                    <input required type="text" id="name" readonly
+                                                    <input type="text" id="name" readonly
                                                            onclick="myFunction()"
-                                                           class="form-control" value="{{location.city_name}}">
-                                                    <input required type="hidden" id="city" name="city"
-                                                           value="{{location.city_id}}">
-
-                                                    {% endfor %}
-
-                                                    <div id="myDropdown" class="dropdown-content"
-                                                         style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
-                                                               onkeyup="filterFunction()" class="form-control">
-                                                        {% for city in location %}
-                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
-                                                        {% endfor %}
-                                                    </div>
+                                                           class="form-control" value="{{response.city_name}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -168,8 +154,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control"
-                                                           name="contact_number" value="{{response.contact_number}}"/>
+                                                    <input type="tel"  name="contact_number" pattern="[0-9]{10}"
+                                                           class="form-control" value="{{response.contact_number}}"
+                                                           title="Please enter a 10-digit phone number" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -199,7 +186,7 @@
                                             <label class="col-sm-3 col-form-label">Added By</label>
                                             <div class="col-sm-9">
                                                 <label class="form-control">{{ request.session.name }}</label>
-                                                <input type="hidden" id="created_by" name="created_by"
+                                                <input  type="hidden" id="created_by" name="created_by"
                                                        value="{{ request.session.uid }}">
                                             </div>
                                         </div>

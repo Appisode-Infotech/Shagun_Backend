@@ -95,6 +95,29 @@
 
 
 
+        .messages-container {
+          background-color: #ffe6e6;
+          display: none;
+        }
+
+        /* Style the error messages */
+        .messages {
+
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .messages li {
+          color: #b30000; /* Dark red text color for error messages */
+          background-color: #ffd9d9; /* Light red background color for error messages */
+          border: 1px solid #ff8080; /* Dark red border for error messages */
+          padding: 5px;
+          border-radius: 3px;
+          margin: 3px;
+        }
+
+
 
 
     </style>
@@ -121,7 +144,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Add New Delivery Vendor</h4>
                                 <form class="form-sample" action="/add_delivery_vendor" method="post"
-                                      enctype="multipart/form-data">
+                                      enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Printer info
@@ -132,7 +155,7 @@
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" readonly onclick="myFunction()"
+                                                    <input type="text" id="name" readonly onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
@@ -142,7 +165,15 @@
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="city" name="city">
+                                                    <div class="messages-container">
+                                                        <ul class="messages">
+                                                            <li>
+                                                                <div id="error-message"> Please select City
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <input type="hidden" id="city" name="city">
                                                 </div>
                                             </div>
                                         </div>
@@ -168,7 +199,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="contact_number"/>
+                                                    <input type="tel"  name="contact_number"
+                                                           pattern="[0-9]{10}" class="form-control"
+                                                           title="Please enter a 10-digit phone number" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,7 +229,7 @@
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
-                                                    <input type="hidden" id="created_by" name="created_by"
+                                                    <input required type="hidden" id="created_by" name="created_by"
                                                            value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
@@ -266,6 +299,17 @@
 
 
 
+</script>
+
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var name = document.getElementById("name").value;
+            var errorContainer = document.querySelector('.messages-container');
+            if (!name) {
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+        });
 </script>
 
 <!-- container-scroller -->

@@ -41,8 +41,8 @@ def user_register(reg_obj):
             sql_query = """INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, 
                             fcm_token, city) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (
-            reg_obj.name, reg_obj.email, reg_obj.phone, False, 'images/profile_pic/profile.png', reg_obj.uid, True,
-            reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
+                reg_obj.name, reg_obj.email, reg_obj.phone, False, 'images/profile_pic/profile.png', reg_obj.uid, True,
+                reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
             cursor.execute(sql_query, values)
             query = "SELECT * FROM users WHERE uid = %s;"
             cursor.execute(query, [reg_obj.uid])
@@ -562,7 +562,7 @@ def dashboard_search_employee(search):
 def dashboard_search_employee_status(status):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 2 AND status = '{status}' ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
@@ -691,6 +691,11 @@ def disable_bank(bank_id, status):
     try:
         with connection.cursor() as cursor:
             disable_bank_query = "UPDATE bank_details SET status = %s WHERE id = %s"
+
+            if status == 1:
+                cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
+                               (bank_id,))
+
             values = (status, bank_id)
             cursor.execute(disable_bank_query, values)
             return {

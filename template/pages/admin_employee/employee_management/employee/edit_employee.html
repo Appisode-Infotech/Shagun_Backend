@@ -36,6 +36,9 @@
 
 
 
+
+
+
     </style>
 </head>
 
@@ -68,7 +71,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="email" name="email"
+                                                    <input required type="text" id="email" name="email"
                                                            class="form-control"
                                                            value="{{emp.email}}">
                                                 </div>
@@ -78,7 +81,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="name" name="name"
+                                                    <input required type="text" id="name" name="name"
                                                            class="form-control"
                                                            value="{{emp.name}}">
                                                 </div>
@@ -90,9 +93,13 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="phone" name="phone"
-                                                           class="form-control"
-                                                           value="{{emp.phone}}">
+                                                    <!--                                                    <input type="text" id="phone" name="phone"-->
+                                                    <!--                                                           class="form-control"-->
+                                                    <!--                                                           value="{{emp.phone}}">-->
+                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
+                                                           class="form-control" value="{{emp.phone}}"
+                                                           title="Please enter a 10-digit phone number" required>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -102,7 +109,7 @@
                                                 <div class="col-sm-9">
                                                     <input type="text" id="city" name="city"
                                                            class="form-control"
-                                                           value="{{emp.city}}">
+                                                           value="{{emp.city}}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,9 +119,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Password</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" id="password" name="password"
+                                                    <input required type="password" id="password" name="password"
                                                            class="form-control form-control-lg"
-                                                           value="{{emp.password}}">
+                                                           value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -124,19 +131,17 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Confirm Password</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" id="confirmPassword"
+                                                    <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
-                                                           value="{{emp.password}}">
+                                                           value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
-
+                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
+                                                        Passwords do not match!
+                                                    </div>
                                                 </div>
+
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="center-button">
-                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
-                                            not match!
                                         </div>
                                     </div>
                                     <div class="row">
@@ -203,6 +208,9 @@
 
     // Add event listeners to trigger validation when input changes
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
+
+
+
 
 
 </script>

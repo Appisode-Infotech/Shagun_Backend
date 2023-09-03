@@ -354,10 +354,10 @@ def get_printers_jobs(pid, status):
         return {"status": False, "message": str(e)}, 301
 
 
-def change_print_jobs_status(pid, status):
+def change_print_jobs_status(pjid, status):
     try:
         with connection.cursor() as cursor:
-            query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{pid}' """
+            query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{pjid}' """
             cursor.execute(query)
             return {
                 "status": True,

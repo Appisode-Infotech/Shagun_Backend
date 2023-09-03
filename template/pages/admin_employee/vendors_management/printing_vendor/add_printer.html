@@ -93,6 +93,31 @@
         }
 
 
+        .messages-container {
+          background-color: #ffe6e6;
+          display: none;
+        }
+
+        /* Style the error messages */
+        .messages {
+
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .messages li {
+          color: #b30000; /* Dark red text color for error messages */
+          background-color: #ffd9d9; /* Light red background color for error messages */
+          border: 1px solid #ff8080; /* Dark red border for error messages */
+          padding: 5px;
+          border-radius: 3px;
+          margin: 3px;
+        }
+
+
+
+
     </style>
 
 </head>
@@ -117,7 +142,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Add New Printing Vendor</h4>
                                 <form class="form-sample" action="/add_printer" method="post"
-                                      enctype="multipart/form-data">
+                                      enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Printer info
@@ -128,17 +153,26 @@
                                                 <label class="col-sm-3 col-form-label">City</label>
                                                 <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" readonly onclick="myFunction()"
+                                                    <input type="text" id="name" readonly onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
-                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
+                                                    <div id="myDropdown" class="dropdown-content"
+                                                         style="cursor: pointer;">
                                                         <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for city in city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
                                                         {% endfor %}
                                                     </div>
-                                                    <input required type="hidden" id="city" name="city">
+                                                    <div class="messages-container">
+                                                        <ul class="messages">
+                                                            <li>
+                                                                <div id="error-message"> Please select city
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <input type="hidden" id="city" name="city">
                                                 </div>
                                             </div>
                                         </div>
@@ -156,7 +190,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="store_owner"/>
+                                                    <input required type="text" class="form-control"
+                                                           name="store_owner"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -164,7 +199,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="contact_number"/>
+                                                    <!--                                                    <input required type="text" class="form-control" name="contact_number"/>-->
+                                                    <input type="tel" name="contact_number"
+                                                           pattern="[0-9]{10}" class="form-control"
+                                                           title="Please enter a 10-digit phone number" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +220,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="lat_lng" placeholder="example@gmail.com"/>
+                                                    <input required type="text" class="form-control" name="lat_lng"
+                                                           placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -201,7 +240,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">User Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="email" class="form-control" name="printer_user_name"
+                                                    <input required type="email" class="form-control"
+                                                           name="printer_user_name"
                                                            placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
@@ -212,9 +252,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Password</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="password" id="password" name="printer_password"
+                                                    <input required type="password" id="password"
+                                                           name="printer_password"
                                                            class="form-control form-control-lg"
-                                                           placeholder="password">
+                                                           placeholder="password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -226,19 +267,16 @@
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
-                                                           placeholder="password">
+                                                           placeholder="confirm password" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
-
+                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
+                                                        Passwords do
+                                                        not match!
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="center-button">
-                                        <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do
-                                            not match!
-                                        </div>
-
                                     </div>
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mr-2"
@@ -301,6 +339,8 @@
             dropdown.classList.remove("show");
         }
     });
+
+
 </script>
 
 
@@ -312,7 +352,7 @@
       } else {
         field.type = 'password';
       }
-      validatePasswords(); // Validate passwords after toggling visibility
+      validatePasswords();
     }
 
     function validatePasswords() {
@@ -336,8 +376,21 @@
     // Add event listeners to trigger validation when input changes
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
 
+</script>
+
+
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var name = document.getElementById("name").value;
+            var errorContainer = document.querySelector('.messages-container');
+            if (!name) {
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+        });
 
 </script>
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

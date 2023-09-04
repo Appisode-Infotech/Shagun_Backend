@@ -305,28 +305,10 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Activate/ Deactivate</label>
+                                                <label class="col-sm-3 col-form-label">created by</label>
                                                 <div class="col-sm-9">
-                                                    <div class="dropdown">
-                                                        <button type="button"
-                                                                class="btn btn-outline-info dropdown-toggle"
-                                                                id="dropdownMenuIconButton2" data-toggle="dropdown"
-                                                                aria-haspopup="true"
-                                                                aria-expanded="false">
-                                                            {% if kyc_data.kyc.verification_status == 0 %}
-                                                            Inactive
-                                                            {% elif kyc_data.kyc.verification_status == 1 %}
-                                                            Active
-                                                            {% endif %}
-                                                        </button>
-                                                        <div class="dropdown-menu"
-                                                             aria-labelledby="dropdownMenuIconButton3">
-                                                            <a class="dropdown-item"
-                                                               href="{% url 'activate_deactivate_kyc' kyc_data.kyc.id 1 %}">Active</a>
-                                                            <a class="dropdown-item"
-                                                               href="{% url 'activate_deactivate_kyc' kyc_data.kyc.id 0 %}">Inactive</a>
-                                                        </div>
-                                                    </div>
+                                                    <input disabled type="text" class="form-control"
+                                                           value="{{kyc_data.kyc.created_by}}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -334,7 +316,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">created on</label>
                                                 <div class="col-sm-9">
-                                                    <input disabled type="text" class="form-control" name="city"
+                                                    <input disabled type="text" class="form-control"
                                                            value="{{kyc_data.kyc.created_on}}"/>
                                                 </div>
                                             </div>

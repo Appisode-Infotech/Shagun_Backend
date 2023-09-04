@@ -362,9 +362,9 @@ def edit_bank_details(bank_obj):
             user = cursor.fetchone()
             if user is not None:
                 edit_bank_query = """UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, 
-                                account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"""
+                                account_number = %s, modified_on = %s, modified_by = %s WHERE uid = %s"""
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          True, today, bank_obj.modified_by, bank_obj.uid)
+                          today, bank_obj.modified_by, bank_obj.uid)
                 cursor.execute(edit_bank_query, values)
 
                 return {

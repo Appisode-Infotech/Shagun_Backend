@@ -832,10 +832,8 @@ def edit_bank(request, bank_id):
             return redirect('manage_bank_details')
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)
-            bank_list, status_code = bank_controller.get_all_banks_list()
             context = {
-                "bank_data": bank_data,
-                "bank_list": bank_list
+                "bank_data": bank_data
             }
             return render(request, 'pages/admin_employee/users_management/banks/edit_bank.html', context)
     else:
@@ -1936,7 +1934,7 @@ def test_view(request):
         import time
         # Sleep for 10 seconds
         time.sleep(3)
-        response_data = {"success": True, "message": "Messages sent successfully."}
+        response_data = {"success": False, "message": "Messages sent Failed"}
         return JsonResponse(response_data)
     else:
         return render(request, 'pages/admin_employee/event_management/test.html')

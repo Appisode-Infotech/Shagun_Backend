@@ -168,6 +168,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -194,29 +195,7 @@
                                     {{event_data.id}}</h4>
                                 <form class="form-sample" id="myForm">
                                     {% csrf_token %}
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Invited by</label>
-                                                <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" name="invited_by" readonly
-                                                           onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
-
-                                                    <div id="myDropdown" class="dropdown-content"
-                                                         style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
-                                                               onkeyup="filterFunction()" class="form-control">
-                                                        {% for users in admins.admins %}
-                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}</a>
-                                                        {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="uid" name="invited_by_uid">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Invite Message</label>
                                         <textarea class="form-control" id="invite_msg" rows="4"
@@ -270,7 +249,7 @@
                                             <span id="customAlertMessage"></span> <!-- Message element -->
                                             <div class="center-button">
                                                 <input type="submit" value="OK"
-                                                           class="btn btn-outline-info btn-icon-text">
+                                                       class="btn btn-outline-info btn-icon-text">
                                             </div>
                                         </form>
                                     </div>
@@ -376,6 +355,7 @@
                 console.error(error);
             });
         });
+
 
 
 </script>

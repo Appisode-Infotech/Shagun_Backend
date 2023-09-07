@@ -127,6 +127,8 @@
                                                     <input required type="text" id="account_holder_name"
                                                            name="account_holder_name"
                                                            class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            value="{{bank_data.banks.account_holder_name}}">
                                                 </div>
                                             </div>
@@ -161,6 +163,8 @@
                                                 <label class="col-sm-3 col-form-label">IFSC CODE</label>
                                                 <div class="col-sm-9">
                                                     <input required class="form-control" value="{{bank_data.banks.ifsc_code}}"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            id="ifsc_code" name="ifsc_code"/>
                                                 </div>
                                             </div>

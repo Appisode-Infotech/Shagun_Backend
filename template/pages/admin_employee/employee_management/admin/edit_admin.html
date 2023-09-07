@@ -70,7 +70,8 @@
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="email" name="email"
-                                                           class="form-control"
+                                                           class="form-control" pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            value="{{emp.email}}">
                                                 </div>
                                             </div>
@@ -80,7 +81,7 @@
                                                 <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="name" name="name"
-                                                           class="form-control"
+                                                           class="form-control"  pattern="[^ ].*"
                                                            value="{{emp.name}}">
                                                 </div>
                                             </div>
@@ -102,7 +103,7 @@
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="city" name="city"
-                                                           class="form-control"
+                                                           class="form-control" pattern="[^ ].*"
                                                            value="{{emp.city}}">
                                                 </div>
                                             </div>
@@ -114,7 +115,7 @@
                                                 <label class="col-sm-3 col-form-label">Password</label>
                                                 <div class="col-sm-9">
                                                     <input type="password" id="password" name="password"
-                                                           class="form-control form-control-lg"
+                                                           class="form-control form-control-lg" pattern="[^ ].*"
                                                            value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
@@ -126,7 +127,7 @@
                                                 <label class="col-sm-3 col-form-label">Confirm Password</label>
                                                 <div class="col-sm-9">
                                                     <input type="password" id="confirmPassword"
-                                                           class="form-control form-control-lg"
+                                                           class="form-control form-control-lg" pattern="[^ ].*"
                                                            value="{{emp.password}}" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>

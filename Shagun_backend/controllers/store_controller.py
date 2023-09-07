@@ -35,11 +35,11 @@ def printer_login(uname, pwd):
 def add_printer(store_obj):
     try:
         with connection.cursor() as cursor:
-            add_printer_query = """INSERT INTO printer (store_name, city, address, lat_lng, gst_no, store_owner,
+            add_printer_query = """INSERT INTO printer (store_name, city, address, email, gst_no, store_owner,
                                  contact_number, printer_user_name, printer_password) 
                                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address,
-                                store_obj.lat_lng, store_obj.gst_no, store_obj.store_owner, store_obj.contact_number,
+                                store_obj.email, store_obj.gst_no, store_obj.store_owner, store_obj.contact_number,
                                 store_obj.printer_user_name, store_obj.printer_password])
             return {
                 "status": True,
@@ -70,10 +70,10 @@ def disable_printer(pid, pstatus):
 def edit_printer(store_obj):
     try:
         with connection.cursor() as cursor:
-            edit_printer_query = """UPDATE printer SET store_name = %s, city = %s, address = %s, lat_lng = %s, 
+            edit_printer_query = """UPDATE printer SET store_name = %s, city = %s, address = %s, email = %s, 
                                     gst_no= %s, store_owner= %s, contact_number= %s, printer_user_name= %s, 
                                     printer_password=%s  WHERE id = %s"""
-            values = (store_obj.store_name, store_obj.city, store_obj.address, store_obj.lat_lng, store_obj.gst_no,
+            values = (store_obj.store_name, store_obj.city, store_obj.address, store_obj.email  , store_obj.gst_no,
                       store_obj.store_owner, store_obj.contact_number, store_obj.printer_user_name,
                       store_obj.printer_password, store_obj.store_id)
             cursor.execute(edit_printer_query, values)

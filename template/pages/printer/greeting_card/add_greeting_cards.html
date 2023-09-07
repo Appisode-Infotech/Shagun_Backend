@@ -159,7 +159,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Card Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="card_name"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="card_name"/>
                                                 </div>
                                             </div>
                                         </div>

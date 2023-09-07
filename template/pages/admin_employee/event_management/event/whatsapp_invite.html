@@ -181,7 +181,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">phone num</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="phone" id="phone"/>
+                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
+                                                           class="form-control" placeholder="Phone No"
+                                                           title="Please enter a 10-digit phone number" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -189,7 +191,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">CSV file</label>
                                                 <div class="col-sm-9">
-                                                    <input type="file" name="csv_file" accept=".csv"
+                                                    <input required type="file" name="csv_file" accept=".csv"
                                                            class="file-upload-default">
                                                     <div class="input-group col-xs-12">
                                                         <input type="text"

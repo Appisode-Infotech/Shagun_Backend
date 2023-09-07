@@ -118,6 +118,9 @@
 
 
 
+
+
+
     </style>
 
 </head>
@@ -180,7 +183,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="store_name"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="store_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -191,6 +197,8 @@
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            name="store_owner"/>
                                                 </div>
                                             </div>
@@ -199,7 +207,6 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Store Phone</label>
                                                 <div class="col-sm-9">
-                                                    <!--                                                    <input required type="text" class="form-control" name="contact_number"/>-->
                                                     <input type="tel" name="contact_number"
                                                            pattern="[0-9]{10}" class="form-control"
                                                            title="Please enter a 10-digit phone number" required>
@@ -212,7 +219,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="address"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="address"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -220,7 +230,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="lat_lng"
+                                                    <input required type="text" class="form-control" name="email"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
@@ -232,7 +244,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label"> Store GST</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="gst_no"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="gst_no"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -242,6 +257,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="email" class="form-control"
                                                            name="printer_user_name"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
@@ -255,6 +272,8 @@
                                                     <input required type="password" id="password"
                                                            name="printer_password"
                                                            class="form-control form-control-lg"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            placeholder="password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
@@ -267,6 +286,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            placeholder="confirm password" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
@@ -341,6 +362,9 @@
     });
 
 
+
+
+
 </script>
 
 
@@ -376,6 +400,9 @@
     // Add event listeners to trigger validation when input changes
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
 
+
+
+
 </script>
 
 
@@ -388,6 +415,9 @@
                 e.preventDefault();
             }
         });
+
+
+
 
 </script>
 

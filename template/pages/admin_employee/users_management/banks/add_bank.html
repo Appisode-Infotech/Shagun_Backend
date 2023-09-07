@@ -180,6 +180,8 @@
                                                     <input required type="text" id="account_holder_name"
                                                            name="account_holder_name"
                                                            class="form-control"
+                                                           pattern="[^ ].*"
+                                                                       title="This field can't be Empty"
                                                            placeholder="Enter Full Name">
                                                 </div>
                                             </div>
@@ -204,6 +206,8 @@
                                                 <div class="col-sm-9">
                                                     <input required class="form-control" placeholder="Account Number"
                                                            id="account_number"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            name="account_number"/>
                                                 </div>
                                             </div>
@@ -216,6 +220,8 @@
                                                 <label class="col-sm-3 col-form-label">IFSC CODE</label>
                                                 <div class="col-sm-9">
                                                     <input required class="form-control" placeholder="IFSC Code"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            id="ifsc_code" name="ifsc_code"/>
                                                 </div>
                                             </div>

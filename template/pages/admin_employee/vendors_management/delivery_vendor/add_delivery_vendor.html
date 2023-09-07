@@ -120,6 +120,10 @@
 
 
 
+
+
+
+
     </style>
 
 </head>
@@ -158,7 +162,8 @@
                                                     <input type="text" id="name" readonly onclick="myFunction()"
                                                            placeholder="Search.." class="form-control">
 
-                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
+                                                    <div id="myDropdown" class="dropdown-content"
+                                                         style="cursor: pointer;">
                                                         <input type="text" placeholder="Search.." id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for city in city_list %}
@@ -181,7 +186,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="delivery_vendor_name"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="delivery_vendor_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -191,7 +199,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Owner</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="delivery_vendor_owner"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="delivery_vendor_owner"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -199,7 +210,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel"  name="contact_number"
+                                                    <input type="tel" name="contact_number"
                                                            pattern="[0-9]{10}" class="form-control"
                                                            title="Please enter a 10-digit phone number" required>
                                                 </div>
@@ -211,7 +222,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="address"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="address"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -219,21 +233,24 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label"> Vendor GST</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="gst_no"/>
+                                                    <input required type="text" class="form-control"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
+                                                           name="gst_no"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
-                                                <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
-                                                    <input required type="hidden" id="created_by" name="created_by"
-                                                           value="{{ request.session.uid }}">
-                                                </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Added By</label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control">{{ request.session.name }}</label>
+                                                <input required type="hidden" id="created_by" name="created_by"
+                                                       value="{{ request.session.uid }}">
                                             </div>
                                         </div>
+                                    </div>
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton">
@@ -299,6 +316,10 @@
 
 
 
+
+
+
+
 </script>
 
 <script>
@@ -310,6 +331,10 @@
                 e.preventDefault();
             }
         });
+
+
+
+
 </script>
 
 <!-- container-scroller -->

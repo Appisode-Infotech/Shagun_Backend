@@ -114,8 +114,7 @@ def edit_event(event_obj, event_id):
                             event_lat_lng = %s,
                             sub_events = %s,
                             event_date = %s,
-                            event_note = %s,
-                            event_admin = %s
+                            event_note = %s
                         WHERE
                             id = %s
                     """
@@ -125,7 +124,7 @@ def edit_event(event_obj, event_id):
                 event_obj.event_type_id, event_obj.city_id, event_obj.printer_id,
                 event_obj.address_line1, event_obj.address_line2, event_obj.event_lat_lng,
                 sub_events_json, event_obj.event_date, event_obj.event_note,
-                event_admin_json, event_id
+                event_id
             )
             cursor.execute(update_event_query, values)
 

@@ -350,7 +350,7 @@ def filter_event_request(request, status):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
+        return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
                       {"response": response, "status": status})
     else:
         return redirect('sign_up')

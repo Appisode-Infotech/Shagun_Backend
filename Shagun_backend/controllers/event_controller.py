@@ -653,7 +653,7 @@ def get_all_event_list():
         with connection.cursor() as cursor:
             event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
                                   event.is_approved, event.status FROM event LEFT JOIN events_type ON 
-                                  event.event_type_id = events_type.id ORDER BY event.created_on DESC """
+                                  event.event_type_id = events_type.id ORDER BY event.id DESC """
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {

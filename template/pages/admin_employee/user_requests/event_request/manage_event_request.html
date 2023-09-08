@@ -42,8 +42,12 @@
     <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
     <style>
         thead {
-            background-color: #9925b9; /* Purple color (#9925b9) */
+            background-color: #9925b9;
             color: white;
+        }
+
+        th,td {
+            text-align: center;
         }
     </style>
 </head>
@@ -80,9 +84,9 @@
                             </form>
                         </div>
                         <div class="dropdown">
-                            <label> Event Filter: </label>
+                            <label><b> Event Filter: </b></label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                    id="Fil" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
                                 {% if status is None %}
                                 All
@@ -121,7 +125,7 @@
                                     Name
                                 </th>
                                 <th>
-                                    Phone
+                                    Contact No
                                 </th>
                                 <th>
                                     Email
@@ -133,7 +137,7 @@
                                     Event Type
                                 </th>
                                 <th>
-                                    created on
+                                    Created on
                                 </th>
                                 <th>
                                     Status

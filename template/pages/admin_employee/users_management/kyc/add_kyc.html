@@ -112,6 +112,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -134,7 +135,7 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Kyc</h4>
+                                <h4 class="card-title">Add New KYC</h4>
                                 <form class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data"
                                       id="myForm">
                                     {% csrf_token %}
@@ -170,9 +171,10 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="full_name" name="full_name"
                                                            class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="^(?![\s])[A-Za-z ]+$" maxlength="256"
+                                                           title="Please add valid name"
                                                            placeholder="Full Name">
+
                                                 </div>
                                             </div>
                                         </div>
@@ -193,11 +195,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Date of Birth</label>
                                                 <div class="col-sm-9">
-                                                    <input required class="form-control" placeholder="dd/mm/yyyy"
-                                                           id="dob"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
-                                                           name="dob"/>
+                                                    <input required type="date" id="dob" name="dob"
+                                                           class="form-control">
+
                                                 </div>
                                             </div>
                                         </div>
@@ -449,6 +449,7 @@
 
 
 
+
 </script>
 
 
@@ -471,6 +472,7 @@
                 e.preventDefault();
             }
         });
+
 
 
 

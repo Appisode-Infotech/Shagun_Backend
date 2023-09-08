@@ -192,7 +192,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select Bank</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="bank_name" required>
+                                                    <select class="form-control" name="bank_name"  required>
                                                         {% for banks in banks.bank_list %}
                                                         <option>{{banks.bank_name}}</option>
                                                         {% endfor %}
@@ -206,8 +206,8 @@
                                                 <div class="col-sm-9">
                                                     <input required class="form-control" placeholder="Account Number"
                                                            id="account_number"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="\d{1,15}"
+                                                           title="Enter valid Account No(max 15 digit)"
                                                            name="account_number"/>
                                                 </div>
                                             </div>

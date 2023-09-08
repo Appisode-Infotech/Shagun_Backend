@@ -114,13 +114,18 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Events Settlements</h4>
+                        {% if status == 1 %}
+                        <h4 class="card-title">Open Events Settlements List</h4>
+                        {% else %}
+                        <h4 class="card-title">Closed Events Settlements List</h4>
+                        {% endif %}
+
                         <div class="form-group">
                             <form action="{% url 'dashboard_search_event_settlement' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -136,7 +141,7 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Event Id</th>
+                                <th>Event ID</th>
                                 <th>Event Name</th>
                                 <th>Event Admins</th>
                                 <th>Total Shagun Amount</th>

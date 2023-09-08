@@ -124,6 +124,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -160,11 +161,11 @@
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
+                                                           placeholder="Search" class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content"
                                                          style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search" id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for city in city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
@@ -187,8 +188,8 @@
                                                 <label class="col-sm-3 col-form-label">Vendor Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="[A-Za-z]+"
+                                                           title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_name"/>
                                                 </div>
                                             </div>
@@ -200,8 +201,8 @@
                                                 <label class="col-sm-3 col-form-label">Vendor Owner</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="[A-Za-z]+"
+                                                           title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_owner"/>
                                                 </div>
                                             </div>
@@ -320,6 +321,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -331,6 +333,7 @@
                 e.preventDefault();
             }
         });
+
 
 
 

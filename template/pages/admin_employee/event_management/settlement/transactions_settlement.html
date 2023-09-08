@@ -130,12 +130,12 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Transaction settlement</h4>
+                        <h4 class="card-title">Transaction settlement List</h4>
                         {% if request.session.role == 1 %}
                         <label id="shagun-sum-label" class="col-sm-3 col-form-label">Total Shagun Amount: 0.00</label>
                         {% endif %}
                         <div class="dropdown">
-                            <label> Transaction Filter: </label>
+                            <label><b> Transaction Filter: </b></label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -162,7 +162,7 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search

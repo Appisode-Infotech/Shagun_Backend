@@ -363,7 +363,7 @@ def get_settlement_for_event(request, status):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
-                      {"response": response})
+                      {"response": response, "status": status})
     else:
         return redirect('sign_up')
 
@@ -371,6 +371,7 @@ def get_settlement_for_event(request, status):
 def dashboard_search_event_settlement(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.search_event_settlement(request.POST['search'])
+        print(response)
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)

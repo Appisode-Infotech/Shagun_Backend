@@ -12,11 +12,11 @@ from Shagun_backend.util.responsegenerator import responseGenerator
 import firebase_admin
 from firebase_admin import credentials, messaging
 
-
 firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json"
 full_firebase_cred_path = os.path.join(settings.MEDIA_ROOT, firebase_cred_path)
 cred = credentials.Certificate(full_firebase_cred_path)
 firebase_admin.initialize_app(cred)
+
 
 def send_push_notification(device_token, title, message):
     # Create a message
@@ -220,17 +220,18 @@ def search_event_settlement(search):
             event_settlement_query = f"""
                     SELECT e.* ,
                       IFNULL(SUM(th.shagun_amount), 0) AS total_received_amount,
-                             IFNULL(SUM(CASE WHEN th.is_settled = 0 THEN th.shagun_amount ELSE 0 END), 0) AS pending_shagun_amount,
-       IFNULL(SUM(CASE WHEN th.is_settled = 1 THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled = 0 THEN th.shagun_amount ELSE 0 END), 0) 
+                      AS pending_shagun_amount,
+                      IFNULL(SUM(CASE WHEN th.is_settled = 1 THEN th.shagun_amount ELSE 0 END), 0) AS settled_amount,
                       et.event_type_name
                     FROM event e
                     LEFT JOIN transaction_history th ON e.id = th.event_id
                     LEFT JOIN events_type et ON e.event_type_id = et.id
-                    WHERE e.id LIKE '%%{search}%%' OR et.event_type_name LIKE '%%{search}%%' 
-                                    OR LOWER(e.event_admin) LIKE LOWER('%%{search}%%') OR 
-                                    e.event_date LIKE '%%{search}%%'
-                    GROUP BY e.id, e.event_date ORDER BY e.created_on DESC;
+                    WHERE e.id = '{search}'  OR  et.event_type_name LIKE '%{search}%' 
+                    OR LOWER(e.event_admin) LIKE LOWER ('%%{search}%%')
+                    GROUP BY e.id ORDER BY e.created_on DESC;
                     """
+
             cursor.execute(event_settlement_query)
             amount = cursor.fetchall()
             return {

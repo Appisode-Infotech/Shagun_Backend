@@ -303,8 +303,8 @@
                                                 <label class="col-sm-3 col-form-label">Postcode</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="postcode"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="\d{6}"
+                                                           title="Postcode must be 6 digit number"
                                                            value="{{kyc_data.kyc.postcode}}"/>
                                                 </div>
                                             </div>

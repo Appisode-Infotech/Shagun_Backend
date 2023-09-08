@@ -157,11 +157,11 @@
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
+                                                           placeholder="Search" class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content"
                                                          style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search" id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for city in city_list %}
                                                         <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
@@ -197,8 +197,8 @@
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="[A-Za-z]+"
+                                                           title="This field doesn't contain special characters or numbers"
                                                            name="store_owner"/>
                                                 </div>
                                             </div>
@@ -274,7 +274,7 @@
                                                            class="form-control form-control-lg"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
-                                                           placeholder="password" oninput="validatePasswords()">
+                                                           placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -288,7 +288,7 @@
                                                            class="form-control form-control-lg"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
-                                                           placeholder="confirm password" oninput="validatePasswords()">
+                                                           placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password"
                                                        onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
                                                     <div id="passwordMatchMessage" style="color: red; display: none;">

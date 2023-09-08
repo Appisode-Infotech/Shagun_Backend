@@ -159,10 +159,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Card Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
-                                                           name="card_name"/>
+                                                    <input required type="text" class="form-control" name="card_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +179,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown')"
-                                                           placeholder="Search.." class="form-control"
+                                                           placeholder="Search" class="form-control"
                                                            value="{{request.session.printer_user_name}}">
 
                                                     <input required type="hidden" id="printer_id" name="printer_id"

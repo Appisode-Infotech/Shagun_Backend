@@ -879,8 +879,8 @@ def search_kyc_data(search):
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
                 kyc.verification_status, users.profile_pic
                 FROM user_kyc AS kyc
-                INNER JOIN users ON kyc.uid = users.uid WHERE ( full_name LIKE '%{search}%' OR 
-                identification_number1 LIKE '%{search}%' OR identification_number2 LIKE '%{search}%') 
+                INNER JOIN users ON kyc.uid = users.uid WHERE ( kyc.id LIKE '%{search}%' OR kyc.full_name LIKE '%{search}%' OR 
+                kyc.identification_number1 LIKE '%{search}%' OR kyc.identification_number2 LIKE '%{search}%') 
                 ORDER BY kyc.created_on DESC"""
 
             cursor.execute(kyc_data_query)
@@ -902,7 +902,7 @@ def dashboard_search_bank(search):
             bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
                 bnk.account_number, bnk.status, users.profile_pic
                 FROM bank_details AS bnk
-                LEFT JOIN users ON bnk.uid = users.uid WHERE ( ifsc_code LIKE '%{search}%' OR 
+                LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.id = '{search}' OR ( ifsc_code LIKE '%{search}%' OR 
                 account_holder_name LIKE '%{search}%' OR account_number LIKE '%{search}%') ORDER BY bnk.created_on DESC"""
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()

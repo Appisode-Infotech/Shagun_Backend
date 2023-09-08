@@ -135,6 +135,7 @@ def dashboard_search_printers(search):
             p.store_owner, p.contact_number FROM printer AS p
             LEFT JOIN locations AS l ON p.city = l.id 
             WHERE (p.id LIKE '%{search}%' OR store_name LIKE '%{search}%' OR store_owner LIKE '%{search}%'
+            OR l.city_name LIKE '%{search}%'
             OR contact_number LIKE '%{search}%' OR printer_user_name LIKE '%{search}%' ) ORDER BY p.id DESC"""
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()

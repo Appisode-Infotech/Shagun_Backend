@@ -149,11 +149,11 @@
 
                                                     <input type="text" id="name" readonly
                                                            onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
+                                                           placeholder="Search" class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content"
                                                          style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search" id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in user_data %}
                                                         <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
@@ -225,7 +225,7 @@
                                                            class="form-control"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
-                                                           placeholder="enter identification number">
+                                                           placeholder="Enter Identification Number">
                                                 </div>
                                             </div>
                                         </div>
@@ -250,7 +250,7 @@
                                                            class="form-control"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
-                                                           placeholder="enter identification number">
+                                                           placeholder="Enter Identification Number">
                                                 </div>
                                             </div>
                                         </div>
@@ -335,8 +335,8 @@
                                                 <label class="col-sm-3 col-form-label">Postcode</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty" name="postcode"/>
+                                                           pattern="\d{6}"
+                                                           title="Postcode must be 6 digit number" name="postcode"/>
                                                 </div>
                                             </div>
                                         </div>

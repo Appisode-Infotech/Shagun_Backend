@@ -66,8 +66,12 @@
         }
 
         thead {
-            background-color: #9925b9; /* Purple color (#9925b9) */
+            background-color: #9925b9;
             color: white;
+        }
+
+        th,td {
+            text-align: center;
         }
 
 
@@ -96,7 +100,7 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -161,7 +165,7 @@
                                 </th>
 
                                 <th>
-                                    Activate/Deactivate
+                                    Activate/Inactivate
                                 </th>
                                 <th>
                                     Edit

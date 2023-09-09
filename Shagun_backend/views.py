@@ -350,7 +350,7 @@ def filter_event_request(request, status):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
+        return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
                       {"response": response, "status": status})
     else:
         return redirect('sign_up')
@@ -363,7 +363,7 @@ def get_settlement_for_event(request, status):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
-                      {"response": response})
+                      {"response": response, "status": status})
     else:
         return redirect('sign_up')
 
@@ -371,6 +371,7 @@ def get_settlement_for_event(request, status):
 def dashboard_search_event_settlement(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.search_event_settlement(request.POST['search'])
+        print(response)
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -832,10 +833,8 @@ def edit_bank(request, bank_id):
             return redirect('manage_bank_details')
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)
-            bank_list, status_code = bank_controller.get_all_banks_list()
             context = {
-                "bank_data": bank_data,
-                "bank_list": bank_list
+                "bank_data": bank_data
             }
             return render(request, 'pages/admin_employee/users_management/banks/edit_bank.html', context)
     else:
@@ -1930,12 +1929,16 @@ def track_order(request):
 
 # test done here
 
-# def test_view(request):
-#     message = "The message goes here"
-#     title = "This is Title"
-#     token = "dc4RiYjoSIGhLsIqdy_yxh:APA91bEvioV_cHtk1CsaD6NnPQzCQIftJ1sNfAaEzmCYk7Jy3AJ-WNfHM_ZBO3kAMDp5-G-f81n92LBG6abYv0PY3Eniu02-rbqEl2xN-qkCeFPpCtTxtimxlT1VQQTnuUEjh1kOJ_yc"
-#     resp = event_controller.send_push_notification(token, title, message)
-#     return JsonResponse({"msg": resp})
+def test_view(request):
+    if request.method == 'POST':
+        print(request.POST)
+        import time
+        # Sleep for 10 seconds
+        time.sleep(3)
+        response_data = {"success": False, "message": "Messages sent Failed"}
+        return JsonResponse(response_data)
+    else:
+        return render(request, 'pages/admin_employee/event_management/test.html')
 
 
 @api_view(['POST'])

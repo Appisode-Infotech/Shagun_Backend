@@ -362,9 +362,9 @@ def edit_bank_details(bank_obj):
             user = cursor.fetchone()
             if user is not None:
                 edit_bank_query = """UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, 
-                                account_number = %s, status = %s, modified_on = %s, modified_by = %s WHERE uid = %s"""
+                                account_number = %s, modified_on = %s, modified_by = %s WHERE uid = %s"""
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          True, today, bank_obj.modified_by, bank_obj.uid)
+                          today, bank_obj.modified_by, bank_obj.uid)
                 cursor.execute(edit_bank_query, values)
 
                 return {
@@ -879,8 +879,8 @@ def search_kyc_data(search):
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
                 kyc.verification_status, users.profile_pic
                 FROM user_kyc AS kyc
-                INNER JOIN users ON kyc.uid = users.uid WHERE ( full_name LIKE '%{search}%' OR 
-                identification_number1 LIKE '%{search}%' OR identification_number2 LIKE '%{search}%') 
+                INNER JOIN users ON kyc.uid = users.uid WHERE ( kyc.id LIKE '%{search}%' OR kyc.full_name LIKE '%{search}%' OR 
+                kyc.identification_number1 LIKE '%{search}%' OR kyc.identification_number2 LIKE '%{search}%') 
                 ORDER BY kyc.created_on DESC"""
 
             cursor.execute(kyc_data_query)
@@ -902,7 +902,7 @@ def dashboard_search_bank(search):
             bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
                 bnk.account_number, bnk.status, users.profile_pic
                 FROM bank_details AS bnk
-                LEFT JOIN users ON bnk.uid = users.uid WHERE ( ifsc_code LIKE '%{search}%' OR 
+                LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.id = '{search}' OR ( ifsc_code LIKE '%{search}%' OR 
                 account_holder_name LIKE '%{search}%' OR account_number LIKE '%{search}%') ORDER BY bnk.created_on DESC"""
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()

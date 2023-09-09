@@ -87,8 +87,12 @@
             margin-right: 10px;
         }
         thead {
-            background-color: #9925b9; /* Purple color (#9925b9) */
+            background-color: #9925b9;
             color: white;
+        }
+
+        th,td {
+            text-align: center;
         }
         .custom-alert-overlay {
             position: fixed;
@@ -110,10 +114,6 @@
             padding: 20px;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
           }
-
-
-
-
 
     </style>
 </head>
@@ -140,7 +140,7 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -198,7 +198,7 @@
                                     status
                                 </th>
                                 <th>
-                                    Activate/Deactivate
+                                    Activate/Inactivate
                                 </th>
                                 <th>
                                     Edit
@@ -272,6 +272,8 @@
                                                             <label class="col-sm-3 col-form-label">Card Name</label>
                                                             <div class="col-sm-9">
                                                                 <input required id="name" type="text"
+                                                                       pattern="[^ ].*"
+                                                                       title="This field can't be Empty"
                                                                        class="form-control"
                                                                        name="card_name"/>
                                                             </div>
@@ -284,6 +286,8 @@
                                                             <label class="col-sm-3 col-form-label">Price</label>
                                                             <div class="col-sm-9">
                                                                 <input required id="price" name="card_price" type="text"
+                                                                       pattern="^(?!\s)(\d+(\.\d{1,2})?)?$"
+                                                                       title="Please add the amount only"
                                                                        class="form-control"/>
                                                             </div>
                                                         </div>
@@ -388,11 +392,6 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
-
-
-
-
-
 
 </script>
 </body>

@@ -8,6 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
@@ -81,6 +82,89 @@
 
         .show {display: block;}
 
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            z-index: 9999; /* Ensure the overlay is on top of other elements */
+            display: none; /* Initially hidden */
+        }
+
+        .loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Add your other loader styles here */
+            z-index: 10000; /* Ensure the loader is on top of the overlay */
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure the overlay is on top of other content */
+        }
+
+        .custom-alert {
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center horizontally */
+            text-align: center; /* Center text */
+        }
+
+        .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between icons and text */
+        }
+
+        /* Center the text vertically */
+        .custom-alert span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between text and button */
+        }
+
+        .center-button {
+          display: flex;
+          justify-content: center;
+
+        }
+        .center-button button {
+            margin-right: 10px;
+        }
+
+
+
 
 
 
@@ -107,31 +191,11 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Invite for event: {{event_data.event_type_name}} - {{event_data.id}}</h4>
-                                <form class="form-sample" action="/test_view/{{event_data.id}}/" method="post" enctype="multipart/form-data">
+                                <h4 class="card-title">Invite for event: {{event_data.event_type_name}} -
+                                    {{event_data.id}}</h4>
+                                <form class="form-sample" id="myForm">
                                     {% csrf_token %}
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Invited by</label>
-                                                <div class="col-sm-9">
 
-                                                    <input required type="text" id="name" name="invited_by" readonly
-                                                           onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
-
-                                                    <div id="myDropdown" class="dropdown-content" style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
-                                                               onkeyup="filterFunction()" class="form-control">
-                                                        {% for users in admins.admins %}
-                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}</a>
-                                                        {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="uid" name="invited_by_uid">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Invite Message</label>
                                         <textarea class="form-control" id="invite_msg" rows="4"
@@ -167,9 +231,30 @@
                                         </div>
                                     </div>
                                     <div class="center-button">
-                                    <input type="submit" value="Submit" class="btn btn-primary mr-2">
-                                </div>
+                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                    </div>
                                 </form>
+                                <div class="overlay" id="overlay"></div> <!-- Overlay -->
+                                <div id="loader" class="loader"></div> <!-- Loader -->
+                                <div id="customAlertOverlay" class="custom-alert-overlay">
+                                    <div class="custom-alert">
+                                        <form action="/test_view" method="get">
+                                            {% csrf_token %}
+                                            <div class="icon-container">
+                                                <i id="customAlertIcon" class="fas fa-check-circle"></i>
+                                                <!-- Green tick icon -->
+                                                <i id="customAlertIconError" class="fas fa-times-circle"></i>
+                                                <!-- Red times icon -->
+                                            </div>
+                                            <span id="customAlertMessage"></span> <!-- Message element -->
+                                            <div class="center-button">
+                                                <input type="submit" value="OK"
+                                                       class="btn btn-outline-info btn-icon-text">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
                                 {% if error_message %}
                                 <p>{{ error_message }}</p>
                                 {% endif %}
@@ -197,49 +282,7 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-<script>
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-        const dropdown = document.getElementById("myDropdown");
-        dropdown.classList.toggle("show");
-    }
-
-    function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
-
-    function setValue(value1, value2) {
-        document.getElementById("name").value = value1;
-        document.getElementById("uid").value = value2;
-        myFunction();
-    }
-
-    // Add an event listener to the document to close the dropdown when clicking outside
-    document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("myDropdown");
-        const nameInput = document.getElementById("name");
-        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
-        }
-    });
-
-
-
-
-</script>
+</div>
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
@@ -261,7 +304,61 @@
 <script src="{% static 'js/typeahead.js' %}"></script>
 <script src="{% static 'js/select2.js' %}"></script>
 
-<!-- End custom js for this page-->
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("loader").style.display = "block";
+
+            fetch('/test_view', {
+                method: 'POST',
+                body: new FormData(document.getElementById("myForm")),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+
+                if (data.success) {
+                    var customAlertOverlay = document.getElementById("customAlertOverlay");
+                    var customAlertIcon = document.getElementById("customAlertIcon");
+                    var customAlertIconError = document.getElementById("customAlertIconError");
+                    var customAlertMessage = document.getElementById("customAlertMessage");
+
+                    customAlertIcon.style.display = "block";
+                    customAlertIconError.style.display = "none";
+                    customAlertIcon.style.color = "green";
+                    customAlertIcon.style.fontSize = "48px";
+                    customAlertMessage.textContent = data.message;
+
+                    customAlertOverlay.style.display = "flex";
+
+                } else {
+                    console.log(data.success);
+                    var customAlertOverlay = document.getElementById("customAlertOverlay");
+                    var customAlertIcon = document.getElementById("customAlertIcon");
+                    var customAlertIconError = document.getElementById("customAlertIconError");
+                    var customAlertMessage = document.getElementById("customAlertMessage");
+
+                    customAlertIcon.style.display = "none";
+                    customAlertIconError.style.display = "block";
+                    customAlertIconError.style.color = "red";
+                    customAlertIconError.style.fontSize = "48px";
+                    customAlertMessage.textContent = data.message;
+
+                    customAlertOverlay.style.display = "flex";
+                }
+
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        });
+
+
+
+</script>
 
 </body>
 

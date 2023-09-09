@@ -46,8 +46,8 @@ def dashboard_search_delivery_vendor(search):
             delivery_vendor_data_query = f""" SELECT p.id, p.delivery_vendor_name, l.city_name, p.address, p.status, p.gst_no, 
             p.delivery_vendor_owner, p.contact_number FROM delivery_vendors AS p
             LEFT JOIN locations AS l ON p.city = l.id 
-            WHERE (p.id LIKE '%{search}%' OR delivery_vendor_name LIKE '%{search}%' OR delivery_vendor_owner LIKE '%{search}%'
-            OR contact_number LIKE '%{search}%' ) ORDER BY p.id DESC"""
+            WHERE (p.id LIKE '%{search}%' OR p.delivery_vendor_name LIKE '%{search}%' OR p.delivery_vendor_owner LIKE '%{search}%'
+            OR p.contact_number LIKE '%{search}%' OR l.city_name LIKE '%{search}%') ORDER BY p.id DESC"""
             cursor.execute(delivery_vendor_data_query)
             delivery_vendor_data = cursor.fetchall()
             return {

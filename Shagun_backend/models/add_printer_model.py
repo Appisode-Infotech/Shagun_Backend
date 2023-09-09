@@ -38,7 +38,7 @@ class AddPrinterModel:
     store_name: str
     city: str
     address: str
-    lat_lng: str
+    email: str
     gst_no: str
     store_owner: str
     contact_number: str
@@ -52,14 +52,14 @@ class AddPrinterModel:
         store_name = from_str(obj.get("store_name"))
         city = from_str(obj.get("city"))
         address = from_str(obj.get("address"))
-        lat_lng = from_str(obj.get("lat_lng"))
+        email = from_str(obj.get("email"))
         gst_no = from_str(obj.get("gst_no"))
         store_owner = from_str(obj.get("store_owner"))
         contact_number = from_str(obj.get("contact_number"))
         printer_user_name = from_union([from_str, from_none], obj.get("printer_user_name"))
         printer_password = from_union([from_str, from_none], obj.get("printer_password"))
         store_id = from_union([from_str, from_none], obj.get("store_id"))
-        return AddPrinterModel(store_name, city, address, lat_lng, gst_no, store_owner, contact_number,
+        return AddPrinterModel(store_name, city, address, email, gst_no, store_owner, contact_number,
                                printer_user_name, printer_password, store_id)
 
     def to_dict(self) -> dict:
@@ -67,7 +67,7 @@ class AddPrinterModel:
         result["store_name"] = from_str(self.store_name)
         result["city"] = from_str(self.city)
         result["address"] = from_str(self.address)
-        result["lat_lng"] = from_str(self.lat_lng)
+        result["email"] = from_str(self.email)
         result["gst_no"] = from_str(self.gst_no)
         result["store_owner"] = from_str(self.store_owner)
         result["contact_number"] = from_str(self.contact_number)

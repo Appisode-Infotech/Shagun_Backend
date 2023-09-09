@@ -66,8 +66,12 @@
             margin-left: 5px;
         }
         thead {
-            background-color: #9925b9; /* Purple color (#9925b9) */
+            background-color: #9925b9;
             color: white;
+        }
+
+        th,td {
+            text-align: center;
         }
     </style>
 </head>
@@ -88,13 +92,13 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Printing Vendors</h4>
+                        <h4 class="card-title">Printing Vendor List</h4>
                         <div class="form-group">
                             <form action="{% url 'dashboard_search_printers' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
@@ -127,7 +131,7 @@
                         </div>
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_printer' %}'">
-                            Printer
+                            <b>Printer</b>
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
                     </div>
@@ -154,7 +158,7 @@
                                     Status
                                 </th>
                                 <th>
-                                    Activate/Deactivate
+                                    Activate/Inactivate
                                 </th>
                                 <th>
                                     Edit

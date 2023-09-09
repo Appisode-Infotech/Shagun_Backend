@@ -48,25 +48,20 @@
             align-items: center;
         }
 
-        .card-title {
-            margin: 0;
-        }
-
-        .btn {
-            margin: 0;
-        }
-
-        .btn-icon-text {
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-icon-text i {
-            margin-left: 5px;
-        }
         thead {
-            background-color: #9925b9; /* Purple color (#9925b9) */
+            background-color: #9925b9;
             color: white;
+        }
+
+        th,td {
+            text-align: center;
+        }
+        th {
+            text-align: center;
+        }
+
+        header {
+        aspect-ratio:3/2;
         }
 
 
@@ -88,14 +83,14 @@
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <div class="header-container">
+                    <div class="header-container" >
                         <h4 class="card-title">Events List</h4>
                         <div class="form-group">
                             <form action="{% url 'dashboard_search_event' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -104,8 +99,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label> Filter on event status: </label>
+                        <div  style="aspect-ratio:5/2;">
+                            <label><b> Event Filter: </b></label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -131,18 +126,20 @@
                             </div>
 
                         </div>
+                        <div style="aspect-ratio:3/2;">
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_events' %}'">
                             Event
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
+                        </div>
                     </div>
 
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Event Id</th>
+                                <th>Event ID</th>
                                 <th>Event Name</th>
                                 <th>Event Admins</th>
                                 <th>Status</th>

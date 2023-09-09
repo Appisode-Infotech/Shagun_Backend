@@ -272,6 +272,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="address_line1"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            value="{{event.event_data.address_line1}}"/>
                                                 </div>
                                             </div>
@@ -282,6 +284,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="address_line2"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            value="{{event.event_data.address_line2}}"/>
                                                 </div>
                                             </div>
@@ -313,6 +317,8 @@
                                                 <label class="col-sm-3 col-form-label">Delivery Fee</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="delivery_fee"
+                                                           pattern="^(?!\s)(\d+(\.\d{1,2})?)?$"
+                                                            title="Please add the amount only"
                                                            value="{{event.event_data.delivery_fee}}"/>
                                                 </div>
                                             </div>
@@ -340,6 +346,8 @@
                                         {% for sub_event in event.event_data.sub_events %}
                                         <div class="event-row">
                                             <input required class="event-input" type="text"
+                                                   pattern="[^ ].*"
+                                                   title="This field can't be Empty"
                                                    name="sub_events[{{ forloop.counter0 }}][sub_event_name]"
                                                    value="{{sub_event.sub_event_name}}">
                                             <input required class="event-input" type="datetime-local"
@@ -366,7 +374,7 @@
                                                    onclick="toggleDropdown('myDropdown4')"
                                                    value="{{admin.name}}" class="event-input">
 
-                                            <input required class="event-input" type="text"
+                                            <input readonly class="event-input" type="text"
                                                    name="event_admin[0][role]" value="{{admin.role}}">
                                             <input type="hidden" id="uid" name="event_admin[0][uid]"
                                                    value="{{admin.uid}}">

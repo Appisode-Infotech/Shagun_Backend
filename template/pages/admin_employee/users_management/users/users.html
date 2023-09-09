@@ -46,6 +46,10 @@
             color: white;
         }
 
+        th,td {
+            text-align: center;
+        }
+
 
 
     </style>
@@ -73,7 +77,7 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -124,7 +128,7 @@
                                     Email
                                 </th>
                                 <th>
-                                    Phone
+                                    Contact No
                                 </th>
                                 <th>
                                     KYC Status
@@ -133,7 +137,7 @@
                                     User Status
                                 </th>
                                 <th>
-                                    Activate/Deactivate
+                                    Activate/Inactivate
                                 </th>
                             </tr>
                             </thead>

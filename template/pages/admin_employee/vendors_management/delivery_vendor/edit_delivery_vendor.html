@@ -87,6 +87,10 @@
         }
 
 
+
+
+
+
     </style>
 
 </head>
@@ -134,6 +138,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="delivery_vendor_name"
+                                                           pattern="[A-Za-z]+"
+                                                           title="This field doesn't contain special characters or numbers"
                                                            value="{{response.delivery_vendor_name}}"/>
                                                 </div>
                                             </div>
@@ -146,6 +152,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="delivery_vendor_owner"
+                                                           pattern="[A-Za-z]+"
+                                                           title="This field doesn't contain special characters or numbers"
                                                            value="{{response.delivery_vendor_owner}}"/>
                                                 </div>
                                             </div>
@@ -154,7 +162,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Phone</label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel"  name="contact_number" pattern="[0-9]{10}"
+                                                    <input type="tel" name="contact_number" pattern="[0-9]{10}"
                                                            class="form-control" value="{{response.contact_number}}"
                                                            title="Please enter a 10-digit phone number" required>
                                                 </div>
@@ -167,6 +175,8 @@
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="address"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            value="{{response.address}}"/>
                                                 </div>
                                             </div>
@@ -176,6 +186,8 @@
                                                 <label class="col-sm-3 col-form-label"> Vendor GST</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="gst_no"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            value="{{response.gst_no}}"/>
                                                 </div>
                                             </div>
@@ -186,7 +198,7 @@
                                             <label class="col-sm-3 col-form-label">Added By</label>
                                             <div class="col-sm-9">
                                                 <label class="form-control">{{ request.session.name }}</label>
-                                                <input  type="hidden" id="created_by" name="created_by"
+                                                <input type="hidden" id="created_by" name="created_by"
                                                        value="{{ request.session.uid }}">
                                             </div>
                                         </div>
@@ -254,6 +266,10 @@
             dropdown.classList.remove("show");
         }
     });
+
+
+
+
 
 
 </script>

@@ -89,8 +89,12 @@
             margin-right: 10px;
         }
         thead {
-            background-color: #9925b9; /* Purple color (#9925b9) */
+            background-color: #9925b9;
             color: white;
+        }
+
+        th,td {
+            text-align: center;
         }
 
       .custom-alert-overlay {
@@ -149,6 +153,8 @@
                                                 <label class="col-sm-3 col-form-label">Location Name </label>
                                                 <div class="col-sm-9">
                                                     <input required id="city_name" name="city_name" type="text"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
@@ -178,10 +184,10 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Location Id</th>
-                                <th>Name Name</th>
+                                <th>Location ID</th>
+                                <th>Location Name</th>
                                 <th>Status</th>
-                                <th>Activate/Deactivate</th>
+                                <th>Active/Inactive</th>
                                 <th>Edit</th>
                             </tr>
                             </thead>
@@ -241,6 +247,8 @@
                                                             <div class="col-sm-9">
                                                                 <input required id="name" type="text"
                                                                        class="form-control"
+                                                                       pattern="[^ ].*"
+                                                                       title="This field can't be Empty"
                                                                        name="name"/>
                                                             </div>
                                                         </div>

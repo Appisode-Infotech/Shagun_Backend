@@ -85,8 +85,12 @@
 
         }
         thead {
-            background-color: #9925b9; /* Purple color (#9925b9) */
+            background-color: #9925b9;
             color: white;
+        }
+
+        th,td {
+            text-align: center;
         }
         .custom-alert-overlay {
         position: fixed;
@@ -146,6 +150,8 @@
                                                 <label class="col-sm-3 col-form-label">Event Type Name </label>
                                                 <div class="col-sm-9">
                                                     <input required id="event_type_name" name="event_type_name"
+                                                           pattern="[^ ].*"
+                                                           title="This field can't be Empty"
                                                            type="text"
                                                            class="form-control"/>
                                                 </div>
@@ -176,10 +182,10 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Event Type Id</th>
+                                <th>Event Type ID</th>
                                 <th>Event Type Name</th>
                                 <th>Status</th>
-                                <th>Activate/Deactivate</th>
+                                <th>Activate/Inactivate</th>
                                 <th>Edit</th>
                             </tr>
                             </thead>
@@ -239,6 +245,8 @@
                                                             <div class="col-sm-9">
                                                                 <input required id="name" type="text"
                                                                        class="form-control"
+                                                                       pattern="[^ ].*"
+                                                                       title="This field can't be Empty"
                                                                        name="name"
                                                                        value="{{ event.event_type_name }}"/>
                                                             </div>

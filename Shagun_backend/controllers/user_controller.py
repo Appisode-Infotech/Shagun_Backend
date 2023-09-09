@@ -580,7 +580,8 @@ def dashboard_search_employee_status(status):
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        emp_login_query = "SELECT password, name, profile_pic, role FROM users WHERE uid = %s AND ( role = 2 OR role = 1 );"
+        emp_login_query = """SELECT password, name, profile_pic, role FROM users WHERE uid = %s AND 
+                            ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
         if result is not None and result[0] == pwd:
@@ -594,12 +595,12 @@ def employee_login(uname, pwd):
 
         if result is not None and result[0] != pwd:
             return {
-                "msg": "wrong password",
+                "msg": "Please enter valid User Name and Password",
             }
 
         else:
             return {
-                "msg": "user not exist, Please register",
+                "msg": "Please enter valid User Name and Password",
             }
 
 

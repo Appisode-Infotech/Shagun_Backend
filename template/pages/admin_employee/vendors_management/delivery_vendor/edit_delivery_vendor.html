@@ -124,11 +124,13 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City</label>
+                                                <label class="col-sm-3 col-form-label">City </label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="name" readonly
-                                                           onclick="myFunction()"
                                                            class="form-control" value="{{response.city_name}}">
+
+                                                    <input type="hidden" id="city" name="city"
+                                                           class="form-control" value="{{response.city}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -138,7 +140,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="delivery_vendor_name"
-                                                           pattern="[A-Za-z]+"
+                                                           pattern="[A-Za-z -]+"
                                                            title="This field doesn't contain special characters or numbers"
                                                            value="{{response.delivery_vendor_name}}"/>
                                                 </div>
@@ -152,7 +154,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="delivery_vendor_owner"
-                                                           pattern="[A-Za-z]+"
+                                                           pattern="[A-Za-z -]+"
                                                            title="This field doesn't contain special characters or numbers"
                                                            value="{{response.delivery_vendor_owner}}"/>
                                                 </div>
@@ -224,55 +226,6 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-
-
-<script>
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-        const dropdown = document.getElementById("myDropdown");
-        dropdown.classList.toggle("show");
-    }
-
-    function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
-
-    function setValue(value1, value2) {
-        document.getElementById("name").value = value1;
-        document.getElementById("city").value = value2;
-        myFunction();
-    }
-
-    // Add an event listener to the document to close the dropdown when clicking outside
-    document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("myDropdown");
-        const nameInput = document.getElementById("name");
-        console.log(dropdown)
-        console.log(nameInput)
-        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
-        }
-    });
-
-
-
-
-
-
-</script>
 
 <!-- container-scroller -->
 <!-- plugins:js -->

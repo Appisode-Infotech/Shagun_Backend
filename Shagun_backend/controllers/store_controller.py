@@ -4,8 +4,11 @@ from django.db import connection
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 
+from datetime import datetime
+
+  # Handle invalid date input gracefully
+
 def printer_login(uname, pwd):
-    print(pwd)
     with connection.cursor() as cursor:
         printer_login_query = f"""SELECT id,printer_user_name, printer_password, store_name FROM printer 
                                     WHERE printer_user_name = '{uname}' """
@@ -236,6 +239,10 @@ def search_all_jobs(status, search):
 def printer_search_all_jobs(status, search, pid):
     status_values_str = ', '.join(str(status_value) for status_value in status)
     try:
+        input_date = datetime.strptime(search, '%d/%m/%Y').strftime('%Y-%m-%d')
+    except ValueError:
+        input_date = None
+    try:
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" 
             SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
@@ -244,9 +251,9 @@ def printer_search_all_jobs(status, search, pid):
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
             LEFT JOIN greeting_cards AS gc ON pj.card_id = gc.id
-            WHERE pj.status IN ({status_values_str}) AND pj.printer_id = '{pid}' AND ( pj.event_id LIKE '%{search}%' OR 
-            pj.printer_id LIKE '%{search}%' OR gc.card_name LIKE '%{search}%' OR p.store_name LIKE '%{search}%') 
-            ORDER BY pj.created_on DESC"""
+            WHERE pj.status IN ({status_values_str}) AND pj.printer_id = '{pid}' AND ( pj.id = '{search}' OR 
+            et.event_type_name LIKE '%{search}%' OR pj.billing_amount LIKE '%{search}%' OR e.event_date LIKE '%{input_date}%') 
+            ORDER BY pj.id DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
             print(get_all_jobs_query)

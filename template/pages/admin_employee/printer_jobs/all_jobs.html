@@ -104,7 +104,7 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -114,7 +114,7 @@
                             </form>
                         </div>
                         <div class="dropdown">
-                            <label> Job Filter: </label>
+                            <label><b> Job Filter: </b></label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -123,7 +123,7 @@
                                 {% elif status == 1 %}
                                 New
                                 {% elif status == 2 %}
-                                InProgress
+                                In Progress</a>
                                 {% elif status == 3 %}
                                 Print Completed
                                 {% elif status == 4 %}
@@ -138,7 +138,7 @@
                                 <a class="dropdown-item"
                                    href="{% url 'filter_all_printer_jobs' 1 %}">New</a>
                                 <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 2 %}">InProgress</a>
+                                   href="{% url 'filter_all_printer_jobs' 2 %}">In Progress</a>
                                 <a class="dropdown-item"
                                    href="{% url 'filter_all_printer_jobs' 3 %}">Print Completed</a>
                                 <a class="dropdown-item"

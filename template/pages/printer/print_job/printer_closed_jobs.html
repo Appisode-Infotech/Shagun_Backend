@@ -98,7 +98,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Closed Jobs</h4>
+                        <h4 class="card-title">Closed Jobs List</h4>
                         <div class="form-group">
                             <form action="{% url 'printer_search_closed_jobs' %}" method="POST">
                                 {% csrf_token %}
@@ -124,6 +124,7 @@
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
                                 <th>Job Status</th>
+                                <th>Set Status</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -138,7 +139,7 @@
                                     <b>Event Date : </b> {{ job.event_date }}</br></br>
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
-                                <td>{{ job.billing_amount }}</td>
+                                <td>₹ {{ job.billing_amount }}</td>
                                 <td>
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>
@@ -161,7 +162,7 @@
                                             {% if job.status == 1 %}
                                             New
                                             {% elif job.status == 2 %}
-                                            InProgress
+                                            In Progress
                                             {% elif job.status == 3 %}
                                             Print Completed
                                             {% elif job.status == 4 %}
@@ -175,7 +176,7 @@
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 1 'printer_closed_jobs' %}">New</a>
                                             <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_closed_jobs' %}">InProgress</a>
+                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_closed_jobs' %}">In Progress</a>
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 3 'printer_closed_jobs' %}">Print Completed</a>
                                             <a class="dropdown-item"

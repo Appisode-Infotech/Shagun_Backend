@@ -98,7 +98,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">All Jobs</h4>
+                        <h4 class="card-title">All Jobs List</h4>
                         <div class="form-group">
                             <form action="{% url 'printer_search_all_jobs' %}" method="POST">
                                 {% csrf_token %}
@@ -114,7 +114,7 @@
                             </form>
                         </div>
                         <div class="dropdown">
-                            <label> Job Filter: </label>
+                            <label><b> Filter on Job Status: </b></label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -138,7 +138,7 @@
                                 <a class="dropdown-item"
                                    href="{% url 'printer_filter_all_jobs' 1 %}">New</a>
                                 <a class="dropdown-item"
-                                   href="{% url 'printer_filter_all_jobs' 2 %}">InProgress</a>
+                                   href="{% url 'printer_filter_all_jobs' 2 %}">In Progress</a>
                                 <a class="dropdown-item"
                                    href="{% url 'printer_filter_all_jobs' 3 %}">Print Completed</a>
                                 <a class="dropdown-item"
@@ -175,7 +175,7 @@
                                     <b>Event Date : </b> {{ job.event_date }} </br></br>
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
-                                <td>{{ job.billing_amount }}</td>
+                                <td>₹ {{ job.billing_amount }}</td>
                                 <td>
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>
@@ -197,7 +197,7 @@
                                             {% if job.status == 1 %}
                                             New
                                             {% elif job.status == 2 %}
-                                            InProgress
+                                            In Progress
                                             {% elif job.status == 3 %}
                                             Print Completed
                                             {% elif job.status == 4 %}
@@ -211,7 +211,7 @@
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 1 'printer_all_jobs' %}">New</a>
                                             <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_all_jobs' %}">InProgress</a>
+                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_all_jobs' %}">In Progress</a>
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 3 'printer_all_jobs' %}">Print Completed</a>
                                             <a class="dropdown-item"

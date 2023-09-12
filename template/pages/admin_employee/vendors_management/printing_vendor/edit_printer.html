@@ -202,8 +202,8 @@
                                                 <label class="col-sm-3 col-form-label"> Store GST</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="gst_no"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           title="Please enter valid 15 digit GST No."
                                                            value="{{printer_data.store.gst_no}}"/>
                                                 </div>
                                             </div>

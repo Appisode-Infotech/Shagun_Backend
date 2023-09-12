@@ -229,7 +229,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Printing Vendor</label>
+                                                <label class="col-sm-3 col-form-label">Select Printing Vendor</label>
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="printer_name" readonly
@@ -250,7 +250,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Event Date</label>
+                                                <label class="col-sm-3 col-form-label">Event Date & Time</label>
                                                 <div class="col-sm-9">
                                                     <input required type="datetime-local" id="event_date"
                                                            name="event_date" class="form-control">
@@ -264,7 +264,7 @@
                                                 <label class="col-sm-3 col-form-label">Address Line1</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="256"
                                                            title="This field can't be Empty"
                                                            name="address_line1"/>
                                                 </div>
@@ -275,7 +275,7 @@
                                                 <label class="col-sm-3 col-form-label">Address Line2</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="256"
                                                            title="This field can't be Empty"
                                                            name="address_line2"/>
                                                 </div>
@@ -307,7 +307,7 @@
                                                 <label class="col-sm-3 col-form-label">Delivery Fee</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="delivery_fee"
-                                                           placeholder="00.00" pattern="^(?!\s)(\d+(\.\d{1,2})?)?$"
+                                                           placeholder="00.00" pattern="[0-9]" maxlength="3"
                                                             title="Please add the amount only"/>
                                                 </div>
                                             </div>
@@ -327,6 +327,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note</label>
                                         <textarea required class="form-control" id="event_note" rows="4"
+                                                  maxlength="256"
                                                   name="event_note"></textarea>
                                     </div>
 
@@ -334,7 +335,7 @@
                                         <label class="col-sm-3 col-form-label">Sub Events</label>
                                         <div class="event-row">
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
-                                                   pattern="[^ ].*"
+                                                   pattern="[^ ].*" maxlength="256"
                                                    title="This field can't be Empty"
                                                    placeholder="Sub Event Name" required>
                                             <input class="event-input" type="datetime-local"
@@ -355,20 +356,20 @@
                                         <div class="event-row">
                                             <input type="text" id="name" name="event_admin[0][name]" readonly
                                                    onclick="toggleDropdown('myDropdown4')"
-                                                   placeholder="Search.." class="event-input">
+                                                   placeholder="Search" class="event-input">
 
                                             <div id="myDropdown4" class="dropdown-content">
-                                                <input type="text" placeholder="Search.." id="myInput4"
+                                                <input type="text" placeholder="Search" id="myInput4"
                                                        onkeyup="filterFunction('myDropdown4')" class="form-control">
                                                 {% for users in users.user_data %}
                                                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}
                                                     {{users.phone}}</a>
                                                 {% endfor %}
                                             </div>
-                                            <input required class="event-input" type="text"
+                                            <input required class="event-input" type="text" maxlength="256"
                                                    pattern="[^ ].*"
                                                    title="This field can't be Empty"
-                                                   name="event_admin[0][role]" placeholder="Bride, Groom etc ....">
+                                                   name="event_admin[0][role]" placeholder="Bride, Groom etc ">
 
                                             <input type="hidden" id="uid" name="event_admin[0][uid]">
                                         </div>

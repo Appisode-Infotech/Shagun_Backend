@@ -121,6 +121,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -197,7 +198,7 @@
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[A-Za-z]+"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="store_owner"/>
                                                 </div>
@@ -230,7 +231,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="email"
+                                                    <input required type="email" class="form-control" name="email"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            placeholder="example@gmail.com"/>
@@ -245,8 +246,8 @@
                                                 <label class="col-sm-3 col-form-label"> Store GST</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
                                                 </div>
                                             </div>
@@ -272,9 +273,11 @@
                                                     <input required type="password" id="password"
                                                            name="printer_password"
                                                            class="form-control form-control-lg"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
-                                                           placeholder="Password" oninput="validatePasswords()">
+                                                           pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,12}$"
+                                                    title="Password must contain at least one uppercase letter, one
+                                                    lowercase letter, one number, one special character, and be 8-12
+                                                    characters long"
+                                                    placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -363,6 +366,7 @@
 
 
 
+
 </script>
 
 
@@ -401,6 +405,7 @@
 
 
 
+
 </script>
 
 
@@ -413,6 +418,7 @@
                 e.preventDefault();
             }
         });
+
 
 
 

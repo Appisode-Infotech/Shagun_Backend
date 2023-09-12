@@ -188,7 +188,7 @@
                                                 <label class="col-sm-3 col-form-label">Vendor Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[A-Za-z]+"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_name"/>
                                                 </div>
@@ -201,7 +201,7 @@
                                                 <label class="col-sm-3 col-form-label">Vendor Owner</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[A-Za-z]+"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_owner"/>
                                                 </div>
@@ -235,8 +235,8 @@
                                                 <label class="col-sm-3 col-form-label"> Vendor GST</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^[a-zA-Z0-9]*$"
-                                                           title="Enter valid GSTIN"
+                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
                                                 </div>
                                             </div>

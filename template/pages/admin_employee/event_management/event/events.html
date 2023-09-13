@@ -99,8 +99,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div  style="aspect-ratio:5/2;">
-                            <label><b> Event Filter: </b></label>
+                        <div  class="form-group">
+                            <label class="mr-2 custom-label"> Event Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -126,10 +126,10 @@
                             </div>
 
                         </div>
-                        <div style="aspect-ratio:3/2;">
+                        <div class="form-group">
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_events' %}'">
-                            Event
+                            Add Event
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
                         </div>
@@ -139,21 +139,19 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Event ID</th>
                                 <th>Event Name</th>
                                 <th>Event Admins</th>
                                 <th>Status</th>
                                 <th>Set Status</th>
                                 <th>Active</th>
                                 <th>Edit</th>
-                                <th>I</th>
+                                <th>Invite</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for event in response %}
 
                             <tr>
-                                <td>{{ event.event_id }}</td>
                                 <td>{{ event.event_name }}</td>
 
                                 <td>

@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -52,7 +54,7 @@
         }
 
         .btn {
-            margin: 20px;
+            margin-right: 10px;
         }
 
         .btn-icon-text {
@@ -109,9 +111,11 @@
         background-color: #f2f2f2;
         border: 1px solid #ddd;
         border-radius: 5px;
-        padding: 20px;
+        padding: 10px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       }
+
+
 
 
 
@@ -134,20 +138,25 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Events Type</h4>
-                        <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="showPopUpDiv1()">
-                            Event Type
-                            <i class="ti-plus btn-icon-append"></i>
-                        </button>
+                        <h4 class="card-title" >Events Type</h4>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-outline-info btn-icon-text"
+                                    onclick="showPopUpDiv1()">
+                                Add Event Type
+                                <i class="ti-plus btn-icon-append"></i>
+                            </button>
+                        </div>
                         <div id="customAlertOverlay" class="custom-alert-overlay">
                             <div class="custom-alert">
                                 <form class="form-sample" action="/add_events_type" method="post">
                                     {% csrf_token %}
+                                    <div class="text-center">
+                                    <h4 class="card-title" >Add Event Type</h4>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Event Type Name </label>
+                                                <label class="col-sm-3 col-form-label">Name </label>
                                                 <div class="col-sm-9">
                                                     <input required id="event_type_name" name="event_type_name"
                                                            pattern="[^ ].*"
@@ -157,9 +166,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-7">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Created By</label>
+                                                <label class="col-sm-3 col-form-label">Creator</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
@@ -182,7 +191,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Event Type ID</th>
                                 <th>Event Type Name</th>
                                 <th>Status</th>
                                 <th>Activate/Inactivate</th>
@@ -193,7 +201,6 @@
                             {% for event in response %}
 
                             <tr>
-                                <td>{{ event.event_type_id }}</td>
                                 <td>{{ event.event_type_name }}</td>
                                 <td>
                                     {% if event.status == 1 %}
@@ -224,11 +231,13 @@
                                 <td>
                                     <button onclick="showPopUpDiv('{{event.event_type_id}}', '{{event.event_type_name}}')"
                                             class="btn btn-outline-info btn-fw">Edit
+                                        <i class="fas fa-edit"></i>
                                     </button>
                                     <div id="customAlertOverlay1" class="custom-alert-overlay">
                                         <div class="custom-alert">
                                             <form class="form-sample" action="/edit_event_type" method="post">
                                                 {% csrf_token %}
+                                                <h4 class="card-title">Edit Event Type</h4>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
@@ -363,6 +372,8 @@
 
 
 
+
+
 </script>
 <script>
         function toggleForm() {
@@ -383,6 +394,8 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
+
 
 
 

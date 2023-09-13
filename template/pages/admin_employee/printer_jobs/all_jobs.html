@@ -113,8 +113,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label><b> Job Filter: </b></label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> Job Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -132,6 +132,7 @@
                                 Closed
                                 {% endif %}
                             </button>
+
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
                                 <a class="dropdown-item"
                                    href="{% url 'all_printer_jobs'  %}">All</a>
@@ -155,7 +156,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Job ID</th>
                                 <th>Printing Vendor</th>
                                 <th class="wish" >Event Name</th>
                                 <th>Job Details</th>
@@ -167,7 +167,6 @@
                             {% for job in response %}
 
                             <tr>
-                                <td>{{ job.id }}</td>
                                 <td><b>ID: </b>{{ job.printer_id }}<br><br>
                                     <b>Name: </b>{{job.store_name}}
                                 </td>

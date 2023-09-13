@@ -113,12 +113,14 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label><b> Job Filter: </b></label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> Job Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                {% if status == 2 %}
+                                {% if status == None %}
+                                All
+                                {% elif status == 2 %}
                                 InProgress
                                 {% elif status == 3 %}
                                 Print Completed
@@ -127,6 +129,8 @@
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                <a class="dropdown-item"
+                                   href="{% url 'Open_printer_jobs'  %}">All</a>
                                 <a class="dropdown-item"
                                    href="{% url 'filter_open_printer_jobs' 2 %}">In Progress</a>
                                 <a class="dropdown-item"
@@ -140,7 +144,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Job ID</th>
                                 <th>Printing Vendor</th>
                                 <th>Event Name</th>
                                 <th>Job Details</th>
@@ -152,7 +155,6 @@
                             <tbody>
                             {% for job in response %}
                             <tr>
-                                <td>{{ job.id }}</td>
                                 <td><b>ID: </b>{{ job.printer_id }}<br><br>
                                     <b>Name: </b>{{job.store_name}}
                                 </td>

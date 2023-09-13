@@ -118,7 +118,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Job ID</th>
                                 <th class="wish" >Event Name</th>
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
@@ -130,7 +129,6 @@
                             {% for job in response %}
 
                             <tr>
-                                <td>{{ job.id }}</td>
                                 <td class="wish"  title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
                                     <b>Wish: </b>{{job.wish}}</td>
                                 <td>

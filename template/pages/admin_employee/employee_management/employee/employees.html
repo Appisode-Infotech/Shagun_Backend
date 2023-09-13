@@ -100,7 +100,7 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -109,8 +109,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label> Employee Filter </label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> Employee Filter </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -133,20 +133,19 @@
 
                         </div>
                         {% if request.session.role == 1 %}
+                        <div class="form-group">
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_employee' %}'">
                             Employee
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
+                        </div>
                         {% endif%}
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>
-                                    Id
-                                </th>
                                 <th>
                                     User
                                 </th>
@@ -171,9 +170,6 @@
                             <tbody>
                             {% for user in response %}
                             <tr>
-                                <td>
-                                    {{user.id}}
-                                </td>
                                 <td class="py-1">
                                     <a href="{{MEDIA_URL}}{{ user.profile_pic }}" target="_blank">
                                         <img src="{{MEDIA_URL}}{{ user.profile_pic }}" alt="image"/>

@@ -120,7 +120,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Job ID</th>
                                 <th>Printing Vendor</th>
                                 <th>Event Name</th>
                                 <th>Job Details</th>
@@ -133,7 +132,6 @@
                             {% for job in response %}
 
                             <tr>
-                                <td>{{ job.id }}</td>
                                 <td><b>ID: </b>{{ job.printer_id }}<br><br>
                                     <b>Name: </b>{{job.store_name}}
                                 </td>

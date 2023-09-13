@@ -31,7 +31,7 @@ def home_page_data(uid):
             cursor.execute(get_kyc_query)
             kyc_status = cursor.fetchone()
 
-            get_kyc_request_query = f"SELECT 1 FROM user_callback_request WHERE uid = '{uid}' AND status = 0 "
+            get_kyc_request_query = f"SELECT * FROM user_callback_request WHERE uid = '{uid}' AND status = 0 "
             cursor.execute(get_kyc_request_query)
             kyc_request = cursor.fetchone()
             if kyc_request:

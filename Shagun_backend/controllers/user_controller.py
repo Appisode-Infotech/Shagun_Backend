@@ -671,7 +671,7 @@ def get_user_profile(uid):
             cursor.execute(bank_sql_query)
             bank_data = cursor.fetchall()
 
-            get_kyc_request_query = f"SELECT 1 FROM user_callback_request WHERE uid = '{uid}' AND status = 1 "
+            get_kyc_request_query = f"SELECT * FROM user_callback_request WHERE uid = '{uid}' AND status = 0 "
             cursor.execute(get_kyc_request_query)
             kyc_request = cursor.fetchone()
             if kyc_request:

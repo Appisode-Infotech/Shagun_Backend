@@ -1143,6 +1143,7 @@ def whatsapp_invite(request, e_id):
         invite_message = request.POST['invite_msg']
         phone = request.POST['phone']
         if 'csv_file' in request.FILES:
+            print("csv found")
             csv_file = request.FILES['csv_file']
             try:
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
@@ -1154,11 +1155,14 @@ def whatsapp_invite(request, e_id):
                             cleaned_cell = ''.join(filter(str.isdigit, cell))
                             if cell.isdigit() and len(cleaned_cell) == 10:
                                 mob_numbers.append(cleaned_cell)
+                                print(mob_numbers)
 
                 mob_numbers = list(set(mob_numbers))
                 if phone != '':
                     mob_numbers.append(phone)
-                event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                print(mob_numbers)
+                response = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                print(response)
                 return redirect(reverse('whatsapp_invite', args=[e_id]))
 
             except Exception as e:

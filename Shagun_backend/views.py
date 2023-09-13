@@ -1472,7 +1472,9 @@ def user_register(request):
         print(request.data)
         print("profile pic")
         print(request.data['profile_pic'])
-        for file_key, file_obj in request.FILES.items():
+        print("request file")
+        print(request.FILES.get('profile_pic'))
+        for file_key, file_obj in request.FILES.get('profile_pic'):
             file_name = f"""images/profile_pic/{request.data['uid']}"""
             form_data = form_data.copy()
             form_data['profile'] = file_name

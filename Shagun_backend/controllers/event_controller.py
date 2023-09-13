@@ -534,7 +534,7 @@ def get_my_event_list(uid):
             cursor.execute(phone_query)
             phone = cursor.fetchone()[0]
             # SQL query for events with event_date less than or equal to today
-            sql_query_past_events = sql_query_upcoming_events = f"""
+            sql_query_my_events = sql_query_upcoming_events = f"""
                     SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
                         event.is_approved, event.status,
                         total_amount.shagun_amount AS total_amount,
@@ -551,42 +551,16 @@ def get_my_event_list(uid):
                         FROM transaction_history
                         GROUP BY event_id
                     ) AS sender_count ON event.id = sender_count.event_id
-                    WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) < '{today.date()}'
+                    WHERE JSON_CONTAINS(event_admin, %(uid_json)s)
                     AND event.is_approved = 1 ORDER BY event.created_on DESC
                 """
-
-            # SQL query for events with event_date greater than today
-            sql_query_upcoming_events = f"""
-                        SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                            event.is_approved, event.status,
-                            total_amount.shagun_amount AS total_amount,
-                            sender_count.sender_uid_count AS sender_count
-                        FROM event 
-                        LEFT OUTER JOIN events_type ON event.event_type_id = events_type.id 
-                        LEFT OUTER JOIN (
-                            SELECT event_id, SUM(shagun_amount) AS shagun_amount
-                            FROM transaction_history
-                            GROUP BY event_id
-                        ) AS total_amount ON event.id = total_amount.event_id
-                        LEFT OUTER JOIN (
-                            SELECT event_id, COUNT(DISTINCT sender_uid) AS sender_uid_count
-                            FROM transaction_history
-                            GROUP BY event_id
-                        ) AS sender_count ON event.id = sender_count.event_id
-                        WHERE JSON_CONTAINS(event_admin, %(uid_json)s) AND DATE(event.event_date) >= '{today.date()}'
-                        AND event.is_approved = 1 ORDER BY event.created_on DESC
-                    """
 
             # UID JSON data
             uid_json = json.dumps({'uid': uid})
 
             # Execute the first query for past events
-            cursor.execute(sql_query_past_events, {'uid_json': uid_json})
-            past_events = cursor.fetchall()
-
-            # Execute the second query for upcoming events
-            cursor.execute(sql_query_upcoming_events, {'uid_json': uid_json})
-            upcoming_events = cursor.fetchall()
+            cursor.execute(sql_query_my_events, {'uid_json': uid_json})
+            my_events = cursor.fetchall()
 
             invited_events_query = f"""
                         SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone, 
@@ -609,8 +583,7 @@ def get_my_event_list(uid):
 
             return {
                 "status": True,
-                "past_events": responsegenerator.responseGenerator.generateResponse(past_events, EVENT_LIST),
-                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events, EVENT_LIST),
+                "my_events": responsegenerator.responseGenerator.generateResponse(my_events, EVENT_LIST),
                 "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
                                                                                        INVITED_EVENT_LIST),
                 "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)

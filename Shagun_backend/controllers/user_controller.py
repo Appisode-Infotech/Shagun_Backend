@@ -671,10 +671,19 @@ def get_user_profile(uid):
             cursor.execute(bank_sql_query)
             bank_data = cursor.fetchall()
 
+            get_kyc_request_query = f"SELECT 1 FROM user_callback_request WHERE uid = '{uid}' AND status = 1 "
+            cursor.execute(get_kyc_request_query)
+            kyc_request = cursor.fetchone()
+            if kyc_request:
+                is_active_kyc_request = True
+            else:
+                is_active_kyc_request = False
+
             return {
                 "status": True,
                 "message": "User found",
                 "events_count": events_count[0],
+                "is_active_kyc_request": is_active_kyc_request,
                 "bank_count": counts[0],
                 "total_amount_sent": counts[1],
                 "total_amount_received": counts[2],

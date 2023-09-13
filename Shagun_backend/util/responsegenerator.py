@@ -208,35 +208,8 @@ class responseGenerator:
         if controller_type == USER_HOME_PAGE:
             total_recieved_amount = 0
             total_sent_amount = 0
-            transaction_sent_list = []
-            transaction_recieved_list = []
             events_invite_list = []
-            for sent in data[0]:
-                total_sent_amount = sent[5]
-                transaction_sent_list.append(
-                    {
-                        "amount_sent": sent[0],
-                        "event_name": sent[1],
-                        "sent_to": sent[2],
-                        "event_id": sent[3],
-                        "profile_pic": sent[4]
-
-                    }
-                )
-
-            for recieved in data[1]:
-                total_recieved_amount = recieved[5]
-                transaction_recieved_list.append(
-                    {
-                        "amount_received": recieved[0],
-                        "even_name": recieved[1],
-                        "received_from": recieved[2],
-                        "event_id": recieved[3],
-                        "profile_pic": recieved[4]
-                    }
-                )
-
-            for invites in data[2]:
+            for invites in data:
                 events_invite_list.append(
                     {
                         "event_name": invites[0],
@@ -250,8 +223,7 @@ class responseGenerator:
                     }
                 )
 
-            return total_sent_amount, transaction_sent_list, total_recieved_amount, transaction_recieved_list, \
-                events_invite_list
+            return total_sent_amount, total_recieved_amount, events_invite_list
 
         if controller_type == GIFT_SENT:
             sent_gift = []

@@ -1463,8 +1463,11 @@ def get_users_by_name_or_phone(request):
 # user-provided information, and creating a new user account in the backend database.
 @api_view(['POST'])
 def user_register(request):
+    print(request.data)
+    print(request.Files)
     reg_obj = registration_model.registration_model_from_dict(request.data)
     user, status_code = user_controller.user_register(reg_obj)
+    print(user)
     if user['user'] is not None:
         token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
                            'secret_key', algorithm='HS256')

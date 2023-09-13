@@ -393,6 +393,18 @@ def all_printer_jobs(request):
         return redirect('sign_up')
 
 
+def new_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
 def search_all_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4, 5]
@@ -400,7 +412,21 @@ def search_all_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def search_new_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1]
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -424,7 +450,7 @@ def search_open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -472,7 +498,7 @@ def search_closed_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -510,7 +536,7 @@ def search_transactions_settlement(request, event_id):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                      {"response": response, "event_id": event_id})
+                      {"response": response, "event_id": event_id, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 

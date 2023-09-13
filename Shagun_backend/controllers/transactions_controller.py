@@ -158,6 +158,38 @@ def get_received_gift(gift_data_obj):
         return {"status": False, "message": str(e)}, 301
 
 
+def get_received_gift_for_event(uid, eid):
+    try:
+        with connection.cursor() as cursor:
+            sent_gift_query = f"""
+                SELECT th.receiver_uid, th.sender_uid, th.shagun_amount, th.transaction_amount,
+                    th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, ev.id, 
+                    CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
+                    (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}' AND event_id = '{eid}') 
+                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
+                FROM transaction_history AS th
+                LEFT JOIN users As u ON th.sender_uid = u.uid
+                LEFT JOIN event AS ev ON th.event_id = ev.id
+                LEFT JOIN events_type AS et ON ev.event_type_id = et.id
+                LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
+                LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
+                WHERE th.receiver_uid = '{uid}' AND th.event_id = '{eid}' ORDER BY th.created_on DESC"""
+            cursor.execute(sent_gift_query)
+            received_gifts = cursor.fetchall()
+            total_gift_received, received_gift_list = responseGenerator.generateResponse(received_gifts, GIFT_SENT)
+
+            return {
+                "status": True,
+                "total_received_gifts": total_gift_received,
+                "received_gifts": received_gift_list
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
 def get_track_order(track_order_obj):
     try:
         with connection.cursor() as cursor:
@@ -203,6 +235,7 @@ def get_transaction_list(event_id, status):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
 
 def search_transaction_list(event_id, search):
     try:

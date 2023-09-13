@@ -1468,8 +1468,10 @@ def user_register(request):
     if request.data['profile_pic'] is None:
         print("No profile added")
     else:
+        print("file found")
         for file_key, file_obj in request.FILES.items():
             file_name = f"""images/profile_pic/{request.data['uid']}"""
+            print(file_name)
             with default_storage.open(file_name, 'wb+') as destination:
                 for chunk in file_obj.chunks():
                     print("test1")

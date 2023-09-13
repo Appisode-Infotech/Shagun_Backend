@@ -68,6 +68,8 @@
 
 
 
+
+
     </style>
 </head>
 
@@ -209,6 +211,17 @@
                                 </td>
                                 <td>
                                     <div class="dropdown">
+                                        {% if event.is_approved == 2 %}
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                 data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" disabled>
+                                            {% if event.status == 0 %}
+                                            Inactive
+                                            {% elif event.status == 1 %}
+                                            Active
+                                            {% endif %}
+                                        </button>
+                                        {% else %}
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                 id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false">
@@ -224,14 +237,25 @@
                                             <a class="dropdown-item"
                                                href="{% url 'activate_deactivate_event' event.event_id 0 %}">Inactive</a>
                                         </div>
+                                        {% endif %}
                                     </div>
+
                                 </td>
                                 <td>
+                                    {% if event.is_approved == 2 %}
+                                    <button type="button" class="btn btn-outline-info btn-fw"
+                                            onclick="window.location.href='{% url 'edit_event' event.event_id %}'"
+                                            disabled>
+                                        Edit
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    {% else %}
                                     <button type="button" class="btn btn-outline-info btn-fw"
                                             onclick="window.location.href='{% url 'edit_event' event.event_id %}'">
                                         Edit
                                         <i class="fas fa-edit"></i>
                                     </button>
+                                    {% endif%}
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-social-icon btn-outline-facebook"
@@ -301,6 +325,8 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
 
 
 

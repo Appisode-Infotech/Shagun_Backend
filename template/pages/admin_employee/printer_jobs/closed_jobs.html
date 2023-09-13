@@ -79,6 +79,7 @@
             text-overflow: ellipsis;
         }
 
+
     </style>
 </head>
 
@@ -129,14 +130,23 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if response|length == 0 %}
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <h4>No data found</h4>
+                                </td>
+                            </tr>
+                            {% else %}
+
                             {% for job in response %}
 
                             <tr>
                                 <td><b>ID: </b>{{ job.printer_id }}<br><br>
                                     <b>Name: </b>{{job.store_name}}
                                 </td>
-                                <td class="wish"  title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
-                                    <b>Wish: </b>{{job.wish}}</td>
+                                <td class="wish" title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
+                                    <b>Wish: </b>{{job.wish}}
+                                </td>
                                 <td>
                                     <b>Card Id</b> : {{ job.card_name }}</br></br>
                                     <b>Event Date : </b> {{ job.event_date }}</br></br>
@@ -160,6 +170,8 @@
 
                             </tr>
                             {% endfor %}
+                            {% endif %}
+
                             </tbody>
                         </table>
                     </div>
@@ -219,6 +231,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 

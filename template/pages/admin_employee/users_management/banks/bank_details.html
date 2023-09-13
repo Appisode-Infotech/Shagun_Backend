@@ -75,6 +75,7 @@
         }
 
 
+
     </style>
 </head>
 
@@ -133,11 +134,11 @@
 
                         </div>
                         <div class="form-group">
-                        <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'add_bank' %}'">
-                            Add Bank Detail
-                            <i class="ti-plus btn-icon-append"></i>
-                        </button>
+                            <button type="button" class="btn btn-outline-info btn-icon-text"
+                                    onclick="window.location.href='{% url 'add_bank' %}'">
+                                Add Bank Detail
+                                <i class="ti-plus btn-icon-append"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -172,6 +173,14 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if response|length == 0 %}
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <h4>No data found</h4>
+                                </td>
+                            </tr>
+                            {% else %}
+
                             {% for bank in response %}
                             <tr>
                                 <td class="py-1">
@@ -226,6 +235,8 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% endif %}
+
                             </tbody>
                         </table>
                     </div>

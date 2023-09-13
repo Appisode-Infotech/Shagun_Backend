@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/user_home_page', user_home_page, name='user_home_page'),
     path('api/gift_sent_list', gift_sent_list, name='gift_sent_list'),
     path('api/gift_received_list', gift_received_list, name='gift_received_list'),
+    path('api/gift_received_for_event', gift_received_for_event, name='gift_received_for_event'),
     path('api/get_greeting_cards', get_greeting_cards, name='get_greeting_cards'),
     path('api/track_order', track_order, name='track_order'),
     path('api/get_single_event', get_single_event, name='get_single_event'),

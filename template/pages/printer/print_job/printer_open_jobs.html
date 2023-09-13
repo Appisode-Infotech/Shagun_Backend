@@ -79,6 +79,7 @@
             text-overflow: ellipsis;
         }
 
+
     </style>
 </head>
 
@@ -154,6 +155,14 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if response|length == 0 %}
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <h4>No data found</h4>
+                                </td>
+                            </tr>
+                            {% else %}
+
                             {% for job in response %}
 
                             <tr>
@@ -215,6 +224,8 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% endif %}
+
                             </tbody>
                         </table>
                     </div>
@@ -274,6 +285,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 

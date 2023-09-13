@@ -114,7 +114,8 @@ def edit_event(event_obj, event_id):
                             event_lat_lng = %s,
                             sub_events = %s,
                             event_date = %s,
-                            event_note = %s
+                            event_note = %s,
+                            delivery_fee = %s
                         WHERE
                             id = %s
                     """
@@ -123,7 +124,7 @@ def edit_event(event_obj, event_id):
             values = (
                 event_obj.event_type_id, event_obj.city_id, event_obj.printer_id,
                 event_obj.address_line1, event_obj.address_line2, event_obj.event_lat_lng,
-                sub_events_json, event_obj.event_date, event_obj.event_note,
+                sub_events_json, event_obj.event_date, event_obj.event_note, event_obj.delivery_fee,
                 event_id
             )
             cursor.execute(update_event_query, values)
@@ -766,8 +767,12 @@ def event_admin(event_id):
 def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
     try:
         with connection.cursor() as cursor:
-            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) 
-                              VALUES (%s, %s, %s, %s)"""
+            invite_query = """
+                INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) 
+                VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                invited_by = VALUES(invited_by), invite_message = VALUES(invite_message)
+            """
             data_list = [(invited_by, invited_to, e_id, invite_message) for invited_to in invited_to]
             cursor.executemany(invite_query, data_list)
 

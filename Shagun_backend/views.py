@@ -1032,7 +1032,7 @@ def dashboard_search_employee(request):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], "role": 2})
     else:
         return redirect('sign_up')
 
@@ -1143,6 +1143,7 @@ def whatsapp_invite(request, e_id):
         invite_message = request.POST['invite_msg']
         phone = request.POST['phone']
         if 'csv_file' in request.FILES:
+            print("csv found")
             csv_file = request.FILES['csv_file']
             try:
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
@@ -1154,11 +1155,14 @@ def whatsapp_invite(request, e_id):
                             cleaned_cell = ''.join(filter(str.isdigit, cell))
                             if cell.isdigit() and len(cleaned_cell) == 10:
                                 mob_numbers.append(cleaned_cell)
+                                print(mob_numbers)
 
                 mob_numbers = list(set(mob_numbers))
                 if phone != '':
                     mob_numbers.append(phone)
-                event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                print(mob_numbers)
+                response = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                print(response)
                 return redirect(reverse('whatsapp_invite', args=[e_id]))
 
             except Exception as e:
@@ -1876,6 +1880,26 @@ def gift_received_list(request):
         if username == request.data.get('uid'):
             gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
             response, status_code = transactions_controller.get_received_gift(gift_data_obj)
+            return JsonResponse(response, status=status_code)
+
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
+@api_view(['POST'])
+def gift_received_for_event(request):
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            response, status_code = transactions_controller.get_received_gift_for_event(request.data['uid'],
+                                                                                        request.data['eid'])
             return JsonResponse(response, status=status_code)
 
         else:

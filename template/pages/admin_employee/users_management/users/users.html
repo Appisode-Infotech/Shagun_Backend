@@ -52,6 +52,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -139,6 +140,14 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if response|length == 0 %}
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <h4>No data found</h4>
+                                </td>
+                            </tr>
+                            {% else %}
+
                             {% for user in response %}
                             <tr>
                                 <td class="py-1">
@@ -190,6 +199,8 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% endif %}
+
                             </tbody>
                         </table>
                     </div>

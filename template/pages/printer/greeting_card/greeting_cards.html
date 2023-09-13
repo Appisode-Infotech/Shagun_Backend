@@ -141,7 +141,7 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -150,8 +150,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label> Greetings Filter </label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> Greetings Filter </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -173,24 +173,23 @@
                             </div>
 
                         </div>
+                        <div class="form-group">
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'printer_add_greeting_cards' %}'">
                             Greeting
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                             <tr>
                                 <th>
-                                    Id
-                                </th>
-                                <th>
                                     Card
                                 </th>
                                 <th>
-                                    Card Id
+                                    Card Name
                                 </th>
                                 <th>
                                     Price
@@ -209,9 +208,6 @@
                             <tbody>
                             {% for greetings in response %}
                             <tr>
-                                <td>
-                                    {{greetings.card_id}}
-                                </td>
                                 <td class="py-1">
                                     <img src="{{MEDIA_URL}}{{ greetings.card_image_url }}" alt="image"/>
                                 </td>
@@ -257,6 +253,7 @@
                                             <form class="form-sample" action="/printer_edit_greeting_cards"
                                                   method="post">
                                                 {% csrf_token %}
+                                                <h4 class="card-title">Edit Greeting Card</h4>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group row">

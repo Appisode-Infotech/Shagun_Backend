@@ -98,7 +98,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Closed Jobs</h4>
+                        <h4 class="card-title">Closed Jobs List</h4>
                         <div class="form-group">
                             <form action="{% url 'printer_search_closed_jobs' %}" method="POST">
                                 {% csrf_token %}
@@ -119,7 +119,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Job ID</th>
                                 <th class="wish" >Event Name</th>
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
@@ -130,7 +129,6 @@
                             {% for job in response %}
 
                             <tr>
-                                <td>{{ job.id }}</td>
                                 <td class="wish"  title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
                                     <b>Wish: </b>{{job.wish}}</td>
                                 <td>
@@ -138,7 +136,7 @@
                                     <b>Event Date : </b> {{ job.event_date }}</br></br>
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
-                                <td>{{ job.billing_amount }}</td>
+                                <td>₹ {{ job.billing_amount }}</td>
                                 <td>
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>
@@ -152,41 +150,6 @@
                                     <label class="badge badge-success">Closed</label>
                                     {% endif %}
                                 </td>
-
-                                <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            {% if job.status == 1 %}
-                                            New
-                                            {% elif job.status == 2 %}
-                                            InProgress
-                                            {% elif job.status == 3 %}
-                                            Print Completed
-                                            {% elif job.status == 4 %}
-                                            Dispatched
-                                            {% elif job.status == 5 %}
-                                            Closed
-                                            {% endif %}
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-
-                                            <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 1 'printer_closed_jobs' %}">New</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_closed_jobs' %}">InProgress</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 3 'printer_closed_jobs' %}">Print Completed</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 4 'printer_closed_jobs' %}">Dispatched</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 5 'printer_closed_jobs'%}">Closed</a>
-                                        </div>
-
-                                    </div>
-                                </td>
-
 
                             </tr>
                             {% endfor %}

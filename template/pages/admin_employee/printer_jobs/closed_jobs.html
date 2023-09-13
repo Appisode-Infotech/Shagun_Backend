@@ -98,13 +98,13 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">jobs List</h4>
+                        <h4 class="card-title">Closed Jobs List</h4>
                         <div class="form-group">
                             <form action="{% url 'search_closed_printer_jobs' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="search......." value="{{search}}"
+                                           placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
                                         <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
@@ -120,7 +120,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Job ID</th>
                                 <th>Printing Vendor</th>
                                 <th>Event Name</th>
                                 <th>Job Details</th>
@@ -133,13 +132,11 @@
                             {% for job in response %}
 
                             <tr>
-                                <td>{{ job.id }}</td>
                                 <td><b>ID: </b>{{ job.printer_id }}<br><br>
                                     <b>Name: </b>{{job.store_name}}
                                 </td>
                                 <td class="wish"  title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
                                     <b>Wish: </b>{{job.wish}}</td>
-                                <td>
                                 <td>
                                     <b>Card Id</b> : {{ job.card_name }}</br></br>
                                     <b>Event Date : </b> {{ job.event_date }}</br></br>

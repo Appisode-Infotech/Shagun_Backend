@@ -68,19 +68,19 @@
                     <div class="col-md-6 grid-margin transparent">
                         <div class="icon-and-text-container">
                             <i class="fas fa-money-check-alt"></i>
-                            <p>Billing Stats</p>
+                            <h4>Billing Stats</h4>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                     <div class="card-body">
                                         <p class="mb-4">Total Billing Amount</p>
-                                        <p class="fs-30 mb-2">{{ total_amount }}</p>
+                                        <p class="fs-30 mb-2">₹ {{ total_amount }}</p>
                                     </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                     <div class="card-body">
                                         <p class="mb-4">Completed Job Billing Amount</p>
-                                        <p class="fs-30 mb-2">{{ work_done_amount }}</p>
+                                        <p class="fs-30 mb-2">₹ {{ work_done_amount }}</p>
                                     </div>
                             </div>
                         </div>
@@ -88,13 +88,13 @@
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                     <div class="card-body">
                                         <p class="mb-4">In Progress Job Billing Amount</p>
-                                        <p class="fs-30 mb-2">{{ in_progress_amount }}</p>
+                                        <p class="fs-30 mb-2">₹ {{ in_progress_amount }}</p>
                                     </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                     <div class="card-body">
                                         <p class="mb-4">New Job Billing Amount</p>
-                                        <p class="fs-30 mb-2">{{ new_amount }}</p>
+                                        <p class="fs-30 mb-2">₹ {{ new_amount }}</p>
                                     </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                     <div class="col-md-6 grid-margin transparent">
                         <div class="icon-and-text-container">
                             <i class="fas fa-print" style="color:#4747a1;"></i>
-                            <p>Printing Vendors Jobs</p>
+                            <h4>Printing Vendors Jobs</h4>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
@@ -114,6 +114,17 @@
                                 </a>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
+                                <a href="{% url 'printer_new_jobs' %}" class="card card-dark-blue">
+                                    <div class="card-body">
+                                        <p class="mb-4">New Jobs</p>
+                                        <p class="fs-30 mb-2">{{ new_jobs }}</p>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4 stretch-card transparent">
                                 <a href="{% url 'printer_open_jobs' %}" class="card card-dark-blue">
                                     <div class="card-body">
                                         <p class="mb-4">Open Jobs</p>
@@ -121,8 +132,6 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <a href="{% url 'printer_closed_jobs' %}" class="card card-dark-blue">
                                     <div class="card-body">
@@ -131,14 +140,7 @@
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-md-6 mb-4 stretch-card transparent">
-                                <a href="{% url 'printer_new_jobs' %}" class="card card-dark-blue">
-                                    <div class="card-body">
-                                        <p class="mb-4">New Jobs</p>
-                                        <p class="fs-30 mb-2">{{ new_jobs }}</p>
-                                    </div>
-                                </a>
-                            </div>
+
                         </div>
                     </div>
                 </div>

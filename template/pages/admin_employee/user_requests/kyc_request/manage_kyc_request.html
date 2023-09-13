@@ -86,8 +86,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label><b> KYC Filter: </b></label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> KYC Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -119,9 +119,6 @@
                             <thead>
                             <tr>
                                 <th>
-                                    Id
-                                </th>
-                                <th>
                                     User
                                 </th>
                                 <th>
@@ -150,9 +147,6 @@
                             <tbody>
                             {% for req in response %}
                             <tr>
-                                <td>
-                                    {{req.id}}
-                                </td>
                                 <td class="py-1">
                                     <img src="{{MEDIA_URL}}{{ req.profile }}" alt="image"/>
                                 </td>

@@ -86,8 +86,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label> User Filter: </label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> User Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -116,9 +116,6 @@
                             <thead>
                             <tr>
                                 <th>
-                                    Id
-                                </th>
-                                <th>
                                     User
                                 </th>
                                 <th>
@@ -144,9 +141,6 @@
                             <tbody>
                             {% for user in response %}
                             <tr>
-                                <td>
-                                    {{user.id}}
-                                </td>
                                 <td class="py-1">
                                     <a href="{{MEDIA_URL}}{{ user.profile_pic }}" target="_blank">
                                         <img src="{{MEDIA_URL}}{{ user.profile_pic }}" alt="image"/>

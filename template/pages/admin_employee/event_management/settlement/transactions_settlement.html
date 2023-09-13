@@ -105,13 +105,26 @@
             text-align: center;
         }
 
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure the overlay is on top of other content */
+          }
 
-
-
-
-
-
-
+          .custom-alert {
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          }
 
 
 
@@ -136,10 +149,10 @@
                     <div class="header-container">
                         <h4 class="card-title">Transaction settlement List</h4>
                         {% if request.session.role == 1 %}
-                        <label id="shagun-sum-label" class="col-sm-3 col-form-label">Total Shagun Amount: 0.00</label>
+                        <label id="shagun-sum-label" class="form-group">Total Shagun Amount: 0.00</label>
                         {% endif %}
-                        <div class="dropdown">
-                            <label><b> Transaction Filter: </b></label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> Transaction Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -202,6 +215,7 @@
                                 <tbody>
                                 {% for data in response %}
                                 <tr>
+
                                     {% if request.session.role == 1 %}
                                     <td>
                                         {% if data.is_settled == 0 %}
@@ -260,13 +274,16 @@
                         <div id="error-message" class="alert alert-danger" style="display: none;">
                             Please select the transaction to settle.
                         </div>
-                        <div id="popupDiv" class="popup-div">
-                            <label id="shagun-sum-label1">Please confirm if you want to pay the amount: 0.00</label>
-                            <div class="center-button">
-                                <button type="button" onclick="hidePopUpDiv()" class="btn btn-outline-danger btn-fw">
-                                    Cancel
-                                </button>
-                                <input type="submit" class="btn btn-outline-info btn-icon-text" value="Confirm">
+                        <div id="customAlertOverlay" class="custom-alert-overlay">
+                            <div class="custom-alert">
+                                <label id="shagun-sum-label1">Please confirm if you want to pay the amount: 0.00</label>
+                                <div class="center-button">
+                                    <button type="button" onclick="hidePopUpDiv()"
+                                            class="btn btn-outline-danger btn-fw">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-outline-success btn-fw">Confirm</button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -376,6 +393,10 @@
 
 
 
+
+
+
+
 </script>
 
 
@@ -383,6 +404,7 @@
     var popupDiv = document.getElementById("popupDiv");
     var errorMessage = document.getElementById("error-message");
     var timeoutId; // Initialize a variable to hold the timeout ID
+    var customAlertOverlay = document.getElementById("customAlertOverlay");
 
     function showPopUpDiv(event) {
         event.preventDefault();  // Prevent the form from submitting
@@ -392,7 +414,7 @@
 
         // Check if the sum is greater than 0
         if (parseFloat(document.getElementById('shagun-sum-label1').textContent.split(':')[1].trim()) > 0) {
-            popupDiv.style.display = "block";
+            customAlertOverlay.style.display = "flex";
 
             // Hide the error message if it's displayed
             errorMessage.style.display = "none";
@@ -417,8 +439,13 @@
     }
 
     function hidePopUpDiv() {
-        popupDiv.style.display = "none";
+        var customAlertOverlay = document.getElementById("customAlertOverlay");
+        customAlertOverlay.style.display = "none";
     }
+
+
+
+
 
 
 </script>
@@ -430,6 +457,10 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
+
+
 
 </script>
 <script>
@@ -466,6 +497,10 @@
             updateShagunSum();
         });
     }
+
+
+
+
 
 
 

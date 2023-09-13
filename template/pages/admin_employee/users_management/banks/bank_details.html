@@ -53,7 +53,7 @@
         }
 
         .btn {
-            margin: 0px;
+            margin-right: 10px;
         }
 
         .btn-icon-text {
@@ -109,8 +109,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="dropdown">
-                            <label> Bank Filter: </label>
+                        <div class="form-group">
+                            <label class="mr-2 custom-label"> Bank Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -132,19 +132,18 @@
                             </div>
 
                         </div>
+                        <div class="form-group">
                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                 onclick="window.location.href='{% url 'add_bank' %}'">
-                            Bank Detail
+                            Add Bank Detail
                             <i class="ti-plus btn-icon-append"></i>
                         </button>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>
-                                    Id
-                                </th>
                                 <th>
                                     User
                                 </th>
@@ -175,10 +174,6 @@
                             <tbody>
                             {% for bank in response %}
                             <tr>
-                                <td>
-                                    {{bank.id}}
-                                </td>
-
                                 <td class="py-1">
                                     <a href="{{MEDIA_URL}}{{ bank.profile_pic }}" target="_blank">
                                         <img src="{{MEDIA_URL}}{{ bank.profile_pic }}" alt="image"/>

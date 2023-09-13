@@ -5,10 +5,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -53,7 +53,7 @@
         }
 
         .btn {
-            margin: 20px;
+            margin-right: 5px;
         }
 
         .btn-icon-text {
@@ -118,6 +118,8 @@
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       }
 
+
+
     </style>
 </head>
 
@@ -138,15 +140,20 @@
                 <div class="card-body">
                     <div class="header-container">
                         <h4 class="card-title">Locations</h4>
-                        <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="showPopUpDiv1()">
-                            Location
-                            <i class="ti-plus btn-icon-append"></i>
-                        </button>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-outline-info btn-icon-text"
+                                    onclick="showPopUpDiv1()">
+                                Add Location
+                                <i class="ti-plus btn-icon-append"></i>
+                            </button>
+                        </div>
                         <div id="customAlertOverlay" class="custom-alert-overlay">
                             <div class="custom-alert">
                                 <form class="form-sample" action="/add_location" method="post">
                                     {% csrf_token %}
+                                    <div class="text-center">
+                                        <h4 class="card-title">Add Location</h4>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
@@ -184,7 +191,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>Location ID</th>
                                 <th>Location Name</th>
                                 <th>Status</th>
                                 <th>Active/Inactive</th>
@@ -194,7 +200,6 @@
                             <tbody>
                             {% for location in locations %}
                             <tr>
-                                <td>{{ location.location_id }}</td>
                                 <td>{{ location.location_name }}</td>
                                 <td>
                                     {% if location.status == 1 %}
@@ -225,12 +230,13 @@
                                 <td>
                                     <button onclick="showPopUpDiv('{{location.location_id}}', '{{location.location_name}}')"
                                             class="btn btn-outline-info btn-fw">Edit
-
+                                        <i class="fas fa-edit"></i>
                                     </button>
                                     <div id="customAlertOverlay1" class="custom-alert-overlay">
                                         <div class="custom-alert">
                                             <form class="form-sample" action="/edit_location" method="post">
                                                 {% csrf_token %}
+                                                <h4 class="card-title">Edit Location</h4>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
@@ -325,6 +331,8 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
+
 
 
 

@@ -115,6 +115,8 @@
 
 
 
+
+
     </style>
 </head>
 
@@ -186,6 +188,7 @@
                                     {% if request.session.role == 1 %}
                                     <th><input type="checkbox" id="select-all" onclick="toggleSelectAll()"></th>
                                     {% endif %}
+                                    <th>ID</th>
                                     <th>Event Name</th>
                                     <th>Sender Details</th>
                                     <th>Receiver</th>
@@ -201,6 +204,7 @@
                                 <tbody>
                                 {% for data in response %}
                                 <tr>
+
                                     {% if request.session.role == 1 %}
                                     <td>
                                         {% if data.is_settled == 0 %}
@@ -211,6 +215,7 @@
                                         {% endif %}
                                     </td>
                                     {% endif %}
+                                    <td>{{ data.id }}</td>
                                     <td>{{ data.event_type }}</td>
                                     <td><b>Sent by:</b> {{ data.sender_name }}</br></br>
                                         <b>Behalf of: </b>{{data.gifter_name}}
@@ -374,6 +379,8 @@
 
 
 
+
+
 </script>
 
 
@@ -419,6 +426,8 @@
     }
 
 
+
+
 </script>
 
 
@@ -428,6 +437,8 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
 
 </script>
 <script>
@@ -464,6 +475,8 @@
             updateShagunSum();
         });
     }
+
+
 
 
 

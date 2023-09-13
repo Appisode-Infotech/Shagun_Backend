@@ -800,7 +800,7 @@ def get_user_requests(param):
                             LEFT JOIN
                                 locations AS l ON ucr.city = l.id
                             WHERE
-                                ucr.type = '{param}' AND u.role = 3 ORDER BY ucr.created_on DESC ;
+                                ucr.type = '{param}' AND u.role = 3 ORDER BY ucr.status ASC ;
                         """
 
             cursor.execute(request_query)

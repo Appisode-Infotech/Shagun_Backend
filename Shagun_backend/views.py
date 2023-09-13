@@ -1474,25 +1474,30 @@ def user_register(request):
             print(file_name)
             with default_storage.open(file_name, 'wb+') as destination:
                 for chunk in file_obj.chunks():
-                    print("test1")
                     destination.write(chunk)
-                    print("test2")
 
-    reg_obj = registration_model.registration_model_from_dict(request.data)
-    print("model object")
-    print(reg_obj)
-    user, status_code = user_controller.user_register(reg_obj, file_name)
-    print(user)
-    if user['user'] is not None:
-        token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
-                           'secret_key', algorithm='HS256')
-    else:
-        token = None
+    print("hurrry")
     return JsonResponse({
-        "status": user['status'],
-        "token": token,
-        "user": user['user']
-    }, status=status_code)
+        "status": True,
+        "token": "poiuytrtyuiooiuytfghjklkjhgfg",
+        "user": "ok"
+    }, status=200)
+
+    # reg_obj = registration_model.registration_model_from_dict(request.data)
+    # print("model object")
+    # print(reg_obj)
+    # user, status_code = user_controller.user_register(reg_obj, file_name)
+    # print(user)
+    # if user['user'] is not None:
+    #     token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
+    #                        'secret_key', algorithm='HS256')
+    # else:
+    #     token = None
+    # return JsonResponse({
+    #     "status": user['status'],
+    #     "token": token,
+    #     "user": user['user']
+    # }, status=status_code)
 
 
 @api_view(['POST'])

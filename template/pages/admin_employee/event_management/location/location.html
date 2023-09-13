@@ -120,6 +120,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -160,8 +161,8 @@
                                                 <label class="col-sm-3 col-form-label">Location Name </label>
                                                 <div class="col-sm-9">
                                                     <input required id="city_name" name="city_name" type="text"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           title="Enter City Name" maxlength="256"
                                                            class="form-control"/>
                                                 </div>
                                             </div>
@@ -253,8 +254,8 @@
                                                             <div class="col-sm-9">
                                                                 <input required id="name" type="text"
                                                                        class="form-control"
-                                                                       pattern="[^ ].*"
-                                                                       title="This field can't be Empty"
+                                                                       pattern="^[A-Za-z][A-Za-z ]*$"
+                                                                       title="Enter City Name" maxlength="256"
                                                                        name="name"/>
                                                             </div>
                                                         </div>
@@ -331,6 +332,7 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
 
 
 

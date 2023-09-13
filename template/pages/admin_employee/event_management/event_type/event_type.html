@@ -119,6 +119,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -138,7 +139,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title" >Events Type</h4>
+                        <h4 class="card-title">Events Type</h4>
                         <div class="form-group">
                             <button type="button" class="btn btn-outline-info btn-icon-text"
                                     onclick="showPopUpDiv1()">
@@ -151,7 +152,7 @@
                                 <form class="form-sample" action="/add_events_type" method="post">
                                     {% csrf_token %}
                                     <div class="text-center">
-                                    <h4 class="card-title" >Add Event Type</h4>
+                                        <h4 class="card-title">Add Event Type</h4>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -159,8 +160,8 @@
                                                 <label class="col-sm-3 col-form-label">Name </label>
                                                 <div class="col-sm-9">
                                                     <input required id="event_type_name" name="event_type_name"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           title="Enter Event Type Name" maxlength="256"
                                                            type="text"
                                                            class="form-control"/>
                                                 </div>
@@ -254,8 +255,8 @@
                                                             <div class="col-sm-9">
                                                                 <input required id="name" type="text"
                                                                        class="form-control"
-                                                                       pattern="[^ ].*"
-                                                                       title="This field can't be Empty"
+                                                                       pattern="^[A-Za-z][A-Za-z ]*$"
+                                                                       title="Enter Event Type Name" maxlength="256"
                                                                        name="name"
                                                                        value="{{ event.event_type_name }}"/>
                                                             </div>
@@ -374,6 +375,7 @@
 
 
 
+
 </script>
 <script>
         function toggleForm() {
@@ -394,6 +396,7 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
 
 
 

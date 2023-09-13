@@ -73,6 +73,7 @@
         th,td {
             text-align: center;
         }
+
     </style>
 </head>
 
@@ -101,7 +102,8 @@
                                            placeholder="Search" value="{{search}}"
                                            aria-label="Recipient's username">
                                     <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search</button>
+                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -130,11 +132,11 @@
 
                         </div>
                         <div class="form-group">
-                        <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'add_printer' %}'">
-                            <b>Add Printing Vendor</b>
-                            <i class="ti-plus btn-icon-append"></i>
-                        </button>
+                            <button type="button" class="btn btn-outline-info btn-icon-text"
+                                    onclick="window.location.href='{% url 'add_printer' %}'">
+                                <b>Add Printing Vendor</b>
+                                <i class="ti-plus btn-icon-append"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -162,9 +164,17 @@
                                 <th>
                                     Edit
                                 </th>
-                           </tr>
+                            </tr>
                             </thead>
                             <tbody>
+                            {% if response|length == 0 %}
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <h4>No data found</h4>
+                                </td>
+                            </tr>
+                            {% else %}
+
                             {% for printer in response %}
                             <tr>
                                 <td>
@@ -189,7 +199,7 @@
                                     <label class="badge badge-danger">Inactive</label>
                                     {% endif %}
                                 </td>
-                                 <td>
+                                <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                 id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
@@ -201,8 +211,10 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_printers' printer.id 1 %}">Active</a>
-                                            <a class="dropdown-item" href="{% url 'activate_deactivate_printers' printer.id 0 %}">Inactive</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_printers' printer.id 1 %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'activate_deactivate_printers' printer.id 0 %}">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -215,6 +227,8 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% endif %}
+
                             </tbody>
                         </table>
                     </div>

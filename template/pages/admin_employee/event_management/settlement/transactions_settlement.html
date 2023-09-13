@@ -213,9 +213,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for data in response %}
+                                {% if response|length == 0 %}
                                 <tr>
+                                    <td colspan="7" style="text-align: center;">
+                                        <h4>No data found</h4>
+                                    </td>
+                                </tr>
+                                {% else %}
 
+                                {% for data in response %}
+
+                                <tr>
                                     {% if request.session.role == 1 %}
                                     <td>
                                         {% if data.is_settled == 0 %}
@@ -240,6 +248,7 @@
                                         <b>Transaction ID: </b>{{ data.transaction_id }}</br></br>
                                     </td>
                                     <td>
+
                                         {{ data.shagun_amount }}
                                     </td>
                                     <td>
@@ -260,16 +269,19 @@
                                     </td>
                                 </tr>
                                 {% endfor %}
+                                {% endif %}
                                 </tbody>
 
                             </table>
                         </div>
-                        {% if request.session.role == 1 %}
+                        {% if request.session.role == 1%}
+                        {% if status != 1%}
                         <div class="center-button">
                             <button onclick="showPopUpDiv(event)" class="btn btn-outline-info btn-icon-text">Check-Out .
                                 <i class="fas fa-money-check"></i>
                             </button>
                         </div>
+                        {% endif %}
                         {% endif %}
                         <div id="error-message" class="alert alert-danger" style="display: none;">
                             Please select the transaction to settle.

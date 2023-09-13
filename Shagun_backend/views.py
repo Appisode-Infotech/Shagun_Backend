@@ -1031,7 +1031,7 @@ def dashboard_search_employee(request):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], "role":2})
     else:
         return redirect('sign_up')
 

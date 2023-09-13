@@ -79,6 +79,7 @@
             text-overflow: ellipsis;
         }
 
+
     </style>
 </head>
 
@@ -153,6 +154,14 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if response|length == 0 %}
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <h4>No data found</h4>
+                                </td>
+                            </tr>
+                            {% else %}
+
                             {% for job in response %}
                             <tr>
                                 <td><b>ID: </b>{{ job.printer_id }}<br><br>
@@ -182,6 +191,8 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% endif %}
+
                             </tbody>
                         </table>
                     </div>

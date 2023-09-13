@@ -41,11 +41,11 @@ def user_register(reg_obj, file_name):
             sql_query = """INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, 
                             fcm_token, city) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (
-                reg_obj.name, reg_obj.email, reg_obj.phone, False, file_name, reg_obj.uid, True,
-                reg_obj.auth_type, reg_obj.role, reg_obj.fcm_token, reg_obj.city)
+                reg_obj['name'], reg_obj['email'], reg_obj['phone'], False, file_name, reg_obj['uid'], True,
+                reg_obj['auth_type'], reg_obj['role'], reg_obj['fcm_token'], reg_obj['city'])
             cursor.execute(sql_query, values)
             query = "SELECT * FROM users WHERE uid = %s;"
-            cursor.execute(query, [reg_obj.uid])
+            cursor.execute(query, [reg_obj['uid']])
             user_data = cursor.fetchone()
             return {
                 "status": True,

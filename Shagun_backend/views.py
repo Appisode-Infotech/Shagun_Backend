@@ -1468,17 +1468,7 @@ def user_register(request):
     if request.data['profile_pic'] is None:
         print("No profile added")
     else:
-        print("request data")
-        print(request.data)
-        print("profile pic")
-        print(request.data['profile_pic'])
-        print("request file")
-        print(request.FILES.get('profile_pic'))
-        for file_key, file_obj in request.data:
-            print("file_key")
-            print(file_key)
-            print("file_obj")
-            print(file_obj)
+        for file_key, file_obj in request.FILES.get('profile_pic'):
             file_name = f"""images/profile_pic/{request.data['uid']}"""
             form_data = form_data.copy()
             form_data['profile'] = file_name
@@ -1487,6 +1477,8 @@ def user_register(request):
                     destination.write(chunk)
 
     reg_obj = registration_model.registration_model_from_dict(form_data)
+    print("model")
+    print(reg_obj)
     user, status_code = user_controller.user_register(reg_obj)
     print(user)
     if user['user'] is not None:

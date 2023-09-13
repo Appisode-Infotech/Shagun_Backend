@@ -583,7 +583,7 @@ def get_my_event_list(uid):
 
             return {
                 "status": True,
-                "past_events": responsegenerator.responseGenerator.generateResponse(my_events, EVENT_LIST),
+                "my_events": responsegenerator.responseGenerator.generateResponse(my_events, EVENT_LIST),
                 "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
                                                                                        INVITED_EVENT_LIST),
                 "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)

@@ -244,7 +244,9 @@ class responseGenerator:
                         "event_id": invites[3],
                         "is_gifted": invites[4],
                         "event_admins": json.loads(invites[2]),
-                        "invited_by": invites[5]
+                        "invited_by": invites[5],
+                        "invited_by_name": invites[6],
+                        "invited_by_profile": invites[7]
                     }
                 )
 
@@ -550,7 +552,9 @@ class responseGenerator:
                         "event_id": invites[3],
                         "is_gifted": invites[4],
                         "event_admins": json.loads(invites[2]),
-                        "invited_by": invites[5]
+                        "invited_by": invites[5],
+                        "invited_by_name": invites[6],
+                        "invited_by_profile": invites[7]
                     }
                 )
             return events_invite_list
@@ -695,7 +699,9 @@ class responseGenerator:
                         "event_id": invites[3],
                         "is_gifted": invites[4],
                         "event_admins": json.loads(invites[2]),
-                        "invited_by": invites[5]
+                        "invited_by": invites[5],
+                        "invited_by_name": invites[6],
+                        "invited_by_profile": invites[7]
                     }
                 )
             return invited_events_list

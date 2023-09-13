@@ -589,7 +589,8 @@ def get_my_event_list(uid):
             upcoming_events = cursor.fetchall()
 
             invited_events_query = f"""
-                        SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS invited_by_phone
+                        SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone, 
+                        u_invited_by.name, u_invited_by.profile_pic
                         FROM event_guest_invite AS egi
                         LEFT JOIN users AS u ON u.phone = egi.invited_to
                         LEFT JOIN event AS e ON egi.event_id = e.id
@@ -848,8 +849,8 @@ def get_my_invited_event_list(uid):
     try:
         with connection.cursor() as cursor:
             invited_events_query = f"""
-                SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone AS 
-                invited_by_phone
+                SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone, 
+                u_invited_by.name, u_invited_by.profile_pic
                 FROM event_guest_invite AS egi
                 LEFT JOIN users AS u ON u.phone = egi.invited_to
                 LEFT JOIN event AS e ON egi.event_id = e.id

@@ -58,12 +58,21 @@ def home_page_data(uid):
             cursor.execute(get_kyc_query)
             kyc_status = cursor.fetchone()
 
+            get_kyc_request_query = f"SELECT 1 FROM user_callback_request WHERE uid = '{uid}' AND status = 1 "
+            cursor.execute(get_kyc_request_query)
+            kyc_request = cursor.fetchone()
+            if kyc_request:
+                is_active_kyc_request = True
+            else:
+                is_active_kyc_request = False
+
             home_page = sent_transactions, received_transactions, invited_events
             response = responsegenerator.responseGenerator.generateResponse(home_page, USER_HOME_PAGE)
 
             return {
                 "status": True,
                 "kyc_status": kyc_status[0],
+                "is_active_kyc_request": is_active_kyc_request,
                 "total_sent_amount": response[0],
                 "total_recieved_amount": response[2],
                 "transaction_sent_list": response[1],

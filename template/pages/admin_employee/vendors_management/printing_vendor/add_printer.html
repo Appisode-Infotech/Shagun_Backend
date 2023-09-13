@@ -348,6 +348,8 @@
     function setValue(value1, value2) {
         document.getElementById("name").value = value1;
         document.getElementById("city").value = value2;
+        var errorContainer = document.querySelector('.messages-container');
+        errorContainer.style.display = "none";
         myFunction();
     }
 
@@ -355,17 +357,11 @@
     document.addEventListener("click", function(event) {
         const dropdown = document.getElementById("myDropdown");
         const nameInput = document.getElementById("name");
-        console.log(dropdown)
-        console.log(nameInput)
+
         if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
             dropdown.classList.remove("show");
         }
     });
-
-
-
-
-
 
 </script>
 
@@ -418,11 +414,6 @@
                 e.preventDefault();
             }
         });
-
-
-
-
-
 </script>
 
 <!-- container-scroller -->

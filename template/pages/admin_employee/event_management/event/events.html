@@ -65,6 +65,9 @@
         }
 
 
+
+
+
     </style>
 </head>
 
@@ -83,7 +86,7 @@
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <div class="header-container" >
+                    <div class="header-container">
                         <h4 class="card-title">Events List</h4>
                         <div class="form-group">
                             <form action="{% url 'dashboard_search_event' %}" method="POST">
@@ -99,7 +102,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div  class="form-group">
+                        <div class="form-group">
                             <label class="mr-2 custom-label"> Event Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
@@ -127,11 +130,11 @@
 
                         </div>
                         <div class="form-group">
-                        <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'add_events' %}'">
-                            Add Event
-                            <i class="ti-plus btn-icon-append"></i>
-                        </button>
+                            <button type="button" class="btn btn-outline-info btn-icon-text"
+                                    onclick="window.location.href='{% url 'add_events' %}'">
+                                Add Event
+                                <i class="ti-plus btn-icon-append"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -149,6 +152,14 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if response|length == 0 %}
+                            <tr>
+                                <td colspan="7" style="text-align: center;">
+                                    <h4>No data found</h4>
+                                </td>
+                            </tr>
+                            {% else %}
+
                             {% for event in response %}
 
                             <tr>
@@ -156,11 +167,11 @@
 
                                 <td>
                                     {% for admin in event.admins %}
-                                            <b>{{ admin.role }}</b> : {{ admin.name }} &nbsp;
+                                    <b>{{ admin.role }}</b> : {{ admin.name }} &nbsp;
 
-                                            <a href="{{ MEDIA_URL }}{{ admin.qr_code }}" target="_blank">
-                                                <i class="fas fa-qrcode" style="color: blue; cursor: pointer;"></i>
-                                            </a><br><br>
+                                    <a href="{{ MEDIA_URL }}{{ admin.qr_code }}" target="_blank">
+                                        <i class="fas fa-qrcode" style="color: blue; cursor: pointer;"></i>
+                                    </a><br><br>
                                     {% endfor %}
                                     <br><b>Date : </b> {{ event.event_date }}
                                 </td>
@@ -224,12 +235,13 @@
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-social-icon btn-outline-facebook"
-                                    onclick="window.location.href='{% url 'whatsapp_invite' event.event_id %}'">
+                                            onclick="window.location.href='{% url 'whatsapp_invite' event.event_id %}'">
                                         <i class="fab fa-whatsapp"></i></button>
 
                                 </td>
                             </tr>
                             {% endfor %}
+                            {% endif %}
                             </tbody>
                         </table>
                     </div>
@@ -289,6 +301,9 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
+
 
 
 

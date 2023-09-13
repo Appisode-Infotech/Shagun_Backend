@@ -1464,19 +1464,23 @@ def get_users_by_name_or_phone(request):
 # user-provided information, and creating a new user account in the backend database.
 @api_view(['POST'])
 def user_register(request):
-    print("request data")
-    print(request.data)
-    print("profile pic")
-    print(request.data['profile_pic'])
     form_data = request.data
-    for file_key, file_obj in request.FILES.items():
-        file_name = f"""images/profile_pic/{request.data['uid']}"""
-        form_data = form_data.copy()
-        form_data['profile'] = file_name
-        with default_storage.open(file_name, 'wb+') as destination:
-            for chunk in file_obj.chunks():
-                destination.write(chunk)
-    reg_obj = registration_model.registration_model_from_dict(request.data)
+    if request.data['profile_pic'] is None:
+        print("No profile added")
+    else:
+        print("request data")
+        print(request.data)
+        print("profile pic")
+        print(request.data['profile_pic'])
+        for file_key, file_obj in request.FILES.items():
+            file_name = f"""images/profile_pic/{request.data['uid']}"""
+            form_data = form_data.copy()
+            form_data['profile'] = file_name
+            with default_storage.open(file_name, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    destination.write(chunk)
+
+    reg_obj = registration_model.registration_model_from_dict(form_data)
     user, status_code = user_controller.user_register(reg_obj)
     print(user)
     if user['user'] is not None:

@@ -13,6 +13,7 @@ def get_greeting_cards(event_id):
                                     SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status
                                     FROM greeting_cards gc
                                     INNER JOIN event e ON e.printer_id = gc.printer_id AND e.id = '{event_id}'
+                                    WHERE gc.status = 1
                                     ORDER BY gc.created_on DESC
                                 """
             cursor.execute(greeting_cards_query)

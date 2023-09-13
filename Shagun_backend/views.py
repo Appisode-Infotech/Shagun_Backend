@@ -652,6 +652,7 @@ def add_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         form_data = request.POST
         if request.method == 'POST':
+            print(request.FILES)
             for file_key, file_obj in request.FILES.items():
                 file_name = f"""images/greeting_card/{int(time.time())}_{str(file_obj)}"""
                 form_data = form_data.copy()
@@ -1463,8 +1464,23 @@ def get_users_by_name_or_phone(request):
 # user-provided information, and creating a new user account in the backend database.
 @api_view(['POST'])
 def user_register(request):
-    reg_obj = registration_model.registration_model_from_dict(request.data)
-    user, status_code = user_controller.user_register(reg_obj)
+    file_name = ""
+    if request.data['profile_pic'] is None:
+        print("No profile added")
+    else:
+        print("file found")
+        for file_key, file_obj in request.FILES.items():
+            file_name = f"""images/profile_pic/{request.data['uid']}"""
+            print(file_name)
+            with default_storage.open(file_name, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    destination.write(chunk)
+
+    # reg_obj = registration_model.registration_model_from_dict(request.data)
+    # print("model object")
+    # print(reg_obj)
+    user, status_code = user_controller.user_register(request.data, file_name)
+    print(user)
     if user['user'] is not None:
         token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
                            'secret_key', algorithm='HS256')

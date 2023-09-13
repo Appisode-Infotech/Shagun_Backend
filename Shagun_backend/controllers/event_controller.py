@@ -114,7 +114,8 @@ def edit_event(event_obj, event_id):
                             event_lat_lng = %s,
                             sub_events = %s,
                             event_date = %s,
-                            event_note = %s
+                            event_note = %s,
+                            delivery_fee = %s
                         WHERE
                             id = %s
                     """
@@ -123,7 +124,7 @@ def edit_event(event_obj, event_id):
             values = (
                 event_obj.event_type_id, event_obj.city_id, event_obj.printer_id,
                 event_obj.address_line1, event_obj.address_line2, event_obj.event_lat_lng,
-                sub_events_json, event_obj.event_date, event_obj.event_note,
+                sub_events_json, event_obj.event_date, event_obj.event_note, event_obj.delivery_fee,
                 event_id
             )
             cursor.execute(update_event_query, values)
@@ -583,7 +584,7 @@ def get_my_event_list(uid):
 
             return {
                 "status": True,
-                "past_events": responsegenerator.responseGenerator.generateResponse(my_events, EVENT_LIST),
+                "my_events": responsegenerator.responseGenerator.generateResponse(my_events, EVENT_LIST),
                 "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
                                                                                        INVITED_EVENT_LIST),
                 "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)

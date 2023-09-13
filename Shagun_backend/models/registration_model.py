@@ -38,7 +38,6 @@ class RegistrationModel:
     name: str
     email: str
     phone: str
-    profile: str
     fcm_token: str
     city: str
     auth_type: Optional[str] = None
@@ -51,12 +50,11 @@ class RegistrationModel:
         name = from_str(obj.get("name"))
         email = from_str(obj.get("email"))
         phone = from_str(obj.get("phone"))
-        profile = from_str(obj.get("profile"))
         fcm_token = from_str(obj.get("fcm_token"))
         city = from_str(obj.get("city"))
         auth_type = from_union([from_str, from_none], obj.get("auth_type"))
         role = from_union([from_int, from_none], obj.get("role"))
-        return RegistrationModel(uid, name, email, phone, profile, fcm_token, city, auth_type, role)
+        return RegistrationModel(uid, name, email, phone, fcm_token, city, auth_type, role)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -64,7 +62,6 @@ class RegistrationModel:
         result["name"] = from_str(self.name)
         result["email"] = from_str(self.email)
         result["phone"] = from_str(self.phone)
-        result["profile"] = from_str(self.profile)
         result["fcm_token"] = from_str(self.fcm_token)
         result["city"] = from_str(self.city)
         if self.auth_type is not None:

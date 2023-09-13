@@ -1464,38 +1464,30 @@ def get_users_by_name_or_phone(request):
 # user-provided information, and creating a new user account in the backend database.
 @api_view(['POST'])
 def user_register(request):
-    form_data = request.data
-    for file_key, file_obj in request.FILES.items():
-        file_name = f"""images/profile_pic/{request.data['uid']}"""
-        print("============================filename=============")
-        print(file_name)
-        form_data = form_data.copy()
-        form_data['profile'] = file_name
-        print("=====================form data=================")
-        print(form_data)
-        with default_storage.open(file_name, 'wb+') as destination:
-            for chunk in file_obj.chunks():
-                destination.write(chunk)
+    if request.data['profile_pic'] is None:
+        print("No profile added")
+    else:
+        for file_key, file_obj in request.FILES.items():
+            file_name = f"""images/profile_pic/{request.data['uid']}"""
+            with default_storage.open(file_name, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    destination.write(chunk)
 
-    return JsonResponse({"form_data": form_data})
-
-    # reg_obj = registration_model.registration_model_from_dict(form_data)
-    # print("model object")
-    # print(reg_obj)
-    # user, status_code = user_controller.user_register(reg_obj)
-    # print(user)
-    #
-    # if user['user'] is not None:
-    #     token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
-    #                        'secret_key', algorithm='HS256')
-    # else:
-    #     token = None
-    #
-    # return JsonResponse({
-    #     "status": user['status'],
-    #     "token": token,
-    #     "user": user['user']
-    # }, status=status_code)
+    reg_obj = registration_model.registration_model_from_dict(request.data)
+    print("model object")
+    print(reg_obj)
+    user, status_code = user_controller.user_register(reg_obj,file_name)
+    print(user)
+    if user['user'] is not None:
+        token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
+                           'secret_key', algorithm='HS256')
+    else:
+        token = None
+    return JsonResponse({
+        "status": user['status'],
+        "token": token,
+        "user": user['user']
+    }, status=status_code)
 
 
 @api_view(['POST'])

@@ -619,6 +619,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             });
 
             event_lat_lng.value = 'Latitude: ' + initialLatLng.lat + ', Longitude: ' + initialLatLng.lng;
+            searchInput = document.getElementById('searchInput');
 
             // Initialize Google Places Autocomplete for search
             var autocomplete = new google.maps.places.Autocomplete(searchInput);
@@ -632,6 +633,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 }
 
                 map.setCenter(place.geometry.location);
+                map.setZoom(15);
 
                 if (!marker) {
                     marker = new google.maps.Marker({

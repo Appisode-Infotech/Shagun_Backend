@@ -1464,6 +1464,7 @@ def get_users_by_name_or_phone(request):
 # user-provided information, and creating a new user account in the backend database.
 @api_view(['POST'])
 def user_register(request):
+    file_name = ""
     if request.data['profile_pic'] is None:
         print("No profile added")
     else:
@@ -1476,7 +1477,7 @@ def user_register(request):
     reg_obj = registration_model.registration_model_from_dict(request.data)
     print("model object")
     print(reg_obj)
-    user, status_code = user_controller.user_register(reg_obj,file_name)
+    user, status_code = user_controller.user_register(reg_obj, file_name)
     print(user)
     if user['user'] is not None:
         token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},

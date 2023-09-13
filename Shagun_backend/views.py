@@ -303,7 +303,7 @@ def search_kyc_request(request):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response})
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -339,7 +339,7 @@ def search_event_request(request):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response})
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 

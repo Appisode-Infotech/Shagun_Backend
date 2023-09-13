@@ -1472,7 +1472,9 @@ def user_register(request):
             file_name = f"""images/profile_pic/{request.data['uid']}"""
             with default_storage.open(file_name, 'wb+') as destination:
                 for chunk in file_obj.chunks():
+                    print("test1")
                     destination.write(chunk)
+                    print("test2")
 
     reg_obj = registration_model.registration_model_from_dict(request.data)
     print("model object")

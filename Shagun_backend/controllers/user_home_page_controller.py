@@ -47,8 +47,8 @@ def home_page_data(uid):
                 "kyc_status": kyc_status[0],
                 "is_active_kyc_request": is_active_kyc_request,
                 "total_sent_amount": response[0],
-                "total_recieved_amount": response[2],
-                "events_invite_list": response[4],
+                "total_recieved_amount": response[1],
+                "events_invite_list": response[2],
             }, 200
 
 

@@ -765,6 +765,7 @@ def event_admin(event_id):
 
 
 def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
+    print(invited_to)
     try:
         with connection.cursor() as cursor:
             invite_query = """
@@ -786,8 +787,8 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
             cursor.execute(inviter_name_query)
             invited_by = cursor.fetchone()
 
-            user_query = """SELECT name, fcm_token FROM users WHERE phone IN (%s)"""
-            cursor.execute(user_query, invited_to)
+            user_query = f"""SELECT name, fcm_token FROM users WHERE phone IN %s"""
+            cursor.execute(user_query, (invited_to,))
             results = cursor.fetchall()
             for row in results:
                 name, fcm_token = row

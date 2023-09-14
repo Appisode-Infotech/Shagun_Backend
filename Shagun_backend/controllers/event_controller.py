@@ -801,7 +801,7 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
             for row in results:
                 name, fcm_token, uid = row
                 invite_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
-                                        VALUES ('{uid}', 'Shagun',
+                                        VALUES ('{uid}', 'invite',
                                         '{invited_by[0]} has invited you to {event_name[0]}',
                                         '{invited_by[0]} has invited you to {event_name[0]}')"""
                 cursor.execute(invite_notification_query)
@@ -871,7 +871,7 @@ def get_my_notifications_list(uid):
             cursor.execute(notification_query)
             notification_list = cursor.fetchall()
             return {
-                "invited_list": responsegenerator.responseGenerator.generateResponse(notification_list,
+                "notification_list": responsegenerator.responseGenerator.generateResponse(notification_list,
                                                                                      NOTIFICATION_LIST)
             }, 200
 

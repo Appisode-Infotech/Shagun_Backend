@@ -38,6 +38,7 @@
 
 
 
+
     </style>
 </head>
 <body>
@@ -69,30 +70,31 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Total Transactions</p>
-                                        <p class="fs-30 mb-2">₹ {{ total_transactions }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Total Transactions</p>
+                                    <p class="fs-30 mb-2">₹ {{ total_transactions }}</p>
+
+                                </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Total Shagun Amount</p>
-                                        <p class="fs-30 mb-2">₹ {{ total_shagun }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Total Shagun Amount</p>
+                                    <p class="fs-30 mb-2">₹ {{ total_shagun }}</p>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Today's Transaction</p>
-                                        <p class="fs-30 mb-2">₹ {{ todays_transactions }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Today's Transaction</p>
+                                    <p class="fs-30 mb-2">₹ {{ todays_transactions }}</p>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Today's Shagun</p>
-                                        <p class="fs-30 mb-2">₹ {{ today_shagun }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Today's Shagun</p>
+                                    <p class="fs-30 mb-2">₹ {{ today_shagun }}</p>
+                                </div>
                             </div>
                         </div>
                         <div class="icon-and-text-container">
@@ -185,7 +187,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <a href="{% url 'dashboard_search_printers_status' 1 %}" >
+                                <a href="{% url 'dashboard_search_printers_status' 1 %}">
                                     <div class="card-body">
                                         <p class="mb-4">Active Printing Vendor</p>
                                         <p class="fs-30 mb-2">{{ active_printers }}</p>
@@ -193,7 +195,7 @@
                                 </a>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <a href="{% url 'dashboard_search_printers_status' 0 %}" >
+                                <a href="{% url 'dashboard_search_printers_status' 0 %}">
                                     <div class="card-body">
                                         <p class="mb-4">Inactive Printing Vendor</p>
                                         <p class="fs-30 mb-2">{{ inactive_printers }}</p>
@@ -213,7 +215,7 @@
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <a href="{% url 'dashboard_search_delivery_vendors_status' 0 %}">
                                     <div class="card-body">
-                                        <p class="mb-4">Inactive  Delivery Vendor</p>
+                                        <p class="mb-4">Inactive Delivery Vendor</p>
                                         <p class="fs-30 mb-2">{{ inactive_delivery_vendors }}</p>
                                     </div>
                                 </a>

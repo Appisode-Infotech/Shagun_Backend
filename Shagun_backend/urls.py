@@ -40,6 +40,7 @@ urlpatterns = [
     path('api/get_users_by_name_or_phone', get_users_by_name_or_phone, name='get_users_by_name_or_phone'),
     path('api/search_user_event', search_user_event, name='search_user_event'),
     path('api/get_my_all_invited_events', get_my_all_invited_events, name='get_my_all_invited_events'),
+    path('api/get_my_notifications', get_my_notifications, name='get_my_notifications'),
 
     path('', admin_dashboard, name='admin_dashboard'),
     path('sign_up', sign_up, name='sign_up'),

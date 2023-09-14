@@ -169,6 +169,13 @@ def add_user_kyc(kyc_obj):
                           0, today, kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
                           kyc_obj.postcode, kyc_obj.country, today, kyc_obj.created_by_uid, kyc_obj.created_by_uid)
                 cursor.execute(sql_query, values)
+
+                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                            VALUES ('{kyc_obj.uid}', 'KYC',
+                            'KYC Completed for {kyc_obj.full_name}',
+                            'KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and {kyc_obj.identification_proof2}:{kyc_obj.identification_number2}')"""
+                cursor.execute(KYC_notification_query)
+
                 return {
                     "status": True,
                     "message": "User KYC inserted"

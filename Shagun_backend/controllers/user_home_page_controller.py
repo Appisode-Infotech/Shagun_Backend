@@ -13,21 +13,22 @@ def home_page_data(uid):
             phone = cursor.fetchone()[0]
 
             sent_transactions_query = f"""
-                            SELECT (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_amount
-                            FROM transaction_history AS th
-                            WHERE th.sender_uid = '{uid}'
-                            LIMIT 5
-                        """
+                SELECT COALESCE(SUM(shagun_amount), 0) AS total_amount
+                FROM transaction_history
+                WHERE sender_uid = '{uid}'
+            """
             cursor.execute(sent_transactions_query)
-            sent_transactions = cursor.fetchall()
+            sent_transactions = cursor.fetchone()
+            print(sent_transactions)
 
             received_transactions_query = f"""
-                            SELECT (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}') AS total_amount
-                            FROM transaction_history AS th
-                            WHERE th.receiver_uid = '{uid}'
-                        """
+                SELECT COALESCE(SUM(shagun_amount), 0) AS total_amount
+                FROM transaction_history
+                WHERE receiver_uid = '{uid}'
+            """
             cursor.execute(received_transactions_query)
-            received_transactions = cursor.fetchall()
+            received_transactions = cursor.fetchone()
+            print(received_transactions)
 
             invited_events_query = f"""
                 SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone,
@@ -43,6 +44,7 @@ def home_page_data(uid):
             """
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
+            print(invited_events)
 
             get_kyc_query = f"SELECT kyc FROM users WHERE uid = '{uid}'"
             cursor.execute(get_kyc_query)
@@ -63,8 +65,8 @@ def home_page_data(uid):
                 "status": True,
                 "kyc_status": kyc_status[0],
                 "is_active_kyc_request": is_active_kyc_request,
-                "total_sent_amount": response[0],
-                "total_recieved_amount": response[1],
+                "total_sent_amount": round(sent_transactions[0]),
+                "total_recieved_amount": round(received_transactions[0]),
                 "events_invite_list": response[2],
             }, 200
 

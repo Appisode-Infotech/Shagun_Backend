@@ -12,6 +12,23 @@ def home_page_data(uid):
             cursor.execute(phone_query)
             phone = cursor.fetchone()[0]
 
+            sent_transactions_query = f"""
+                            SELECT (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{uid}') AS total_amount
+                            FROM transaction_history AS th
+                            WHERE th.sender_uid = '{uid}'
+                            LIMIT 5
+                        """
+            cursor.execute(sent_transactions_query)
+            sent_transactions = cursor.fetchall()
+
+            received_transactions_query = f"""
+                            SELECT (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}') AS total_amount
+                            FROM transaction_history AS th
+                            WHERE th.receiver_uid = '{uid}'
+                        """
+            cursor.execute(received_transactions_query)
+            received_transactions = cursor.fetchall()
+
             invited_events_query = f"""
                 SELECT et.event_type_name, e.event_date, e.event_admin, e.id, egi.status, u_invited_by.phone,
                 u_invited_by.name, u_invited_by.profile_pic
@@ -46,8 +63,8 @@ def home_page_data(uid):
                 "status": True,
                 "kyc_status": kyc_status[0],
                 "is_active_kyc_request": is_active_kyc_request,
-                "total_sent_amount": response[0],
-                "total_recieved_amount": response[1],
+                "total_sent_amount": sent_transactions[0],
+                "total_recieved_amount": received_transactions[0],
                 "events_invite_list": response[2],
             }, 200
 

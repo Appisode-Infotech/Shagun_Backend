@@ -17,7 +17,19 @@ def add_transaction_history(transaction_obj):
             '{transaction_obj.transaction_fee}', '{transaction_obj.delivery_fee}', '{transaction_obj.transaction_id}',
             '{transaction_obj.payment_status}', '{transaction_obj.event_id}', {transaction_obj.status}, '{today}', '{transaction_obj.gifter_name}')"""
 
-            print(cursor.execute(transaction_history_query))
+            cursor.execute(transaction_history_query)
+
+            event_type_query = f"""SELECT et.event_type_name FROM event AS e
+                                            LEFT JOIN events_type AS et ON e.event_type_id = et.id
+                                             WHERE e.id = '{transaction_obj.event_id}' """
+            cursor.execute(event_type_query)
+            event_type = cursor.fetchone()
+
+            reciever_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+            VALUES ('{transaction_obj.receiver_uid}', 'Shagun',
+            '{transaction_obj.gifter_name} sent you Shagun amount: {transaction_obj.shagun_amount} ',
+            'For your {event_type[0]} event')"""
+            cursor.execute(reciever_notification_query)
 
             printer_query = f"""SELECT printer_id FROM event 
                                  WHERE id = '{transaction_obj.event_id}' """
@@ -29,7 +41,7 @@ def add_transaction_history(transaction_obj):
               VALUES('{transaction_obj.transaction_id}', '{printer[0]}', '{transaction_obj.greeting_card_id}',
                1,'{today}', '{today}', '{transaction_obj.greeting_card_price}', '{transaction_obj.event_id}', '{transaction_obj.wish}' )"""
 
-            print(cursor.execute(printer_jobs_query))
+            cursor.execute(printer_jobs_query)
 
             return {
                 "status": True,

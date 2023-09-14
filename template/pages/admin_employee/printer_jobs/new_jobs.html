@@ -99,9 +99,9 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">All jobs List</h4>
+                        <h4 class="card-title">New Jobs List</h4>
                         <div class="form-group">
-                            <form action="{% url 'search_all_printer_jobs' %}" method="POST">
+                            <form action="{% url 'search_new_printer_jobs' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <input name="search" id="search" type="text" class="form-control"
@@ -114,43 +114,6 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="form-group">
-                            <label class="mr-2 custom-label"> Job Filter: </label>
-                            <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                {% if status is None %}
-                                All
-                                {% elif status == 1 %}
-                                New
-                                {% elif status == 2 %}
-                                In Progress</a>
-                                {% elif status == 3 %}
-                                Print Completed
-                                {% elif status == 4 %}
-                                Dispatched
-                                {% elif status == 5 %}
-                                Closed
-                                {% endif %}
-                            </button>
-
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                <a class="dropdown-item"
-                                   href="{% url 'all_printer_jobs'  %}">All</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 1 %}">New</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 2 %}">In Progress</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 3 %}">Print Completed</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 4 %}">Dispatched</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 5 %}">Closed</a>
-                            </div>
-
-                        </div>
-
                     </div>
 
                     <div class="table-responsive">

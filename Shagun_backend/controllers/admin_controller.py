@@ -14,7 +14,7 @@ def admin_dashboard(uid):
                     SUM(transaction_amount) AS total_sum,
                     SUM(shagun_amount) AS total_shagun_amount,
                     SUM(transaction_fee) AS total_transaction_fee,
-                    SUM(CASE WHEN DATE(created_on) = '{today}' THEN shagun_amount ELSE 0 END) AS shagun_today
+                    SUM(CASE WHEN DATE(created_on) = '{today.date()}' THEN shagun_amount ELSE 0 END) AS shagun_today
                 FROM transaction_history;
                 """
             cursor.execute(transaction_stats_query)

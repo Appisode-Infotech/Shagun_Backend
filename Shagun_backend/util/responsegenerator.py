@@ -677,3 +677,18 @@ class responseGenerator:
                     }
                 )
             return invited_events_list
+
+        if controller_type == NOTIFICATION_LIST:
+            notification_list = []
+            for invites in data:
+                notification_list.append(
+                    {
+                        "id": invites[0],
+                        "uid": invites[1],
+                        "type": invites[2],
+                        "title": invites[3],
+                        "message": invites[4],
+                        "created_on": invites[5]
+                    }
+                )
+            return notification_list

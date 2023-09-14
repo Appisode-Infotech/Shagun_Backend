@@ -300,6 +300,8 @@
     function setValue(value1, value2) {
         document.getElementById("name").value = value1;
         document.getElementById("city").value = value2;
+        var errorContainer = document.querySelector('.messages-container');
+        errorContainer.style.display = "none";
         myFunction();
     }
 

@@ -303,7 +303,7 @@ def search_kyc_request(request):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response})
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -339,7 +339,7 @@ def search_event_request(request):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response})
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -393,6 +393,18 @@ def all_printer_jobs(request):
         return redirect('sign_up')
 
 
+def new_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1]
+        response, status_code = store_controller.get_all_jobs(status)
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html', {"response": response})
+    else:
+        return redirect('sign_up')
+
+
 def search_all_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4, 5]
@@ -400,7 +412,21 @@ def search_all_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
+                      {"response": response, "search": request.POST['search']})
+    else:
+        return redirect('sign_up')
+
+
+def search_new_printer_jobs(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        status = [1]
+        response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
+        paginator = Paginator(response['jobs'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -424,7 +450,7 @@ def search_open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -472,7 +498,7 @@ def search_closed_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html', {"response": response})
+        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html', {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -510,7 +536,7 @@ def search_transactions_settlement(request, event_id):
         page = request.GET.get('page')
         response = paginator.get_page(page)
         return render(request, 'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                      {"response": response, "event_id": event_id})
+                      {"response": response, "event_id": event_id, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -1143,7 +1169,6 @@ def whatsapp_invite(request, e_id):
         invite_message = request.POST['invite_msg']
         phone = request.POST['phone']
         if 'csv_file' in request.FILES:
-            print("csv found")
             csv_file = request.FILES['csv_file']
             try:
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
@@ -1155,14 +1180,11 @@ def whatsapp_invite(request, e_id):
                             cleaned_cell = ''.join(filter(str.isdigit, cell))
                             if cell.isdigit() and len(cleaned_cell) == 10:
                                 mob_numbers.append(cleaned_cell)
-                                print(mob_numbers)
 
                 mob_numbers = list(set(mob_numbers))
                 if phone != '':
                     mob_numbers.append(phone)
-                print(mob_numbers)
                 response = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
-                print(response)
                 return redirect(reverse('whatsapp_invite', args=[e_id]))
 
             except Exception as e:
@@ -1849,6 +1871,25 @@ def get_my_all_invited_events(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
+
+@api_view(['POST'])
+def get_my_notifications(request):
+    response, status_code = event_controller.get_my_notifications_list(request.data['uid'])
+    return JsonResponse(response, status=status_code)
+    # token = request.headers.get('Authorization').split(' ')[1]
+    # try:
+    #     decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+    #     username = decoded_token['username']
+    #     if username == request.data.get('uid'):
+    #         response, status_code = event_controller.get_my_notifications_list(request.data['uid'])
+    #         return JsonResponse(response, status=status_code)
+    #     else:
+    #         return JsonResponse({'message': 'Invalid token for user'}, status=401)
+    #
+    # except jwt.ExpiredSignatureError:
+    #     return JsonResponse({'message': 'Token has expired'}, status=401)
+    # except jwt.InvalidTokenError:
+    #     return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 @api_view(['POST'])

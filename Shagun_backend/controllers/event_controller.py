@@ -45,11 +45,19 @@ def create_event(event_obj):
 
             cursor.execute(create_event_query, values)
             event_id = cursor.lastrowid
-            event_admin_query = f"""SELECT event_admin FROM event WHERE  id = '{event_id}'"""
+            event_admin_query = f"""SELECT e.event_admin, et.event_type_name FROM event AS e
+                                    LEFT JOIN events_type AS et ON e.event_type_id = et.id
+                                    WHERE  e.id = '{event_id}'"""
             cursor.execute(event_admin_query)
             admin = cursor.fetchone()
             event_admins = json.loads(admin[0])
             for item in event_admins:
+                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                            VALUES ('{item["uid"]}', 'event',
+                            'Event has been created',
+                            ' Event created for {admin[1]} on {event_obj.event_date}')"""
+                cursor.execute(event_created_notification_query)
+
                 uid = item["uid"]
                 phone_query = f"""SELECT phone FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
@@ -765,6 +773,7 @@ def event_admin(event_id):
 
 
 def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
+    print(invited_to)
     try:
         with connection.cursor() as cursor:
             invite_query = """
@@ -786,11 +795,16 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
             cursor.execute(inviter_name_query)
             invited_by = cursor.fetchone()
 
-            user_query = """SELECT name, fcm_token FROM users WHERE phone IN (%s)"""
-            cursor.execute(user_query, invited_to)
+            user_query = f"""SELECT name, fcm_token, uid FROM users WHERE phone IN %s"""
+            cursor.execute(user_query, (invited_to,))
             results = cursor.fetchall()
             for row in results:
-                name, fcm_token = row
+                name, fcm_token, uid = row
+                invite_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                        VALUES ('{uid}', 'invite',
+                                        '{invited_by[0]} has invited you to {event_name[0]}',
+                                        '{invited_by[0]} has invited you to {event_name[0]}')"""
+                cursor.execute(invite_notification_query)
                 title = f"""{invited_by[0]} has invited you to {event_name[0]}"""
                 send_push_notification(fcm_token, title, invite_message)
             return {
@@ -843,6 +857,22 @@ def get_my_invited_event_list(uid):
             return {
                 "invited_list": responsegenerator.responseGenerator.generateResponse(invited_events,
                                                                                      INVITED_EVENTS_LIST)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+def get_my_notifications_list(uid):
+    try:
+        with connection.cursor() as cursor:
+            notification_query = f""" SELECT * FROM notification WHERE uid = '{uid}' """
+            cursor.execute(notification_query)
+            notification_list = cursor.fetchall()
+            return {
+                "notification_list": responsegenerator.responseGenerator.generateResponse(notification_list,
+                                                                                     NOTIFICATION_LIST)
             }, 200
 
     except pymysql.Error as e:

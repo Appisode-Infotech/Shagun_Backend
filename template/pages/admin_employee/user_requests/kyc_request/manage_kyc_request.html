@@ -53,6 +53,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -185,7 +186,21 @@
                                 </td>
 
                                 <td>
+
                                     <div class="dropdown">
+                                        {% if req.status == 1 %}
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" disabled>
+                                            {% if req.status == 0 %}
+                                            Pending
+                                            {% elif req.status == 1 %}
+                                            Completed
+                                            {% elif req.status == 2 %}
+                                            Rejected
+                                            {% endif %}
+                                        </button>
+                                        {% else %}
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                 id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false">
@@ -205,7 +220,9 @@
                                             <a class="dropdown-item"
                                                href="{% url 'set_KYC_request_status' req.id request.session.uid 2 %}">Rejected</a>
                                         </div>
+                                        {% endif %}
                                     </div>
+
                                 </td>
                             </tr>
                             {% endfor %}

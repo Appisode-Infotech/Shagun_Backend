@@ -1880,6 +1880,7 @@ def get_my_notifications(request):
         username = decoded_token['username']
         if username == request.data.get('uid'):
             response, status_code = event_controller.get_my_notifications_list(request.data['uid'])
+            print(response)
             return JsonResponse(response, status=status_code)
         else:
             return JsonResponse({'message': 'Invalid token for user'}, status=401)

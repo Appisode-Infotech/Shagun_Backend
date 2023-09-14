@@ -38,6 +38,8 @@
 
 
 
+
+
     </style>
 </head>
 <body>
@@ -69,30 +71,33 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Total Transactions</p>
-                                        <p class="fs-30 mb-2">₹ {{ total_transactions }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Total Transactions</p>
+                                    <p class="fs-30 mb-2"><span
+                                            id="total_transactions">{{ total_transactions }}</span></p>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Total Shagun Amount</p>
-                                        <p class="fs-30 mb-2">₹ {{ total_shagun }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Total Shagun Amount</p>
+                                    <p class="fs-30 mb-2"><span id="total_shagun">{{ total_shagun }}</span></p>
+                                </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Today's Transaction</p>
-                                        <p class="fs-30 mb-2">₹ {{ todays_transactions }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Today's Transaction</p>
+                                    <p class="fs-30 mb-2"><span
+                                            id="todays_transactions">{{ todays_transactions }}</span></p>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                    <div class="card-body">
-                                        <p class="mb-4">Today's Shagun</p>
-                                        <p class="fs-30 mb-2">₹ {{ today_shagun }}</p>
-                                    </div>
+                                <div class="card-body">
+                                    <p class="mb-4">Today's Shagun</p>
+                                    <p class="fs-30 mb-2"><span id="today_shagun">{{ today_shagun }}</span></p>
+                                </div>
                             </div>
                         </div>
                         <div class="icon-and-text-container">
@@ -185,7 +190,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <a href="{% url 'dashboard_search_printers_status' 1 %}" >
+                                <a href="{% url 'dashboard_search_printers_status' 1 %}">
                                     <div class="card-body">
                                         <p class="mb-4">Active Printing Vendor</p>
                                         <p class="fs-30 mb-2">{{ active_printers }}</p>
@@ -193,7 +198,7 @@
                                 </a>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <a href="{% url 'dashboard_search_printers_status' 0 %}" >
+                                <a href="{% url 'dashboard_search_printers_status' 0 %}">
                                     <div class="card-body">
                                         <p class="mb-4">Inactive Printing Vendor</p>
                                         <p class="fs-30 mb-2">{{ inactive_printers }}</p>
@@ -213,7 +218,7 @@
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <a href="{% url 'dashboard_search_delivery_vendors_status' 0 %}">
                                     <div class="card-body">
-                                        <p class="mb-4">Inactive  Delivery Vendor</p>
+                                        <p class="mb-4">Inactive Delivery Vendor</p>
                                         <p class="fs-30 mb-2">{{ inactive_delivery_vendors }}</p>
                                     </div>
                                 </a>
@@ -284,6 +289,37 @@
 <!-- container-scroller -->
 
 <!-- plugins:js -->
+<script>
+    // Function to format a number in lakh (10K) format
+    function formatNumberInLakh(number) {
+        if (number >= 100000) {
+            return (number / 100000).toFixed(1) + 'L';
+        } else if (number >= 1000) {
+            return (number / 1000).toFixed(1) + 'K';
+        } else {
+            return number.toString();
+        }
+    }
+
+    // Retrieve the values from the DOM
+    var totalTransactionsElement = document.getElementById('total_transactions');
+    var totalShagunElement = document.getElementById('total_shagun');
+    var todaysTransactionsElement = document.getElementById('todays_transactions');
+    var todayShagunElement = document.getElementById('today_shagun');
+
+    // Get the values from the DOM elements
+    var total_transactions = parseFloat(totalTransactionsElement.textContent);
+    var total_shagun = parseFloat(totalShagunElement.textContent);
+    var todays_transactions = parseFloat(todaysTransactionsElement.textContent);
+    var today_shagun = parseFloat(todayShagunElement.textContent);
+
+    // Format and update the content of the spans with the formatted numbers
+    totalTransactionsElement.textContent = '₹ ' + formatNumberInLakh(total_transactions);
+    totalShagunElement.textContent = '₹ ' + formatNumberInLakh(total_shagun);
+    todaysTransactionsElement.textContent = '₹ ' + formatNumberInLakh(todays_transactions);
+    todayShagunElement.textContent = '₹ ' + formatNumberInLakh(today_shagun);
+</script>
+
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->

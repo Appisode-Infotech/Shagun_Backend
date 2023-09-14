@@ -52,14 +52,14 @@ def create_event(event_obj):
             admin = cursor.fetchone()
             event_admins = json.loads(admin[0])
             for item in event_admins:
+                uid = item["uid"]
                 event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
-                            VALUES ('{item["uid"]}', 'event',
+                            VALUES ('{uid}', 'event',
                             'Event has been created',
                             ' Event created for {admin[1]} on {event_obj.event_date}')"""
                 resp1 = cursor.execute(event_created_notification_query)
                 print(resp1)
 
-                uid = item["uid"]
                 phone_query = f"""SELECT phone FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
                 phone = cursor.fetchone()
@@ -865,6 +865,7 @@ def get_my_invited_event_list(uid):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_my_notifications_list(uid):
     try:
         with connection.cursor() as cursor:
@@ -873,7 +874,7 @@ def get_my_notifications_list(uid):
             notification_list = cursor.fetchall()
             return {
                 "notification_list": responsegenerator.responseGenerator.generateResponse(notification_list,
-                                                                                     NOTIFICATION_LIST)
+                                                                                          NOTIFICATION_LIST)
             }, 200
 
     except pymysql.Error as e:

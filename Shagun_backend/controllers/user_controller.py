@@ -81,7 +81,6 @@ def get_all_users(kyc):
                 FROM users WHERE role = 3 AND kyc LIKE '{kyc}' ORDER BY created_on DESC  """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -100,7 +99,6 @@ def filter_users(status):
                 FROM users WHERE role = 3 AND status LIKE '{status}' ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -157,12 +155,36 @@ def add_user_kyc(kyc_obj):
             query = "SELECT * FROM users WHERE uid = %s;"
             cursor.execute(query, [kyc_obj.uid])
             user = cursor.fetchone()
+            print(user)
             if user is not None:
-                sql_query = """INSERT INTO user_kyc (uid, full_name, dob, address_line1, identification_proof1,
-                identification_proof2, identification_number1, identification_number2, identification_doc1, 
-                identification_doc2, verification_status, created_on, gender, address_line2, city, state, postcode, 
-                country, updated_on, created_by, updated_by) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                sql_query = """
+                INSERT INTO user_kyc (uid, full_name, dob, address_line1, identification_proof1,
+                    identification_proof2, identification_number1, identification_number2,
+                    identification_doc1, identification_doc2, verification_status, created_on,
+                    gender, address_line2, city, state, postcode, country, updated_on, created_by, updated_by)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                full_name = VALUES(full_name),
+                dob = VALUES(dob),
+                address_line1 = VALUES(address_line1),
+                identification_proof1 = VALUES(identification_proof1),
+                identification_proof2 = VALUES(identification_proof2),
+                identification_number1 = VALUES(identification_number1),
+                identification_number2 = VALUES(identification_number2),
+                identification_doc1 = VALUES(identification_doc1),
+                identification_doc2 = VALUES(identification_doc2),
+                verification_status = VALUES(verification_status),
+                created_on = VALUES(created_on),
+                gender = VALUES(gender),
+                address_line2 = VALUES(address_line2),
+                city = VALUES(city),
+                state = VALUES(state),
+                postcode = VALUES(postcode),
+                country = VALUES(country),
+                updated_on = VALUES(updated_on),
+                created_by = VALUES(created_by),
+                updated_by = VALUES(updated_by)
+                """
                 values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.adress1,
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
@@ -339,11 +361,30 @@ def add_bank_details(bank_obj):
             if user is not None:
                 cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
                                (bank_obj.uid,))
-                sql_query = """INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number, 
-                            status, added_by, modified_on,modified_by) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                sql_query = """
+                INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number, 
+                    status, added_by, modified_on, modified_by)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                bank_name = VALUES(bank_name),
+                ifsc_code = VALUES(ifsc_code),
+                account_holder_name = VALUES(account_holder_name),
+                account_number = VALUES(account_number),
+                status = VALUES(status),
+                added_by = VALUES(added_by),
+                modified_on = VALUES(modified_on),
+                modified_by = VALUES(modified_by)
+                """
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
                           bank_obj.account_number, True, bank_obj.added_by, today, bank_obj.added_by)
                 cursor.execute(sql_query, values)
+
+                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                            VALUES ('{bank_obj.uid}', 'KYC',
+                                            'Linked {bank_obj.bank_name} Bank for {bank_obj.account_holder_name}',
+                                            'The {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked ')"""
+                cursor.execute(KYC_notification_query)
+
                 return {
                     "status": True,
                     "message": "Bank Details added successfully"
@@ -554,7 +595,6 @@ def dashboard_search_employee(search):
                 LIKE '%{search}%') ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -573,7 +613,6 @@ def dashboard_search_employee_status(status):
                 FROM users WHERE role = 2 AND status = '{status}' ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -736,7 +775,6 @@ def edit_user_kyc(obj):
 
             # Check each field in the object and update the SQL query accordingly
             if obj.identification_doc1 is None and obj.identification_doc2 is None:
-                print("both none")
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
                 sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s,  "
                 sql += "address_line2=%s, postcode=%s, city=%s, country=%s, updated_by=%s,updated_on=%s WHERE id=%s"
@@ -765,7 +803,6 @@ def edit_user_kyc(obj):
                     obj.id
                 ])
             else:
-                print("both are none")
                 # Handle the case where both identification_doc1 and identification_doc2 are not None
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
                 sql += "identification_proof2=%s, identification_number2=%s, address_line1=%s, state=%s, address_line2=%s, "
@@ -777,7 +814,6 @@ def edit_user_kyc(obj):
                     obj.modified_by_uid, today.now(), obj.id
                 ])
 
-            print(sql)
             cursor.execute(sql, values)
             connection.commit()
             return {

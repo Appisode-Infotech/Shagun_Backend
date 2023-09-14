@@ -292,7 +292,9 @@
 <script>
     // Function to format a number in lakh (10K) format
     function formatNumberInLakh(number) {
-        if (number >= 100000) {
+        if (number >= 10000000) {
+            return (number / 10000000).toFixed(1) + 'Cr';
+        } else if (number >= 100000) {
             return (number / 100000).toFixed(1) + 'L';
         } else if (number >= 1000) {
             return (number / 1000).toFixed(1) + 'K';

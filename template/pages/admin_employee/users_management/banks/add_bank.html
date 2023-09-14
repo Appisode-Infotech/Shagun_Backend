@@ -114,6 +114,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -150,11 +151,11 @@
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
-                                                           placeholder="Search.." class="form-control">
+                                                           placeholder="Search" class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content"
                                                          style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search" id="myInput"
                                                                onkeyup="filterFunction()" class="form-control">
                                                         {% for users in user.user_data %}
                                                         <a onclick="setValue('{{users.name}}', '{{users.uid}}')">{{users.name}}
@@ -181,7 +182,7 @@
                                                            name="account_holder_name"
                                                            class="form-control"
                                                            pattern="[^ ].*"
-                                                                       title="This field can't be Empty"
+                                                           title="This field can't be Empty"
                                                            placeholder="Enter Full Name">
                                                 </div>
                                             </div>
@@ -192,7 +193,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select Bank</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="bank_name"  required>
+                                                    <select class="form-control" name="bank_name" required>
+                                                        <option value="" disabled selected>Select an option</option>
                                                         {% for banks in banks.bank_list %}
                                                         <option>{{banks.bank_name}}</option>
                                                         {% endfor %}
@@ -303,6 +305,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -315,6 +318,7 @@
                 e.preventDefault();
             }
         });
+
 </script>
 <!-- container-scroller -->
 <!-- plugins:js -->

@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -114,6 +116,8 @@
             padding: 20px;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
           }
+
+
 
 
 
@@ -256,6 +260,8 @@
                                 <td>
                                     <button onclick="showPopUpDiv('{{greetings.card_id}}', '{{greetings.card_name}}','{{greetings.card_price}}')"
                                             class="btn btn-outline-info btn-fw">Edit
+                                        <i class="fas fa-edit"></i>
+
                                     </button>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
@@ -395,6 +401,8 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
+
 
 
 </script>

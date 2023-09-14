@@ -114,6 +114,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -185,7 +186,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Gender</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="gender">
+                                                    <select class="form-control" style="color: #000;" name="gender" required>
+                                                        <option value="" disabled selected>Select an option</option>
                                                         <option>Male</option>
                                                         <option>Female</option>
                                                     </select>
@@ -208,12 +210,12 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Proof1</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="identification_proof1">
-                                                        <option selected>Select an option</option>
-                                                        <option>Aadhar Card</option>
-                                                        <option>Voter ID</option>
-                                                        <option>Driving License</option>
-                                                        <option>Ration Card</option>
+                                                    <select class="form-control" style="color: #000;" name="identification_proof1" required>
+                                                        <option value="" disabled selected>Select an option</option>
+                                                        <option value="Aadhar Card">Aadhar Card</option>
+                                                        <option value="Voter ID">Voter ID</option>
+                                                        <option value="Driving License">Driving License</option>
+                                                        <option value="Ration Card">Ration Card</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -237,8 +239,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Proof2</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" name="identification_proof2">
-                                                        <option>PAN CARD</option>
+                                                    <select class="form-control" style="color: #000;" name="identification_proof2" disabled>
+                                                        <option selected>PAN CARD</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -453,6 +455,7 @@
 
 
 
+
 </script>
 
 
@@ -475,6 +478,7 @@
                 e.preventDefault();
             }
         });
+
 
 
 

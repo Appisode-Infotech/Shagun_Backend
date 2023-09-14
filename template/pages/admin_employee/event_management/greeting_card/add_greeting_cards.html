@@ -185,11 +185,11 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown')"
-                                                           placeholder="Search.." class="form-control">
+                                                           placeholder="Search" class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content"
                                                          style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search" id="myInput"
                                                                onkeyup="filterFunction('myDropdown')"
                                                                class="form-control">
                                                         {% for printers in printer_data %}

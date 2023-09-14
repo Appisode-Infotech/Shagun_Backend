@@ -56,7 +56,8 @@ def create_event(event_obj):
                             VALUES ('{item["uid"]}', 'event',
                             'Event has been created',
                             ' Event created for {admin[1]} on {event_obj.event_date}')"""
-                cursor.execute(event_created_notification_query)
+                resp1 = cursor.execute(event_created_notification_query)
+                print(resp1)
 
                 uid = item["uid"]
                 phone_query = f"""SELECT phone FROM users WHERE  uid = '{uid}'"""

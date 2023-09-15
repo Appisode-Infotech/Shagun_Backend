@@ -864,7 +864,7 @@ def get_my_invited_event_list(uid):
 def get_my_notifications_list(uid):
     try:
         with connection.cursor() as cursor:
-            notification_query = f""" SELECT * FROM notification WHERE uid = '{uid}' """
+            notification_query = f""" SELECT * FROM notification WHERE uid = '{uid}' ORDER BY created_on DESC"""
             cursor.execute(notification_query)
             notification_list = cursor.fetchall()
             return {

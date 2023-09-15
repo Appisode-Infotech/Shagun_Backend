@@ -247,7 +247,8 @@ class responseGenerator:
                         "settlement_status": sent[10],
                         "bank_name": sent[13],
                         "bank_logo": sent[14],
-                        "acc_no": sent[15]
+                        "acc_no": sent[15],
+                        "profile_pic": sent[16]
                     }
                 )
             return total_gift_amount, sent_gift

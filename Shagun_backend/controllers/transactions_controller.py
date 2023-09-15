@@ -98,7 +98,7 @@ def get_sent_gift(gift_data_obj):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, ev.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{gift_data_obj.uid}')
-                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
+                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.receiver_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
@@ -143,7 +143,7 @@ def get_received_gift(gift_data_obj):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, ev.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{gift_data_obj.uid}') 
-                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
+                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.sender_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id

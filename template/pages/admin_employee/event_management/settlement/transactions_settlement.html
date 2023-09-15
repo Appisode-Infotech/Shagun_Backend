@@ -247,9 +247,8 @@
                                         <b>Delivery Fee: </b>₹ {{ data.delivery_fee }}</br></br>
                                         <b>Transaction ID: </b>{{ data.transaction_id }}</br></br>
                                     </td>
-                                    <td>
-
-                                        ₹ {{ data.shagun_amount }}
+                                    <td style="display: none;">
+                                        {{ data.shagun_amount }}
                                     </td>
                                     <td>
                                         {% if data.is_settled == 0 %}
@@ -484,9 +483,15 @@
             if (selectRows[i].checked && !selectRows[i].disabled) {
                 const shagunAmountCell = selectRows[i].parentNode.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling;
                 const shagunAmount = parseFloat(shagunAmountCell.textContent);
-                sum += shagunAmount;
+
+                // Check if the parsed value is a valid number
+                if (!isNaN(shagunAmount)) {
+                    sum += shagunAmount;
+                }
             }
         }
+
+        console.log("sum: " + sum); // Move this line inside the loop
         document.getElementById('shagun-sum-label').textContent = 'Total Shagun Amount: ' + sum.toFixed(2);
         document.getElementById('shagun-sum-label1').textContent = 'Please confirm if you want to pay the amount: ' + sum.toFixed(2);
     }
@@ -510,13 +515,8 @@
         });
     }
 
-
-
-
-
-
-
 </script>
+
 
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 

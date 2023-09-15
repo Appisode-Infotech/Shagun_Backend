@@ -580,6 +580,7 @@ def add_events_type(request):
 def add_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         form_data = request.POST
+        print(form_data)
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
                 file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1"
@@ -591,6 +592,7 @@ def add_kyc(request):
                     for chunk in file_obj.chunks():
                         destination.write(chunk)
 
+            print(form_data)
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
             user_controller.add_user_kyc(kyc_obj)
             return redirect('add_bank')

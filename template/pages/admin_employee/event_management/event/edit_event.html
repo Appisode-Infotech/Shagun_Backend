@@ -241,7 +241,7 @@
                                                            value="{{event.event_data.store_name}}" class="form-control">
 
                                                     <div id="myDropdown3" class="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput3"
+                                                        <input type="text" placeholder="Search" id="myInput3"
                                                                onkeyup="filterFunction('myDropdown3')"
                                                                class="form-control">
                                                         {% for printers in printers.printer_data %}
@@ -255,7 +255,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Event Date</label>
+                                                <label class="col-sm-3 col-form-label">Event Date & Time</label>
                                                 <div class="col-sm-9">
                                                     <input required type="datetime-local" id="event_date"
                                                            name="event_date"
@@ -317,7 +317,7 @@
                                                 <label class="col-sm-3 col-form-label">Delivery Fee</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="delivery_fee"
-                                                           pattern="[0-9]{1,3}"
+                                                           pattern="[1-9][0-9]{0,4}"
                                                             title="Please add the amount only"
                                                            value="{{event.event_data.delivery_fee}}"/>
                                                 </div>
@@ -525,9 +525,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             const eventAdminRow = document.createElement('div');
             eventAdminRow.classList.add('event-row');
             eventAdminRow.innerHTML = `
-            <input required type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search.." class="event-input">
+            <input required type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search" class="event-input">
             <div id="myDropdown5" class="dropdown-content">
-                <input required type="text" placeholder="Search.." id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
+                <input required type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
                 {% for users in users.user_data %}
                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
                 {% endfor %}

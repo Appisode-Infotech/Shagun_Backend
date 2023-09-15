@@ -171,7 +171,7 @@
                                                 <label class="col-sm-3 col-form-label">Price</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           placeholder="00.00" pattern="^(?!\s)(\d+(\.\d{1,2})?)?$"
+                                                           placeholder="00.00" pattern="[1-9][0-9]{0,5}"
                                                            title="Please add the amount only"
                                                            name="card_price"/>
                                                 </div>
@@ -185,11 +185,11 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="printer_name" readonly
                                                            onclick="toggleDropdown('myDropdown')"
-                                                           placeholder="Search.." class="form-control">
+                                                           placeholder="Search" class="form-control">
 
                                                     <div id="myDropdown" class="dropdown-content"
                                                          style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search.." id="myInput"
+                                                        <input type="text" placeholder="Search" id="myInput"
                                                                onkeyup="filterFunction('myDropdown')"
                                                                class="form-control">
                                                         {% for printers in printer_data %}

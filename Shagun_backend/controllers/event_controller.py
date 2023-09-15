@@ -544,7 +544,7 @@ def get_my_event_list(uid):
             cursor.execute(phone_query)
             phone = cursor.fetchone()[0]
             # SQL query for events with event_date less than or equal to today
-            sql_query_my_events = sql_query_upcoming_events = f"""
+            sql_query_my_events = f"""
                     SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
                         event.is_approved, event.status,
                         total_amount.shagun_amount AS total_amount,
@@ -580,7 +580,7 @@ def get_my_event_list(uid):
                         LEFT JOIN event AS e ON egi.event_id = e.id
                         LEFT JOIN events_type AS et ON e.event_type_id = et.id
                         LEFT JOIN users AS u_invited_by ON u_invited_by.uid = egi.invited_by
-                        WHERE egi.invited_to = '{phone}'
+                        WHERE egi.invited_to = '{phone}' AND e.status = 1
                         ORDER BY egi.created_at DESC
                         LIMIT 5
                     """
@@ -774,7 +774,6 @@ def event_admin(event_id):
 
 
 def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
-    print(invited_to)
     try:
         with connection.cursor() as cursor:
             invite_query = """
@@ -808,10 +807,7 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
                 cursor.execute(invite_notification_query)
                 title = f"""{invited_by[0]} has invited you to {event_name[0]}"""
                 send_push_notification(fcm_token, title, invite_message)
-            return {
-                "status": True,
-                "msg": "Inserted successfully"
-            }, 200
+            return {"status": False, "message": "Messages sent Failed"}, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -851,7 +847,6 @@ def get_my_invited_event_list(uid):
                 LEFT JOIN users AS u_invited_by ON u_invited_by.uid = egi.invited_by
                 WHERE egi.invited_to = (SELECT phone FROM users WHERE uid = '{uid}') AND e.status = 1
                 ORDER BY egi.created_at DESC
-                LIMIT 5
             """
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()

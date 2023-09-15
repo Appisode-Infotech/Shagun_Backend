@@ -118,7 +118,7 @@
                             <label class="mr-2 custom-label"> Job Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
+                                    aria-expanded="false" style="width: 150px; height: 40px;">
                                 {% if status is None %}
                                 All
                                 {% elif status == 1 %}
@@ -187,7 +187,7 @@
                                     <b>Event Date : </b> {{ job.event_date }} </br></br>
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
-                                <td>{{ job.billing_amount }}</td>
+                                <td>₹ {{ job.billing_amount }}</td>
                                 <td>
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>

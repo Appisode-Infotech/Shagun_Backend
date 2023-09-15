@@ -241,15 +241,15 @@
                                     </td>
                                     <td>{{ data.receiver_name }}</td>
                                     <td>
-                                        <b>Transaction Amount : </b>{{ data.transaction_amount }}</br></br>
-                                        <b>Shagun Amount: </b>{{ data.shagun_amount }}</br></br>
-                                        <b>Transaction Fee: </b>{{ data.transaction_fee }}</br></br>
-                                        <b>Delivery Fee: </b>{{ data.delivery_fee }}</br></br>
+                                        <b>Transaction Amount : </b>₹ {{ data.transaction_amount }}</br></br>
+                                        <b>Shagun Amount: </b>₹ {{ data.shagun_amount }}</br></br>
+                                        <b>Transaction Fee: </b>₹ {{ data.transaction_fee }}</br></br>
+                                        <b>Delivery Fee: </b>₹ {{ data.delivery_fee }}</br></br>
                                         <b>Transaction ID: </b>{{ data.transaction_id }}</br></br>
                                     </td>
                                     <td>
 
-                                        {{ data.shagun_amount }}
+                                        ₹ {{ data.shagun_amount }}
                                     </td>
                                     <td>
                                         {% if data.is_settled == 0 %}

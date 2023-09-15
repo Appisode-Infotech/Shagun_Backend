@@ -15,7 +15,8 @@ class responseGenerator:
                 "Kyc": data[6],
                 "profile": data[7],
                 "user_id": data[1],
-                "created_on": data[8]
+                "created_on": data[8],
+                "user_status": data[9]
             }
 
         if controller_type == EMPLOYEE_BY_ID:

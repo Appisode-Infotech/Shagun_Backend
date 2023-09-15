@@ -590,11 +590,12 @@ def get_all_admins():
 def dashboard_search_employee(search):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 2 AND ( id LIKE '%{search}%' OR name LIKE '%{search}%' OR phone 
                 LIKE '%{search}%') ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
+            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -829,6 +830,7 @@ def edit_user_kyc(obj):
 
 
 def get_user_requests(param):
+    print(param)
     try:
         with connection.cursor() as cursor:
             request_query = f"""
@@ -847,7 +849,8 @@ def get_user_requests(param):
                         """
 
             cursor.execute(request_query)
-            request_list = cursor.fetchall()
+            reso = request_list = cursor.fetchall()
+            print(reso)
             return {
                 "status": True,
                 "req_list": responsegenerator.responseGenerator.generateResponse(request_list, REQUEST_LIST)

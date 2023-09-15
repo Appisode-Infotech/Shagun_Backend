@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -117,6 +119,8 @@
 
 
 
+
+
     </style>
 </head>
 
@@ -155,7 +159,7 @@
                             <label class="mr-2 custom-label"> Greetings Filter </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
+                                    aria-expanded="false" style="width: 110px; height: 40px;">
                                 {% if status is None %}
                                 All
                                 {% elif status == 0 %}
@@ -224,7 +228,7 @@
                                 <td>
                                     {{greetings.card_name}}
                                 </td>
-                                <td>
+                                <td>₹
                                     {{greetings.card_price}}
                                 </td>
                                 <td>
@@ -256,6 +260,8 @@
                                 <td>
                                     <button onclick="showPopUpDiv('{{greetings.card_id}}', '{{greetings.card_name}}','{{greetings.card_price}}')"
                                             class="btn btn-outline-info btn-fw">Edit
+                                        <i class="fas fa-edit"></i>
+
                                     </button>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
@@ -288,8 +294,9 @@
                                                         <div class="form-group row">
                                                             <label class="col-sm-3 col-form-label">Price</label>
                                                             <div class="col-sm-9">
-                                                                <input id="price" name="card_price" type="text"
-                                                                       class="form-control"/>
+                                                                <input required type="text" class="form-control"
+                                                                placeholder="00.00" pattern="[1-9][0-9]{0,5}"
+                                                                    title="Please add the amount only" name="card_price"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -395,6 +402,8 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
+
 
 
 </script>

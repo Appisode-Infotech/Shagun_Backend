@@ -64,11 +64,26 @@
         aspect-ratio:3/2;
         }
 
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure the overlay is on top of other content */
+          }
 
-
-
-
-
+          .custom-alert {
+            background-color: #ffffe0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          }
 
     </style>
 </head>
@@ -85,6 +100,21 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <div id="customAlertOverlay" class="custom-alert-overlay">
+            <div class="custom-alert">
+                You can only Invite to Approved Events
+            </div>
+        </div>
+        <div id="customAlertOverlay1" class="custom-alert-overlay">
+            <div class="custom-alert">
+                You cannot Edit Rejected Events
+            </div>
+        </div>
+        <div id="customAlertOverlay2" class="custom-alert-overlay">
+            <div class="custom-alert">
+                You cannot Activate/Inactivate Rejected Events
+            </div>
+        </div>
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -108,7 +138,7 @@
                             <label class="mr-2 custom-label"> Event Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
+                                    aria-expanded="false" style="width: 110px; height: 40px;">
                                 {% if status == '%' or status is None %}
                                 All
                                 {% elif status == '0' %}
@@ -163,7 +193,6 @@
                             {% else %}
 
                             {% for event in response %}
-
                             <tr>
                                 <td>{{ event.event_name }}</td>
 
@@ -214,7 +243,7 @@
                                         {% if event.is_approved == 2 %}
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                  data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" disabled>
+                                                aria-expanded="false" onclick="showCustomAlertForActivate()">
                                             {% if event.status == 0 %}
                                             Inactive
                                             {% elif event.status == 1 %}
@@ -244,8 +273,7 @@
                                 <td>
                                     {% if event.is_approved == 2 %}
                                     <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="window.location.href='{% url 'edit_event' event.event_id %}'"
-                                            disabled>
+                                             onclick="showCustomAlertForEdit()">
                                         Edit
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -258,9 +286,15 @@
                                     {% endif%}
                                 </td>
                                 <td>
+                                    {% if event.is_approved == 1 %}
                                     <button type="button" class="btn btn-social-icon btn-outline-facebook"
                                             onclick="window.location.href='{% url 'whatsapp_invite' event.event_id %}'">
                                         <i class="fab fa-whatsapp"></i></button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-social-icon btn-outline-facebook"
+                                            onclick="showCustomAlertForInvite()">
+                                        <i class="fab fa-whatsapp"></i></button>
+                                    {% endif %}
 
                                 </td>
                             </tr>
@@ -325,13 +359,35 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+</script>
+<script> showCustomAlertForEdit
+function showCustomAlertForInvite() {
+  var customAlertOverlay = document.getElementById("customAlertOverlay");
+  customAlertOverlay.style.display = "flex";
+
+  setTimeout(function() {
+    customAlertOverlay.style.display = "none";
+  }, 1000);
+}
+
+function showCustomAlertForEdit() {
+  var customAlertOverlay = document.getElementById("customAlertOverlay1");
+  customAlertOverlay.style.display = "flex";
+
+  setTimeout(function() {
+    customAlertOverlay.style.display = "none";
+  }, 1000);
+}
 
 
+function showCustomAlertForActivate() {
+  var customAlertOverlay = document.getElementById("customAlertOverlay2");
+  customAlertOverlay.style.display = "flex";
 
-
-
-
-
+  setTimeout(function() {
+    customAlertOverlay.style.display = "none";
+  }, 1000);
+}
 
 </script>
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

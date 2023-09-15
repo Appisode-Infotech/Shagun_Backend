@@ -323,6 +323,7 @@ def filter_kyc_request(request, status):
 def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
+        print(response)
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)

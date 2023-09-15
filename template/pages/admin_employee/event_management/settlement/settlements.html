@@ -173,9 +173,9 @@
                                     {% endfor %}</br>
                                     <b>Date : </b> {{ event.event_date }}
                                 </td>
-                                <td>{{event.total_received_amount}}</td>
-                                <td>{{event.settled_amount}}</td>
-                                <td>{{event.balance_shagun_amount}}</td>
+                                <td>₹ {{event.total_received_amount}}</td>
+                                <td>₹ {{event.settled_amount}}</td>
+                                <td>₹ {{event.balance_shagun_amount}}</td>
                                 <td>
                                     {% if event.total_received_amount > 0 %}
                                     <button type="button" class="btn btn-outline-info btn-fw"

@@ -829,6 +829,7 @@ def edit_user_kyc(obj):
 
 
 def get_user_requests(param):
+    print(param)
     try:
         with connection.cursor() as cursor:
             request_query = f"""
@@ -847,7 +848,8 @@ def get_user_requests(param):
                         """
 
             cursor.execute(request_query)
-            request_list = cursor.fetchall()
+            reso = request_list = cursor.fetchall()
+            print(reso)
             return {
                 "status": True,
                 "req_list": responsegenerator.responseGenerator.generateResponse(request_list, REQUEST_LIST)

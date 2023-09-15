@@ -8,10 +8,11 @@ from Shagun_backend.util.constants import USER_HOME_PAGE
 def home_page_data(uid):
     try:
         with connection.cursor() as cursor:
-            phone_query = f"""SELECT phone FROM users WHERE uid = '{uid}'"""
+            phone_query = f"""SELECT * FROM users WHERE uid = '{uid}'"""
             cursor.execute(phone_query)
-            phone = cursor.fetchone()[0]
-            user_status = cursor.fetchone()[9]
+            user_data = cursor.fetchone()
+            phone = user_data[4]
+            user_status = user_data[9]
 
             sent_transactions_query = f"""
                 SELECT COALESCE(SUM(shagun_amount), 0) AS total_amount

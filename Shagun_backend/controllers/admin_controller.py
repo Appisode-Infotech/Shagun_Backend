@@ -10,13 +10,22 @@ def admin_dashboard(uid):
         with connection.cursor() as cursor:
             transaction_stats_query = f"""
                 SELECT 
-                    SUM(CASE WHEN DATE(created_on) = '{today.date()}' THEN transaction_amount ELSE 0 END) AS sum_today,
-                    SUM(transaction_amount) AS total_sum,
-                    SUM(shagun_amount) AS total_shagun_amount,
-                    SUM(transaction_fee) AS total_transaction_fee,
-                    SUM(CASE WHEN DATE(created_on) = '{today.date()}' THEN shagun_amount ELSE 0 END) AS shagun_today
-                FROM transaction_history;
-                """
+                    COALESCE(sum_today, 0) AS sum_today,
+                    COALESCE(total_sum, 0) AS total_sum,
+                    COALESCE(total_shagun_amount, 0) AS total_shagun_amount,
+                    COALESCE(total_transaction_fee, 0) AS total_transaction_fee,
+                    COALESCE(shagun_today, 0) AS shagun_today
+                FROM (
+                    SELECT 
+                        SUM(CASE WHEN DATE(created_on) = '{today.date()}' THEN transaction_amount ELSE 0 END) AS sum_today,
+                        SUM(transaction_amount) AS total_sum,
+                        SUM(shagun_amount) AS total_shagun_amount,
+                        SUM(transaction_fee) AS total_transaction_fee,
+                        SUM(CASE WHEN DATE(created_on) = '{today.date()}' THEN shagun_amount ELSE 0 END) AS shagun_today
+                    FROM transaction_history
+                ) AS subquery;
+            """
+
             cursor.execute(transaction_stats_query)
             transaction_stats = cursor.fetchone()
             event_stats_query = f"""

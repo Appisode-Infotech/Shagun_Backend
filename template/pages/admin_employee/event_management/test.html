@@ -197,6 +197,29 @@
                                     {{event_data.id}}</h4>
                                 <form class="form-sample" id="myForm">
                                     {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Invited By</label>
+                                                <div class="col-sm-9">
+
+                                                    <input type="text" id="name" name="invited_by" readonly
+                                                           onclick="myFunction()"
+                                                           placeholder="Search" class="form-control">
+
+                                                    <div id="myDropdown" class="dropdown-content"
+                                                         style="cursor: pointer;">
+                                                        <input type="text" placeholder="Search" id="myInput"
+                                                               onkeyup="filterFunction()" class="form-control">
+                                                        {% for users in admins.admins %}
+                                                        <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}</a>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <input type="hidden" id="uid" name="invited_by_uid">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Invite Message</label>
@@ -307,6 +330,66 @@
 <script src="{% static 'js/select2.js' %}"></script>
 
 <script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        const dropdown = document.getElementById("myDropdown");
+        dropdown.classList.toggle("show");
+    }
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    function setValue(value1, value2) {
+        document.getElementById("name").value = value1;
+        document.getElementById("uid").value = value2;
+        myFunction();
+    }
+
+    // Add an event listener to the document to close the dropdown when clicking outside
+    document.addEventListener("click", function(event) {
+        const dropdown = document.getElementById("myDropdown");
+        const nameInput = document.getElementById("name");
+        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+
+
+
+
+
+</script>
+<script>
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            var phone = document.getElementById("phone").value;
+            var csvFile = document.querySelector('input[type="file"]').value;
+            var uidInput = document.getElementById("uid");
+
+            if (uidInput.value.trim() === "" || (phone === "" && csvFile === "")) {
+                var errorContainer = document.querySelector('.messages-container');
+                errorContainer.style.display = "block";
+                e.preventDefault();
+            }
+        });
+
+
+</script>
+
+<script>
         document.getElementById("myForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
@@ -322,7 +405,7 @@
                 document.getElementById("loader").style.display = "none";
                 document.getElementById("overlay").style.display = "none";
 
-                if (data.success) {
+                if (data.status) {
                     var customAlertOverlay = document.getElementById("customAlertOverlay");
                     var customAlertIcon = document.getElementById("customAlertIcon");
                     var customAlertIconError = document.getElementById("customAlertIconError");
@@ -357,10 +440,6 @@
                 console.error(error);
             });
         });
-
-
-
-
 
 </script>
 

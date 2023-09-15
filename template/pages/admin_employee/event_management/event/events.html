@@ -78,7 +78,7 @@
           }
 
           .custom-alert {
-            background-color: #f2f2f2;
+            background-color: #ffffe0;
             border: 1px solid #ddd;
             border-radius: 5px;
             padding: 20px;
@@ -108,6 +108,11 @@
         <div id="customAlertOverlay1" class="custom-alert-overlay">
             <div class="custom-alert">
                 You cannot Edit Rejected Events
+            </div>
+        </div>
+        <div id="customAlertOverlay2" class="custom-alert-overlay">
+            <div class="custom-alert">
+                You cannot Activate/Inactivate Rejected Events
             </div>
         </div>
         <div class="col-lg-10 grid-margin stretch-card">
@@ -238,7 +243,7 @@
                                         {% if event.is_approved == 2 %}
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                  data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" disabled>
+                                                aria-expanded="false" onclick="showCustomAlertForActivate()">
                                             {% if event.status == 0 %}
                                             Inactive
                                             {% elif event.status == 1 %}
@@ -367,6 +372,16 @@ function showCustomAlertForInvite() {
 
 function showCustomAlertForEdit() {
   var customAlertOverlay = document.getElementById("customAlertOverlay1");
+  customAlertOverlay.style.display = "flex";
+
+  setTimeout(function() {
+    customAlertOverlay.style.display = "none";
+  }, 1000);
+}
+
+
+function showCustomAlertForActivate() {
+  var customAlertOverlay = document.getElementById("customAlertOverlay2");
   customAlertOverlay.style.display = "flex";
 
   setTimeout(function() {

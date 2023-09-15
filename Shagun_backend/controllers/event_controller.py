@@ -774,7 +774,6 @@ def event_admin(event_id):
 
 
 def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
-    print(invited_to)
     try:
         with connection.cursor() as cursor:
             invite_query = """
@@ -808,10 +807,7 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
                 cursor.execute(invite_notification_query)
                 title = f"""{invited_by[0]} has invited you to {event_name[0]}"""
                 send_push_notification(fcm_token, title, invite_message)
-            return {
-                "status": True,
-                "msg": "Inserted successfully"
-            }, 200
+            return {"status": False, "message": "Messages sent Failed"}, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

@@ -124,11 +124,11 @@
                                 {% elif status == 1 %}
                                 New
                                 {% elif status == 2 %}
-                                In Progress</a>
+                                Print Started
                                 {% elif status == 3 %}
                                 Print Completed
                                 {% elif status == 4 %}
-                                Dispatched
+                                Ready For Dispatched
                                 {% elif status == 5 %}
                                 Closed
                                 {% endif %}
@@ -140,11 +140,11 @@
                                 <a class="dropdown-item"
                                    href="{% url 'filter_all_printer_jobs' 1 %}">New</a>
                                 <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 2 %}">In Progress</a>
+                                   href="{% url 'filter_all_printer_jobs' 2 %}">Print Started</a>
                                 <a class="dropdown-item"
                                    href="{% url 'filter_all_printer_jobs' 3 %}">Print Completed</a>
                                 <a class="dropdown-item"
-                                   href="{% url 'filter_all_printer_jobs' 4 %}">Dispatched</a>
+                                   href="{% url 'filter_all_printer_jobs' 4 %}">Ready For Dispatched</a>
                                 <a class="dropdown-item"
                                    href="{% url 'filter_all_printer_jobs' 5 %}">Closed</a>
                             </div>
@@ -192,11 +192,11 @@
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>
                                     {% elif job.status == 2 %}
-                                    <label class="badge badge-light">In Progress</label>
+                                    <label class="badge badge-light">Print Started</label>
                                     {% elif job.status == 3 %}
                                     <label class="badge badge-secondary">Print Completed</label>
                                     {% elif job.status == 4 %}
-                                    <label class="badge badge-info">Dispatched</label>
+                                    <label class="badge badge-info">Ready For Dispatched</label>
                                     {% elif job.status == 5 %}
                                     <label class="badge badge-success">Closed</label>
                                     {% endif %}

@@ -1591,6 +1591,7 @@ def edit_user(request):
                         for chunk in file_obj.chunks():
                             destination.write(chunk)
 
+            print(file_name)
             # edit_reg_obj = registration_model.registration_model_from_dict(request.data)
             response, status_code = user_controller.edit_user(request.data, file_name)
             return JsonResponse(response, status=status_code)

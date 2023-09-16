@@ -58,12 +58,22 @@ def user_register(reg_obj, file_name):
         return {"status": False, "message": str(e), "user": None}, 301
 
 
-def edit_user(edit_reg_obj):
+def edit_user(edit_reg_obj, file_name):
     try:
         with connection.cursor() as cursor:
-            sql_query = "UPDATE users SET name = %s, email = %s, phone = %s, profile_pic = %s WHERE uid = %s"
-            values = (edit_reg_obj.name, edit_reg_obj.email, edit_reg_obj.phone, edit_reg_obj.profile, edit_reg_obj.uid)
-            cursor.execute(sql_query, values)
+            if file_name == '':
+                sql_query = "UPDATE users SET name = %s, email = %s, phone = %s WHERE uid = %s"
+                values = (
+                edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], edit_reg_obj.uid)
+                cursor.execute(sql_query, values)
+
+            else:
+                sql_query = "UPDATE users SET name = %s, email = %s, phone = %s, profile_pic = %s WHERE uid = %s"
+                values = (
+                edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], file_name, edit_reg_obj.uid)
+                cursor.execute(sql_query, values)
+
+
             return {
                 "status": True,
                 "message": "User edited successfully"

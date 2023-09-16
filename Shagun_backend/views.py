@@ -503,13 +503,15 @@ def search_closed_printer_jobs(request):
     else:
         return redirect('sign_up')
 
-
 def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             reciever_list = request.POST.getlist('selected_uid')
+            print(reciever_list)
             transaction_id = request.POST.getlist('selected_ids')
+            print(transaction_id)
             amount_list = request.POST.getlist('selected_amounts')
+            print(amount_list)
             transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
             paginator = Paginator(response['transactions'], 250)
@@ -517,7 +519,7 @@ def transactions_settlement(request, event_id):
             response = paginator.get_page(page)
             return render(request,
                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                          {"status": True, "response": response, "event_id": event_id})
+                          {"response": response, "event_id": event_id})
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
             paginator = Paginator(response['transactions'], 250)
@@ -528,6 +530,32 @@ def transactions_settlement(request, event_id):
                           {"response": response, "event_id": event_id})
     else:
         return redirect('sign_up')
+
+
+# def transactions_settlement(request, event_id):
+#     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+#         if request.method == 'POST':
+#             print("started")
+#             print(request.POST)
+#             reciever_list = request.POST.getlist('selected_uid')
+#             print(reciever_list)
+#             transaction_id = request.POST.getlist('selected_ids')
+#             print(transaction_id)
+#             amount_list = request.POST.getlist('selected_amounts')
+#             print(amount_list)
+#             transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
+#             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
+#             return JsonResponse(response)
+#         else:
+#             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
+#             paginator = Paginator(response['transactions'], 250)
+#             page = request.GET.get('page')
+#             response = paginator.get_page(page)
+#             return render(request,
+#                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
+#                           {"response": response, "event_id": event_id})
+#     else:
+#         return redirect('sign_up')
 
 
 def search_transactions_settlement(request, event_id):
@@ -1551,8 +1579,20 @@ def edit_user(request):
         decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
         username = decoded_token['username']
         if username == request.data.get('uid'):
-            edit_reg_obj = registration_model.registration_model_from_dict(request.data)
-            response, status_code = user_controller.edit_user(edit_reg_obj)
+            file_name = ""
+            if request.data['profile_pic'] is None:
+                print("No profile added")
+            else:
+                print("file found")
+                for file_key, file_obj in request.FILES.items():
+                    file_name = f"""images/profile_pic/{request.data['uid']}_{str(file_obj)}"""
+                    print(file_name)
+                    with default_storage.open(file_name, 'wb+') as destination:
+                        for chunk in file_obj.chunks():
+                            destination.write(chunk)
+
+            # edit_reg_obj = registration_model.registration_model_from_dict(request.data)
+            response, status_code = user_controller.edit_user(request.data, file_name)
             return JsonResponse(response, status=status_code)
 
         else:

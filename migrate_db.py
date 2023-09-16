@@ -298,6 +298,15 @@ table_queries = [
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
     """,
+    """
+    CREATE TABLE `order_status` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `transaction_id` int(11) NOT NULL,
+ `status` int(11) NOT NULL,
+ `created_on` timestamp NOT NULL DEFAULT current_timestamp(),
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+    """,
 
     """
     INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, 

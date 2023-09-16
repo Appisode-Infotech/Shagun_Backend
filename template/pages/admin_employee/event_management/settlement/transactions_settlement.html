@@ -450,7 +450,7 @@
         selectedShagunAmounts = [];
         selectedShagunAmountSum = 0.0;
 
-        const checkboxes = document.querySelectorAll('.select-row:checked');
+        const checkboxes = document.querySelectorAll('.select-row:checked:not([disabled])');
         checkboxes.forEach((checkbox) => {
             const row = checkbox.closest('tr');
             const id = row.querySelector('td:nth-child(2)').textContent;
@@ -609,7 +609,6 @@
                 customAlertOverlay1.style.display = "flex";
 
             } else {
-                console.log(data.success);
                 var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
                 var customAlertIcon = document.getElementById("customAlertIcon");
                 var customAlertIconError = document.getElementById("customAlertIconError");

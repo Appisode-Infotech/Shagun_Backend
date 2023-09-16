@@ -219,8 +219,7 @@
                                             <a class="dropdown-item {% if job.status >= 2 %}disabled{% endif %}"
                                                href="{% url 'change_printer_jobs_status' job.id 1 'printer_all_jobs' %}">New</a>
                                             <a class="dropdown-item {% if job.status >= 3 %}disabled{% endif %}"
-                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_all_jobs' %}">In
-                                                Progress</a>
+                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_all_jobs' %}">Print Started</a>
                                             <a class="dropdown-item {% if job.status >= 4 %}disabled{% endif %}"
                                                href="{% url 'change_printer_jobs_status' job.id 3 'printer_all_jobs' %}">Print
                                                 Completed</a>

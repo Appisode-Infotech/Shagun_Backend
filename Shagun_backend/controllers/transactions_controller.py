@@ -18,6 +18,7 @@ def add_transaction_history(transaction_obj):
             '{transaction_obj.payment_status}', '{transaction_obj.event_id}', {transaction_obj.status}, '{today}', '{transaction_obj.gifter_name}')"""
 
             cursor.execute(transaction_history_query)
+            transaction_id = cursor.lastrowid
 
             event_type_query = f"""SELECT et.event_type_name FROM event AS e
                                             LEFT JOIN events_type AS et ON e.event_type_id = et.id
@@ -42,6 +43,10 @@ def add_transaction_history(transaction_obj):
                1,'{today}', '{today}', '{transaction_obj.greeting_card_price}', '{transaction_obj.event_id}', '{transaction_obj.wish}' )"""
 
             cursor.execute(printer_jobs_query)
+
+            add_printer_query = """INSERT INTO order_status (transaction_id, status) 
+                                                         VALUES (%s, %s)"""
+            cursor.execute(add_printer_query, [transaction_id, 1])
 
             return {
                 "status": True,

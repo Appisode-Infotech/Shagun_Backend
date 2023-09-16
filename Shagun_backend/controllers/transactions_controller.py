@@ -431,7 +431,7 @@ def search_received_gift(gift_data_obj):
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
                 WHERE th.receiver_uid = '{gift_data_obj.uid}' 
-                AND ( u.name LIKE '%{gift_data_obj.search}%' OR u.phoneLIKE '%{gift_data_obj.search}%') 
+                AND ( u.name LIKE '%{gift_data_obj.search}%' OR u.phone LIKE '%{gift_data_obj.search}%') 
                 ORDER BY th.created_on DESC"""
             cursor.execute(sent_gift_query)
             received_gifts = cursor.fetchall()

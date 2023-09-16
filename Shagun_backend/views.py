@@ -1,3 +1,5 @@
+import json
+
 import jwt
 from datetime import datetime, timedelta
 import os
@@ -508,11 +510,14 @@ def transactions_settlement(request, event_id):
         if request.method == 'POST':
             print("started")
             print(request.POST)
-            reciever_list = request.POST.getlist('selectedReceiverUids')
+            reciever_list = request.POST.getlist('selectedReceiverUids')[0]
+            reciever_list = [str(item) for item in reciever_list.split(',')]
             print(reciever_list)
-            transaction_id = request.POST.getlist('selectedShagunAmounts')
+            transaction_id = request.POST.getlist('selectedIds')[0]
+            transaction_id = [int(item) for item in transaction_id.split(',')]
             print(transaction_id)
-            amount_list = request.POST.getlist('selectedShagunAmounts')
+            amount_list = request.POST.getlist('selectedShagunAmounts')[0]
+            amount_list = [float(item) for item in amount_list.split(',')]
             print(amount_list)
             transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')

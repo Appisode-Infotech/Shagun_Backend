@@ -254,7 +254,6 @@ def search_transaction_list(event_id, search):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
-
 def settle_payment(receivers_list, transactions_list, amount_list):
     user_totals = {}
 
@@ -265,10 +264,9 @@ def settle_payment(receivers_list, transactions_list, amount_list):
         else:
             user_totals[username] = user_amount_float
 
-    total_amount = sum(user_totals.values())
-    print("total amount to be paid is :" + total_amount)
-
     for username, user_total in user_totals.items():
+        print(f"The user {username} should get a total of {user_total:.2f}")
+
         import requests
         import hmac
         # python code to implement payment gateway and sent the respective amount to respective users

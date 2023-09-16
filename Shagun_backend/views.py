@@ -1522,7 +1522,7 @@ def get_users_by_name_or_phone(request):
 @api_view(['POST'])
 def user_register(request):
     file_name = ""
-    if request.data['profile_pic'] is None:
+    if request.data.get('profile_pic') is None:
         print("No profile added")
     else:
         print("file found")
@@ -1580,7 +1580,7 @@ def edit_user(request):
         username = decoded_token['username']
         if username == request.data.get('uid'):
             file_name = ""
-            if request.data['profile_pic'] is None:
+            if request.data.get('profile_pic') is None:
                 print("No profile added")
             else:
                 print("file found")

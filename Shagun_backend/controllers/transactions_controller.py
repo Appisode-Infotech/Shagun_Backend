@@ -2,6 +2,8 @@ import hashlib
 
 import pymysql
 from django.db import connection
+
+from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
 
@@ -274,11 +276,26 @@ def settle_payment(transactions_list):
 
             for user, total_amount in user_totals.items():
                 print(f"User: {user}, Total Amount: {total_amount}")
-                bank_data_query = f"""SELECT bank_name, ifsc_code, account_holder_name, account_number 
-                                            FROM bank_details WHERE uid = '{user}' """
+                bank_data_query = f"""SELECT bk.bank_name, bk.ifsc_code, bk.account_holder_name, bk.account_number,
+                                            u.name, u.fcm_token FROM bank_details AS bk 
+                                            LEFT JOIN users AS u ON bk.uid = u.uid WHERE uid = '{user}' """
                 cursor.execute(bank_data_query)
                 bank_data = cursor.fetchall()
                 print(bank_data)
+                for row in bank_data:
+                    bank_name, ifsc_code, account_holder_name, account_number, name, fcm_token = row
+                    invite_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                                        VALUES ('{user}', 'shagun',
+                                                        'Shagun amount {total_amount} credited',
+                                                        'Shagun amount of {total_amount} INR has been successfully 
+                                                        transferred to {bank_name} Bank for the account ending with 
+                                                        {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]}')"""
+                    cursor.execute(invite_notification_query)
+                    title = f"""Shagun amount {total_amount} credited"""
+                    message = f""" Shagun amount of {total_amount} INR has been successfully 
+                                                        transferred to {bank_name} Bank for the account ending with 
+                                                        {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]} """
+                    send_push_notification(fcm_token, title, message)
 
             return {
                 "status": True,

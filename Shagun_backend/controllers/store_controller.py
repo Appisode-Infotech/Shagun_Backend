@@ -1,6 +1,7 @@
 import pymysql
 from django.db import connection
 
+from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 
@@ -372,13 +373,35 @@ def change_print_jobs_status(pjid, status):
             query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{pjid}' """
             cursor.execute(query)
 
-            query = "SELECT id FROM print_jobs WHERE id = %s"
+            query = "SELECT transaction_id FROM print_jobs WHERE id = %s"
             cursor.execute(query, (pjid,))
             transaction_id = cursor.fetchone()[0]
 
             add_printer_query = """INSERT INTO order_status (transaction_id, status) 
                                              VALUES (%s, %s)"""
             cursor.execute(add_printer_query, [transaction_id, status])
+
+            fcm_query = f"""SELECT u.name, u.fcm_token FROM transaction_history AS th
+                            LEFT JOIN users as u ON th.sender_uid = u.uid
+                            WHERE th.id = %s"""
+            cursor.execute(fcm_query, (transaction_id,))
+            fcm_data = cursor.fetchone()
+            if status == 1:
+                title = f"Transaction {transaction_id} status: Job Created"
+                message = "Your transaction is created and pending for further processing."
+            elif status == 2:
+                title = f"Transaction {transaction_id} status: Printing Started"
+                message = "The printing process of your card has begun."
+            elif status == 3:
+                title = f"Transaction {transaction_id} status: Printing Completed"
+                message = "Printing of your card is completed successfully."
+            elif status == 4:
+                title = f"Transaction {transaction_id} status: Ready for Dispatch"
+                message = "Your card is now ready for dispatch."
+            else:
+                title = f"Transaction {transaction_id} status: Dispatched"
+                message = "Your card has been dispatched."
+            send_push_notification(fcm_data[1], title, message)
 
             return {
                 "status": True,

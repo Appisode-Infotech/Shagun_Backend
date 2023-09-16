@@ -261,46 +261,50 @@ def settle_payment(transactions_list):
     try:
         with connection.cursor() as cursor:
             transactions_string = ', '.join(transactions_list)
-            settlement_data_query = f"""SELECT receiver_uid, shagun_amount FROM transaction_history 
+            settlement_data_query = f"""SELECT th.receiver_uid, th.shagun_amount, u.name AS sender_name FROM transaction_history AS th
+                                        LEFT JOIN users AS u ON u.id = th.sender_uid
                                         WHERE id IN ({transactions_string})"""
             cursor.execute(settlement_data_query)
             settlement_data = cursor.fetchall()
             print(settlement_data)
             user_totals = {}
 
-            for user, amount in settlement_data:
-                if user in user_totals:
-                    user_totals[user] += amount
+            for receiver, amount, sender_name in settlement_data:
+                if receiver in user_totals:
+                    user_totals[receiver]['amount'] += amount
+                    user_totals[receiver]['sender_name'] = sender_name
                 else:
-                    user_totals[user] = amount
+                    user_totals[receiver] = {'amount': amount, 'sender_name': sender_name}
 
-            for user, total_amount in user_totals.items():
-                print(f"User: {user}, Total Amount: {total_amount}")
+            for receiver, data in user_totals.items():
+                total_amount = data['amount']
+                sender_name = data['sender_name']
+                print(f"Receiver: {receiver}, Total Amount: {total_amount}, Sender: {sender_name}")
                 bank_data_query = f"""SELECT bk.bank_name, bk.ifsc_code, bk.account_holder_name, bk.account_number,
-                                            u.name, u.fcm_token FROM bank_details AS bk 
-                                            LEFT JOIN users AS u ON bk.uid = u.uid WHERE uid = '{user}' """
+                                        u.name, u.fcm_token FROM bank_details AS bk 
+                                        LEFT JOIN users AS u ON bk.uid = u.uid WHERE uid = '{receiver}' """
                 cursor.execute(bank_data_query)
                 bank_data = cursor.fetchall()
                 print(bank_data)
                 for row in bank_data:
-                    bank_name, ifsc_code, account_holder_name, account_number, name, fcm_token = row
+                    bank_name, ifsc_code, account_holder_name, account_number, receiver_name, fcm_token = row
                     invite_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
-                                                        VALUES ('{user}', 'shagun',
-                                                        'Shagun amount {total_amount} credited',
-                                                        'Shagun amount of {total_amount} INR has been successfully 
-                                                        transferred to {bank_name} Bank for the account ending with 
-                                                        {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]}')"""
+                                                    VALUES ('{receiver}', 'shagun',
+                                                    'Shagun amount {total_amount} credited by {sender_name}',
+                                                    'Shagun amount of {total_amount} INR has been successfully 
+                                                    transferred to {bank_name} Bank for the account ending with 
+                                                    {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]}')"""
                     cursor.execute(invite_notification_query)
-                    title = f"""Shagun amount {total_amount} credited"""
+                    title = f"""Shagun amount {total_amount} credited from {sender_name}"""
                     message = f""" Shagun amount of {total_amount} INR has been successfully 
-                                                        transferred to {bank_name} Bank for the account ending with 
-                                                        {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]} """
+                                                    transferred to {bank_name} Bank for the account ending with 
+                                                    {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]} """
                     send_push_notification(fcm_token, title, message)
 
-            return {
-                "status": True,
-                "message": "Amount Transfer Completed",
-            }, 200
+        return {
+            "status": True,
+            "message": "Amount Transfer Completed",
+        }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

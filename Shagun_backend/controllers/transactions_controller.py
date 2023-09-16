@@ -50,6 +50,15 @@ def add_transaction_history(transaction_obj):
                                                          VALUES (%s, %s)"""
             cursor.execute(add_printer_query, [transaction_id, 1])
 
+            fcm_query = f"""SELECT fcm_token FROM users 
+                                             WHERE uid = '{transaction_obj.uid}' """
+            cursor.execute(fcm_query)
+            fcm_token = cursor.fetchone()
+            title = f"Transaction {transaction_id} status: Job Created"
+            message = "Your transaction is created and pending for further processing."
+            send_push_notification(fcm_token[0], title, message)
+
+
             return {
                 "status": True,
                 "msg": "Transaction records added"

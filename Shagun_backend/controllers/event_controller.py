@@ -57,15 +57,17 @@ def create_event(event_obj):
                             VALUES ('{uid}', 'event',
                             'Event has been created',
                             ' Event created for {admin[1]} on {event_obj.event_date}')"""
-                resp1 = cursor.execute(event_created_notification_query)
-                print(resp1)
+                cursor.execute(event_created_notification_query)
 
-                phone_query = f"""SELECT phone FROM users WHERE  uid = '{uid}'"""
+                phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
-                phone = cursor.fetchone()
+                user_data = cursor.fetchone()
+                title = f"Event has been created"
+                message = f"Event created for {admin[1]} on {event_obj.event_date}"
+                send_push_notification(user_data[1], title, message)
 
                 # Replace this with your desired text
-                text = "https://shagunmobile.page.link/qrScanner/" + str(event_id) + "_" + phone[0]
+                text = "https://shagunmobile.page.link/qrScanner/" + str(event_id) + "_" + user_data[0]
 
                 # Generate QR code
                 qr = qrcode.QRCode(

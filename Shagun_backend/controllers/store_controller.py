@@ -372,7 +372,7 @@ def change_print_jobs_status(pjid, status):
             query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{pjid}' """
             cursor.execute(query)
 
-            query = "SELECT transaction_id FROM print_jobs WHERE id = %s"
+            query = "SELECT id FROM print_jobs WHERE id = %s"
             cursor.execute(query, (pjid,))
             transaction_id = cursor.fetchone()[0]
 

@@ -276,6 +276,9 @@
 
                             </table>
                         </div>
+                        <div id="error-message" class="alert alert-danger" style="display: none; margin-top: 10px;">
+                            Please select the transaction to settle.
+                        </div>
                         {% if request.session.role == 1%}
                         {% if status != 1%}
                         <div class="center-button">
@@ -285,9 +288,6 @@
                         </div>
                         {% endif %}
                         {% endif %}
-                        <div id="error-message" class="alert alert-danger" style="display: none;">
-                            Please select the transaction to settle.
-                        </div>
                         <div id="customAlertOverlay" class="custom-alert-overlay">
                             <div class="custom-alert">
                                 <label id="shagun-sum-label1">Please confirm if you want to pay the amount: 0.00</label>
@@ -472,16 +472,14 @@
         window.location.href = selectedValue;
     });
 
-
-
-
-
 </script>
 <script>
     // Function to update the sum of Shagun Amount for selected rows
     function updateShagunSum() {
         let sum = 0;
         const selectRows = document.getElementsByClassName('select-row');
+        var errorMessage = document.getElementById("error-message");
+
         for (let i = 0; i < selectRows.length; i++) {
             if (selectRows[i].checked && !selectRows[i].disabled) {
                 const shagunAmountCell = selectRows[i].parentNode.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling;
@@ -495,6 +493,7 @@
         }
 
         console.log("sum: " + sum); // Move this line inside the loop
+        errorMessage.style.display = "none";
         document.getElementById('shagun-sum-label').textContent = 'Total Shagun Amount: ' + sum.toFixed(2);
         document.getElementById('shagun-sum-label1').textContent = 'Please confirm if you want to pay the amount: ' + sum.toFixed(2);
     }

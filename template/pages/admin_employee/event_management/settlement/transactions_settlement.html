@@ -463,11 +463,13 @@
             selectedShagunAmountSum += shagunAmount;
         });
 
+        errorMessage.style.display = "none";
+
         console.log(selectedIds)
         console.log(selectedReceiverUids)
         console.log(selectedShagunAmounts)
         console.log(selectedShagunAmountSum)
-        // Update the sum display
+
         document.getElementById('selectedShagunAmountSum').textContent = selectedShagunAmountSum.toFixed(2);
         document.getElementById('selectedShagunAmountSumConf').textContent = selectedShagunAmountSum.toFixed(2);
         document.getElementById('selected_uid').value = selectedReceiverUids
@@ -488,11 +490,11 @@
         updateSelectedData();
     }
 
-    // Attach event listener to the "Select All" checkbox
+    // event listener to the "Select All" checkbox
     const selectAllCheckbox = document.getElementById('select-all');
     selectAllCheckbox.addEventListener('click', toggleSelectAll);
 
-    // Attach event listener to individual checkboxes
+    // event listener to individual checkboxes
     const rowCheckboxes = document.querySelectorAll('.select-row');
     rowCheckboxes.forEach((checkbox) => {
         checkbox.addEventListener('change', updateSelectedData);

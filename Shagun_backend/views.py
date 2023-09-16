@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 import os
 import csv
 from django.core.files.storage import FileSystemStorage
-import re
 
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
@@ -21,7 +20,7 @@ from Shagun_backend.controllers import user_controller, event_controller, app_da
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
     bank_controller, test_controller, delivery_vendor_controller
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
-    app_data_model, add_printer_model, transactions_history_model, track_order_model, employee_model, \
+    app_data_model, add_printer_model, transactions_history_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model, bank_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
 from Shagun_backend.util.constants import today
@@ -1912,6 +1911,27 @@ def gift_sent_list(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
+
+@api_view(['POST'])
+def gift_sent_search(request):
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            gift_data_obj = gifts_transaction_model.gifts_transaction_model_from_dict(request.data)
+            response, status_code = transactions_controller.get_sent_gift(gift_data_obj)
+            return JsonResponse(response, status=status_code)
+
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
+
+
 @api_view(['POST'])
 def gift_received_list(request):
     token = request.headers.get('Authorization').split(' ')[1]
@@ -1941,6 +1961,24 @@ def gift_received_for_event(request):
         if username == request.data.get('uid'):
             response, status_code = transactions_controller.get_received_gift_for_event(request.data['uid'],
                                                                                         request.data['eid'])
+            return JsonResponse(response, status=status_code)
+
+        else:
+            return JsonResponse({'message': 'Invalid token for user'}, status=401)
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'message': 'Token has expired'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'message': 'Invalid token'}, status=401)
+
+@api_view(['POST'])
+def track_transaction(request):
+    token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
+        username = decoded_token['username']
+        if username == request.data.get('uid'):
+            response, status_code = transactions_controller.get_transaction_track(request.data['tid'])
             return JsonResponse(response, status=status_code)
 
         else:
@@ -1988,24 +2026,6 @@ def enable_disable_vendor(request):
     response, status_code = delivery_vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
 
-
-@api_view(['POST'])
-def track_order(request):
-    token = request.headers.get('Authorization').split(' ')[1]
-    try:
-        decoded_token = jwt.decode(token, 'secret_key', algorithms=['HS256'])
-        username = decoded_token['username']
-        if username == request.data.get('uid'):
-            track_order_obj = track_order_model.track_order_model_from_dict(request.data)
-            response, status_code = transactions_controller.get_track_order(track_order_obj)
-            return JsonResponse(response, status=status_code)
-        else:
-            return JsonResponse({'message': 'Invalid token for user'}, status=401)
-
-    except jwt.ExpiredSignatureError:
-        return JsonResponse({'message': 'Token has expired'}, status=401)
-    except jwt.InvalidTokenError:
-        return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
 # test done here

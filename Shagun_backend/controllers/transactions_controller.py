@@ -178,7 +178,7 @@ def get_received_gift_for_event(uid, eid):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, ev.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}' AND event_id = '{eid}') 
-                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number
+                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.sender_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
@@ -200,31 +200,6 @@ def get_received_gift_for_event(uid, eid):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
-
-def get_track_order(track_order_obj):
-    try:
-        with connection.cursor() as cursor:
-            track_order_query = f""" SELECT transaction_history.shagun_amount, print_jobs.status, 
-                                CASE WHEN print_jobs.transaction_id IS NOT NULL THEN True ELSE False END AS 
-                                settlement_status, transaction_history.created_on
-                                FROM transaction_history
-                                LEFT JOIN print_jobs ON transaction_history.id = print_jobs.transaction_id
-                                WHERE transaction_history.sender_uid = '{track_order_obj.uid}' 
-                                AND transaction_history.event_id = '{track_order_obj.event_id}'
-                                """
-            cursor.execute(track_order_query)
-            track = cursor.fetchall()
-            return {
-                "status": True,
-                "track_data": responseGenerator.generateResponse(track, TRACK_ORDER)
-            }, 200
-
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
-
 
 def get_transaction_list(event_id, status):
     try:
@@ -295,6 +270,11 @@ def settle_payment(receivers_list, transactions_list, amount_list):
                 track_order_query = " UPDATE transaction_history SET is_settled = 1 WHERE id IN ({})".format(
                     ','.join(transactions_list))
                 cursor.execute(track_order_query)
+
+                sql = "INSERT INTO order_status (transaction_id, status) VALUES (%s, %s)"
+                values = [(transaction_id, 6) for transaction_id in transactions_list]
+                cursor.executemany(sql, values)
+
                 return {
                     "status": True,
                     "msg": "done"
@@ -364,3 +344,21 @@ def settle_payment(receivers_list, transactions_list, amount_list):
         #         return {"status": False, "message": str(e)}, 301
         # else:
         #     print("Payment request failed.")
+
+
+def get_transaction_track(tid):
+    try:
+        with connection.cursor() as cursor:
+            track_order_query = f""" SELECT * from order_status WHERE transaction_id = {tid} """
+            cursor.execute(track_order_query)
+            track = cursor.fetchall()
+            print(track)
+            return {
+                "status": True,
+                "track_transaction": responseGenerator.generateResponse(track, TRACK_ORDER)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

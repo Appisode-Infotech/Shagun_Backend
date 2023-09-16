@@ -99,7 +99,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Closed Jobs List</h4>
+                        <h4 class="card-title">Dispatched Jobs List</h4>
                         <div class="form-group">
                             <form action="{% url 'search_closed_printer_jobs' %}" method="POST">
                                 {% csrf_token %}
@@ -126,7 +126,6 @@
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
                                 <th>Job Status</th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -161,9 +160,9 @@
                                     {% elif job.status == 3 %}
                                     <label class="badge badge-secondary">Print Completed</label>
                                     {% elif job.status == 4 %}
-                                    <label class="badge badge-info">Ready For Dispatched</label>
+                                    <label class="badge badge-info">Ready For Dispatch</label>
                                     {% elif job.status == 5 %}
-                                    <label class="badge badge-success">Closed</label>
+                                    <label class="badge badge-success">Dispatched</label>
                                     {% endif %}
                                 </td>
 

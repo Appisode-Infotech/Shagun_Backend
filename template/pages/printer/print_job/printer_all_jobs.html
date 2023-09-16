@@ -119,7 +119,7 @@
                             <label class="mr-2 custom-label"> Filter on Job Status: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false" style="width: 150px; height: 40px;">
+                                    aria-expanded="false" style="width: 200px; height: 40px;">
                                 {% if status is None %}
                                 All
                                 {% elif status == 1 %}
@@ -194,14 +194,14 @@
                                     {% elif job.status == 4 %}
                                     <label class="badge badge-info">Ready For Dispatched</label>
                                     {% elif job.status == 5 %}
-                                    <label class="badge badge-success">Ready For Dispatched</label>
+                                    <label class="badge badge-success">Dispatched</label>
                                     {% endif %}
                                 </td>
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                 id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                                aria-expanded="false" style="width: 200px; height: 40px;">
                                             {% if job.status == 1 %}
                                             New
                                             {% elif job.status == 2 %}

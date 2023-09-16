@@ -449,7 +449,8 @@ def search_open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -497,7 +498,8 @@ def search_closed_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html', {"response": response, "search": request.POST['search']})
+        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html',
+                      {"response": response, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -515,7 +517,7 @@ def transactions_settlement(request, event_id):
             response = paginator.get_page(page)
             return render(request,
                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                          {"response": response, "event_id": event_id})
+                          {"status": True, "response": response, "event_id": event_id})
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
             paginator = Paginator(response['transactions'], 250)
@@ -1873,6 +1875,7 @@ def get_my_all_invited_events(request):
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
+
 @api_view(['POST'])
 def get_my_notifications(request):
     token = request.headers.get('Authorization').split(' ')[1]
@@ -1909,7 +1912,6 @@ def gift_sent_list(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
-
 
 
 @api_view(['POST'])
@@ -1952,7 +1954,6 @@ def gift_received_list(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-
 @api_view(['POST'])
 def gift_received_search(request):
     token = request.headers.get('Authorization').split(' ')[1]
@@ -1991,6 +1992,7 @@ def gift_received_for_event(request):
         return JsonResponse({'message': 'Token has expired'}, status=401)
     except jwt.InvalidTokenError:
         return JsonResponse({'message': 'Invalid token'}, status=401)
+
 
 @api_view(['POST'])
 def track_transaction(request):
@@ -2046,7 +2048,6 @@ def manage_vendor(request):
 def enable_disable_vendor(request):
     response, status_code = delivery_vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
 
 
 # test done here

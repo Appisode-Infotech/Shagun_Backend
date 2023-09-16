@@ -3,6 +3,7 @@ import json
 import pymysql
 from django.db import connection
 
+from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
@@ -208,6 +209,14 @@ def add_user_kyc(kyc_obj):
                             'KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and {kyc_obj.identification_proof2}:{kyc_obj.identification_number2}')"""
                 cursor.execute(KYC_notification_query)
 
+                fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{kyc_obj.uid}' """
+                cursor.execute(fcm_query)
+                fcm_token = cursor.fetchone()
+                title = f"KYC Completed"
+                message = f""" KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and 
+                                {kyc_obj.identification_proof2}:{kyc_obj.identification_number2} """
+                send_push_notification(fcm_token[0], title, message)
+
                 return {
                     "status": True,
                     "message": "User KYC inserted"
@@ -392,8 +401,15 @@ def add_bank_details(bank_obj):
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                                             VALUES ('{bank_obj.uid}', 'KYC',
                                             'Linked {bank_obj.bank_name} Bank for {bank_obj.account_holder_name}',
-                                            'The {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked ')"""
+                                            'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked ')"""
                 cursor.execute(KYC_notification_query)
+
+                fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{bank_obj.uid}' """
+                cursor.execute(fcm_query)
+                fcm_token = cursor.fetchone()
+                title = f"Bank Linked"
+                message = f""" Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked """
+                send_push_notification(fcm_token[0], title, message)
 
                 return {
                     "status": True,

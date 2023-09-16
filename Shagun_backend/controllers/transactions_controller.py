@@ -206,6 +206,7 @@ def get_received_gift_for_event(uid, eid):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_transaction_list(event_id, status):
     try:
         with connection.cursor() as cursor:
@@ -220,6 +221,7 @@ def get_transaction_list(event_id, status):
             track = cursor.fetchall()
             return {
                 "status": True,
+                "message": "Transaction Completed",
                 "transactions": responseGenerator.generateResponse(track, Transaction_DATA)
             }, 200
 
@@ -264,6 +266,7 @@ def settle_payment(receivers_list, transactions_list, amount_list):
             user_totals[username] = user_amount_float
 
     total_amount = sum(user_totals.values())
+    print("total amount to be paid is :" + total_amount)
 
     for username, user_total in user_totals.items():
         import requests
@@ -409,8 +412,6 @@ def search_sent_gift(gift_data_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-
-
 def search_received_gift(gift_data_obj):
     try:
         with connection.cursor() as cursor:
@@ -449,4 +450,3 @@ def search_received_gift(gift_data_obj):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-

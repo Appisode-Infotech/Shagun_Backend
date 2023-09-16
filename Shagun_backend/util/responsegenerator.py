@@ -278,10 +278,9 @@ class responseGenerator:
             for order in data:
                 track_order.append(
                     {
-                        "shagun_amount": order[0],
-                        "track_status": order[1],
-                        "is_gift_card_sent": order[2],
-                        "shagun_gifted_on": order[3]
+                        "tid": order[1],
+                        "status": order[2],
+                        "date": order[3]
                     }
                 )
             return track_order

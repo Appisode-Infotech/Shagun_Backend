@@ -6,7 +6,8 @@ from Shagun_backend.util.constants import *
 
 from datetime import datetime
 
-  # Handle invalid date input gracefully
+
+# Handle invalid date input gracefully
 
 def printer_login(uname, pwd):
     with connection.cursor() as cursor:
@@ -42,8 +43,9 @@ def add_printer(store_obj):
                                  contact_number, printer_user_name, printer_password) 
                                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address,
-                                store_obj.email, store_obj.gst_no, store_obj.store_owner, store_obj.contact_number,
-                                store_obj.printer_user_name, store_obj.printer_password])
+                                               store_obj.email, store_obj.gst_no, store_obj.store_owner,
+                                               store_obj.contact_number,
+                                               store_obj.printer_user_name, store_obj.printer_password])
             return {
                 "status": True,
                 "user": "store added successfully"
@@ -76,7 +78,7 @@ def edit_printer(store_obj):
             edit_printer_query = """UPDATE printer SET store_name = %s, city = %s, address = %s, email = %s, 
                                     gst_no= %s, store_owner= %s, contact_number= %s, printer_user_name= %s, 
                                     printer_password=%s  WHERE id = %s"""
-            values = (store_obj.store_name, store_obj.city, store_obj.address, store_obj.email  , store_obj.gst_no,
+            values = (store_obj.store_name, store_obj.city, store_obj.address, store_obj.email, store_obj.gst_no,
                       store_obj.store_owner, store_obj.contact_number, store_obj.printer_user_name,
                       store_obj.printer_password, store_obj.store_id)
             cursor.execute(edit_printer_query, values)
@@ -89,6 +91,7 @@ def edit_printer(store_obj):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_printer_by_id(pid):
     try:
         with connection.cursor() as cursor:
@@ -98,8 +101,8 @@ def get_printer_by_id(pid):
             printer = cursor.fetchone()
             if printer is not None:
                 return {
-                      "status": True,
-                      "store": responsegenerator.responseGenerator.generateResponse(printer, PRINTER_BY_ID)
+                    "status": True,
+                    "store": responsegenerator.responseGenerator.generateResponse(printer, PRINTER_BY_ID)
                 }, 200
             else:
                 return {
@@ -190,8 +193,8 @@ def get_all_jobs(status):
             jobs = cursor.fetchall()
             if jobs is not None:
                 return {
-                      "status": True,
-                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                    "status": True,
+                    "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
                 }, 200
             else:
                 return {
@@ -223,8 +226,8 @@ def search_all_jobs(status, search):
             print(get_all_jobs_query)
             if jobs is not None:
                 return {
-                      "status": True,
-                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                    "status": True,
+                    "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
                 }, 200
             else:
                 return {
@@ -235,6 +238,7 @@ def search_all_jobs(status, search):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
 
 def printer_search_all_jobs(status, search, pid):
     status_values_str = ', '.join(str(status_value) for status_value in status)
@@ -259,8 +263,8 @@ def printer_search_all_jobs(status, search, pid):
             print(get_all_jobs_query)
             if jobs is not None:
                 return {
-                      "status": True,
-                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                    "status": True,
+                    "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
                 }, 200
             else:
                 return {
@@ -289,8 +293,8 @@ def filter_all_jobs(status):
             print(get_all_jobs_query)
             if jobs is not None:
                 return {
-                      "status": True,
-                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                    "status": True,
+                    "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
                 }, 200
             else:
                 return {
@@ -319,8 +323,8 @@ def printer_filter_jobs(status, pid):
             print(get_all_jobs_query)
             if jobs is not None:
                 return {
-                      "status": True,
-                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                    "status": True,
+                    "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
                 }, 200
             else:
                 return {
@@ -348,8 +352,8 @@ def get_printers_jobs(pid, status):
             jobs = cursor.fetchall()
             if jobs is not None:
                 return {
-                      "status": True,
-                      "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
+                    "status": True,
+                    "jobs": responsegenerator.responseGenerator.generateResponse(jobs, ALL_JOBS)
                 }, 200
             else:
                 return {
@@ -367,6 +371,15 @@ def change_print_jobs_status(pjid, status):
         with connection.cursor() as cursor:
             query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{pjid}' """
             cursor.execute(query)
+
+            query = "SELECT transaction_id FROM print_jobs WHERE id = %s"
+            cursor.execute(query, (pjid,))
+            transaction_id = cursor.fetchone()[0]
+
+            add_printer_query = """INSERT INTO order_status (transaction_id, status) 
+                                             VALUES (%s, %s)"""
+            cursor.execute(add_printer_query, [transaction_id, status])
+
             return {
                 "status": True,
                 "message": "Printer job status updated successfully"

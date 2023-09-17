@@ -152,10 +152,11 @@ class responseGenerator:
                 "printer_id": data[14],
                 "approved_date_time": data[15],
                 "status": data[16],
-                "delivery_fee": data[17],
-                "event_type_name": data[18],
-                "city_name": data[19],
-                "store_name": data[20]
+                "delivery_fee": int(data[17]),
+                "delivery_address": data[18],
+                "event_type_name": data[19],
+                "city_name": data[20],
+                "store_name": data[21]
             }
 
         if controller_type == GIFT_EVENT:
@@ -509,7 +510,8 @@ class responseGenerator:
                         "card_name": jobs[12],
                         "card_image_url": jobs[13],
                         "card_price": jobs[14],
-                        "event_date": jobs[15]
+                        "event_date": jobs[15],
+                        "delivery_address": jobs[16]
 
                     }
                 )

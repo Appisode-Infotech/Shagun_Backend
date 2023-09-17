@@ -79,6 +79,7 @@
             text-overflow: ellipsis;
         }
 
+
     </style>
 </head>
 
@@ -122,6 +123,7 @@
                                 <th class="wish">Event Name</th>
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
+                                <th>Delivery Address</th>
                                 <th>Job Status</th>
                                 <th>Set Status</th>
                             </tr>
@@ -147,6 +149,8 @@
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
                                 <td>₹ {{ job.billing_amount }}</td>
+                                <td> {{ job.delivery_address }}</td>
+
                                 <td>
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>
@@ -183,12 +187,14 @@
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 1 'printer_new_jobs' %}">New</a>
                                             <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_new_jobs' %}">Print Started</a>
+                                               href="{% url 'change_printer_jobs_status' job.id 2 'printer_new_jobs' %}">Print
+                                                Started</a>
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 3 'printer_new_jobs' %}">Print
                                                 Completed</a>
                                             <a class="dropdown-item"
-                                               href="{% url 'change_printer_jobs_status' job.id 4 'printer_new_jobs' %}">Ready For Dispatch</a>
+                                               href="{% url 'change_printer_jobs_status' job.id 4 'printer_new_jobs' %}">Ready
+                                                For Dispatch</a>
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 5 'printer_new_jobs'%}">Dispatched</a>
                                         </div>
@@ -258,6 +264,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 

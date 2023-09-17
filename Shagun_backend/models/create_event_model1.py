@@ -34,6 +34,7 @@ def sub_events(data):
 def event_admins(data):
     event_admins_count = sum(key.startswith('event_admin[') for key in data.keys())
     event_admins_count //= 3
+    print(event_admins_count)
     event_admins_list = []
     for i in range(event_admins_count):
         with connection.cursor() as cursor:
@@ -65,6 +66,7 @@ def transform_data_to_json(data):
         "event_date": convert_datetime(data['event_date']),
         "event_note": data['event_note'],
         "event_admin": event_admins(data),
-        "delivery_fee": data['delivery_fee']
+        "delivery_fee": data['delivery_fee'],
+        "delivery_address": data['delivery_address']
     }
     return result

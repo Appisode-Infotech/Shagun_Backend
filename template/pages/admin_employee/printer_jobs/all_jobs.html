@@ -161,6 +161,7 @@
                                 <th class="wish">Event Name</th>
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
+                                <th>Delivery Address</th>
                                 <th>Job Status</th>
                             </tr>
                             </thead>
@@ -188,6 +189,7 @@
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
                                 <td>₹ {{ job.billing_amount }}</td>
+                                <td> {{ job.delivery_address }}</td>
                                 <td>
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>

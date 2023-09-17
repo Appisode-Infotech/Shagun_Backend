@@ -376,6 +376,7 @@ def change_print_jobs_status(pjid, status):
             query = "SELECT transaction_id FROM print_jobs WHERE id = %s"
             cursor.execute(query, (pjid,))
             transaction_id = cursor.fetchone()[0]
+            print(transaction_id)
 
             add_printer_query = """INSERT INTO order_status (transaction_id, status) 
                                              VALUES (%s, %s)"""
@@ -386,6 +387,7 @@ def change_print_jobs_status(pjid, status):
                             WHERE th.id = %s"""
             cursor.execute(fcm_query, (transaction_id,))
             fcm_data = cursor.fetchone()
+            print(fcm_data)
             if status == 1:
                 title = f"Transaction {transaction_id} status: Job Created"
                 message = "Your transaction is created and pending for further processing."
@@ -401,6 +403,8 @@ def change_print_jobs_status(pjid, status):
             else:
                 title = f"Transaction {transaction_id} status: Dispatched"
                 message = "Your card has been dispatched."
+                print("fcm token=================================")
+            print(fcm_data[1])
             send_push_notification(fcm_data[1], title, message)
 
             return {

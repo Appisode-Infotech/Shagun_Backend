@@ -21,6 +21,7 @@ from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
     bank_controller, test_controller, delivery_vendor_controller
+from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model, bank_model
@@ -59,6 +60,11 @@ def custom_404(request, slug=None):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        device_token = "f2ddBJQTQy-C4uEDRf3VdS:APA91bHpGcBi-ruY2IjsxMLfS1OxRSM5-VY9e3AHcqd_PSFPPiV7qGULmFRpY-N6nvjblyYTH5pEoz35iklzzRNS37Quzcnb0USl4XggHH_F99Z0U94QnjwtetqRal24gBSdUTV_VsAc"
+        title = "Test notification"
+        message = "Test notifcation message"
+        resp = send_push_notification(device_token, title, message)
+        print(resp)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
@@ -779,7 +785,9 @@ def activate_deactivate_printers(request, printer_id, status):
 
 def change_print_jobs_status(request, pid, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        print("change print job status")
         response, status_code = store_controller.change_print_jobs_status(pid, status)
+        print(response)
         return redirect('Open_printer_jobs')
     else:
         return redirect('sign_up')
@@ -1176,12 +1184,17 @@ def printer_search_greetings(request):
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {"response": response, "search": request.POST['search']})
     else:
-        return redirect('sign_up')
+        return redirect('printer_login')
 
 
 def change_printer_jobs_status(request, pjid, status, from_page):
-    store_controller.change_print_jobs_status(pjid, status)
-    return redirect(from_page)
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        response, status_code = store_controller.change_print_jobs_status(pjid, status)
+        return redirect(from_page)
+    else:
+        return redirect('printer_login')
+
+
 
 
 def whatsapp_invite(request, e_id):

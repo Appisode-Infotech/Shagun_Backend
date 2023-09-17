@@ -184,7 +184,7 @@ def get_all_jobs(status):
     try:
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
-            gc.card_price, e.event_date FROM print_jobs AS pj
+            gc.card_price, e.event_date, e.delivery_address FROM print_jobs AS pj
             LEFT JOIN printer AS p ON pj.printer_id = p.id
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
@@ -214,7 +214,7 @@ def search_all_jobs(status, search):
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" 
             SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
-            gc.card_price, e.event_date FROM print_jobs AS pj
+            gc.card_price, e.event_date, e.delivery_address FROM print_jobs AS pj
             LEFT JOIN printer AS p ON pj.printer_id = p.id
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
@@ -251,7 +251,7 @@ def printer_search_all_jobs(status, search, pid):
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" 
             SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
-            gc.card_price, e.event_date FROM print_jobs AS pj
+            gc.card_price, e.event_date, e.delivery_address FROM print_jobs AS pj
             LEFT JOIN printer AS p ON pj.printer_id = p.id
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
@@ -283,7 +283,7 @@ def filter_all_jobs(status):
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" 
             SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
-            gc.card_price, e.event_date FROM print_jobs AS pj
+            gc.card_price, e.event_date, e.delivery_address FROM print_jobs AS pj
             LEFT JOIN printer AS p ON pj.printer_id = p.id
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
@@ -313,7 +313,7 @@ def printer_filter_jobs(status, pid):
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" 
             SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
-            gc.card_price, e.event_date FROM print_jobs AS pj
+            gc.card_price, e.event_date, e.delivery_address FROM print_jobs AS pj
             LEFT JOIN printer AS p ON pj.printer_id = p.id
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id
@@ -343,7 +343,7 @@ def get_printers_jobs(pid, status):
     try:
         with connection.cursor() as cursor:
             get_all_jobs_query = f""" SELECT pj.*, p.store_name, et.event_type_name, gc.card_name, gc.card_image_url,
-            gc.card_price, e.event_date FROM print_jobs AS pj
+            gc.card_price, e.event_date, e.delivery_address FROM print_jobs AS pj
             LEFT JOIN printer AS p ON pj.printer_id = p.id
             LEFT JOIN event AS e ON pj.event_id = e.id
             LEFT JOIN events_type AS et ON e.event_type_id = et.id

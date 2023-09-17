@@ -80,6 +80,7 @@
         }
 
 
+
     </style>
 </head>
 
@@ -150,6 +151,7 @@
                                 <th class="wish">Event Name</th>
                                 <th>Job Details</th>
                                 <th>Billing Amount</th>
+                                <th>Delivery Address</th>
                                 <th>Job Status</th>
                                 <th>Set Status</th>
                             </tr>
@@ -175,6 +177,8 @@
                                     <b>Event ID : </b> {{ job.event_id }}
                                 </td>
                                 <td>₹ {{ job.billing_amount }}</td>
+                                <td> {{ job.delivery_address }}</td>
+
                                 <td>
                                     {% if job.status == 1 %}
                                     <label class="badge badge-warning ">New</label>
@@ -215,7 +219,8 @@
                                                href="{% url 'change_printer_jobs_status' job.id 3 'printer_open_jobs' %}">Print
                                                 Completed</a>
                                             <a class="dropdown-item {% if job.status >= 5 %}disabled{% endif %}"
-                                               href="{% url 'change_printer_jobs_status' job.id 4 'printer_open_jobs' %}">Ready For Dispatch</a>
+                                               href="{% url 'change_printer_jobs_status' job.id 4 'printer_open_jobs' %}">Ready
+                                                For Dispatch</a>
                                             <a class="dropdown-item"
                                                href="{% url 'change_printer_jobs_status' job.id 5 'printer_open_jobs' %}">Dispatched</a>
                                         </div>
@@ -285,6 +290,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 

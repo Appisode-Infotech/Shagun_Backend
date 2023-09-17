@@ -54,7 +54,7 @@ def add_transaction_history(transaction_obj):
             cursor.execute(add_printer_query, [transaction_id, 1])
 
             fcm_query = f"""SELECT fcm_token FROM users 
-                                             WHERE uid = '{transaction_obj.uid}' """
+                                             WHERE uid = '{transaction_obj.receiver_uid}' """
             cursor.execute(fcm_query)
             fcm_token = cursor.fetchone()
             print(fcm_token)

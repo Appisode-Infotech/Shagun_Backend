@@ -273,7 +273,7 @@ def settle_payment(transactions_list):
         with connection.cursor() as cursor:
             transactions_string = ', '.join(transactions_list)
             settlement_data_query = f"""SELECT th.receiver_uid, th.shagun_amount, u.name AS sender_name FROM transaction_history AS th
-                                        LEFT JOIN users AS u ON u.id = th.sender_uid
+                                        LEFT JOIN users AS u ON u.uid = th.sender_uid
                                         WHERE th.id IN ({transactions_string})"""
             cursor.execute(settlement_data_query)
             settlement_data = cursor.fetchall()

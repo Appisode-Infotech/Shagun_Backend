@@ -21,12 +21,14 @@ def add_transaction_history(transaction_obj):
 
             cursor.execute(transaction_history_query)
             transaction_id = cursor.lastrowid
+            print(transaction_id)
 
             event_type_query = f"""SELECT et.event_type_name FROM event AS e
                                             LEFT JOIN events_type AS et ON e.event_type_id = et.id
                                              WHERE e.id = '{transaction_obj.event_id}' """
             cursor.execute(event_type_query)
             event_type = cursor.fetchone()
+            print(event_type)
 
             reciever_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
             VALUES ('{transaction_obj.receiver_uid}', 'Shagun',
@@ -38,6 +40,7 @@ def add_transaction_history(transaction_obj):
                                  WHERE id = '{transaction_obj.event_id}' """
             cursor.execute(printer_query)
             printer = cursor.fetchone()
+            print(printer)
 
             printer_jobs_query = f""" INSERT INTO print_jobs(transaction_id, printer_id, card_id, status,
              created_on, last_modified, billing_amount, event_id, wish)
@@ -54,11 +57,10 @@ def add_transaction_history(transaction_obj):
                                              WHERE uid = '{transaction_obj.uid}' """
             cursor.execute(fcm_query)
             fcm_token = cursor.fetchone()
+            print(fcm_token)
             title = f"Transaction {transaction_id} status: Job Created"
             message = "Your transaction is created and pending for further processing."
             send_push_notification(fcm_token[0], title, message)
-
-
             return {
                 "status": True,
                 "msg": "Transaction records added"
@@ -272,7 +274,7 @@ def settle_payment(transactions_list):
             transactions_string = ', '.join(transactions_list)
             settlement_data_query = f"""SELECT th.receiver_uid, th.shagun_amount, u.name AS sender_name FROM transaction_history AS th
                                         LEFT JOIN users AS u ON u.id = th.sender_uid
-                                        WHERE id IN ({transactions_string})"""
+                                        WHERE th.id IN ({transactions_string})"""
             cursor.execute(settlement_data_query)
             settlement_data = cursor.fetchall()
             print(settlement_data)
@@ -291,7 +293,8 @@ def settle_payment(transactions_list):
                 print(f"Receiver: {receiver}, Total Amount: {total_amount}, Sender: {sender_name}")
                 bank_data_query = f"""SELECT bk.bank_name, bk.ifsc_code, bk.account_holder_name, bk.account_number,
                                         u.name, u.fcm_token FROM bank_details AS bk 
-                                        LEFT JOIN users AS u ON bk.uid = u.uid WHERE uid = '{receiver}' """
+                                        LEFT JOIN users AS u ON bk.uid = u.uid 
+                                        WHERE bk.uid = '{receiver}' """
                 cursor.execute(bank_data_query)
                 bank_data = cursor.fetchall()
                 print(bank_data)

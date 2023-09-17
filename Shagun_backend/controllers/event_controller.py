@@ -22,8 +22,6 @@ def send_push_notification(device_token, title, message):
     # Create a message
     notification = messaging.Notification(title=title, body=message)
     message = messaging.Message(notification=notification, token=device_token)
-
-    # Send the message
     response = messaging.send(message)
 
 
@@ -809,7 +807,7 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
                 cursor.execute(invite_notification_query)
                 title = f"""{invited_by[0]} has invited you to {event_name[0]}"""
                 send_push_notification(fcm_token, title, invite_message)
-            return {"status": False, "message": "Messages sent Failed"}, 200
+            return {"statusss": True, "message": "Messages sent Successfully"}, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

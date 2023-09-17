@@ -58,7 +58,7 @@ def add_transaction_history(transaction_obj):
             cursor.execute(fcm_query)
             fcm_token = cursor.fetchone()
             print(fcm_token)
-            title = f"Transaction {transaction_id} status: Job Created"
+            title = f"Order {transaction_id} status: Job Created"
             message = "Your transaction is created and pending for further processing."
             send_push_notification(fcm_token[0], title, message)
             return {

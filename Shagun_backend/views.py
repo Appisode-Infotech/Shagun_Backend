@@ -1190,6 +1190,7 @@ def whatsapp_invite(request, e_id):
     invited_list = event_controller.get_invited_users_list(e_id)
 
     if request.method == 'POST':
+        print("started")
         mob_numbers = []
         invited_by = request.POST['invited_by_uid']
         invite_message = request.POST['invite_msg']
@@ -1210,20 +1211,24 @@ def whatsapp_invite(request, e_id):
                 mob_numbers = list(set(mob_numbers))
                 if phone != '':
                     mob_numbers.append(phone)
-                response = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
-                return redirect(reverse('whatsapp_invite', args=[e_id]))
+                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                # return redirect(reverse('whatsapp_invite', args=[e_id]))
+                print(response)
+                return JsonResponse(response)
 
             except Exception as e:
                 error_message = f"An error occurred while processing the CSV: {e}"
-                return render(request, 'pages/admin_employee/event_management/event/whatsapp_invite.html',
+                return render(request, 'pages/test_pages/test_whatsapp_invite.html',
                               {'error_message': error_message, "event_data": event_data['event_data'],
                                "admins": admins})
 
         else:
             if phone != '':
                 mob_numbers.append(phone)
-                event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
-            return redirect(reverse('whatsapp_invite', args=[e_id]))
+                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                print(response)
+                return JsonResponse(response)
+            # return redirect(reverse('whatsapp_invite', args=[e_id]))
 
     else:
         return render(request, 'pages/admin_employee/event_management/event/whatsapp_invite.html',

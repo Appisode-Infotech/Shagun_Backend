@@ -44,7 +44,7 @@ def add_transaction_history(transaction_obj):
 
             printer_jobs_query = f""" INSERT INTO print_jobs(transaction_id, printer_id, card_id, status,
              created_on, last_modified, billing_amount, event_id, wish)
-              VALUES('{transaction_obj.transaction_id}', '{printer[0]}', '{transaction_obj.greeting_card_id}',
+              VALUES('{transaction_id}', '{printer[0]}', '{transaction_obj.greeting_card_id}',
                1,'{today}', '{today}', '{transaction_obj.greeting_card_price}', '{transaction_obj.event_id}', '{transaction_obj.wish}' )"""
 
             cursor.execute(printer_jobs_query)
@@ -54,7 +54,7 @@ def add_transaction_history(transaction_obj):
             cursor.execute(add_printer_query, [transaction_id, 1])
 
             fcm_query = f"""SELECT fcm_token FROM users 
-                                             WHERE uid = '{transaction_obj.uid}' """
+                                             WHERE uid = '{transaction_obj.receiver_uid}' """
             cursor.execute(fcm_query)
             fcm_token = cursor.fetchone()
             print(fcm_token)

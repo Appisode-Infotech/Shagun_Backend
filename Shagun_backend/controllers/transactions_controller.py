@@ -58,7 +58,7 @@ def add_transaction_history(transaction_obj):
             cursor.execute(fcm_query)
             fcm_token = cursor.fetchone()
             print(fcm_token)
-            title = f"Transaction {transaction_id} status: Job Created"
+            title = f"Order {transaction_id} status: Job Created"
             message = "Your transaction is created and pending for further processing."
             send_push_notification(fcm_token[0], title, message)
             return {
@@ -273,7 +273,7 @@ def settle_payment(transactions_list):
         with connection.cursor() as cursor:
             transactions_string = ', '.join(transactions_list)
             settlement_data_query = f"""SELECT th.receiver_uid, th.shagun_amount, u.name AS sender_name FROM transaction_history AS th
-                                        LEFT JOIN users AS u ON u.id = th.sender_uid
+                                        LEFT JOIN users AS u ON u.uid = th.sender_uid
                                         WHERE th.id IN ({transactions_string})"""
             cursor.execute(settlement_data_query)
             settlement_data = cursor.fetchall()
@@ -308,9 +308,7 @@ def settle_payment(transactions_list):
                                                     {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]}')"""
                     cursor.execute(invite_notification_query)
                     title = f"""Shagun amount {total_amount} credited from {sender_name}"""
-                    message = f""" Shagun amount of {total_amount} INR has been successfully 
-                                                    transferred to {bank_name} Bank for the account ending with 
-                                                    {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]} """
+                    message = f""" Shagun amount of {total_amount} INR has been successfully transferred to {bank_name} Bank for the account ending with {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]} """
                     send_push_notification(fcm_token, title, message)
 
         return {

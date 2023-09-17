@@ -389,19 +389,19 @@ def change_print_jobs_status(pjid, status):
             fcm_data = cursor.fetchone()
             print(fcm_data)
             if status == 1:
-                title = f"Transaction {transaction_id} status: Job Created"
+                title = f"Order {transaction_id} status: Job Created"
                 message = "Your transaction is created and pending for further processing."
             elif status == 2:
-                title = f"Transaction {transaction_id} status: Printing Started"
+                title = f"Order {transaction_id} status: Printing Started"
                 message = "The printing process of your card has begun."
             elif status == 3:
-                title = f"Transaction {transaction_id} status: Printing Completed"
+                title = f"Order {transaction_id} status: Printing Completed"
                 message = "Printing of your card is completed successfully."
             elif status == 4:
-                title = f"Transaction {transaction_id} status: Ready for Dispatch"
+                title = f"Order {transaction_id} status: Ready for Dispatch"
                 message = "Your card is now ready for dispatch."
             else:
-                title = f"Transaction {transaction_id} status: Dispatched"
+                title = f"Order {transaction_id} status: Dispatched"
                 message = "Your card has been dispatched."
                 print("fcm token=================================")
             print(fcm_data[1])

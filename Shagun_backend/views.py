@@ -1,3 +1,5 @@
+import json
+
 import jwt
 from datetime import datetime, timedelta
 import os
@@ -506,20 +508,14 @@ def search_closed_printer_jobs(request):
 def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            reciever_list = request.POST.getlist('selected_uid')
-            print(reciever_list)
             transaction_id = request.POST.getlist('selected_ids')
             print(transaction_id)
-            amount_list = request.POST.getlist('selected_amounts')
-            print(amount_list)
-            transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
-            response, status_code = transactions_controller.get_transaction_list(event_id, '%')
-            paginator = Paginator(response['transactions'], 250)
-            page = request.GET.get('page')
-            response = paginator.get_page(page)
-            return render(request,
-                          'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                          {"response": response, "event_id": event_id})
+            settlement, status_code = transactions_controller.settle_payment(transaction_id)
+            if status_code == 200:
+                response, status_code = transactions_controller.update_transactions(transaction_id)
+                return JsonResponse(response)
+            else:
+                return JsonResponse(settlement)
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
             paginator = Paginator(response['transactions'], 250)
@@ -531,17 +527,16 @@ def transactions_settlement(request, event_id):
     else:
         return redirect('sign_up')
 
-
 # def transactions_settlement(request, event_id):
 #     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
 #         if request.method == 'POST':
 #             print("started")
 #             print(request.POST)
-#             reciever_list = request.POST.getlist('selected_uid')
+#             reciever_list = request.POST.getlist('selectedReceiverUids')
 #             print(reciever_list)
-#             transaction_id = request.POST.getlist('selected_ids')
+#             transaction_id = request.POST.getlist('selectedShagunAmounts')
 #             print(transaction_id)
-#             amount_list = request.POST.getlist('selected_amounts')
+#             amount_list = request.POST.getlist('selectedShagunAmounts')
 #             print(amount_list)
 #             transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
 #             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
@@ -552,7 +547,7 @@ def transactions_settlement(request, event_id):
 #             page = request.GET.get('page')
 #             response = paginator.get_page(page)
 #             return render(request,
-#                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
+#                           'pages/test_pages/test_transactions_settlement.html',
 #                           {"response": response, "event_id": event_id})
 #     else:
 #         return redirect('sign_up')

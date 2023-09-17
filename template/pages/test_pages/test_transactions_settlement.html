@@ -450,7 +450,7 @@
         selectedShagunAmounts = [];
         selectedShagunAmountSum = 0.0;
 
-        const checkboxes = document.querySelectorAll('.select-row:checked:not([disabled])');
+        const checkboxes = document.querySelectorAll('.select-row:checked');
         checkboxes.forEach((checkbox) => {
             const row = checkbox.closest('tr');
             const id = row.querySelector('td:nth-child(2)').textContent;
@@ -463,13 +463,11 @@
             selectedShagunAmountSum += shagunAmount;
         });
 
-        errorMessage.style.display = "none";
-
         console.log(selectedIds)
         console.log(selectedReceiverUids)
         console.log(selectedShagunAmounts)
         console.log(selectedShagunAmountSum)
-
+        // Update the sum display
         document.getElementById('selectedShagunAmountSum').textContent = selectedShagunAmountSum.toFixed(2);
         document.getElementById('selectedShagunAmountSumConf').textContent = selectedShagunAmountSum.toFixed(2);
         document.getElementById('selected_uid').value = selectedReceiverUids
@@ -490,11 +488,11 @@
         updateSelectedData();
     }
 
-    // event listener to the "Select All" checkbox
+    // Attach event listener to the "Select All" checkbox
     const selectAllCheckbox = document.getElementById('select-all');
     selectAllCheckbox.addEventListener('click', toggleSelectAll);
 
-    // event listener to individual checkboxes
+    // Attach event listener to individual checkboxes
     const rowCheckboxes = document.querySelectorAll('.select-row');
     rowCheckboxes.forEach((checkbox) => {
         checkbox.addEventListener('change', updateSelectedData);
@@ -611,6 +609,7 @@
                 customAlertOverlay1.style.display = "flex";
 
             } else {
+                console.log(data.success);
                 var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
                 var customAlertIcon = document.getElementById("customAlertIcon");
                 var customAlertIconError = document.getElementById("customAlertIconError");

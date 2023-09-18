@@ -136,6 +136,20 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <div id="customAlertOverlay3" class="custom-alert-overlay">
+            <div class="custom-alert">
+                <label class="form-group">
+                    <p>Please confirm if you want to <span id="location_status"></span> the location</p>
+                </label>
+                <div class="center-button">
+                    <button type="button" onclick="hideActivationPopUpDiv()"
+                            class="btn btn-outline-danger btn-fw">
+                        Cancel
+                    </button>
+                    <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm</button>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -228,10 +242,12 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_location' location.location_id 1 %}">Active</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_location' location.location_id 0 %}">Inactive</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-location-id="{{ location.location_id }}" data-action="1"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-location-id'), this.getAttribute('data-action'))">Active</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-location-id="{{ location.location_id }}" data-action="0"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-location-id'), this.getAttribute('data-action'))">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -317,6 +333,42 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
+
+
+<script>
+    function showCustomAlertForActivateInactive(eventTypeId, action) {
+        console.log(eventTypeId);
+        console.log(action);
+        window.eventTypeId = eventTypeId;
+        window.action = action;
+
+        var customAlertOverlay = document.getElementById("customAlertOverlay3");
+        customAlertOverlay.style.display = "flex";
+
+        var eventStatusSpan = document.getElementById("location_status");
+
+        if (action === "1") {
+            eventStatusSpan.textContent = "Activate";
+        } else if (action === "0") {
+            eventStatusSpan.textContent = "Inactivate";
+        }
+
+    }
+
+    var confirmButton = document.getElementById("confirmButton");
+    confirmButton.addEventListener("click", function() {
+        console.log("clicked")
+        var url = '/activate_deactivate_location/' + eventTypeId + '/' + action + '/';
+        console.log(url)
+        window.location.href = url;
+    });
+
+    function hideActivationPopUpDiv() {
+        var customAlertOverlay = document.getElementById("customAlertOverlay3");
+        customAlertOverlay.style.display = "none";
+    }
+
+</script>
 <script>
     function showPopUpDiv(val1, val2) {
         var customAlertOverlay1 = document.getElementById("customAlertOverlay1");

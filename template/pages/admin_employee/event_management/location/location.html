@@ -336,10 +336,10 @@
 
 
 <script>
-    function showCustomAlertForActivateInactive(eventTypeId, action) {
-        console.log(eventTypeId);
+    function showCustomAlertForActivateInactive(locationId, action) {
+        console.log(locationId);
         console.log(action);
-        window.eventTypeId = eventTypeId;
+        window.locationId = locationId;
         window.action = action;
 
         var customAlertOverlay = document.getElementById("customAlertOverlay3");
@@ -358,7 +358,7 @@
     var confirmButton = document.getElementById("confirmButton");
     confirmButton.addEventListener("click", function() {
         console.log("clicked")
-        var url = '/activate_deactivate_location/' + eventTypeId + '/' + action + '/';
+        var url = '/activate_deactivate_location/' + locationId + '/' + action + '/';
         console.log(url)
         window.location.href = url;
     });

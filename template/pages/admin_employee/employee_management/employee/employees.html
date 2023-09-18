@@ -346,10 +346,10 @@
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 <script>
-    function showCustomAlertForActivateInactive(adminId, action) {
-        console.log(adminId);
+    function showCustomAlertForActivateInactive(employeeId, action) {
+        console.log(employeeId);
         console.log(action);
-        window.adminId = adminId;
+        window.employeeId = employeeId;
         window.action = action;
 
         var customAlertOverlay = document.getElementById("customAlertOverlay3");
@@ -368,7 +368,7 @@
     var confirmButton = document.getElementById("confirmButton");
     confirmButton.addEventListener("click", function() {
         console.log("clicked")
-        var url = '/activate_deactivate_employee/' + adminId + '/' + action + '/'+ 2 + '/';
+        var url = '/activate_deactivate_employee/' + employeeId + '/' + action + '/'+ 2 + '/';
         console.log(url)
         window.location.href = url;
     });

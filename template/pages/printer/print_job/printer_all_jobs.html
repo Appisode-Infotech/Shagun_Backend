@@ -82,6 +82,9 @@
 
 
 
+
+
+
     </style>
 </head>
 
@@ -220,22 +223,23 @@
                                         </button>
                                         {% if job.status != 5 %}
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item {% if job.status >= 2 %}disabled{% endif %}"
+                                            <a class="dropdown-item disabled"
                                                href="{% url 'change_printer_jobs_status' job.id 1 'printer_all_jobs' %}">New</a>
-                                            <a class="dropdown-item {% if job.status >= 3 %}disabled{% endif %}"
+                                            <a class="dropdown-item {% if job.status == 1 %}{% else %}disabled{% endif%}"
                                                href="{% url 'change_printer_jobs_status' job.id 2 'printer_all_jobs' %}">Print
                                                 Started</a>
-                                            <a class="dropdown-item {% if job.status >= 4 %}disabled{% endif %}"
+                                            <a class="dropdown-item {% if job.status == 2 %}{% else %}disabled{% endif%}"
                                                href="{% url 'change_printer_jobs_status' job.id 3 'printer_all_jobs' %}">Print
                                                 Completed</a>
-                                            <a class="dropdown-item {% if job.status >= 5 %}disabled{% endif %}"
+                                            <a class="dropdown-item {% if job.status == 3 %}{% else %}disabled{% endif%}"
                                                href="{% url 'change_printer_jobs_status' job.id 4 'printer_all_jobs' %}">Ready
                                                 For Dispatched</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item {% if job.status == 4 %}{% else %}disabled{% endif%}"
                                                href="{% url 'change_printer_jobs_status' job.id 5 'printer_all_jobs' %}">Dispatched</a>
                                         </div>
                                         {% endif %}
                                     </div>
+
 
                                 </td>
                             </tr>
@@ -301,6 +305,9 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
+
 
 
 

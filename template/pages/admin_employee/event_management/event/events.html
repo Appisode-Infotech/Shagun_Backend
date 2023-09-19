@@ -85,6 +85,34 @@
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
           }
 
+          .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between icons and text */
+        }
+
+        /* Center the text vertically */
+        .custom-alert span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between text and button */
+        }
+
+        .center-button {
+          display: flex;
+          justify-content: center;
+
+        }
+        .center-button button {
+            margin-right: 10px;
+        }
+
+
+
+
+
     </style>
 </head>
 
@@ -108,6 +136,34 @@
         <div id="customAlertOverlay1" class="custom-alert-overlay">
             <div class="custom-alert">
                 You cannot Edit Rejected Events
+            </div>
+        </div>
+        <div id="customAlertOverlay3" class="custom-alert-overlay">
+            <div class="custom-alert">
+                <label class="form-group">
+                    <p>Please confirm if you want to make the event <span id="event_status"></span></p>
+                </label>
+                <div class="center-button">
+                    <button type="button" onclick="hidePopUpDiv()"
+                            class="btn btn-outline-danger btn-fw">
+                        Cancel
+                    </button>
+                    <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm</button>
+                </div>
+            </div>
+        </div>
+        <div id="customAlertOverlay4" class="custom-alert-overlay">
+            <div class="custom-alert">
+                <label class="form-group">
+                    <p>Please confirm if you want to set event status to <span id="approval_status"></span></p>
+                </label>
+                <div class="center-button">
+                    <button type="button" onclick="hideApprovalPopUpDiv()"
+                            class="btn btn-outline-danger btn-fw">
+                        Cancel
+                    </button>
+                    <button type="submit" id="confirmButton1" class="btn btn-outline-success btn-fw">Confirm</button>
+                </div>
             </div>
         </div>
         <div id="customAlertOverlay2" class="custom-alert-overlay">
@@ -229,12 +285,15 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item"
-                                               href="{% url 'set_event_status' event.event_id 0 %}">Pending</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'set_event_status' event.event_id 1 %}">Approved</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'set_event_status' event.event_id 2 %}">Rejected</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-event-id="{{ event.event_id }}" data-action="0"
+                                               onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Pending</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-event-id="{{ event.event_id }}" data-action="1"
+                                               onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Approved</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-event-id="{{ event.event_id }}" data-action="2"
+                                               onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Rejected</a>
                                         </div>
                                     </div>
                                 </td>
@@ -242,7 +301,7 @@
                                     <div class="dropdown">
                                         {% if event.is_approved == 2 %}
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                 data-toggle="dropdown" aria-haspopup="true"
+                                                data-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false" onclick="showCustomAlertForActivate()">
                                             {% if event.status == 0 %}
                                             Inactive
@@ -261,10 +320,12 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_event' event.event_id 1 %}">Active</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_event' event.event_id 0 %}">Inactive</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-event-id="{{ event.event_id }}" data-action="1"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Active</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-event-id="{{ event.event_id }}" data-action="0"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Inactive</a>
                                         </div>
                                         {% endif %}
                                     </div>
@@ -273,7 +334,7 @@
                                 <td>
                                     {% if event.is_approved == 2 %}
                                     <button type="button" class="btn btn-outline-info btn-fw"
-                                             onclick="showCustomAlertForEdit()">
+                                            onclick="showCustomAlertForEdit()">
                                         Edit
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -353,12 +414,86 @@
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
+
+<script>
+    function showCustomAlertForApproval(eventId, action) {
+        console.log(eventId);
+        console.log(action);
+        window.eventId = eventId;
+        window.action = action;
+
+        var customAlertOverlay = document.getElementById("customAlertOverlay4");
+        customAlertOverlay.style.display = "flex";
+
+        var eventStatusSpan = document.getElementById("approval_status");
+
+        if (action === "1") {
+            eventStatusSpan.textContent = "Approved";
+        } else if (action === "2") {
+            eventStatusSpan.textContent = "Rejected";
+        }else if (action === "0") {
+            eventStatusSpan.textContent = "Pending";
+        }
+
+    }
+
+    var confirmButton = document.getElementById("confirmButton1");
+    confirmButton.addEventListener("click", function() {
+        console.log("clicked")
+        var url = '/set_event_status/' + eventId + '/' + action + '/';
+        console.log(url)
+        window.location.href = url;
+    });
+
+    function hideApprovalPopUpDiv() {
+        var customAlertOverlay = document.getElementById("customAlertOverlay4");
+        customAlertOverlay.style.display = "none";
+    }
+
+</script>
+
+<script>
+    function showCustomAlertForActivateInactive(eventId, action) {
+        console.log(eventId);
+        console.log(action);
+        window.eventId = eventId;
+        window.action = action;
+
+        var customAlertOverlay = document.getElementById("customAlertOverlay3");
+        customAlertOverlay.style.display = "flex";
+
+        var eventStatusSpan = document.getElementById("event_status");
+
+        if (action === "1") {
+            eventStatusSpan.textContent = "Active";
+        } else if (action === "0") {
+            eventStatusSpan.textContent = "Inactive";
+        }
+
+    }
+
+    var confirmButton = document.getElementById("confirmButton");
+    confirmButton.addEventListener("click", function() {
+        console.log("clicked")
+        var url = '/activate_deactivate_event/' + eventId + '/' + action + '/';
+        console.log(url)
+        window.location.href = url;
+    });
+
+    function hidePopUpDiv() {
+        var customAlertOverlay = document.getElementById("customAlertOverlay3");
+        customAlertOverlay.style.display = "none";
+    }
+
+</script>
+
 <script>
     document.getElementById("approval-status-dropdown").addEventListener("change", function() {
         var dropdown = document.getElementById("approval-status-dropdown");
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 </script>
 <script> showCustomAlertForEdit
 function showCustomAlertForInvite() {

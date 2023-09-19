@@ -441,6 +441,19 @@ def edit_bank_details(bank_obj):
                           today, bank_obj.modified_by, bank_obj.uid)
                 cursor.execute(edit_bank_query, values)
 
+                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                                            VALUES ('{bank_obj.uid}', 'KYC',
+                                                            'Linked {bank_obj.bank_name} Bank for {bank_obj.account_holder_name}',
+                                                            'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked ')"""
+                cursor.execute(KYC_notification_query)
+
+                fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{bank_obj.uid}' """
+                cursor.execute(fcm_query)
+                fcm_token = cursor.fetchone()
+                title = f"Bank Updated"
+                message = f""" Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is Updated """
+                send_push_notification(fcm_token[0], title, message)
+
                 return {
                     "status": True,
                     "message": "Bank Details Updated successfully"
@@ -842,6 +855,19 @@ def edit_user_kyc(obj):
                 ])
 
             cursor.execute(sql, values)
+            KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                        VALUES ('{obj.uid}', 'KYC',
+                                        'KYC Updated for {obj.full_name}',
+                                        'KYC updated with {obj.identification_proof1}:{obj.identification_number1} and {obj.identification_proof2}:{obj.identification_number2}')"""
+            cursor.execute(KYC_notification_query)
+
+            fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{obj.uid}' """
+            cursor.execute(fcm_query)
+            fcm_token = cursor.fetchone()
+            title = f"KYC Updated"
+            message = f""" KYC Updated with {obj.identification_proof1}:{obj.identification_number1} and 
+                                            {obj.identification_proof2}:{obj.identification_number2} """
+            send_push_notification(fcm_token[0], title, message)
             connection.commit()
             return {
                 "status": True,

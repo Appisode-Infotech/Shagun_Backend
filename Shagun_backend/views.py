@@ -511,6 +511,7 @@ def search_closed_printer_jobs(request):
     else:
         return redirect('sign_up')
 
+
 def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
@@ -532,6 +533,7 @@ def transactions_settlement(request, event_id):
                           {"response": response, "event_id": event_id})
     else:
         return redirect('sign_up')
+
 
 # def transactions_settlement(request, event_id):
 #     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -832,10 +834,12 @@ def edit_kyc(request, kyc_id):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
+            print(kyc_obj)
             user_controller.edit_user_kyc(kyc_obj)
             return redirect('manage_kyc')
         else:
             kyc_data, status_code = user_controller.get_kyc_by_id(kyc_id)
+            print(kyc_data)
             users_list, status_code = user_controller.get_all_users(1)
             context = {
                 "kyc_data": kyc_data,
@@ -993,13 +997,9 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
-            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
-            print(event_obj)
             response = event_controller.edit_event(event_obj, event_id)
-            print(response)
             return redirect('manage_event')
         else:
             event_types, status_code = event_controller.get_event_type_list_for_user()
@@ -1199,8 +1199,6 @@ def change_printer_jobs_status(request, pjid, status, from_page):
         return redirect('printer_login')
 
 
-
-
 def whatsapp_invite(request, e_id):
     event_data, status_code = event_controller.get_event_by_id(e_id)
     admins = event_controller.get_event_admins(e_id)
@@ -1213,6 +1211,7 @@ def whatsapp_invite(request, e_id):
         invite_message = request.POST['invite_msg']
         phone = request.POST['phone']
         if 'csv_file' in request.FILES:
+            print("started with csv")
             csv_file = request.FILES['csv_file']
             try:
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
@@ -1227,30 +1226,41 @@ def whatsapp_invite(request, e_id):
 
                 mob_numbers = list(set(mob_numbers))
                 if phone != '':
+                    print("started with csv and phone")
                     mob_numbers.append(phone)
-                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
-                # return redirect(reverse('whatsapp_invite', args=[e_id]))
+                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
+                                                                                 invite_message)
                 print(response)
+                response = {
+                    "status": True,
+                    "message": "Transaction Completed"
+                }
                 return JsonResponse(response)
 
             except Exception as e:
                 error_message = f"An error occurred while processing the CSV: {e}"
-                return render(request, 'pages/test_pages/test_whatsapp_invite.html',
+                return render(request, 'template/pages/admin_employee/event_management/event/whatsapp_invite.html',
                               {'error_message': error_message, "event_data": event_data['event_data'],
                                "admins": admins})
 
         else:
+            print("started with only phone")
             if phone != '':
                 mob_numbers.append(phone)
-                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id, invite_message)
+                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
+                                                                                 invite_message)
                 print(response)
+                response = {
+                    "status": True,
+                    "message": "Transaction Completed"
+                }
+                print("sending response")
                 return JsonResponse(response)
-            # return redirect(reverse('whatsapp_invite', args=[e_id]))
 
     else:
-        return render(request, 'pages/admin_employee/event_management/event/whatsapp_invite.html',
+        return render(request, 'template/pages/admin_employee/event_management/event/whatsapp_invite.html',
                       {'invited_list': invited_list['invited_list'], "admins": admins,
-                       "event_data": event_data['event_data']})
+                       "event_data": event_data['event_data'], "event_id": e_id})
 
 
 # Printer view functions

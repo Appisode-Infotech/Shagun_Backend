@@ -221,13 +221,14 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <span style="display:none;" id="event_id">{{ event_id }}</span>
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Invite for event: {{event_data.event_type_name}} -
+                                <h4 class="card-title"> Test Invite for event: {{event_data.event_type_name}} -
                                     {{event_data.id}}</h4>
                                 <form class="form-sample" action="/whatsapp_invite/{{event_data.id}}/" method="post"
                                       enctype="multipart/form-data" id="myForm">

@@ -50,6 +50,51 @@
             text-align: center;
         }
 
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure the overlay is on top of other content */
+          }
+
+          .custom-alert {
+            background-color: #ffffe0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          }
+
+          .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between icons and text */
+        }
+
+        /* Center the text vertically */
+        .custom-alert span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between text and button */
+        }
+
+        .center-button {
+          display: flex;
+          justify-content: center;
+
+        }
+        .center-button button {
+            margin-right: 10px;
+        }
+
 
 
 
@@ -68,6 +113,20 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <div id="customAlertOverlay3" class="custom-alert-overlay">
+            <div class="custom-alert">
+                <label class="form-group">
+                    <p>Please confirm if you want to make the user <span id="event_status"></span></p>
+                </label>
+                <div class="center-button">
+                    <button type="button" onclick="hideActivationPopUpDiv()"
+                            class="btn btn-outline-danger btn-fw">
+                        Cancel
+                    </button>
+                    <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm</button>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -190,10 +249,12 @@
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_users' user.id 1 %}">Active</a>
-                                            <a class="dropdown-item"
-                                               href="{% url 'activate_deactivate_users' user.id 0 %}">Inactive</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-user-id="{{ user.id }}" data-action="1"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-user-id'), this.getAttribute('data-action'))">Active</a>
+                                            <a class="dropdown-item" href="javascript:void(0);"
+                                               data-user-id="{{ user.id }}" data-action="0"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-user-id'), this.getAttribute('data-action'))">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
@@ -255,7 +316,40 @@
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<script>
+    function showCustomAlertForActivateInactive(userId, action) {
+        console.log(userId);
+        console.log(action);
+        window.userId = userId;
+        window.action = action;
 
+        var customAlertOverlay = document.getElementById("customAlertOverlay3");
+        customAlertOverlay.style.display = "flex";
+
+        var eventStatusSpan = document.getElementById("event_status");
+
+        if (action === "1") {
+            eventStatusSpan.textContent = "Active";
+        } else if (action === "0") {
+            eventStatusSpan.textContent = "Inactive";
+        }
+
+    }
+
+    var confirmButton = document.getElementById("confirmButton");
+    confirmButton.addEventListener("click", function() {
+        console.log("clicked")
+        var url = '/activate_deactivate_users/' + userId + '/' + action + '/';
+        console.log(url)
+        window.location.href = url;
+    });
+
+    function hideActivationPopUpDiv() {
+        var customAlertOverlay = document.getElementById("customAlertOverlay3");
+        customAlertOverlay.style.display = "none";
+    }
+
+</script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <!-- End plugin js for this page -->

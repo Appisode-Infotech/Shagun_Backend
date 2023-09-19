@@ -366,6 +366,7 @@ def filter_event_request(request, status):
 def get_settlement_for_event(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement(status)
+        print(response)
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1022,7 +1023,6 @@ def edit_event(request, event_id):
 
 
 def filtered_events_on_approval_status(request, status):
-    # Get all events filtered by status
     response, status_code = event_controller.get_event_by_approval_status(status)
     paginator = Paginator(response['event_list'], 25)
     page = request.GET.get('page')
@@ -1102,13 +1102,16 @@ def dashboard_search_employee(request):
 
 
 def dashboard_search_employee_status(request, status, role):
-    response, status_code = user_controller.dashboard_search_employee_status(status)
-    print(response)
-    paginator = Paginator(response['user_data'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                  {'response': response, "status": status, "role": role})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.dashboard_search_employee_status(status)
+        print(response)
+        paginator = Paginator(response['user_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
+                      {'response': response, "status": status, "role": role})
+    else:
+        return redirect('sign_up')
 
 
 def dashboard_search_printers(request):
@@ -1136,22 +1139,27 @@ def dashboard_search_delivery_vendors(request):
 
 
 def dashboard_search_printers_status(request, status):
-    # Get all printers filtered by status
-    response, status_code = store_controller.dashboard_search_printers_status(status)
-    paginator = Paginator(response['printer_data'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
-                  {'response': response, "status": status})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = store_controller.dashboard_search_printers_status(status)
+        paginator = Paginator(response['printer_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
+                      {'response': response, "status": status})
+    else:
+        return redirect('sign_up')
 
 
 def dashboard_search_delivery_vendors_status(request, status):
-    response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor_status(status)
-    paginator = Paginator(response['delivery_vendor_data'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
-    return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
-                  {'response': response, "status": status})
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor_status(status)
+        paginator = Paginator(response['delivery_vendor_data'], 25)
+        page = request.GET.get('page')
+        response = paginator.get_page(page)
+        return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
+                      {'response': response, "status": status})
+    else:
+        return redirect('sign_up')
 
 
 def dashboard_search_greetings(request):
@@ -1200,67 +1208,71 @@ def change_printer_jobs_status(request, pjid, status, from_page):
 
 
 def whatsapp_invite(request, e_id):
-    event_data, status_code = event_controller.get_event_by_id(e_id)
-    admins = event_controller.get_event_admins(e_id)
-    invited_list = event_controller.get_invited_users_list(e_id)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        event_data, status_code = event_controller.get_event_by_id(e_id)
+        admins = event_controller.get_event_admins(e_id)
+        invited_list = event_controller.get_invited_users_list(e_id)
 
-    if request.method == 'POST':
-        print("started")
-        mob_numbers = []
-        invited_by = request.POST['invited_by_uid']
-        invite_message = request.POST['invite_msg']
-        phone = request.POST['phone']
-        if 'csv_file' in request.FILES:
-            print("started with csv")
-            csv_file = request.FILES['csv_file']
-            try:
-                fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
-                filename = fs.save(csv_file.name, csv_file)
-                with open(fs.path(filename), 'r') as file:
-                    reader = csv.reader(file)
-                    for row in reader:
-                        for cell in row:
-                            cleaned_cell = ''.join(filter(str.isdigit, cell))
-                            if cell.isdigit() and len(cleaned_cell) == 10:
-                                mob_numbers.append(cleaned_cell)
+        if request.method == 'POST':
+            print("started")
+            mob_numbers = []
+            invited_by = request.POST['invited_by_uid']
+            invite_message = request.POST['invite_msg']
+            phone = request.POST['phone']
+            if 'csv_file' in request.FILES:
+                print("started with csv")
+                csv_file = request.FILES['csv_file']
+                try:
+                    fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
+                    filename = fs.save(csv_file.name, csv_file)
+                    with open(fs.path(filename), 'r') as file:
+                        reader = csv.reader(file)
+                        for row in reader:
+                            for cell in row:
+                                cleaned_cell = ''.join(filter(str.isdigit, cell))
+                                if cell.isdigit() and len(cleaned_cell) == 10:
+                                    mob_numbers.append(cleaned_cell)
 
-                mob_numbers = list(set(mob_numbers))
+                    mob_numbers = list(set(mob_numbers))
+                    if phone != '':
+                        print("started with csv and phone")
+                        mob_numbers.append(phone)
+                    response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
+                                                                                     invite_message)
+                    print(response)
+                    response = {
+                        "status": True,
+                        "message": "Transaction Completed"
+                    }
+                    return JsonResponse(response)
+
+                except Exception as e:
+                    error_message = f"An error occurred while processing the CSV: {e}"
+                    return render(request, 'pages/admin_employee/event_management/event/whatsapp_invite.html',
+                                  {'error_message': error_message, "event_data": event_data['event_data'],
+                                   "admins": admins})
+
+            else:
+                print("started with only phone")
                 if phone != '':
-                    print("started with csv and phone")
                     mob_numbers.append(phone)
-                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
-                                                                                 invite_message)
-                print(response)
-                response = {
-                    "status": True,
-                    "message": "Transaction Completed"
-                }
-                return JsonResponse(response)
-
-            except Exception as e:
-                error_message = f"An error occurred while processing the CSV: {e}"
-                return render(request, 'template/pages/admin_employee/event_management/event/whatsapp_invite.html',
-                              {'error_message': error_message, "event_data": event_data['event_data'],
-                               "admins": admins})
+                    response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
+                                                                                     invite_message)
+                    print(response)
+                    response = {
+                        "status": True,
+                        "message": "Transaction Completed"
+                    }
+                    print("sending response")
+                    return JsonResponse(response)
 
         else:
-            print("started with only phone")
-            if phone != '':
-                mob_numbers.append(phone)
-                response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
-                                                                                 invite_message)
-                print(response)
-                response = {
-                    "status": True,
-                    "message": "Transaction Completed"
-                }
-                print("sending response")
-                return JsonResponse(response)
+            return render(request, 'pages/admin_employee/event_management/event/whatsapp_invite.html',
+                          {'invited_list': invited_list['invited_list'], "admins": admins,
+                           "event_data": event_data['event_data'], "event_id": e_id})
 
     else:
-        return render(request, 'template/pages/admin_employee/event_management/event/whatsapp_invite.html',
-                      {'invited_list': invited_list['invited_list'], "admins": admins,
-                       "event_data": event_data['event_data'], "event_id": e_id})
+        return redirect('sign_up')
 
 
 # Printer view functions

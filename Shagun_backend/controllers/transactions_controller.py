@@ -13,11 +13,12 @@ def add_transaction_history(transaction_obj):
         with connection.cursor() as cursor:
             transaction_history_query = f"""INSERT INTO transaction_history (sender_uid, receiver_uid, 
             transaction_amount, shagun_amount, greeting_card_id, transaction_fee, delivery_fee, transaction_id, 
-            payment_status, event_id, status, created_on, gifter_name) 
+            payment_status, event_id, status, created_on, gifter_name,greeting_card_price) 
             VALUES ('{transaction_obj.uid}', '{transaction_obj.receiver_uid}', 
             '{transaction_obj.transaction_amount}', '{transaction_obj.shagun_amount}', '{transaction_obj.greeting_card_id}',
             '{transaction_obj.transaction_fee}', '{transaction_obj.delivery_fee}', '{transaction_obj.transaction_id}',
-            '{transaction_obj.payment_status}', '{transaction_obj.event_id}', {transaction_obj.status}, '{today}', '{transaction_obj.gifter_name}')"""
+            '{transaction_obj.payment_status}', '{transaction_obj.event_id}', {transaction_obj.status}, '{today}', 
+            '{transaction_obj.gifter_name}','{transaction_obj.greeting_card_price}')"""
 
             cursor.execute(transaction_history_query)
             transaction_id = cursor.lastrowid

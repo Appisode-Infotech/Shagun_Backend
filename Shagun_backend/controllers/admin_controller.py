@@ -61,14 +61,16 @@ def admin_dashboard(uid):
             job_stats = cursor.fetchone()
 
             events_sql = """
-                        SELECT
-                            SUM(CASE WHEN is_approved = 0 THEN 1 ELSE 0 END) AS pending_events,
-                            SUM(CASE WHEN is_approved = 1 THEN 1 ELSE 0 END) AS approved_events,
-                            SUM(CASE WHEN is_approved = 2 THEN 1 ELSE 0 END) AS rejected_events,
-                            COUNT(*) AS total_events
-                        FROM
-                            event;
-                        """
+                SELECT
+                    COALESCE(SUM(CASE WHEN is_approved = 0 THEN 1 ELSE 0 END), 0) AS pending_events,
+                    COALESCE(SUM(CASE WHEN is_approved = 1 THEN 1 ELSE 0 END), 0) AS approved_events,
+                    COALESCE(SUM(CASE WHEN is_approved = 2 THEN 1 ELSE 0 END), 0) AS rejected_events,
+                    COALESCE(COUNT(*), 0) AS total_events
+                FROM
+                    event;
+            """
+
+            # Now you can execute the SQL query
             cursor.execute(events_sql)
             events_stat = cursor.fetchone()
 

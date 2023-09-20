@@ -17,15 +17,16 @@ def printer_login(uname, pwd):
                                     WHERE printer_user_name = '{uname}' """
         cursor.execute(printer_login_query)
         result = cursor.fetchone()
-        stored_password = result[2].encode('utf-8')
-        if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
-            return {
-                "msg": "Success",
-                "username": result[1],
-                "pwd": result[2],
-                "store_name": result[3],
-                "id": result[0],
-            }
+        if result is not None:
+            stored_password = result[2].encode('utf-8')
+            if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
+                return {
+                    "msg": "Success",
+                    "username": result[1],
+                    "pwd": result[2],
+                    "store_name": result[3],
+                    "id": result[0],
+                }
         else:
             return {
                 "msg": "Invalid Credentials, please try again",

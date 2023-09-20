@@ -674,15 +674,16 @@ def employee_login(uname, pwd):
                             ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
-        stored_password = result[0].encode('utf-8')
-        if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
-            return {
-                "msg": "Success",
-                "data": result[0],
-                "name": result[1],
-                "profile_pic": result[2],
-                "role": result[3]
-            }
+        if result is not None:
+            stored_password = result[0].encode('utf-8')
+            if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
+                return {
+                    "msg": "Success",
+                    "data": result[0],
+                    "name": result[1],
+                    "profile_pic": result[2],
+                    "role": result[3]
+                }
         else:
             return {
                 "msg": "Invalid Credentials, please try again"

@@ -7,10 +7,8 @@ user = 'root'  # Replace with your MySQL user
 password = ''  # Replace with your MySQL password
 database = 'shagun'
 
-user_password = "admin@#123"
-hashed_password = bcrypt.hashpw(user_password.encode('utf-8'), bcrypt.gensalt())
-
-
+password_hash = bcrypt.hashpw('admin@#123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+print(password_hash)
 # SQL statements for table creation
 table_queries = [
     """
@@ -318,7 +316,7 @@ table_queries = [
     INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, 
     `status`, `role`, `fcm_token`, `city`, `password`) VALUES (NULL, 'admin@shagun.com', 'Shagun Admin', 
     'admin@shagun.com', '1234567890', '', '0', 'images/profile_pic/profile.png', '2023-09-15 14:21:59', '1', '1', '', 
-    'Bangalore', '{hashed_password}');
+    'Bangalore', '{password_hash}');
     """
 ]
 

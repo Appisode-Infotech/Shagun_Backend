@@ -47,15 +47,16 @@ def admin_dashboard(uid):
             today_event_stats = cursor.fetchall()
 
             jobs_sql = """
-                    SELECT
-                        SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS new_count,
-                        SUM(CASE WHEN `status` IN (2, 3, 4) THEN 1 ELSE 0 END) AS in_progress_count,
-                        SUM(CASE WHEN `status` = 5 THEN 1 ELSE 0 END) AS completed_count,
-                        COUNT(*) AS total_jobs
-                    FROM
-                        `print_jobs`
-                    """
+                SELECT
+                    COALESCE(SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END), 0) AS new_count,
+                    COALESCE(SUM(CASE WHEN `status` IN (2, 3, 4) THEN 1 ELSE 0 END), 0) AS in_progress_count,
+                    COALESCE(SUM(CASE WHEN `status` = 5 THEN 1 ELSE 0 END), 0) AS completed_count,
+                    COALESCE(COUNT(*), 0) AS total_jobs
+                FROM
+                    `print_jobs`
+            """
 
+            # Now you can execute the SQL query
             cursor.execute(jobs_sql)
             job_stats = cursor.fetchone()
 

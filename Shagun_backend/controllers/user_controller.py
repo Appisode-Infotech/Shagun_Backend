@@ -1,5 +1,5 @@
 import json
-
+import bcrypt
 import pymysql
 from django.db import connection
 
@@ -516,12 +516,14 @@ def get_all_bank_data(status):
 
 
 def add_employee(emp_obj):
+    # Hash the password using bcrypt
+    hashed_password = bcrypt.hashpw(emp_obj.password.encode('utf-8'), bcrypt.gensalt())
     try:
         with connection.cursor() as cursor:
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 2,
-                      emp_obj.city, emp_obj.password, 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password , 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
             # cursor.execute(query, 2)
@@ -538,12 +540,14 @@ def add_employee(emp_obj):
 
 
 def add_admin(emp_obj):
+    # Hash the password using bcrypt
+    hashed_password = bcrypt.hashpw(emp_obj.password.encode('utf-8'), bcrypt.gensalt())
     try:
         with connection.cursor() as cursor:
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 1,
-                      emp_obj.city, emp_obj.password, 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             return {
                 "status": True,
@@ -670,7 +674,8 @@ def employee_login(uname, pwd):
                             ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
-        if result is not None and result[0] == pwd:
+        stored_password = result[0].encode('utf-8')
+        if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
             return {
                 "msg": "Success",
                 "data": result[0],
@@ -678,15 +683,9 @@ def employee_login(uname, pwd):
                 "profile_pic": result[2],
                 "role": result[3]
             }
-
-        if result is not None and result[0] != pwd:
-            return {
-                "msg": "Please enter valid User Name and Password",
-            }
-
         else:
             return {
-                "msg": "Please enter valid User Name and Password",
+                "msg": "Invalid Credentials, please try again"
             }
 
 

@@ -1,3 +1,4 @@
+import bcrypt
 import pymysql
 from django.db import connection
 
@@ -16,8 +17,8 @@ def printer_login(uname, pwd):
                                     WHERE printer_user_name = '{uname}' """
         cursor.execute(printer_login_query)
         result = cursor.fetchone()
-        print(result)
-        if result is not None and result[2] == pwd:
+        stored_password = result[2].encode('utf-8')
+        if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
             return {
                 "msg": "Success",
                 "username": result[1],
@@ -25,19 +26,15 @@ def printer_login(uname, pwd):
                 "store_name": result[3],
                 "id": result[0],
             }
-
-        if result is not None and result[2] != pwd:
-            return {
-                "msg": "wrong password",
-            }
-
         else:
             return {
-                "msg": "printer not exist, Please contact admin to register",
+                "msg": "Invalid Credentials, please try again",
             }
 
 
 def add_printer(store_obj):
+    # Hash the password using bcrypt
+    hashed_password = bcrypt.hashpw(store_obj.printer_password.encode('utf-8'), bcrypt.gensalt())
     try:
         with connection.cursor() as cursor:
             add_printer_query = """INSERT INTO printer (store_name, city, address, email, gst_no, store_owner,
@@ -46,7 +43,7 @@ def add_printer(store_obj):
             cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address,
                                                store_obj.email, store_obj.gst_no, store_obj.store_owner,
                                                store_obj.contact_number,
-                                               store_obj.printer_user_name, store_obj.printer_password])
+                                               store_obj.printer_user_name, hashed_password])
             return {
                 "status": True,
                 "user": "store added successfully"
@@ -422,17 +419,18 @@ def printer_dashboard(pid):
     try:
         with connection.cursor() as cursor:
             transaction_stats_query = f"""
-                                    SELECT 
-                                        SUM(CASE WHEN `status` IN (1, 2, 3, 4, 5) THEN `billing_amount` ELSE 0 END) AS total_amount,
-                                        SUM(CASE WHEN `status` = 5 THEN `billing_amount` ELSE 0 END) AS work_done_amount,
-                                        SUM(CASE WHEN `status` IN (2, 3, 4) THEN `billing_amount` ELSE 0 END) AS in_progress_amount,
-                                        SUM(CASE WHEN `status` = 1 THEN `billing_amount` ELSE 0 END) AS new_amount
-                                    FROM 
-                                        print_jobs
-                                    WHERE printer_id = '{pid}'
-                                    """
+                SELECT 
+                    COALESCE(SUM(CASE WHEN `status` IN (1, 2, 3, 4, 5) THEN `billing_amount` ELSE 0 END), 0) AS total_amount,
+                    COALESCE(SUM(CASE WHEN `status` = 5 THEN `billing_amount` ELSE 0 END), 0) AS work_done_amount,
+                    COALESCE(SUM(CASE WHEN `status` IN (2, 3, 4) THEN `billing_amount` ELSE 0 END), 0) AS in_progress_amount,
+                    COALESCE(SUM(CASE WHEN `status` = 1 THEN `billing_amount` ELSE 0 END), 0) AS new_amount
+                FROM 
+                    print_jobs
+                WHERE printer_id = '{pid}'
+            """
             cursor.execute(transaction_stats_query)
             transaction_stats = cursor.fetchone()
+
             event_stats_query = f"""
                 SELECT 
                     COUNT(*) AS total_events,
@@ -452,17 +450,16 @@ def printer_dashboard(pid):
             today_event_stats = cursor.fetchall()
 
             jobs_sql = f"""
-                    SELECT
-                        SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS new_count,
-                        SUM(CASE WHEN `status` IN (2, 3, 4) THEN 1 ELSE 0 END) AS in_progress_count,
-                        SUM(CASE WHEN `status` = 5 THEN 1 ELSE 0 END) AS completed_count,
-                        COUNT(*) AS total_jobs
-                    FROM
-                        print_jobs
-                    WHERE
-                        printer_id = '{pid}'
-                    """
-
+                SELECT
+                    COALESCE(SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END), 0) AS new_count,
+                    COALESCE(SUM(CASE WHEN `status` IN (2, 3, 4) THEN 1 ELSE 0 END), 0) AS in_progress_count,
+                    COALESCE(SUM(CASE WHEN `status` = 5 THEN 1 ELSE 0 END), 0) AS completed_count,
+                    COALESCE(COUNT(*), 0) AS total_jobs
+                FROM
+                    print_jobs
+                WHERE
+                    printer_id = '{pid}'
+            """
             cursor.execute(jobs_sql)
             job_stats = cursor.fetchone()
 

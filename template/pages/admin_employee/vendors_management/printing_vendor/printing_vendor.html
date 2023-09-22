@@ -164,6 +164,7 @@
                                 <th>
                                     Edit
                                 </th>
+                                <th>Reset Password</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -222,6 +223,13 @@
                                     <button type="button" class="btn btn-outline-info btn-fw"
                                             onclick="window.location.href='{% url 'edit_printer' printer.id%}'">
                                         Edit
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info btn-fw"
+                                            onclick="window.location.href='{% url 'reset_password' printer.email %}'">
+                                        {{printer.email}}
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </td>

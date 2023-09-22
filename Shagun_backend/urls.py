@@ -46,6 +46,7 @@ urlpatterns = [
     path('', admin_dashboard, name='admin_dashboard'),
     path('sign_up', sign_up, name='sign_up'),
     path('printer_login', printer_login, name='printer_login'),
+    path('reset_password/<str:email>/<str:action_page>/', reset_password, name='reset_password'),
     path('logout', logout, name='logout'),
     path('manage_event', manage_event, name='manage_event'),
     path('kyc_request', kyc_request, name='kyc_request'),
@@ -200,7 +201,6 @@ urlpatterns = [
     path('edit_printer', edit_printer, name='edit_printer'),
     path('get_greetings_by_id', get_greetings_by_id, name='get_greetings_by_id'),
 
-    path('add_ev', add_ev, name='add_ev'),
     path('event_admin', event_admin, name='event_admin'),
     path('manage_vendor', manage_vendor, name='manage_vendor'),
     path('enable_disable_vendor', enable_disable_vendor, name='enable_disable_vendor'),

@@ -563,8 +563,8 @@ def edit_employee(emp_obj, user_id):
     try:
         with connection.cursor() as cursor:
             edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
-                                phone = '{emp_obj.phone}', city = '{emp_obj.city}', 
-                                password = '{emp_obj.password}' WHERE id = '{user_id}'"""
+                                phone = '{emp_obj.phone}', city = '{emp_obj.city}'
+                                WHERE id = '{user_id}'"""
             cursor.execute(edit_emp_query)
             return {
                 "status": True,
@@ -674,6 +674,7 @@ def employee_login(uname, pwd):
                             ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
+        print(result)
         if result is not None:
             stored_password = result[0].encode('utf-8')
             if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
@@ -684,6 +685,10 @@ def employee_login(uname, pwd):
                     "profile_pic": result[2],
                     "role": result[3]
                 }
+            else:
+                return {
+                    "msg": "Invalid Password, please try again"
+                }
         else:
             return {
                 "msg": "Invalid Credentials, please try again"
@@ -693,7 +698,7 @@ def employee_login(uname, pwd):
 def get_employee_by_id(emp_id):
     try:
         with connection.cursor() as cursor:
-            emp_data_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city,password
+            emp_data_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city
              FROM users WHERE id = '{emp_id}'"""
             cursor.execute(emp_data_query)
             emp_data = cursor.fetchone()

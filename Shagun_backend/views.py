@@ -1,5 +1,4 @@
-import json
-
+from django.core.mail import send_mail
 import jwt
 from datetime import datetime, timedelta
 import os
@@ -33,6 +32,7 @@ def sign_up(request):
     if request.method == 'POST':
         data = request.POST
         response = user_controller.employee_login(data['username'], data['password'])
+        print(response)
         if response['msg'] == 'Success':
             request.session['is_logged_in'] = True
             request.session['uid'] = data['username']
@@ -62,6 +62,21 @@ def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
+    else:
+        return redirect('sign_up')
+
+
+def reset_password(request, email, action_page):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        print(email)
+        print(action_page)
+        # subject = 'Subject of the email'
+        # message = 'Message content goes here.'
+        # from_email = 'your_email@example.com'
+        # recipient_list = ['recipient@example.com']
+        #
+        # send_mail(subject, message, from_email, recipient_list)
+        return redirect(action_page)
     else:
         return redirect('sign_up')
 

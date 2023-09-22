@@ -153,50 +153,17 @@ def edit_event(event_obj, event_id):
                 uid = item["uid"]
                 event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                                         VALUES ('{uid}', 'event',
-                                        'Event has been created',
-                                        ' Event created for {admin[1]} on {event_obj.event_date}')"""
+                                        'Event has been updated',
+                                        ' Event updated for {admin[1]} on {event_obj.event_date}')"""
                 cursor.execute(event_created_notification_query)
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
                 user_data = cursor.fetchone()
 
-                # Replace this with your desired text
-                text = "https://shagunmobile.page.link/qrScanner/" + str(event_id) + "_" + user_data[0]
-
-                # Generate QR code
-                qr = qrcode.QRCode(
-                    version=1,  # QR code version (controls size)
-                    error_correction=qrcode.constants.ERROR_CORRECT_L,
-                    box_size=10,  # Size of each box in pixels
-                    border=4,  # Border size in boxes
-                )
-
-                # Add data to the QR code
-                qr.add_data(text)
-                qr.make(fit=True)
-
-                # Create an image from the QR code instance with the desired fill color
-                fill_color = "#9925b9"
-                img = qr.make_image(fill_color=fill_color, back_color="white")
-
-                # Construct the path to save the image in the media directory
-                media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
-                os.makedirs(media_dir, exist_ok=True)
-                image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
-
-                img.save(image_path)
-
-                # The relative URL to the saved image
-                image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
-                item["qr_code"] = image_url
-
-            update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
-            cursor.execute(update_qr_sql)
-
-            title = f"Event has been created"
-            message = f"Event created for {admin[1]} on {event_obj.event_date}"
-            send_push_notification(user_data[1], title, message)
+                title = f"Event has been Updated"
+                message = f"Event created for {admin[1]} on {event_obj.event_date}"
+                send_push_notification(user_data[1], title, message)
 
             return {
                 "status": True,
@@ -867,7 +834,7 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
                 cursor.execute(invite_notification_query)
                 title = f"""{invited_by[0]} has invited you to {event_name[0]}"""
                 send_push_notification(fcm_token, title, invite_message)
-            return {"status": True, "message": "Messages sent Successfully"}, 200
+            return {"status": True, "message": "Invitation sent Successfully"}, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

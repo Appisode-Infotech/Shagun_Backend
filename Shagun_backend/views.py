@@ -667,7 +667,9 @@ def add_admin(request):
             'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
-            user_controller.add_admin(admin_obj)
+            print(admin_obj)
+            response = user_controller.add_admin(admin_obj)
+            print(response)
             return redirect('manage_admin')
         else:
             return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html')
@@ -1234,11 +1236,6 @@ def whatsapp_invite(request, e_id):
                         mob_numbers.append(phone)
                     response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
                                                                                      invite_message)
-                    print(response)
-                    response = {
-                        "status": True,
-                        "message": "Transaction Completed"
-                    }
                     return JsonResponse(response)
 
                 except Exception as e:
@@ -1253,12 +1250,7 @@ def whatsapp_invite(request, e_id):
                     mob_numbers.append(phone)
                     response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
                                                                                      invite_message)
-                    print(response)
-                    response = {
-                        "status": True,
-                        "message": "Transaction Completed"
-                    }
-                    print("sending response")
+
                     return JsonResponse(response)
 
         else:

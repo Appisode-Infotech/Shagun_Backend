@@ -1,3 +1,4 @@
+import bcrypt
 import pymysql
 
 # Database connection parameters
@@ -6,6 +7,8 @@ user = 'root'  # Replace with your MySQL user
 password = ''  # Replace with your MySQL password
 database = 'shagun'
 
+password_hash = bcrypt.hashpw('admin@#123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+print(password_hash)
 # SQL statements for table creation
 table_queries = [
     """
@@ -309,11 +312,11 @@ table_queries = [
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
     """,
 
-    """
+    f"""
     INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, 
     `status`, `role`, `fcm_token`, `city`, `password`) VALUES (NULL, 'admin@shagun.com', 'Shagun Admin', 
     'admin@shagun.com', '1234567890', '', '0', 'images/profile_pic/profile.png', '2023-09-15 14:21:59', '1', '1', '', 
-    'Bangalore', 'admin@#123');
+    'Bangalore', '{password_hash}');
     """
 ]
 

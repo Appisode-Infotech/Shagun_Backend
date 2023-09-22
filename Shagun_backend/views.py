@@ -60,11 +60,6 @@ def custom_404(request, slug=None):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        device_token = "f2ddBJQTQy-C4uEDRf3VdS:APA91bHpGcBi-ruY2IjsxMLfS1OxRSM5-VY9e3AHcqd_PSFPPiV7qGULmFRpY-N6nvjblyYTH5pEoz35iklzzRNS37Quzcnb0USl4XggHH_F99Z0U94QnjwtetqRal24gBSdUTV_VsAc"
-        title = "Test notification"
-        message = "Test notifcation message"
-        resp = send_push_notification(device_token, title, message)
-        print(resp)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:

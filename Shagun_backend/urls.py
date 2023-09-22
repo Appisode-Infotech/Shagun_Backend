@@ -17,6 +17,7 @@ Including another URLconf
 from django.urls import path, re_path
 
 from Shagun_backend.views import *
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('<str:slug>/', custom_404, name='catch-all'),
@@ -208,3 +209,4 @@ urlpatterns = [
     path('change_printer_jobs_status/jobId=<int:pjid>/status=<int:status>/jobs=<str:from_page>', change_printer_jobs_status, name='change_printer_jobs_status'),
 
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

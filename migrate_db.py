@@ -313,8 +313,8 @@ table_queries = [
     """,
 
     f"""
-    INSERT INTO `users` (`id`, `uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, 
-    `status`, `role`, `fcm_token`, `city`, `password`) VALUES (NULL, 'admin@shagun.com', 'Shagun Admin', 
+    INSERT INTO `users` (`uid`, `name`, `email`, `phone`, `auth_type`, `kyc`, `profile_pic`, `created_on`, 
+    `status`, `role`, `fcm_token`, `city`, `password`) VALUES ('admin@shagun.com', 'Shagun Admin', 
     'admin@shagun.com', '1234567890', '', '0', 'images/profile_pic/profile.png', '2023-09-15 14:21:59', '1', '1', '', 
     'Bangalore', '{password_hash}');
     """

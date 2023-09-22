@@ -1,4 +1,3 @@
-from django.core.mail import send_mail
 import jwt
 from datetime import datetime, timedelta
 import os
@@ -19,7 +18,7 @@ from rest_framework.reverse import reverse
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller, test_controller, delivery_vendor_controller
+    bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
 from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
@@ -70,12 +69,8 @@ def reset_password(request, email, action_page):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         print(email)
         print(action_page)
-        # subject = 'Subject of the email'
-        # message = 'Message content goes here.'
-        # from_email = 'your_email@example.com'
-        # recipient_list = ['recipient@example.com']
-        #
-        # send_mail(subject, message, from_email, recipient_list)
+        resp = reset_password_controller.reset_password(email, action_page)
+        print(resp)
         return redirect(action_page)
     else:
         return redirect('sign_up')

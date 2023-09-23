@@ -18,7 +18,9 @@ def reset_password(email, user):
     try:
         with connection.cursor() as cursor:
             new_pwd = generate_random_string()
+            print(new_pwd)
             hashed_password = bcrypt.hashpw(new_pwd.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            print(hashed_password)
             if user == 'manage_printers':
                 print("reset pwd for printing vendor")
                 sql_query = f"""UPDATE printer SET printer_password	 = '{hashed_password}' WHERE email = '{email}' """
@@ -47,7 +49,7 @@ def reset_password(email, user):
 
             return {
                 "status": True,
-                "message": "Password reset successful, please click Ok to login using new password"
+                "message": "Password reset successful. We have sent you an email with new password, please click OK to login using new password"
             }, 200
 
     except pymysql.Error as e:

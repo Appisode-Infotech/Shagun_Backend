@@ -65,6 +65,7 @@ def admin_dashboard(request):
 
 
 def reset_password(request, email, action_page):
+    print(email)
     resp, status_code = reset_password_controller.reset_password(email, action_page)
     return JsonResponse(resp)
 

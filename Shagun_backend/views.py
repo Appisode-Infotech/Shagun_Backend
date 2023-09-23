@@ -17,8 +17,8 @@ from rest_framework.reverse import reverse
 
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
-    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
+    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, \
+    request_controller, bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
 from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \

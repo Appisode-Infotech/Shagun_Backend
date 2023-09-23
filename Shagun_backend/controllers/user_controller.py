@@ -65,15 +65,14 @@ def edit_user(edit_reg_obj, file_name):
             if file_name == '':
                 sql_query = "UPDATE users SET name = %s, email = %s, phone = %s WHERE uid = %s"
                 values = (
-                edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], edit_reg_obj['uid'])
+                    edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], edit_reg_obj['uid'])
                 cursor.execute(sql_query, values)
 
             else:
                 sql_query = "UPDATE users SET name = %s, email = %s, phone = %s, profile_pic = %s WHERE uid = %s"
                 values = (
-                edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], file_name, edit_reg_obj['uid'])
+                    edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], file_name, edit_reg_obj['uid'])
                 cursor.execute(sql_query, values)
-
 
             return {
                 "status": True,
@@ -101,6 +100,7 @@ def get_all_users(kyc):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
 
 def get_users_for_kyc(kyc):
     try:
@@ -540,7 +540,7 @@ def add_employee(emp_obj):
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 2,
-                      emp_obj.city, hashed_password , 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
             # cursor.execute(query, 2)
@@ -1062,6 +1062,40 @@ def dashboard_search_user(search):
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
             }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def update_password(data):
+    password_hash = bcrypt.hashpw(data['new_password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT password
+                FROM users WHERE uid = '{data['uid']}'  """
+            cursor.execute(users_data_query)
+            result = cursor.fetchone()
+            if result is not None:
+                stored_password = result[0].encode('utf-8')
+                if bcrypt.checkpw(data['old_password'].encode('utf-8'), stored_password):
+                    sql_query = f"""UPDATE users SET password = '{password_hash}' WHERE uid = '{data['uid']}'"""
+                    cursor.execute(sql_query)
+                    return {
+                        "status": True,
+                        "message": "Password Updated Successfully"
+                    }
+                else:
+                    return {
+                        "status": False,
+                        "message": "You have entered wrong old password"
+                    }
+            else:
+                return {
+                    "status": False,
+                    "message": "You have entered wrong old password"
+                }
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

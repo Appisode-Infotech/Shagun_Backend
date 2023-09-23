@@ -31,7 +31,6 @@ def sign_up(request):
     if request.method == 'POST':
         data = request.POST
         response = user_controller.employee_login(data['username'], data['password'])
-        print(response)
         if response['msg'] == 'Success':
             request.session['is_logged_in'] = True
             request.session['uid'] = data['username']
@@ -66,12 +65,31 @@ def admin_dashboard(request):
 
 
 def reset_password(request, email, action_page):
+    resp, status_code = reset_password_controller.reset_password(email, action_page)
+    return JsonResponse(resp)
+
+
+def forgot_password(request, action_page):
+    if request.method == 'POST':
+        return redirect('sign_up')
+    else:
+        return render(request, 'pages/admin_employee/login_signup/forget_password.html', {"action_page": action_page})
+
+
+def update_password(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        print(email)
-        print(action_page)
-        resp = reset_password_controller.reset_password(email, action_page)
-        print(resp)
-        return redirect(action_page)
+        if request.method == 'POST':
+            print(request.POST)
+            response = user_controller.update_password(request.POST)
+            if not response['status']:
+                messages.error(request, response['message'])
+                return render(request, 'pages/admin_employee/login_signup/change_password.html',
+                              {"msg": response['message']})
+            else:
+                messages.success(request, response['message'])
+                return render(request, 'pages/admin_employee/login_signup/change_password.html')
+        else:
+            return render(request, 'pages/admin_employee/login_signup/change_password.html')
     else:
         return redirect('sign_up')
 
@@ -2073,7 +2091,6 @@ def manage_vendor(request):
 def enable_disable_vendor(request):
     response, status_code = delivery_vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
 
 
 @api_view(['POST'])

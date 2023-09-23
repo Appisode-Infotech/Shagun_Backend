@@ -47,7 +47,7 @@ def reset_password(email, user):
 
             return {
                 "status": True,
-                "message": "Password reset successful"
+                "message": "Password reset successful, please click Ok to login using new password"
             }, 200
 
     except pymysql.Error as e:

@@ -601,7 +601,7 @@ def add_kyc(request):
             user_controller.add_user_kyc(kyc_obj)
             return redirect('add_bank')
         else:
-            response, status_code = user_controller.get_all_users('%')
+            response, status_code = user_controller.get_users_for_kyc('%')
             return render(request, 'pages/admin_employee/users_management/kyc/add_kyc.html', response)
     else:
         return redirect('sign_up')
@@ -616,6 +616,7 @@ def add_bank(request):
         else:
             user, status_code = user_controller.get_all_users('%')
             bank, status_code = bank_controller.get_all_banks_list()
+            print(bank)
             context = {
                 "user": user,
                 "banks": bank
@@ -863,7 +864,7 @@ def edit_bank(request, bank_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             bank_update_obj = bank_details_model.bank_details_model_from_dict(request.POST)
-            user_controller.edit_bank_details(bank_update_obj)
+            resp = user_controller.edit_bank_details(bank_update_obj)
             return redirect('manage_bank_details')
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)

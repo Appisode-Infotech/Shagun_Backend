@@ -37,6 +37,7 @@ class BankDetailsModel:
     account_number: str
     added_by: Optional[str] = None
     modified_by: Optional[str] = None
+    bank_id: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'BankDetailsModel':
@@ -48,7 +49,8 @@ class BankDetailsModel:
         account_number = from_str(obj.get("account_number"))
         added_by = from_union([from_str, from_none], obj.get("added_by"))
         modified_by = from_union([from_str, from_none], obj.get("modified_by"))
-        return BankDetailsModel(uid, bank_name, ifsc_code, account_holder_name, account_number, added_by, modified_by)
+        bank_id = from_union([from_str, from_none], obj.get("bank_id"))
+        return BankDetailsModel(uid, bank_name, ifsc_code, account_holder_name, account_number, added_by, modified_by,bank_id)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -61,6 +63,8 @@ class BankDetailsModel:
             result["added_by"] = from_union([from_str, from_none], self.added_by)
         if self.modified_by is not None:
             result["modified_by"] = from_union([from_str, from_none], self.modified_by)
+        if self.bank_id is not None:
+            result["bank_id"] = from_union([from_str, from_none], self.bank_id)
         return result
 
 

@@ -102,6 +102,23 @@ def get_all_users(kyc):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def get_users_for_kyc(kyc):
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
+                FROM users WHERE role = 3 AND kyc = 0 ORDER BY created_on DESC  """
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 
 def filter_users(status):
     try:
@@ -436,9 +453,9 @@ def edit_bank_details(bank_obj):
             user = cursor.fetchone()
             if user is not None:
                 edit_bank_query = """UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, 
-                                account_number = %s, modified_on = %s, modified_by = %s WHERE uid = %s"""
+                                account_number = %s, modified_on = %s, modified_by = %s WHERE id = %s"""
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          today, bank_obj.modified_by, bank_obj.uid)
+                          today, bank_obj.modified_by, bank_obj.bank_id)
                 cursor.execute(edit_bank_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -791,14 +808,17 @@ def get_user_profile(uid):
 def disable_bank(bank_id, status):
     try:
         with connection.cursor() as cursor:
-            disable_bank_query = "UPDATE bank_details SET status = %s WHERE id = %s"
+            bank_user_sql_query = f"""
+                                SELECT bd.uid
+                                FROM bank_details bd
+                                WHERE bd.id = '{bank_id}'
+                            """
+            cursor.execute(bank_user_sql_query)
+            bank_user = cursor.fetchone()
 
-            if status == 1:
-                cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
-                               (bank_id,))
+            cursor.execute(f"""UPDATE bank_details SET status = 0 WHERE uid = '{bank_user[0]}' """)
 
-            values = (status, bank_id)
-            cursor.execute(disable_bank_query, values)
+            cursor.execute(f"""UPDATE bank_details SET status = '{status}'  WHERE id = '{bank_id}' """)
             return {
                 "status": True,
                 "message": "Bank status changed successfully"

@@ -115,5 +115,7 @@
   $('#navbar-search-icon').click(function() {
     $("#navbar-search-input").focus();
   });
-  
+  document.getElementById('backButton').addEventListener('click', function() {
+    window.history.back();
+});
 })(jQuery);

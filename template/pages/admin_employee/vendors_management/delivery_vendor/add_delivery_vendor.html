@@ -125,6 +125,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -242,13 +243,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Added By</label>
-                                            <div class="col-sm-9">
-                                                <label class="form-control">{{ request.session.name }}</label>
-                                                <input required type="hidden" id="created_by" name="created_by"
-                                                       value="{{ request.session.uid }}">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <div class="col-sm-9">
+                                                    <input disabled class="form-control" value="{{ request.session.name }}" >
+                                                    <input required type="hidden" id="created_by" name="created_by"
+                                                           value="{{ request.session.uid }}">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -324,6 +327,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -335,6 +339,7 @@
                 e.preventDefault();
             }
         });
+
 
 
 

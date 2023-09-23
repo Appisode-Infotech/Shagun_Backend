@@ -118,6 +118,7 @@
             margin-right: 10px;
         }
 
+
     </style>
 </head>
 
@@ -147,6 +148,20 @@
                 </div>
             </div>
         </div>
+        <div id="customAlertOverlay4" class="custom-alert-overlay">
+            <div class="custom-alert">
+                <label class="form-group">
+                    <p>Please confirm if you want to reset password for <span id="emailSpan"></span></p>
+                </label>
+                <div class="center-button">
+                    <button type="button" onclick="hideReserPasswordPopUpDiv()"
+                            class="btn btn-outline-danger btn-fw">
+                        Cancel
+                    </button>
+                    <button type="submit" id="confirmResetPassword" class="btn btn-outline-success btn-fw"> Confirm </button>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -154,11 +169,11 @@
                         <h4 class="card-title">Admins List</h4>
                         {% if request.session.role == 1 %}
                         <div class="form-group">
-                        <button type="button" class="btn btn-outline-info btn-icon-text"
-                                onclick="window.location.href='{% url 'add_admin' %}'">
-                            Admin
-                            <i class="ti-plus btn-icon-append"></i>
-                        </button>
+                            <button type="button" class="btn btn-outline-info btn-icon-text"
+                                    onclick="window.location.href='{% url 'add_admin' %}'">
+                                Admin
+                                <i class="ti-plus btn-icon-append"></i>
+                            </button>
                         </div>
                         {% endif %}
                     </div>
@@ -185,6 +200,7 @@
                                 {% if request.session.role == 1 %}
                                 <th>Edit</th>
                                 {% endif %}
+                                <th>Reset Password</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -241,6 +257,14 @@
                                     </button>
                                 </td>
                                 {% endif %}
+                                <td>
+                                    <button class="btn btn-outline-info btn-fw"
+                                            data-admin-email="{{ user.email }}"
+                                            data-action_page="manage_admin"
+                                            onclick="showCustomAlertForResetPassword(this.getAttribute('data-admin-email'), this.getAttribute('data-action_page'))">
+                                        Reset Password
+                                    </button>
+                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -300,8 +324,6 @@
 
 <script>
     function showCustomAlertForActivateInactive(adminId, action) {
-        console.log(adminId);
-        console.log(action);
         window.adminId = adminId;
         window.action = action;
 
@@ -318,6 +340,18 @@
 
     }
 
+    function showCustomAlertForResetPassword(adminEmail, action_page) {
+        window.adminEmail = adminEmail;
+        window.action_page = action_page;
+
+        var customAlertOverlay = document.getElementById("customAlertOverlay4");
+        customAlertOverlay.style.display = "flex";
+
+        var emailSpan = document.getElementById("emailSpan");
+        emailSpan.textContent = adminEmail;
+
+    }
+
     var confirmButton = document.getElementById("confirmButton");
     confirmButton.addEventListener("click", function() {
         console.log("clicked")
@@ -326,10 +360,24 @@
         window.location.href = url;
     });
 
+    var confirmResetPassword = document.getElementById("confirmResetPassword");
+    confirmResetPassword.addEventListener("click", function() {
+        console.log("clicked")
+        var url = '/reset_password/' + adminEmail + '/' + action_page + '/';
+        console.log(url)
+        window.location.href = url;
+    });
+
     function hideActivationPopUpDiv() {
         var customAlertOverlay = document.getElementById("customAlertOverlay3");
         customAlertOverlay.style.display = "none";
     }
+
+    function hideReserPasswordPopUpDiv() {
+        var customAlertOverlay = document.getElementById("customAlertOverlay4");
+        customAlertOverlay.style.display = "none";
+    }
+
 
 </script>
 <!-- endinject -->

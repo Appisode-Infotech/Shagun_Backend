@@ -1,5 +1,3 @@
-import json
-
 import jwt
 from datetime import datetime, timedelta
 import os
@@ -20,7 +18,7 @@ from rest_framework.reverse import reverse
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller, test_controller, delivery_vendor_controller
+    bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
 from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
@@ -62,6 +60,36 @@ def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
+    else:
+        return redirect('sign_up')
+
+
+def reset_password(request, email, action_page):
+    resp, status_code = reset_password_controller.reset_password(email, action_page)
+    return JsonResponse(resp)
+
+
+def forgot_password(request, action_page):
+    if request.method == 'POST':
+        return redirect('sign_up')
+    else:
+        return render(request, 'pages/admin_employee/login_signup/forget_password.html', {"action_page": action_page})
+
+
+def update_password(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            print(request.POST)
+            response = user_controller.update_password(request.POST)
+            if not response['status']:
+                messages.error(request, response['message'])
+                return render(request, 'pages/admin_employee/login_signup/change_password.html',
+                              {"msg": response['message']})
+            else:
+                messages.success(request, response['message'])
+                return render(request, 'pages/admin_employee/login_signup/change_password.html')
+        else:
+            return render(request, 'pages/admin_employee/login_signup/change_password.html')
     else:
         return redirect('sign_up')
 
@@ -204,7 +232,6 @@ def manage_users(request):
 def manage_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_employees()
-        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -258,7 +285,6 @@ def edit_delivery_vendors(request, vid):
             return redirect('manage_delivery_vendors')
         else:
             response, status_code = delivery_vendor_controller.edit_delivery_vendor(vid)
-            print(response)
             location, status_code = event_controller.get_city_list_for_user()
 
             return render(request,
@@ -324,7 +350,6 @@ def filter_kyc_request(request, status):
 def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
-        print(response)
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -361,7 +386,6 @@ def filter_event_request(request, status):
 def get_settlement_for_event(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement(status)
-        print(response)
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -374,7 +398,6 @@ def get_settlement_for_event(request, status):
 def dashboard_search_event_settlement(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.search_event_settlement(request.POST['search'])
-        print(response)
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -512,7 +535,6 @@ def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             transaction_id = request.POST.getlist('selected_ids')
-            print(transaction_id)
             settlement, status_code = transactions_controller.settle_payment(transaction_id)
             if status_code == 200:
                 response, status_code = transactions_controller.update_transactions(transaction_id)
@@ -529,32 +551,6 @@ def transactions_settlement(request, event_id):
                           {"response": response, "event_id": event_id})
     else:
         return redirect('sign_up')
-
-
-# def transactions_settlement(request, event_id):
-#     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-#         if request.method == 'POST':
-#             print("started")
-#             print(request.POST)
-#             reciever_list = request.POST.getlist('selectedReceiverUids')
-#             print(reciever_list)
-#             transaction_id = request.POST.getlist('selectedShagunAmounts')
-#             print(transaction_id)
-#             amount_list = request.POST.getlist('selectedShagunAmounts')
-#             print(amount_list)
-#             transactions_controller.settle_payment(reciever_list, transaction_id, amount_list)
-#             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
-#             return JsonResponse(response)
-#         else:
-#             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
-#             paginator = Paginator(response['transactions'], 250)
-#             page = request.GET.get('page')
-#             response = paginator.get_page(page)
-#             return render(request,
-#                           'pages/test_pages/test_transactions_settlement.html',
-#                           {"response": response, "event_id": event_id})
-#     else:
-#         return redirect('sign_up')
 
 
 def search_transactions_settlement(request, event_id):
@@ -608,7 +604,6 @@ def add_events_type(request):
 def add_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         form_data = request.POST
-        print(form_data)
         if request.method == 'POST':
             for file_key, file_obj in request.FILES.items():
                 file_name = f"""images/documents/{request.POST['identification_number1'] if file_key == "document1"
@@ -620,12 +615,11 @@ def add_kyc(request):
                     for chunk in file_obj.chunks():
                         destination.write(chunk)
 
-            print(form_data)
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
             user_controller.add_user_kyc(kyc_obj)
             return redirect('add_bank')
         else:
-            response, status_code = user_controller.get_all_users('%')
+            response, status_code = user_controller.get_users_for_kyc('%')
             return render(request, 'pages/admin_employee/users_management/kyc/add_kyc.html', response)
     else:
         return redirect('sign_up')
@@ -640,6 +634,7 @@ def add_bank(request):
         else:
             user, status_code = user_controller.get_all_users('%')
             bank, status_code = bank_controller.get_all_banks_list()
+            print(bank)
             context = {
                 "user": user,
                 "banks": bank
@@ -667,7 +662,9 @@ def add_admin(request):
             'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
-            user_controller.add_admin(admin_obj)
+            print(admin_obj)
+            response = user_controller.add_admin(admin_obj)
+            print(response)
             return redirect('manage_admin')
         else:
             return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html')
@@ -708,7 +705,6 @@ def add_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         form_data = request.POST
         if request.method == 'POST':
-            print(request.FILES)
             for file_key, file_obj in request.FILES.items():
                 file_name = f"""images/greeting_card/{int(time.time())}_{str(file_obj)}"""
                 form_data = form_data.copy()
@@ -783,9 +779,7 @@ def activate_deactivate_printers(request, printer_id, status):
 
 def change_print_jobs_status(request, pid, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        print("change print job status")
         response, status_code = store_controller.change_print_jobs_status(pid, status)
-        print(response)
         return redirect('Open_printer_jobs')
     else:
         return redirect('sign_up')
@@ -830,12 +824,10 @@ def edit_kyc(request, kyc_id):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            print(kyc_obj)
             user_controller.edit_user_kyc(kyc_obj)
             return redirect('manage_kyc')
         else:
             kyc_data, status_code = user_controller.get_kyc_by_id(kyc_id)
-            print(kyc_data)
             users_list, status_code = user_controller.get_all_users(1)
             context = {
                 "kyc_data": kyc_data,
@@ -890,7 +882,7 @@ def edit_bank(request, bank_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             bank_update_obj = bank_details_model.bank_details_model_from_dict(request.POST)
-            user_controller.edit_bank_details(bank_update_obj)
+            resp = user_controller.edit_bank_details(bank_update_obj)
             return redirect('manage_bank_details')
         else:
             bank_data, status_code = user_controller.get_bank_by_id(bank_id)
@@ -1099,7 +1091,6 @@ def dashboard_search_employee(request):
 def dashboard_search_employee_status(request, status, role):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_employee_status(status)
-        print(response)
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
@@ -1209,13 +1200,11 @@ def whatsapp_invite(request, e_id):
         invited_list = event_controller.get_invited_users_list(e_id)
 
         if request.method == 'POST':
-            print("started")
             mob_numbers = []
             invited_by = request.POST['invited_by_uid']
             invite_message = request.POST['invite_msg']
             phone = request.POST['phone']
             if 'csv_file' in request.FILES:
-                print("started with csv")
                 csv_file = request.FILES['csv_file']
                 try:
                     fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'contacts'))
@@ -1230,15 +1219,9 @@ def whatsapp_invite(request, e_id):
 
                     mob_numbers = list(set(mob_numbers))
                     if phone != '':
-                        print("started with csv and phone")
                         mob_numbers.append(phone)
                     response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
                                                                                      invite_message)
-                    print(response)
-                    response = {
-                        "status": True,
-                        "message": "Transaction Completed"
-                    }
                     return JsonResponse(response)
 
                 except Exception as e:
@@ -1248,17 +1231,11 @@ def whatsapp_invite(request, e_id):
                                    "admins": admins})
 
             else:
-                print("started with only phone")
                 if phone != '':
                     mob_numbers.append(phone)
                     response, status_code = event_controller.save_event_guest_invite(invited_by, mob_numbers, e_id,
                                                                                      invite_message)
-                    print(response)
-                    response = {
-                        "status": True,
-                        "message": "Transaction Completed"
-                    }
-                    print("sending response")
+
                     return JsonResponse(response)
 
         else:
@@ -1559,19 +1536,13 @@ def user_register(request):
     if request.data.get('profile_pic') is None:
         print("No profile added")
     else:
-        print("file found")
         for file_key, file_obj in request.FILES.items():
             file_name = f"""images/profile_pic/{request.data['uid']}_{str(file_obj)}"""
-            print(file_name)
             with default_storage.open(file_name, 'wb+') as destination:
                 for chunk in file_obj.chunks():
                     destination.write(chunk)
 
-    # reg_obj = registration_model.registration_model_from_dict(request.data)
-    # print("model object")
-    # print(reg_obj)
     user, status_code = user_controller.user_register(request.data, file_name)
-    print(user)
     if user['user'] is not None:
         token = jwt.encode({'username': user['user']['user_id'], 'exp': datetime.utcnow() + timedelta(minutes=30)},
                            'secret_key', algorithm='HS256')
@@ -1617,15 +1588,12 @@ def edit_user(request):
             if request.data.get('profile_pic') is None:
                 print("No profile added")
             else:
-                print("file found")
                 for file_key, file_obj in request.FILES.items():
                     file_name = f"""images/profile_pic/{request.data['uid']}_{str(file_obj)}"""
-                    print(file_name)
                     with default_storage.open(file_name, 'wb+') as destination:
                         for chunk in file_obj.chunks():
                             destination.write(chunk)
 
-            print(file_name)
             # edit_reg_obj = registration_model.registration_model_from_dict(request.data)
             response, status_code = user_controller.edit_user(request.data, file_name)
             return JsonResponse(response, status=status_code)
@@ -2123,26 +2091,6 @@ def manage_vendor(request):
 def enable_disable_vendor(request):
     response, status_code = delivery_vendor_controller.enable_disable_vendor(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
-
-# test done here
-
-def test_view(request):
-    if request.method == 'POST':
-        print(request.POST)
-        import time
-        # Sleep for 10 seconds
-        time.sleep(3)
-        response_data = {"success": False, "message": "Messages sent Failed"}
-        return JsonResponse(response_data)
-    else:
-        return render(request, 'pages/admin_employee/event_management/test.html')
-
-
-@api_view(['POST'])
-def add_ev(request):
-    resp, status_code = event_controller.add()
-    return JsonResponse(resp)
 
 
 @api_view(['POST'])

@@ -139,9 +139,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Bank</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" style="color: #000;" name="bank_name" required disabled>
-                                                        <option selected>{{bank_data.banks.bank_name }}</option>
-                                                    </select>
+                                                    <input required readonly class="form-control"
+                                                           value="{{bank_data.banks.bank_name }}"
+                                                           id="bank_name"
+                                                           name="bank_name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -211,6 +212,9 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <input type="hidden" id="bank_id" name="bank_id"
+                                                           value="{{ bank_data.banks.id }}">
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>

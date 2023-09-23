@@ -65,15 +65,14 @@ def edit_user(edit_reg_obj, file_name):
             if file_name == '':
                 sql_query = "UPDATE users SET name = %s, email = %s, phone = %s WHERE uid = %s"
                 values = (
-                edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], edit_reg_obj['uid'])
+                    edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], edit_reg_obj['uid'])
                 cursor.execute(sql_query, values)
 
             else:
                 sql_query = "UPDATE users SET name = %s, email = %s, phone = %s, profile_pic = %s WHERE uid = %s"
                 values = (
-                edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], file_name, edit_reg_obj['uid'])
+                    edit_reg_obj['name'], edit_reg_obj['email'], edit_reg_obj['phone'], file_name, edit_reg_obj['uid'])
                 cursor.execute(sql_query, values)
-
 
             return {
                 "status": True,
@@ -90,6 +89,24 @@ def get_all_users(kyc):
         with connection.cursor() as cursor:
             users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
                 FROM users WHERE role = 3 AND kyc LIKE '{kyc}' ORDER BY created_on DESC  """
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def get_users_for_kyc(kyc):
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
+                FROM users WHERE role = 3 AND kyc = 0 ORDER BY created_on DESC  """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -436,9 +453,9 @@ def edit_bank_details(bank_obj):
             user = cursor.fetchone()
             if user is not None:
                 edit_bank_query = """UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, 
-                                account_number = %s, modified_on = %s, modified_by = %s WHERE uid = %s"""
+                                account_number = %s, modified_on = %s, modified_by = %s WHERE id = %s"""
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          today, bank_obj.modified_by, bank_obj.uid)
+                          today, bank_obj.modified_by, bank_obj.bank_id)
                 cursor.execute(edit_bank_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -523,7 +540,7 @@ def add_employee(emp_obj):
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 2,
-                      emp_obj.city, hashed_password , 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
             # cursor.execute(query, 2)
@@ -563,8 +580,8 @@ def edit_employee(emp_obj, user_id):
     try:
         with connection.cursor() as cursor:
             edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
-                                phone = '{emp_obj.phone}', city = '{emp_obj.city}', 
-                                password = '{emp_obj.password}' WHERE id = '{user_id}'"""
+                                phone = '{emp_obj.phone}', city = '{emp_obj.city}'
+                                WHERE id = '{user_id}'"""
             cursor.execute(edit_emp_query)
             return {
                 "status": True,
@@ -674,6 +691,7 @@ def employee_login(uname, pwd):
                             ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
+        print(result)
         if result is not None:
             stored_password = result[0].encode('utf-8')
             if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
@@ -684,6 +702,10 @@ def employee_login(uname, pwd):
                     "profile_pic": result[2],
                     "role": result[3]
                 }
+            else:
+                return {
+                    "msg": "Invalid Password, please try again"
+                }
         else:
             return {
                 "msg": "Invalid Credentials, please try again"
@@ -693,7 +715,7 @@ def employee_login(uname, pwd):
 def get_employee_by_id(emp_id):
     try:
         with connection.cursor() as cursor:
-            emp_data_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city,password
+            emp_data_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city
              FROM users WHERE id = '{emp_id}'"""
             cursor.execute(emp_data_query)
             emp_data = cursor.fetchone()
@@ -786,14 +808,17 @@ def get_user_profile(uid):
 def disable_bank(bank_id, status):
     try:
         with connection.cursor() as cursor:
-            disable_bank_query = "UPDATE bank_details SET status = %s WHERE id = %s"
+            bank_user_sql_query = f"""
+                                SELECT bd.uid
+                                FROM bank_details bd
+                                WHERE bd.id = '{bank_id}'
+                            """
+            cursor.execute(bank_user_sql_query)
+            bank_user = cursor.fetchone()
 
-            if status == 1:
-                cursor.execute('UPDATE bank_details SET status = 0 WHERE uid = %s AND status = 1',
-                               (bank_id,))
+            cursor.execute(f"""UPDATE bank_details SET status = 0 WHERE uid = '{bank_user[0]}' """)
 
-            values = (status, bank_id)
-            cursor.execute(disable_bank_query, values)
+            cursor.execute(f"""UPDATE bank_details SET status = '{status}'  WHERE id = '{bank_id}' """)
             return {
                 "status": True,
                 "message": "Bank status changed successfully"
@@ -1037,6 +1062,40 @@ def dashboard_search_user(search):
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
             }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def update_password(data):
+    password_hash = bcrypt.hashpw(data['new_password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT password
+                FROM users WHERE uid = '{data['uid']}'  """
+            cursor.execute(users_data_query)
+            result = cursor.fetchone()
+            if result is not None:
+                stored_password = result[0].encode('utf-8')
+                if bcrypt.checkpw(data['old_password'].encode('utf-8'), stored_password):
+                    sql_query = f"""UPDATE users SET password = '{password_hash}' WHERE uid = '{data['uid']}'"""
+                    cursor.execute(sql_query)
+                    return {
+                        "status": True,
+                        "message": "Password Updated Successfully"
+                    }
+                else:
+                    return {
+                        "status": False,
+                        "message": "You have entered wrong old password"
+                    }
+            else:
+                return {
+                    "status": False,
+                    "message": "You have entered wrong old password"
+                }
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

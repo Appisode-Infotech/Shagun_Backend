@@ -27,6 +27,11 @@ def printer_login(uname, pwd):
                     "store_name": result[3],
                     "id": result[0],
                 }
+            else:
+                return {
+                    "msg": "Invalid Password, please try again",
+                }
+
         else:
             return {
                 "msg": "Invalid Credentials, please try again",
@@ -75,11 +80,10 @@ def edit_printer(store_obj):
     try:
         with connection.cursor() as cursor:
             edit_printer_query = """UPDATE printer SET store_name = %s, city = %s, address = %s, email = %s, 
-                                    gst_no= %s, store_owner= %s, contact_number= %s, printer_user_name= %s, 
-                                    printer_password=%s  WHERE id = %s"""
+                                    gst_no= %s, store_owner= %s, contact_number= %s, printer_user_name= %s
+                                  WHERE id = %s"""
             values = (store_obj.store_name, store_obj.city, store_obj.address, store_obj.email, store_obj.gst_no,
-                      store_obj.store_owner, store_obj.contact_number, store_obj.printer_user_name,
-                      store_obj.printer_password, store_obj.store_id)
+                      store_obj.store_owner, store_obj.contact_number, store_obj.printer_user_name, store_obj.store_id)
             cursor.execute(edit_printer_query, values)
             return {
                 "status": True,
@@ -118,7 +122,7 @@ def get_printers_by_status(status):
     try:
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.store_owner, p.contact_number FROM printer AS p
+            p.store_owner, p.contact_number, p.email FROM printer AS p
             LEFT JOIN locations AS l ON p.city = l.id WHERE p.status LIKE '{status}' ORDER BY p.id DESC """
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
@@ -137,7 +141,7 @@ def dashboard_search_printers(search):
     try:
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.store_owner, p.contact_number FROM printer AS p
+            p.store_owner, p.contact_number, p.email FROM printer AS p
             LEFT JOIN locations AS l ON p.city = l.id 
             WHERE (p.id LIKE '%{search}%' OR store_name LIKE '%{search}%' OR store_owner LIKE '%{search}%'
             OR l.city_name LIKE '%{search}%'
@@ -160,7 +164,7 @@ def dashboard_search_printers_status(status):
     try:
         with connection.cursor() as cursor:
             printers_status_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.store_owner, p.contact_number FROM printer AS p
+            p.store_owner, p.contact_number, p.email FROM printer AS p
             LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}' ORDER BY p.id DESC"""
             cursor.execute(printers_status_query)
             printer_data = cursor.fetchall()

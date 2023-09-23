@@ -4,29 +4,37 @@
 <head>
 
     <style>
+        .messages-container {
+          background-color: #ffe6e6; /* Light pink background color */
+          padding: 10px;
+          border-radius: 5px;
+          margin-top: 20px;
+        }
 
-.messages-container {
-  background-color: #ffe6e6; /* Light pink background color */
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 20px;
-}
+        /* Style the error messages */
+        .messages {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
 
-/* Style the error messages */
-.messages {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+        .messages li {
+          color: #b30000; /* Dark red text color for error messages */
+          background-color: #ffd9d9; /* Light red background color for error messages */
+          border: 1px solid #ff8080; /* Dark red border for error messages */
+          padding: 10px;
+          border-radius: 3px;
+          margin-bottom: 5px;
+        }
 
-.messages li {
-  color: #b30000; /* Dark red text color for error messages */
-  background-color: #ffd9d9; /* Light red background color for error messages */
-  border: 1px solid #ff8080; /* Dark red border for error messages */
-  padding: 10px;
-  border-radius: 3px;
-  margin-bottom: 5px;
-}
+        .toggle-password {
+          position: absolute;
+          top: 10px;
+          right: 30px;
+          cursor: pointer;
+        }
+
+
 
     </style>
     <!-- Required meta tags -->
@@ -77,14 +85,26 @@
                         <form class="pt-3" action="/sign_up" method="post">
                             {% csrf_token %}
                             <div class="form-group">
-                                <input required type="text" id="username" name="username" class="form-control form-control-lg"
-                                       placeholder="Username" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                      maxlength="256" title="poiuytrew"></div>
-
-                            <div class="form-group">
-                                <input required type="password" id="password" name="password"
+                                <input required type="text" id="username" name="username"
                                        class="form-control form-control-lg"
-                                       placeholder="Password"></div>
+                                       placeholder="Username" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                       maxlength="256" title="poiuytrew"></div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input required type="password" id="password" name="password"
+                                                   class="form-control form-control-lg"
+                                                   placeholder="Password" oninput="validatePasswords()">
+                                            <i class="toggle-password"
+                                               onclick="toggleVisibility('password')">&#x1f441;</i>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <input type="submit" value="Submit"
                                    class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
@@ -96,7 +116,8 @@
                                         Keep me signed in
                                     </label>
                                 </div>
-                                <a href="{% url 'forgot_password' 'staff' %}" class="auth-link text-black">Forgot password?</a>
+                                <a href="{% url 'forgot_password' 'staff' %}" class="auth-link text-black">Forgot
+                                    password?</a>
                             </div>
                         </form>
                     </div>
@@ -112,6 +133,18 @@
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<script>
+    function toggleVisibility(fieldId) {
+      var field = document.getElementById(fieldId);
+      if (field.type === 'password') {
+        field.type = 'text';
+      } else {
+        field.type = 'password';
+      }
+    }
+
+</script>
+>
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <!-- End plugin js for this page -->

@@ -235,6 +235,7 @@
                                             <table class="display expandable-table" style="width:100%">
                                                 <thead>
                                                 <tr>
+                                                    <th>SL No</th>
                                                     <th>Event Name</th>
                                                     <th>Event Admins</th>
                                                     <th>Event Date</th>
@@ -242,9 +243,10 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {% for event in events %}
+                                                {% for index, event in enumerate(events) %}
 
                                                 <tr>
+                                                    <td>{{ index + 1 }}</td>
                                                     <td>{{ event.event_name }}</td>
                                                     <td>
                                                         {% for admin in event.admins %}

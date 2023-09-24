@@ -105,6 +105,7 @@ def update_printer_password(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         if request.method == 'POST':
             response = store_controller.update_printer_password(request.POST)
+            print(response)
             if not response['status']:
                 messages.error(request, response['message'])
                 return render(request, 'pages/printer/printer_auth/change_password.html',

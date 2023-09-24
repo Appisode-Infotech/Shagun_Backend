@@ -1,30 +1,26 @@
-import jwt
-from datetime import datetime, timedelta
-import os
 import csv
-from django.core.files.storage import FileSystemStorage
+import os
+import time
+from datetime import datetime, timedelta
 
+import jwt
+from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import JsonResponse
-from django.contrib import messages
-import time
-
-from rest_framework.reverse import reverse
 
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, \
     request_controller, bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
-from Shagun_backend.controllers.event_controller import send_push_notification
-from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
+from Shagun_backend.models import user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
-    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model, bank_model
+    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
-from Shagun_backend.util.constants import today
 
 
 def sign_up(request):
@@ -49,6 +45,11 @@ def logout(request):
     return redirect('sign_up')
 
 
+def printerLogout(request):
+    request.session.clear()
+    return redirect('printer_login')
+
+
 def custom_404(request, slug=None):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         return render(request, 'pages/admin_employee/error_page/error-404.html')
@@ -62,6 +63,7 @@ def admin_dashboard(request):
         return render(request, 'index.html', response)
     else:
         return redirect('sign_up')
+
 
 def app_settings(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
@@ -97,6 +99,7 @@ def update_password(request):
             return render(request, 'pages/admin_employee/login_signup/change_password.html')
     else:
         return redirect('sign_up')
+
 
 def update_printer_password(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
@@ -2156,4 +2159,3 @@ def enable_disable_vendor(request):
 def event_admin(request):
     response, status_code = test_controller.event_admin(request.data['event_id'])
     return JsonResponse(response)
-

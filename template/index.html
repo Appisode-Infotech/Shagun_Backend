@@ -38,6 +38,7 @@
             text-align: center;
         }
 
+
     </style>
 </head>
 <body>
@@ -243,10 +244,10 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {% for index, event in enumerate(events) %}
-
+                                                {% for event in events %}
+                                                {% with sl_no=forloop.counter %}
                                                 <tr>
-                                                    <td>{{ index + 1 }}</td>
+                                                    <td>{{ sl_no }}</td>
                                                     <td>{{ event.event_name }}</td>
                                                     <td>
                                                         {% for admin in event.admins %}
@@ -264,6 +265,7 @@
                                                         {% endif %}
                                                     </td>
                                                 </tr>
+                                                {% endwith %}
                                                 {% endfor %}
                                                 </tbody>
                                             </table>
@@ -319,6 +321,7 @@
     totalShagunElement.textContent = '₹ ' + formatNumberInLakh(total_shagun);
     todaysTransactionsElement.textContent = '₹ ' + formatNumberInLakh(todays_transactions);
     todayShagunElement.textContent = '₹ ' + formatNumberInLakh(today_shagun);
+
 </script>
 
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

@@ -165,7 +165,9 @@ def manage_bank_list(request):
 def add_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by_uid'])
+            print(request.POST)
+            resp = bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by_uid'])
+            print(resp)
             return redirect('manage_bank_list')
     else:
         return redirect('sign_up')
@@ -325,6 +327,7 @@ def manage_printers(request):
 def manage_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.get_delivery_vendor()
+        print(response)
         paginator = Paginator(response['delivery_vendor_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)

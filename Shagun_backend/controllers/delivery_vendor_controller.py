@@ -2,7 +2,7 @@ import pymysql
 from django.db import connection
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import ALL_PRINTERS_DATA, DELIVERY_VENDOR_DATA
+from Shagun_backend.util.constants import ALL_DELIVERY_VENDOR_DATA, DELIVERY_VENDOR_DATA
 
 
 def add_vendor(vendor_obj):
@@ -52,7 +52,7 @@ def dashboard_search_delivery_vendor(search):
             delivery_vendor_data = cursor.fetchall()
             return {
                 "status": True,
-                "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, ALL_PRINTERS_DATA)
+                "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, ALL_DELIVERY_VENDOR_DATA)
             }, 200
 
     except pymysql.Error as e:
@@ -71,7 +71,7 @@ def dashboard_search_delivery_vendor_status(status):
             delivery_vendor_data = cursor.fetchall()
             return {
                 "status": True,
-                "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, ALL_PRINTERS_DATA)
+                "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, ALL_DELIVERY_VENDOR_DATA)
             }, 200
 
     except pymysql.Error as e:
@@ -107,7 +107,7 @@ def get_delivery_vendor():
             delivery_vendor_data = cursor.fetchall()
             return {
                 "status": True,
-                "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, ALL_PRINTERS_DATA)
+                "delivery_vendor_data": responsegenerator.responseGenerator.generateResponse(delivery_vendor_data, ALL_DELIVERY_VENDOR_DATA)
             }, 200
 
     except pymysql.Error as e:

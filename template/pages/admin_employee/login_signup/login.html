@@ -85,10 +85,10 @@
                         <form class="pt-3" action="/sign_up" method="post">
                             {% csrf_token %}
                             <div class="form-group">
-                                <input required type="text" id="username" name="username"
+                                <input required type="email" id="username" name="username"
                                        class="form-control form-control-lg"
                                        placeholder="Username" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                       maxlength="256" title="poiuytrew"></div>
+                                       maxlength="256"></div>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -115,7 +115,7 @@
                                         Keep me signed in
                                     </label>
                                 </div>
-                                <a href="{% url 'forgot_password' 'staff' %}" class="auth-link text-black">Forgot
+                                <a href="{% url 'forgot_password' 'sign_up' %}" class="auth-link text-black">Forgot
                                     password?</a>
                             </div>
                         </form>

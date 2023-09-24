@@ -17,8 +17,8 @@ from rest_framework.reverse import reverse
 
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
-    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, request_controller, \
-    bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
+    transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, \
+    request_controller, bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
 from Shagun_backend.controllers.event_controller import send_push_notification
 from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
@@ -63,16 +63,21 @@ def admin_dashboard(request):
     else:
         return redirect('sign_up')
 
+def app_settings(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        return render(request, 'pages/admin_employee/app_settings/app_settings.html')
+    else:
+        return redirect('sign_up')
+
 
 def reset_password(request, email, action_page):
-    print(email)
     resp, status_code = reset_password_controller.reset_password(email, action_page)
     return JsonResponse(resp)
 
 
 def forgot_password(request, action_page):
     if request.method == 'POST':
-        return redirect('sign_up')
+        return redirect(action_page)
     else:
         return render(request, 'pages/admin_employee/login_signup/forget_password.html', {"action_page": action_page})
 
@@ -80,7 +85,6 @@ def forgot_password(request, action_page):
 def update_password(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             response = user_controller.update_password(request.POST)
             if not response['status']:
                 messages.error(request, response['message'])
@@ -93,6 +97,22 @@ def update_password(request):
             return render(request, 'pages/admin_employee/login_signup/change_password.html')
     else:
         return redirect('sign_up')
+
+def update_printer_password(request):
+    if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
+        if request.method == 'POST':
+            response = store_controller.update_printer_password(request.POST)
+            if not response['status']:
+                messages.error(request, response['message'])
+                return render(request, 'pages/admin_employee/login_signup/change_password.html',
+                              {"msg": response['message']})
+            else:
+                messages.success(request, response['message'])
+                return render(request, 'pages/admin_employee/login_signup/change_password.html')
+        else:
+            return render(request, 'pages/admin_employee/login_signup/change_password.html')
+    else:
+        return redirect('printer_login')
 
 
 def manage_event(request):
@@ -128,6 +148,42 @@ def manage_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_locations_list()
         return render(request, 'pages/admin_employee/event_management/location/location.html', response)
+    else:
+        return redirect('sign_up')
+
+
+def manage_bank_list(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = bank_controller.get_all_banks_list()
+        print(response)
+        return render(request, 'pages/admin_employee/users_management/banks/bank_lists.html',
+                      {"bank_list": response['bank_list']})
+    else:
+        return redirect('sign_up')
+
+
+def add_bank_list(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by_uid'])
+            return redirect('manage_bank_list')
+    else:
+        return redirect('sign_up')
+
+
+def edit_bank_list(request):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        if request.method == 'POST':
+            bank_controller.edit_bank_list(request.POST['id'], request.POST['name'])
+            return redirect('manage_bank_list')
+    else:
+        return redirect('sign_up')
+
+
+def activate_deactivate_bank_list(request, bank_id, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        bank_controller.activate_deactivate_bank_list(bank_id, status)
+        return redirect('manage_bank_list')
     else:
         return redirect('sign_up')
 
@@ -307,9 +363,9 @@ def printer_login(request):
             return redirect('printer_home_page')
         else:
             messages.error(request, response['msg'])
-            return render(request, 'pages/admin_employee/login_signup/printer_login.html')
+            return render(request, 'pages/printer/printer_auth/printer_login.html')
     else:
-        return render(request, 'pages/admin_employee/login_signup/printer_login.html')
+        return render(request, 'pages/printer/printer_auth/printer_login.html')
 
 
 def kyc_request(request):
@@ -634,8 +690,7 @@ def add_bank(request):
             return redirect('manage_bank_details')
         else:
             user, status_code = user_controller.get_all_users('%')
-            bank, status_code = bank_controller.get_all_banks_list()
-            print(bank)
+            bank, status_code = bank_controller.get_active_banks_list()
             context = {
                 "user": user,
                 "banks": bank
@@ -2099,14 +2154,3 @@ def event_admin(request):
     response, status_code = test_controller.event_admin(request.data['event_id'])
     return JsonResponse(response)
 
-
-@api_view(['POST'])
-def add_bank_list(request):
-    response, status_code = bank_controller.add_bank_list(request.data['bank_name'], request.data['bank_logo'])
-    return JsonResponse(response, status=status_code)
-
-
-@api_view(['POST'])
-def activate_deactivate_bank_list(request):
-    response, status_code = bank_controller.activate_deactivate_bank_list(request.data['id'], request.data['status'])
-    return JsonResponse(response, status=status_code)

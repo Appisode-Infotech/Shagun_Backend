@@ -115,6 +115,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -137,7 +138,12 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New KYC</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Add New KYC</label>
+                                </div>
                                 <form class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data"
                                       id="myForm">
                                     {% csrf_token %}
@@ -186,7 +192,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Gender</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" style="color: #000;" name="gender" required>
+                                                    <select class="form-control" style="color: #000;" name="gender"
+                                                            required>
                                                         <option value="" disabled selected>Select an option</option>
                                                         <option>Male</option>
                                                         <option>Female</option>
@@ -210,7 +217,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Proof1</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" style="color: #000;" name="identification_proof1" required>
+                                                    <select class="form-control" style="color: #000;"
+                                                            name="identification_proof1" required>
                                                         <option value="" disabled selected>Select an option</option>
                                                         <option value="Aadhar Card">Aadhar Card</option>
                                                         <option value="Voter ID">Voter ID</option>
@@ -239,7 +247,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Identification Proof2</label>
                                                 <div class="col-sm-9">
-                                                    <select class="form-control" style="color: #000;" name="identification_proof2" required>
+                                                    <select class="form-control" style="color: #000;"
+                                                            name="identification_proof2" required>
                                                         <option value="" disabled selected>Select an option</option>
                                                         <option value="PAN Card">PAN Card</option>
                                                     </select>
@@ -457,6 +466,7 @@
 
 
 
+
 </script>
 
 
@@ -479,6 +489,7 @@
                 e.preventDefault();
             }
         });
+
 
 
 

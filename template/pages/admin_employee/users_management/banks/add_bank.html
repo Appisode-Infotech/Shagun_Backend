@@ -115,6 +115,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -137,7 +138,12 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Bank Account</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Add New Bank Account</label>
+                                </div>
                                 <form class="form-sample" action="/add_bank" method="post"
                                       enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
@@ -306,6 +312,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -318,6 +325,7 @@
                 e.preventDefault();
             }
         });
+
 
 </script>
 <!-- container-scroller -->

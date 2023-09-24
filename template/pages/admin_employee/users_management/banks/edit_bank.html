@@ -80,6 +80,7 @@
 
         .show {display: block;}
 
+
     </style>
 
 </head>
@@ -102,8 +103,14 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Bank Account </h4>
-                                <form class="form-sample" action="{% url 'edit_bank' bank_data.banks.id %}" method="post" >
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Edit Bank Account</label>
+                                </div>
+                                <form class="form-sample" action="{% url 'edit_bank' bank_data.banks.id %}"
+                                      method="post">
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Bank info
@@ -163,7 +170,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">IFSC CODE</label>
                                                 <div class="col-sm-9">
-                                                    <input required class="form-control" value="{{bank_data.banks.ifsc_code}}"
+                                                    <input required class="form-control"
+                                                           value="{{bank_data.banks.ifsc_code}}"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            id="ifsc_code" name="ifsc_code"/>
@@ -214,7 +222,7 @@
                                     </div>
 
                                     <input type="hidden" id="bank_id" name="bank_id"
-                                                           value="{{ bank_data.banks.id }}">
+                                           value="{{ bank_data.banks.id }}">
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2">
                                     </div>
@@ -273,6 +281,7 @@
             dropdown.classList.remove("show");
         }
     });
+
 
 
 

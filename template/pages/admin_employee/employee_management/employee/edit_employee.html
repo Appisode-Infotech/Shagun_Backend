@@ -60,7 +60,12 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Employee {{emp.id}}</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Edit Employee {{emp.id}} </label>
+                                </div>
                                 <form class="form-sample" action="{% url 'edit_employee' emp.id %}" method="post">
                                     {% csrf_token %}
                                     <p class="card-description">

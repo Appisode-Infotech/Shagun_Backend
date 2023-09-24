@@ -516,3 +516,37 @@ def printer_dashboard(pid):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
+
+
+def update_printer_password(data):
+    password_hash = bcrypt.hashpw(data['new_password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT printer_password
+                FROM printer WHERE printer_user_name = '{data['username']}'  """
+            cursor.execute(users_data_query)
+            result = cursor.fetchone()
+            if result is not None:
+                stored_password = result[0].encode('utf-8')
+                if bcrypt.checkpw(data['old_password'].encode('utf-8'), stored_password):
+                    sql_query = f"""UPDATE printer SET password = '{password_hash}' WHERE printer_user_name = '{data['username']}'"""
+                    cursor.execute(sql_query)
+                    return {
+                        "status": True,
+                        "message": "Password Updated Successfully"
+                    }
+                else:
+                    return {
+                        "status": False,
+                        "message": "You have entered wrong old password"
+                    }
+            else:
+                return {
+                    "status": False,
+                    "message": "You have entered wrong old password"
+                }
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

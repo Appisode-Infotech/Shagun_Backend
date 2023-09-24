@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shagun Admin</title>
+    <!-- plugins:css -->
+    {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'css/vertical-layout-light/style.css' %}">
+
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+
+</head>
+
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    {% include 'app_bar.html' %}
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        {% include 'theme_setting.html' %}
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        {% include 'nav_bar.html' %}
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">App Settings</h4>
+                                <p style="margin-bottom:25px;">
+                                    <b>Map API Details
+                                    </b>
+                                </p>
+                                <form class="forms-sample" action="/app_settings" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="map_api_key">Google Map API Key</label>
+                                        <input required type="text" class="form-control" id="map_api_key" name="map_api_key"
+                                               placeholder="Google Map API Key">
+                                    </div>
+                                    <p style="margin-bottom:25px;">
+                                        <b>Email JS Details
+                                        </b>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Service Id</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="service_id" placeholder="Email JS service Id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Template Id</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="template_id" placeholder="Email JS template Id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">User Id</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="user_id" placeholder="Email JS user Id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">G-recaptcha</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control"
+                                                           name="g-recaptcha-response" placeholder="Email JS G-recaptcha"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style="margin-bottom:25px;">
+                                        <b>Android App Data</b>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Package Name</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="package_name" placeholder=" Android app package name"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">App Name</label>
+                                                <div class="col-sm-9">
+                                                    <input  required type="text" class="form-control" name="app_name" placeholder=" Android app name"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Min Version</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="min_version" placeholder=" Android min app version"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Max Version</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control"
+                                                           name="max_version" placeholder=" Android max app version"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style="margin-bottom:25px;">
+                                        <b>IOS App Data</b>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Package Name</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="package_name" placeholder=" IOS app package name"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">App Name</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="app_name" placeholder=" IOS app name"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Min Version</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="min_version" placeholder=" IOS min app version"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Max Version</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control"
+                                                           name="max_version" placeholder=" IOS max app version"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style="margin-bottom:25px;">
+                                        <b>Payment Gateway</b>
+                                    </p>
+                                    <div class="form-group">
+                                        <label for="cashfree_api">Cashfree API URL</label>
+                                        <input required type="text" class="form-control" id="cashfree_api" name="cashfree_api"
+                                               placeholder="Cashfree API URL">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Secret Key</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" class="form-control" name="secret_key" placeholder=" Cashfree Secret Key"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Client Key</label>
+                                                <div class="col-sm-9">
+                                                    <input  required type="text" class="form-control" name="client_key" placeholder=" Cashfree Client Key"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Firebase Credentials</label>
+                                        <input required type="file" accept=".json" name="firebase_cred"
+                                               class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input required type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload firebase credential file">
+                                            <span class="input-group-append">
+                                              <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="deep_link">Deep Link</label>
+                                        <input type="text" class="form-control" id="deep_link" name="deep_link"
+                                               placeholder="Deep Link">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                    <button class="btn btn-light">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+
+<!-- my_template.html -->
+
+
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="{% static 'vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>
+<script src="{% static 'vendors/select2/select2.min.js' %}"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+
+<script src="{% static 'js/off-canvas.js' %}"></script>
+<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'js/template.js' %}"></script>
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/todolist.js' %}"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="{% static 'js/file-upload.js' %}"></script>
+<script src="{% static 'js/typeahead.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+
+</body>
+
+</html>

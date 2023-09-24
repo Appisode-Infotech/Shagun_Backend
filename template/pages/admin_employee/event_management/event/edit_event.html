@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
@@ -175,7 +177,12 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Event</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Edit Event </label>
+                                </div>
                                 <form class="form-sample" action="{% url 'edit_event' event.event_data.id %}"
                                       method="post"
                                       enctype="multipart/form-data">
@@ -194,7 +201,7 @@
                                                            class="form-control">
 
                                                     <div id="myDropdown1" class="dropdown-content">
-                                                        <input type="text" value="{{event.event_data.event_type_id}}"
+                                                        <input type="text"
                                                                id="myInput1"
                                                                onkeyup="filterFunction('myDropdown1')"
                                                                class="form-control">
@@ -299,11 +306,11 @@
                                         <div id="map"></div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-10">
+                                        <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Event Lat Lng</label>
-                                                <div class="col-sm-10">
-                                                    <input required type="text" id="event_lat_lng" style="width: 50%;"
+                                                <label class="col-sm-3 col-form-label">Event Lat Lng</label>
+                                                <div class="col-sm-9">
+                                                    <input required type="text" id="event_lat_lng"
                                                            value="{{event.event_data.event_lat_lng}}"
                                                            class="form-control" name="event_lat_lng"
                                                            class="form-control" readonly>
@@ -327,7 +334,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{event.event_data.created_by_uid}}</label>
+                                                    <input disabled readonly class="form-control" value="{{event.event_data.created_by_uid}}">
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
                                                            value={{event.event_data.created_by_uid}}>
                                                 </div>

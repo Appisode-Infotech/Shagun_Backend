@@ -148,6 +148,20 @@
                 </div>
             </div>
         </div>
+        <div id="customAlertOverlay4" class="custom-alert-overlay">
+            <div class="custom-alert">
+                <label class="form-group">
+                    <p>Please confirm if you want to reset password for <span id="emailSpan"></span></p>
+                </label>
+                <div class="center-button">
+                    <button type="button" onclick="hideReserPasswordPopUpDiv()"
+                            class="btn btn-outline-danger btn-fw">
+                        Cancel
+                    </button>
+                    <button type="submit" id="confirmResetPassword" class="btn btn-outline-success btn-fw">Confirm</button>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-10 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -168,7 +182,7 @@
                             </form>
                         </div>
                         <div class="form-group">
-                            <label class="mr-2 custom-label"> Employee Filter </label>
+                            <label class="mr-2 custom-label"> Employee Filter: </label>
                             <button type="button" class="btn btn-outline-info dropdown-toggle"
                                     id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false" style="width: 110px; height: 40px;">
@@ -223,6 +237,7 @@
                                 {% if request.session.role == 1 %}
                                 <th>Edit</th>
                                 {% endif %}
+                                <th>Reset Password</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -287,10 +302,17 @@
                                     </button>
                                 </td>
                                 {% endif %}
+                                <td>
+                                    <button class="btn btn-outline-info btn-fw"
+                                            data-emp-email="{{ user.email }}"
+                                            data-action_page="manage_employee"
+                                            onclick="showCustomAlertForResetPassword(this.getAttribute('data-emp-email'), this.getAttribute('data-action_page'))">
+                                        Reset Password
+                                    </button>
+                                </td>
                             </tr>
                             {% endfor %}
                             {% endif %}
-
                             </tbody>
                         </table>
                     </div>
@@ -377,7 +399,31 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay3");
         customAlertOverlay.style.display = "none";
     }
+    
+    function showCustomAlertForResetPassword(empEmail, action_page) {
+        window.empEmail = empEmail;
+        window.action_page = action_page;
 
+        var customAlertOverlay = document.getElementById("customAlertOverlay4");
+        customAlertOverlay.style.display = "flex";
+
+        var emailSpan = document.getElementById("emailSpan");
+        emailSpan.textContent = empEmail;
+
+    }
+    
+    var confirmResetPassword = document.getElementById("confirmResetPassword");
+    confirmResetPassword.addEventListener("click", function() {
+        console.log("clicked")
+        var url = '/reset_password/' + empEmail + '/' + action_page + '/';
+        console.log(url)
+        window.location.href = url;
+    });
+
+    function hideReserPasswordPopUpDiv() {
+        var customAlertOverlay = document.getElementById("customAlertOverlay4");
+        customAlertOverlay.style.display = "none";
+    }
 </script>
 <!-- endinject -->
 <!-- Plugin js for this page -->

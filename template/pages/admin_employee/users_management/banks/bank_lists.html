@@ -9,7 +9,6 @@
     <!-- plugins:css -->
     {% load static%}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -54,7 +53,7 @@
         }
 
         .btn {
-            margin-right: 10 px;
+            margin-right: 5px;
         }
 
         .btn-icon-text {
@@ -67,11 +66,12 @@
         }
 
         /* Styling for the centered popup */
-        #popupDiv {
+        #popupDiv1, #popupDiv {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
+            width: 50%;
             transform: translate(-50%, -50%);
             border: 2px solid lightskyblue;
             padding: 20px;
@@ -97,51 +97,26 @@
             text-align: center;
         }
 
-        .custom-alert-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000; /* Ensure the overlay is on top of other content */
-          }
+      .custom-alert-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000; /* Ensure the overlay is on top of other content */
+      }
 
-          .custom-alert {
-            background-color: #ffffe0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 20px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-          }
-
-          .icon-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px; /* Add spacing between icons and text */
-        }
-
-        /* Center the text vertically */
-        .custom-alert span {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px; /* Add spacing between text and button */
-        }
-
-        .center-button {
-          display: flex;
-          justify-content: center;
-
-        }
-        .center-button button {
-            margin-right: 10px;
-        }
-
+      .custom-alert {
+        background-color: #f2f2f2;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      }
 
 
 
@@ -164,7 +139,7 @@
         <div id="customAlertOverlay3" class="custom-alert-overlay">
             <div class="custom-alert">
                 <label class="form-group">
-                    <p>Please confirm if you want to make the greeting card <span id="event_status"></span></p>
+                    <p>Please confirm if you want to <span id="location_status"></span></p>
                 </label>
                 <div class="center-button">
                     <button type="button" onclick="hideActivationPopUpDiv()"
@@ -179,102 +154,79 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Greeting Cards</h4>
-                        <div class="form-group">
-                            <form action="{% url 'dashboard_search_greetings' %}" method="POST">
-                                {% csrf_token %}
-                                <div class="input-group">
-                                    <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="Search" value="{{search}}"
-                                           aria-label="Recipient's username">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="form-group">
-                            <label class="mr-2 custom-label"> Greetings Filter: </label>
-                            <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false" style="width: 110px; height: 40px;">
-                                {% if status is None %}
-                                All
-                                {% elif status == '0' %}
-                                Inactive
-                                {% elif status == '1' %}
-                                Active
-                                {% endif %}
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                <a class="dropdown-item"
-                                   href="{% url 'manage_greeting_cards'  %}">All</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_greetings_status' 1 %}">Active</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_greetings_status' 0 %}">Inactive</a>
-                            </div>
-
-                        </div>
+                        <h4 class="card-title">Banks List </h4>
                         <div class="form-group">
                             <button type="button" class="btn btn-outline-info btn-icon-text"
-                                    onclick="window.location.href='{% url 'add_greeting_cards' %}'">
-                                Add Greeting
+                                    onclick="showPopUpDiv1()">
+                                Add Bank
                                 <i class="ti-plus btn-icon-append"></i>
                             </button>
+                        </div>
+                        <div id="customAlertOverlay" class="custom-alert-overlay">
+                            <div class="custom-alert">
+                                <form class="form-sample" action="/add_bank_list" method="post">
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        <h4 class="card-title">Add Bank</h4>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Bank Name </label>
+                                                <div class="col-sm-9">
+                                                    <input required id="bank_name" name="bank_name" type="text"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           title="Enter Bank Name" maxlength="256"
+                                                           class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Created By</label>
+                                                <div class="col-sm-9">
+                                                    <input readonly disabled class="form-control" value="{{ request.session.name }}">
+                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
+                                                           value="{{ request.session.uid }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center-button">
+                                        <button type="button" onclick="hidePopUpDiv1()"
+                                                class="btn btn-outline-danger btn-fw">Cancel
+                                        </button>
+                                        <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>
-                                    Card Image
-                                </th>
-                                <th>
-                                    Card Name
-                                </th>
-                                <th>
-                                    Price
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Active/Inactive
-                                </th>
-                                <th>
-                                    Edit
-                                </th>
+                                <th>Bank Name</th>
+                                <th>Status</th>
+                                <th>Active/Inactive</th>
+                                <th>Edit</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% if response|length == 0 %}
+                            {% if bank_list|length == 0 %}
                             <tr>
                                 <td colspan="7" style="text-align: center;">
                                     <h4>No data found</h4>
                                 </td>
                             </tr>
                             {% else %}
-                            {% for greetings in response %}
+                            {% for bank in bank_list %}
                             <tr>
-                                <td class="py-1">
-                                    <a href="{{MEDIA_URL}}{{ greetings.card_image_url }}" target="_blank">
-                                        <img src="{{MEDIA_URL}}{{ greetings.card_image_url }}" alt="image"/>
-                                    </a>
-                                </td>
-
+                                <td>{{ bank.bank_name }}</td>
                                 <td>
-                                    {{greetings.card_name}}
-                                </td>
-                                <td>₹
-                                    {{greetings.card_price}}
-                                </td>
-                                <td>
-                                    {% if greetings.card_status == 1 %}
+                                    {% if bank.bank_status == 1 %}
                                     <label class="badge badge-success">Active</label>
-                                    {% elif greetings.card_status == 0 %}
+                                    {% elif bank.bank_status == 0 %}
                                     <label class="badge badge-danger">Inactive</label>
                                     {% endif %}
                                 </td>
@@ -283,70 +235,55 @@
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                 id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false">
-                                            {% if greetings.card_status == 0 %}
+                                            {% if bank.bank_status == 0 %}
                                             Inactive
-                                            {% elif greetings.card_status == 1 %}
+                                            {% elif bank.bank_status == 1 %}
                                             Active
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
                                             <a class="dropdown-item" href="javascript:void(0);"
-                                               data-greeting-id="{{ greetings.card_id }}" data-action="1"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-greeting-id'), this.getAttribute('data-action'))">Active</a>
+                                               data-bank-id="{{ bank.bank_id }}" data-action="1" data-bank-name="{{bank.bank_name}}"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-bank-id'), this.getAttribute('data-action'), this.getAttribute('data-bank-name'))">Active</a>
                                             <a class="dropdown-item" href="javascript:void(0);"
-                                               data-greeting-id="{{ greetings.card_id }}" data-action="0"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-greeting-id'), this.getAttribute('data-action'))">Inactive</a>
+                                               data-bank-id="{{ bank.bank_id }}" data-action="0" data-bank-name="{{bank.bank_name}}"
+                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-bank-id'), this.getAttribute('data-action'), this.getAttribute('data-bank-name'))">Inactive</a>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <button onclick="showPopUpDiv('{{greetings.card_id}}', '{{greetings.card_name}}','{{greetings.card_price}}')"
+                                    <button onclick="showPopUpDiv('{{bank.bank_id}}', '{{bank.bank_name}}')"
                                             class="btn btn-outline-info btn-fw">Edit
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <div id="customAlertOverlay" class="custom-alert-overlay">
+                                    <div id="customAlertOverlay1" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample" action="/edit_greeting_cards" method="post">
+                                            <form class="form-sample" action="/edit_bank_list" method="post">
                                                 {% csrf_token %}
-                                                <h4 class="card-title">Edit Greeting Card</h4>
-
+                                                <h4 class="card-title">Edit Bank</h4>
                                                 <div class="row">
-                                                    <div class="col-md-10">
+                                                    <div class="col-md-9">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Card ID </label>
+                                                            <label class="col-sm-3 col-form-label">Bank ID </label>
                                                             <div class="col-sm-9">
                                                                 <input readonly id="id" name="id" type="text"
-                                                                       class="form-control"/>
+                                                                       class="form-control" value="{{bank.bank_id}}"/>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-10">
+                                                    <div class="col-md-9">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Card Name</label>
+                                                            <label class="col-sm-3 col-form-label">Name</label>
                                                             <div class="col-sm-9">
                                                                 <input required id="name" type="text"
-                                                                       pattern="[^ ].*"
-                                                                       title="This field can't be Empty"
                                                                        class="form-control"
-                                                                       name="card_name"/>
+                                                                       pattern="^[A-Za-z][A-Za-z ]*$"
+                                                                       title="Enter Bank Name" maxlength="256"
+                                                                       name="name"/>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-10">
-                                                        <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Price</label>
-                                                            <div class="col-sm-9">
-                                                                <input required id="price" name="card_price" type="text"
-                                                                       pattern="[1-9][0-9]{0,5}"
-                                                                       title="Please add the amount only"
-                                                                       class="form-control"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
                                                 <div class="center-button">
                                                     <button type="button" onclick="hidePopUpDiv()"
                                                             class="btn btn-outline-danger btn-fw">Cancel
@@ -361,7 +298,6 @@
                             </tr>
                             {% endfor %}
                             {% endif %}
-
                             </tbody>
                         </table>
                     </div>
@@ -370,39 +306,6 @@
         </div>
 
     </div>
-</div>
-<div class="pagination justify-content-center">
-    <ul class="pagination">
-        {% if response.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1">&laquo; first</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-        </li>
-        {% endif %}
-
-        {% for num in response.paginator.page_range %}
-        {% if num == response.number %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if response.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-        </li>
-        {% endif %}
-    </ul>
 </div>
 <!-- content-wrapper ends -->
 <!-- partial:../../partials/_footer.html -->
@@ -431,22 +334,22 @@
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
 
+
 <script>
-    function showCustomAlertForActivateInactive(greetingId, action) {
-        console.log(greetingId);
-        console.log(action);
-        window.greetingId = greetingId;
+    function showCustomAlertForActivateInactive(bankId, action, bankName) {
+        window.bankId = bankId;
         window.action = action;
+        window.bankName = bankName;
 
         var customAlertOverlay = document.getElementById("customAlertOverlay3");
         customAlertOverlay.style.display = "flex";
 
-        var eventStatusSpan = document.getElementById("event_status");
+        var eventStatusSpan = document.getElementById("location_status");
 
         if (action === "1") {
-            eventStatusSpan.textContent = "Active";
+            eventStatusSpan.textContent = "Activate " + bankName;
         } else if (action === "0") {
-            eventStatusSpan.textContent = "Inactive";
+            eventStatusSpan.textContent = "Inactivate " + bankName;
         }
 
     }
@@ -454,7 +357,7 @@
     var confirmButton = document.getElementById("confirmButton");
     confirmButton.addEventListener("click", function() {
         console.log("clicked")
-        var url = '/activate_deactivate_greeting_cards/' + greetingId + '/' + action + '/';
+        var url = '/activate_deactivate_bank_list/' + bankId + '/' + action + '/';
         console.log(url)
         window.location.href = url;
     });
@@ -465,20 +368,26 @@
     }
 
 </script>
-
 <script>
-    function showPopUpDiv(val1, val2, val3) {
-        // Display the popup by changing its style to "display: block"
-        var customAlertOverlay = document.getElementById("customAlertOverlay");
-        customAlertOverlay.style.display = "flex";
+    function showPopUpDiv(val1, val2) {
+        var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
+        customAlertOverlay1.style.display = "flex";
 
-        // Set the values for the fields in the popup form
         document.getElementById("id").value = val1;
         document.getElementById("name").value = val2;
-        document.getElementById("price").value = val3;
     }
 
     function hidePopUpDiv() {
+        var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
+        customAlertOverlay1.style.display = "none";
+    }
+
+    function showPopUpDiv1() {
+        var customAlertOverlay = document.getElementById("customAlertOverlay");
+        customAlertOverlay.style.display = "flex";
+    }
+
+    function hidePopUpDiv1() {
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
@@ -487,7 +396,9 @@
 
 
 
+
 </script>
+
 </body>
 
 </html>

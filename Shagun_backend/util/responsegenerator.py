@@ -31,7 +31,7 @@ class responseGenerator:
                 "status": data[7],
                 "role": data[8],
                 "city": data[9],
-                "password": data[10]
+                # "password": data[10].encode('utf-8')
             }
 
         if controller_type == EVENT_LIST:
@@ -452,6 +452,25 @@ class responseGenerator:
                         "status": printer[4],
                         "gst_no": printer[5],
                         "store_owner": printer[6],
+                        "contact_number": printer[7],
+                        "email": printer[8]
+                    }
+
+                )
+            return printer_data
+
+        if controller_type == ALL_DELIVERY_VENDOR_DATA:
+            printer_data = []
+            for printer in data:
+                printer_data.append(
+                    {
+                        "id": printer[0],
+                        "store_name": printer[1],
+                        "city": printer[2],
+                        "address": printer[3],
+                        "status": printer[4],
+                        "gst_no": printer[5],
+                        "store_owner": printer[6],
                         "contact_number": printer[7]
                     }
 
@@ -464,13 +483,13 @@ class responseGenerator:
                 "store_name": data[1],
                 "city": data[2],
                 "address": data[3],
-                "lat_lng": data[4],
+                "email": data[4],
                 "status": data[5],
                 "gst_no": data[6],
                 "store_owner": data[7],
                 "contact_number": data[8],
                 "printer_user_name": data[9],
-                "printer_password": data[10],
+                "printer_password": data[10].encode('utf-8'),
                 "city_name": data[11]
 
             }

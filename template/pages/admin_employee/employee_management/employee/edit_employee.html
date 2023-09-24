@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
@@ -60,7 +62,12 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Employee {{emp.id}}</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Edit Employee {{emp.id}} </label>
+                                </div>
                                 <form class="form-sample" action="{% url 'edit_employee' emp.id %}" method="post">
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -71,7 +78,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" id="email" name="email"
+                                                    <input disabled type="text" id="email" name="email"
                                                            class="form-control"
                                                            value="{{emp.email}}">
                                                 </div>
@@ -114,36 +121,36 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Password</label>
-                                                <div class="col-sm-9">
-                                                    <input required type="password" id="password" name="password"
-                                                           class="form-control form-control-lg"
-                                                           value="{{emp.password}}" oninput="validatePasswords()">
-                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+<!--                                    <div class="row">-->
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="col-sm-3 col-form-label">Password</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input required type="password" id="password" name="password"-->
+<!--                                                           class="form-control form-control-lg"-->
+<!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
+<!--                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>-->
 
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Confirm Password</label>
-                                                <div class="col-sm-9">
-                                                    <input required type="password" id="confirmPassword"
-                                                           class="form-control form-control-lg"
-                                                           value="{{emp.password}}" oninput="validatePasswords()">
-                                                    <i class="toggle-password"
-                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
-                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
-                                                        Passwords do not match!
-                                                    </div>
-                                                </div>
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="col-sm-3 col-form-label">Confirm Password</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input required type="password" id="confirmPassword"-->
+<!--                                                           class="form-control form-control-lg"-->
+<!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
+<!--                                                    <i class="toggle-password"-->
+<!--                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>-->
+<!--                                                    <div id="passwordMatchMessage" style="color: red; display: none;">-->
+<!--                                                        Passwords do not match!-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
 
-                                            </div>
-                                        </div>
-                                    </div>
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">

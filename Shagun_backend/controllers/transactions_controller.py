@@ -22,14 +22,12 @@ def add_transaction_history(transaction_obj):
 
             cursor.execute(transaction_history_query)
             transaction_id = cursor.lastrowid
-            print(transaction_id)
 
             event_type_query = f"""SELECT et.event_type_name FROM event AS e
                                             LEFT JOIN events_type AS et ON e.event_type_id = et.id
                                              WHERE e.id = '{transaction_obj.event_id}' """
             cursor.execute(event_type_query)
             event_type = cursor.fetchone()
-            print(event_type)
 
             reciever_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
             VALUES ('{transaction_obj.receiver_uid}', 'Shagun',
@@ -41,7 +39,6 @@ def add_transaction_history(transaction_obj):
                                  WHERE id = '{transaction_obj.event_id}' """
             cursor.execute(printer_query)
             printer = cursor.fetchone()
-            print(printer)
 
             printer_jobs_query = f""" INSERT INTO print_jobs(transaction_id, printer_id, card_id, status,
              created_on, last_modified, billing_amount, event_id, wish)
@@ -55,13 +52,21 @@ def add_transaction_history(transaction_obj):
             cursor.execute(add_printer_query, [transaction_id, 1])
 
             fcm_query = f"""SELECT fcm_token FROM users 
-                                             WHERE uid = '{transaction_obj.receiver_uid}' """
+                                             WHERE uid = '{transaction_obj.uid}' """
             cursor.execute(fcm_query)
             fcm_token = cursor.fetchone()
-            print(fcm_token)
             title = f"Order {transaction_id} status: Job Created"
             message = "Your transaction is created and pending for further processing."
             send_push_notification(fcm_token[0], title, message)
+
+            receiver_fcm_query = f"""SELECT fcm_token FROM users 
+                                             WHERE uid = '{transaction_obj.receiver_uid}' """
+            cursor.execute(receiver_fcm_query)
+            recv_fcm_token = cursor.fetchone()
+            title = f"{transaction_obj.gifter_name} sent you Shagun amount: {transaction_obj.shagun_amount}"
+            message = "For your {event_type[0]} event')"
+            send_push_notification(recv_fcm_token[0], title, message)
+
             return {
                 "status": True,
                 "msg": "Transaction records added"
@@ -337,7 +342,7 @@ def update_transactions(transactions_list):
 
             return {
                 "status": True,
-                "message": "Transaction Completed"
+                "message": "Settlement Completed"
             }, 200
 
     except pymysql.Error as e:

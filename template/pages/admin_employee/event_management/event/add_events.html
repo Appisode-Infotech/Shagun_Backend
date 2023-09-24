@@ -8,6 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
@@ -153,6 +154,9 @@
     }
 
 
+
+
+
     </style>
 
 </head>
@@ -175,7 +179,13 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add New Event</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Add New Event </label>
+                                </div>
+
                                 <form class="form-sample" action="/add_events" method="post"
                                       enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
@@ -291,16 +301,17 @@
                                         <div id="map"></div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-10">
+                                        <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Event Lat Lng</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" id="event_lat_lng" style="width: 50%;"
+                                                <label class="col-sm-3 col-form-label">Event Lat Lng</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="event_lat_lng"
                                                            name="event_lat_lng" class="form-control" readonly>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
@@ -308,7 +319,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="delivery_fee"
                                                            placeholder="00.00" pattern="[1-9][0-9]{0,4}"
-                                                            title="Please add the amount only"/>
+                                                           title="Please add the amount only"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -316,7 +327,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Added By</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
+                                                    <input disabled readonly class="form-control"
+                                                           value="{{ request.session.name }}">
                                                     <input required type="hidden" id="created_by_uid"
                                                            name="created_by_uid"
                                                            value="{{ request.session.uid }}">
@@ -466,6 +478,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
+
 </script>
 
 <script>
@@ -559,6 +574,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
     });
 
 
+
+
+
 </script>
 
 <!-- container-scroller -->
@@ -636,6 +654,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             });
         }
 
+
+
+
 </script>
 
 <script>
@@ -666,6 +687,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             }
         });
 
+
+
+
 </script>
 <script>
         // Get the current date and time in ISO format
@@ -675,6 +699,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("event_date").min = currentDate;
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
+
+
+
 
 </script>
 
@@ -717,6 +744,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
         });
+
+
+
 
 </script>
 

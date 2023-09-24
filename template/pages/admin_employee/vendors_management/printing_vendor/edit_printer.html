@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
@@ -110,7 +112,12 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Printing Vendor</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> Edit Printing Vendor </label>
+                                </div>
                                 <form class="form-sample" action="{% url 'edit_printer' printer_data.store.id %}"
                                       method="post"
                                       enctype="multipart/form-data">
@@ -186,10 +193,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="email"
+                                                    <input disabled type="text" class="form-control" name="email"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
-                                                           value="{{printer_data.store.lat_lng}}"
+                                                           value="{{printer_data.store.email}}"
                                                            placeholder="example@gmail.com"/>
                                                 </div>
                                             </div>
@@ -221,43 +228,44 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Password</label>
-                                                <div class="col-sm-9">
-                                                    <input required type="password" id="password"
-                                                           name="printer_password"
-                                                           class="form-control form-control-lg"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
-                                                           value="{{printer_data.store.printer_password}}"
-                                                           oninput="validatePasswords()">
-                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+<!--                                    <div class="row">-->
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="col-sm-3 col-form-label">Password</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input required type="password" id="password"-->
+<!--                                                           name="printer_password"-->
+<!--                                                           class="form-control form-control-lg"-->
+<!--                                                           pattern="[^ ].*"-->
+<!--                                                           title="This field can't be Empty"-->
+<!--                                                           value="{{printer_data.store.printer_password}}"-->
+<!--                                                           oninput="validatePasswords()">-->
+<!--                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>-->
 
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Confirm Password</label>
-                                                <div class="col-sm-9">
-                                                    <input type="password" id="confirmPassword"
-                                                           class="form-control form-control-lg"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
-                                                           value="{{printer_data.store.printer_password}}"
-                                                           oninput="validatePasswords()">
-                                                    <i class="toggle-password"
-                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>
-                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
-                                                        Passwords do
-                                                        not match!
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="col-sm-3 col-form-label">Confirm Password</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input type="password" id="confirmPassword"-->
+<!--                                                           class="form-control form-control-lg"-->
+<!--                                                           pattern="[^ ].*"-->
+<!--                                                           title="This field can't be Empty"-->
+<!--                                                           value="{{printer_data.store.printer_password}}"-->
+<!--                                                           oninput="validatePasswords()">-->
+<!--                                                    <i class="toggle-password"-->
+<!--                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>-->
+<!--                                                    <div id="passwordMatchMessage" style="color: red; display: none;">-->
+<!--                                                        Passwords do-->
+<!--                                                        not match!-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton">

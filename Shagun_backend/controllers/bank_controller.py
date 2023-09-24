@@ -25,14 +25,15 @@ def get_all_banks_list():
         return {"status": False, "message": str(e)}, 301
 
 
-def add_bank_list(bank_name, bank_logo):
+def get_active_banks_list():
     try:
         with connection.cursor() as cursor:
-            bank_list_query = """INSERT INTO bank_list (bank_name, bank_logo) VALUES (%s, %s )"""
-            cursor.execute(bank_list_query, (bank_name, bank_logo))
+            query = "SELECT * FROM bank_list WHERE status = 1 "
+            cursor.execute(query)
+            bank_list = cursor.fetchall()
             return {
                 "status": True,
-                "message": "Bank List added successfully"
+                "bank_list": responsegenerator.responseGenerator.generateResponse(bank_list, BANK_LISTS)
             }, 200
 
     except pymysql.Error as e:
@@ -44,7 +45,7 @@ def add_bank_list(bank_name, bank_logo):
 def activate_deactivate_bank_list(bank_id, status):
     try:
         with connection.cursor() as cursor:
-            query = f"""UPDATE print_jobs SET status = '{status}' WHERE id = '{id}' """
+            query = f"""UPDATE bank_list SET status = '{status}' WHERE id = '{bank_id}' """
             cursor.execute(query)
             return {
                 "status": True,
@@ -57,4 +58,36 @@ def activate_deactivate_bank_list(bank_id, status):
         return {"status": False, "message": str(e)}, 301
 
 
+def add_bank_list(bank_name, created_by):
+    try:
+        with connection.cursor() as cursor:
+            add_location_query = """INSERT INTO bank_list (bank_name, status, created_by, created_on) 
+                                    VALUES (%s, %s, %s, %s)"""
+            values = (bank_name, True, created_by, today)
+            cursor.execute(add_location_query, values)
+            return {
+                "status": True,
+                "message": "bank added successfully"
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
 
+
+def edit_bank_list(bid, name):
+    try:
+        with connection.cursor() as cursor:
+            update_location_query = """UPDATE bank_list 
+                                      SET bank_name = %s 
+                                      WHERE id = %s"""
+            values = (name, bid)
+            cursor.execute(update_location_query, values)
+            return {
+                "status": True,
+                "message": "bank added successfully"
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301

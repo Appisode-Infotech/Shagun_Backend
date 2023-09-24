@@ -107,13 +107,13 @@ def update_printer_password(request):
             response = store_controller.update_printer_password(request.POST)
             if not response['status']:
                 messages.error(request, response['message'])
-                return render(request, 'pages/admin_employee/login_signup/change_password.html',
+                return render(request, 'pages/printer/printer_auth/change_password.html',
                               {"msg": response['message']})
             else:
                 messages.success(request, response['message'])
-                return render(request, 'pages/admin_employee/login_signup/change_password.html')
+                return render(request, 'pages/printer/printer_auth/change_password.html')
         else:
-            return render(request, 'pages/admin_employee/login_signup/change_password.html')
+            return render(request, 'pages/printer/printer_auth/change_password.html')
     else:
         return redirect('printer_login')
 

@@ -342,7 +342,7 @@ def update_transactions(transactions_list):
 
             return {
                 "status": True,
-                "message": "Transaction Completed"
+                "message": "Settlement Completed"
             }, 200
 
     except pymysql.Error as e:

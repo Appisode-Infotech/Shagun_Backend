@@ -212,7 +212,12 @@
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
-                        <h4 class="card-title">Transaction settlement List</h4>
+                        <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label">Transaction settlement List </label>
+                                </div>
                         {% if request.session.role == 1 %}
                         <label id="shagun-sum-label" class="form-group">
                             <p>Total Shagun Amount: ₹<span id="selectedShagunAmountSum">0.00</span></p>

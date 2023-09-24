@@ -459,6 +459,24 @@ class responseGenerator:
                 )
             return printer_data
 
+        if controller_type == ALL_DELIVERY_VENDOR_DATA:
+            printer_data = []
+            for printer in data:
+                printer_data.append(
+                    {
+                        "id": printer[0],
+                        "store_name": printer[1],
+                        "city": printer[2],
+                        "address": printer[3],
+                        "status": printer[4],
+                        "gst_no": printer[5],
+                        "store_owner": printer[6],
+                        "contact_number": printer[7]
+                    }
+
+                )
+            return printer_data
+
         if controller_type == PRINTER_BY_ID:
             return {
                 "id": data[0],

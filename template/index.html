@@ -38,6 +38,7 @@
             text-align: center;
         }
 
+
     </style>
 </head>
 <body>
@@ -235,6 +236,7 @@
                                             <table class="display expandable-table" style="width:100%">
                                                 <thead>
                                                 <tr>
+                                                    <th>SL No</th>
                                                     <th>Event Name</th>
                                                     <th>Event Admins</th>
                                                     <th>Event Date</th>
@@ -243,8 +245,9 @@
                                                 </thead>
                                                 <tbody>
                                                 {% for event in events %}
-
+                                                {% with sl_no=forloop.counter %}
                                                 <tr>
+                                                    <td>{{ sl_no }}</td>
                                                     <td>{{ event.event_name }}</td>
                                                     <td>
                                                         {% for admin in event.admins %}
@@ -262,6 +265,7 @@
                                                         {% endif %}
                                                     </td>
                                                 </tr>
+                                                {% endwith %}
                                                 {% endfor %}
                                                 </tbody>
                                             </table>
@@ -317,6 +321,7 @@
     totalShagunElement.textContent = '₹ ' + formatNumberInLakh(total_shagun);
     todaysTransactionsElement.textContent = '₹ ' + formatNumberInLakh(todays_transactions);
     todayShagunElement.textContent = '₹ ' + formatNumberInLakh(today_shagun);
+
 </script>
 
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

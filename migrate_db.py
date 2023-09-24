@@ -29,14 +29,15 @@ table_queries = [
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
     """,
     """
-    CREATE TABLE IF NOT EXISTS bank_list (
-        id INT(11) NOT NULL AUTO_INCREMENT,
-        bank_name VARCHAR(255) NOT NULL,
-        bank_logo VARCHAR(255) NOT NULL,
-        status TINYINT(1) NOT NULL,
-        created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-        PRIMARY KEY (id)
-    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    CREATE TABLE `bank_list` (
+         `id` int(11) NOT NULL AUTO_INCREMENT,
+         `bank_name` varchar(255) NOT NULL,
+         `bank_logo` varchar(255) NOT NULL,
+         `status` tinyint(1) NOT NULL,
+         `created_on` timestamp NOT NULL DEFAULT current_timestamp(),
+         `created_by` varchar(255) NOT NULL,
+         PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
     """,
     """
     CREATE TABLE IF NOT EXISTS delivery_vendors (

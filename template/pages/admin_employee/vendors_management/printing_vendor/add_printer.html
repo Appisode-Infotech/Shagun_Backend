@@ -192,7 +192,7 @@
                                                 <label class="col-sm-3 col-form-label">Store Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="store_name"/>
                                                 </div>
@@ -205,7 +205,7 @@
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$" maxlength="255"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="store_owner"/>
                                                 </div>
@@ -228,7 +228,7 @@
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="address"/>
                                                 </div>
@@ -239,7 +239,7 @@
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
                                                     <input required type="email" class="form-control" name="email"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            placeholder="example@gmail.com"/>
                                                 </div>
@@ -253,7 +253,7 @@
                                                 <label class="col-sm-3 col-form-label"> Store GST</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
                                                 </div>
@@ -265,7 +265,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="email" class="form-control"
                                                            name="printer_user_name"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            placeholder="example@gmail.com"/>
                                                 </div>

@@ -146,7 +146,7 @@
                                                 <label class="col-sm-3 col-form-label">Store Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="store_name"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.store_name}}"/>
                                                 </div>
@@ -159,7 +159,7 @@
                                                 <label class="col-sm-3 col-form-label">Store Owner</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" name="store_owner"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.store_owner}}" required/>
                                                 </div>
@@ -183,7 +183,7 @@
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="address"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.address}}"/>
                                                 </div>
@@ -193,8 +193,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
-                                                    <input disabled type="text" class="form-control" name="email"
-                                                           pattern="[^ ].*"
+                                                    <input readonly type="text" class="form-control" name="email"
+                                                           pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.email}}"
                                                            placeholder="example@gmail.com"/>
@@ -209,7 +209,7 @@
                                                 <label class="col-sm-3 col-form-label"> Store GST</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="gst_no"
-                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            value="{{printer_data.store.gst_no}}"/>
                                                 </div>

@@ -196,7 +196,7 @@
                                                 <label class="col-sm-3 col-form-label">Vendor Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_name"/>
                                                 </div>
@@ -209,7 +209,7 @@
                                                 <label class="col-sm-3 col-form-label">Vendor Owner</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_owner"/>
                                                 </div>
@@ -232,7 +232,7 @@
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="address"/>
                                                 </div>

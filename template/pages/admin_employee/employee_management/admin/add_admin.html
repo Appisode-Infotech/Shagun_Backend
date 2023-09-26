@@ -78,7 +78,7 @@
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="email" name="email"
-                                                           class="form-control" pattern="[^ ].*"
+                                                           class="form-control" pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            placeholder="username">
                                                 </div>
@@ -89,7 +89,7 @@
                                                 <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="name" name="name"
-                                                           class="form-control" pattern="[^ ].*"
+                                                           class="form-control" pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            placeholder="Full Name">
                                                 </div>
@@ -112,7 +112,7 @@
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="city" name="city"
-                                                           class="form-control" pattern="[^ ].*"
+                                                           class="form-control" pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty">
                                                 </div>
                                             </div>
@@ -124,8 +124,10 @@
                                                 <label class="col-sm-3 col-form-label">Password</label>
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="password" name="password"
-                                                           class="form-control form-control-lg" pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           class="form-control form-control-lg" pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,12}$"
+                                                    title="Password must contain at least one uppercase letter, one
+                                                    lowercase letter, one number, one special character, and be 8-12
+                                                    characters long"
                                                            placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 

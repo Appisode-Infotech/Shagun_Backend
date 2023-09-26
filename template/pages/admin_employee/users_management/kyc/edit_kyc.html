@@ -147,11 +147,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Date of Birth</label>
                                                 <div class="col-sm-9">
-                                                    <input required class="form-control" value="{{kyc_data.kyc.dob}}"
-                                                           id="dob"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
-                                                           name="dob"/>
+                                                    <input required type="date" id="dob" name="dob" class="form-control"
+                                                           onkeydown="return false">
                                                 </div>
                                             </div>
                                         </div>
@@ -195,8 +192,9 @@
                                                     <input required type="text" id="identification_number1"
                                                            name="identification_number1"
                                                            class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="^[A-Za-z0-9]+$"
+                                                           maxlength="255"
+                                                           title="Enter valid ID Proof"
                                                            value="{{kyc_data.kyc.identification_number1}}">
                                                 </div>
                                             </div>
@@ -220,8 +218,9 @@
                                                     <input required type="text" id="identification_number2"
                                                            name="identification_number2"
                                                            class="form-control"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
+                                                           pattern="^[A-Za-z0-9]+$"
+                                                           maxlength="255"
+                                                           title="Enter valid ID Proof"
                                                            value="{{kyc_data.kyc.identification_number2}}">
                                                 </div>
                                             </div>
@@ -276,7 +275,7 @@
                                                 <label class="col-sm-3 col-form-label">Address 1</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="adress1"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{kyc_data.kyc.address_line1}}"/>
                                                 </div>
@@ -300,7 +299,7 @@
                                                 <label class="col-sm-3 col-form-label">Address 2</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="adress2"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{kyc_data.kyc.address_line2}}"/>
                                                 </div>

@@ -77,7 +77,7 @@
                                                 <label class="col-sm-3 col-form-label">Email</label>
                                                 <div class="col-sm-9">
                                                     <input disabled type="text" id="email" name="email"
-                                                           class="form-control" pattern="[^ ].*"
+                                                           class="form-control" pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            value="{{emp.email}}">
                                                 </div>
@@ -88,7 +88,7 @@
                                                 <label class="col-sm-3 col-form-label">Full Name</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="name" name="name"
-                                                           class="form-control"  pattern="[^ ].*"
+                                                           class="form-control"  pattern="[^ ].*" maxlength="64"
                                                            value="{{emp.name}}">
                                                 </div>
                                             </div>
@@ -110,7 +110,7 @@
                                                 <label class="col-sm-3 col-form-label">Address</label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="city" name="city"
-                                                           class="form-control" pattern="[^ ].*"
+                                                           class="form-control" pattern="[^ ].*" maxlength="255"
                                                            value="{{emp.city}}">
                                                 </div>
                                             </div>

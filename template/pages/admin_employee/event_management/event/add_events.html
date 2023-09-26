@@ -157,6 +157,8 @@
 
 
 
+
+
     </style>
 
 </head>
@@ -263,7 +265,9 @@
                                                 <label class="col-sm-3 col-form-label">Event Date & Time</label>
                                                 <div class="col-sm-9">
                                                     <input required type="datetime-local" id="event_date"
-                                                           name="event_date" class="form-control">
+                                                           name="event_date" class="form-control"
+                                                           onkeydown="return false"
+                                                           placeholder="Select a date and time">
                                                 </div>
                                             </div>
                                         </div>
@@ -357,10 +361,13 @@
                                                    title="This field can't be Empty"
                                                    placeholder="Sub Event Name" required>
                                             <input class="event-input" type="datetime-local"
-                                                   name="sub_events[0][start]" placeholder="Start Time"
-                                                   id="sub_event_start_date" required>
+                                                   name="sub_events[0][start]"
+                                                   id="sub_event_start_date"
+                                                   class="form-control" onkeydown="return false" required>
+
                                             <input class="event-input" type="datetime-local" name="sub_events[0][end]"
-                                                   placeholder="End Time" id="sub_event_end_date" required>
+                                                   placeholder="End Time" id="sub_event_end_date"
+                                                   class="form-control" onkeydown="return false" required>
                                         </div>
                                     </div>
                                     <button type="button" id="addSubEventButton">Add Sub Event</button>
@@ -481,6 +488,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
 </script>
 
 <script>
@@ -577,6 +586,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
 </script>
 
 <!-- container-scroller -->
@@ -657,6 +668,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
 </script>
 
 <script>
@@ -690,6 +703,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
 </script>
 <script>
         // Get the current date and time in ISO format
@@ -699,6 +714,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("event_date").min = currentDate;
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
+
+
 
 
 
@@ -744,6 +761,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
         });
+
+
 
 
 

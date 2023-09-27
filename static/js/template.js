@@ -115,6 +115,39 @@
   $('#navbar-search-icon').click(function() {
     $("#navbar-search-input").focus();
   });
+
+
+     document.addEventListener('DOMContentLoaded', function() {
+     const forms = document.querySelectorAll('.needs-validation, .needs-password-validation');
+    forms.forEach(form => {
+        form.addEventListener(
+            'submit',
+            event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();   // Prevent submission if the form is not valid.
+                    event.stopPropagation();  // Stop the event from propagating further.
+                }
+
+                // Password matching validation
+                if (form.classList.contains('needs-password-validation')) {
+                    const passwordField = form.querySelector('#password');
+                    const confirmPasswordField = form.querySelector('#confirmPassword');
+                    if (passwordField.value !== confirmPasswordField.value) {
+                        event.preventDefault(); // Prevent form submission
+                        event.stopPropagation(); // Stop the event from propagating further.
+                        confirmPasswordField.setCustomValidity("Passwords do not match.");
+                    } else {
+                        confirmPasswordField.setCustomValidity("");
+                    }
+                }
+
+                form.classList.add('was-validated');
+            },
+            false
+        );
+    });
+    });
+
   document.getElementById('backButton').addEventListener('click', function() {
     window.history.back();
 });

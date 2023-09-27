@@ -36,6 +36,8 @@
 
 
 
+
+
     </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -82,13 +84,15 @@
                         <h4>Hello! let's get started</h4>
                         <h6 class="font-weight-light">Sign in to continue.</h6>
 
-                        <form class="pt-3" action="/sign_up" method="post">
+                        <form class="pt-3 needs-validation" action="/sign_up" method="post" novalidate>
                             {% csrf_token %}
                             <div class="form-group">
                                 <input required type="email" id="username" name="username"
                                        class="form-control form-control-lg"
                                        placeholder="Username" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                       maxlength="256"></div>
+                                       maxlength="256">
+                                <div class="invalid-feedback">Please enter a valid username (email).</div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -96,7 +100,9 @@
                                         <div class="col-sm-12">
                                             <input required type="password" id="password" name="password"
                                                    class="form-control form-control-lg"
-                                                   placeholder="Password" oninput="validatePasswords()">
+                                                   placeholder="Password">
+                                            <div class="invalid-feedback">Password should not be blank.</div>
+
                                             <i class="toggle-password"
                                                onclick="toggleVisibility('password')">&#x1f441;</i>
                                         </div>
@@ -141,6 +147,8 @@
         field.type = 'password';
       }
     }
+
+
 
 </script>
 >

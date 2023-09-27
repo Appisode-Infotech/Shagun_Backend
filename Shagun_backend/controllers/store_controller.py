@@ -519,7 +519,7 @@ def update_printer_password(data):
             if result is not None:
                 stored_password = result[0].encode('utf-8')
                 if bcrypt.checkpw(data['old_password'].encode('utf-8'), stored_password):
-                    sql_query = f"""UPDATE printer SET password = '{password_hash}' WHERE printer_user_name = '{data['username']}'"""
+                    sql_query = f"""UPDATE printer SET printer_password = '{password_hash}' WHERE printer_user_name = '{data['username']}'"""
                     cursor.execute(sql_query)
                     return {
                         "status": True,

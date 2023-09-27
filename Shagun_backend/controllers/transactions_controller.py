@@ -64,7 +64,7 @@ def add_transaction_history(transaction_obj):
             cursor.execute(receiver_fcm_query)
             recv_fcm_token = cursor.fetchone()
             title = f"{transaction_obj.gifter_name} sent you Shagun amount: {transaction_obj.shagun_amount}"
-            message = "For your {event_type[0]} event')"
+            message = f"For your {event_type[0]} event')"
             send_push_notification(recv_fcm_token[0], title, message)
 
             return {
@@ -309,8 +309,7 @@ def settle_payment(transactions_list):
                     invite_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                                                     VALUES ('{receiver}', 'shagun',
                                                     'Shagun amount {total_amount} credited by {sender_name}',
-                                                    'Shagun amount of {total_amount} INR has been successfully 
-                                                    transferred to {bank_name} Bank for the account ending with 
+                                                    'Shagun amount of {total_amount} INR has been successfully transferred to {bank_name} Bank for the account ending with 
                                                     {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]}')"""
                     cursor.execute(invite_notification_query)
                     title = f"""Shagun amount {total_amount} credited from {sender_name}"""

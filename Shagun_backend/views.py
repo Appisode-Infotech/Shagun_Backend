@@ -1,28 +1,25 @@
-import jwt
-from datetime import datetime, timedelta
-import os
 import csv
-from django.core.files.storage import FileSystemStorage
+import os
+import time
+from datetime import datetime, timedelta
 
+import jwt
+from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import JsonResponse
-from django.contrib import messages
-import time
-
-from rest_framework.reverse import reverse
 
 from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, \
     request_controller, bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
-from Shagun_backend.controllers.event_controller import send_push_notification
-from Shagun_backend.models import registration_model, user_kyc_model, bank_details_model, create_event_model, \
+from Shagun_backend.models import user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
-    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model, bank_model
+    gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
 
 
@@ -46,6 +43,11 @@ def sign_up(request):
 def logout(request):
     request.session.clear()
     return redirect('sign_up')
+
+
+def printerLogout(request):
+    request.session.clear()
+    return redirect('printer_login')
 
 
 def custom_404(request, slug=None):
@@ -103,15 +105,16 @@ def update_printer_password(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         if request.method == 'POST':
             response = store_controller.update_printer_password(request.POST)
+            print(response)
             if not response['status']:
                 messages.error(request, response['message'])
-                return render(request, 'pages/admin_employee/login_signup/change_password.html',
+                return render(request, 'pages/printer/printer_auth/change_password.html',
                               {"msg": response['message']})
             else:
                 messages.success(request, response['message'])
-                return render(request, 'pages/admin_employee/login_signup/change_password.html')
+                return render(request, 'pages/printer/printer_auth/change_password.html')
         else:
-            return render(request, 'pages/admin_employee/login_signup/change_password.html')
+            return render(request, 'pages/printer/printer_auth/change_password.html')
     else:
         return redirect('printer_login')
 

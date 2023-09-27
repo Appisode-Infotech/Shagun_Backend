@@ -21,11 +21,10 @@ def reset_password(email, user):
             print(new_pwd)
             hashed_password = bcrypt.hashpw(new_pwd.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             print(hashed_password)
-            if user == 'manage_printers':
+            if user == 'printer_login':
                 print("reset pwd for printing vendor")
                 sql_query = f"""UPDATE printer SET printer_password	 = '{hashed_password}' WHERE email = '{email}' """
                 cursor.execute(sql_query)
-
             else:
                 print("reset pwd for shagun staff")
                 sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """

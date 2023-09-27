@@ -65,14 +65,7 @@
             margin-left: 5px;
         }
 
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -209,6 +202,9 @@
                                         <thead>
                                         <tr>
                                             <th>
+                                                SL No
+                                            </th>
+                                            <th>
                                                 User
                                             </th>
                                             <th>
@@ -246,6 +242,7 @@
 
                                         {% for bank in response %}
                                         <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
                                             <td class="py-1">
                                                 <a href="{{MEDIA_URL}}{{ bank.profile_pic }}" target="_blank">
                                                     <img src="{{MEDIA_URL}}{{ bank.profile_pic }}" alt="image"/>

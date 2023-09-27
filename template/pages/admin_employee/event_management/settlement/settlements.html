@@ -64,14 +64,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
         .custom-alert-overlay {
             position: fixed;
             top: 0;
@@ -151,6 +144,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
+                                            <th>SL No</th>
                                             <th>Event Name</th>
                                             <th>Event Admins</th>
                                             <th>Total Shagun Amount</th>
@@ -171,6 +165,7 @@
                                         {% for event in response %}
 
                                         <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
                                             <td>{{ event.event_type_name }}</td>
                                             <td>
                                                 {% for admin in event.event_admin %}

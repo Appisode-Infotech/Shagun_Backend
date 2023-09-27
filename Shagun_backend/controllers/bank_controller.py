@@ -63,7 +63,7 @@ def add_bank_list(bank_name, created_by):
         with connection.cursor() as cursor:
             add_location_query = """INSERT INTO bank_list (bank_name, status, created_by, created_on) 
                                     VALUES (%s, %s, %s, %s)"""
-            values = (bank_name, True, created_by, today)
+            values = (bank_name, True, created_by, getIndianTime())
             cursor.execute(add_location_query, values)
             return {
                 "status": True,

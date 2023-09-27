@@ -65,14 +65,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -212,6 +205,9 @@
                                         <thead>
                                         <tr>
                                             <th>
+                                                SL No
+                                            </th>
+                                            <th>
                                                 Store Owner
                                             </th>
                                             <th>
@@ -246,6 +242,7 @@
 
                                         {% for printer in response %}
                                         <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
                                             <td>
                                                 {{printer.store_owner}}
                                             </td>

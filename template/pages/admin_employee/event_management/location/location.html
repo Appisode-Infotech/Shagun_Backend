@@ -88,14 +88,7 @@
         .center-button button {
             margin-right: 10px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
       .custom-alert-overlay {
         position: fixed;
@@ -117,6 +110,8 @@
         padding: 20px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       }
+
+
 
 
 
@@ -178,7 +173,8 @@
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
                                                             <label class="col-sm-3 col-form-label">Location
-                                                                Name </label>
+                                                                Name <span
+                                                                        style="font-weight: bold; color: red;">*</span></label>
                                                             <div class="col-sm-9">
                                                                 <input required id="city_name" name="city_name"
                                                                        type="text"
@@ -216,6 +212,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
+                                            <th>SL No</th>
                                             <th>Location Name</th>
                                             <th>Status</th>
                                             <th>Active/Inactive</th>
@@ -231,7 +228,11 @@
                                         </tr>
                                         {% else %}
                                         {% for location in locations %}
+
                                         <tr>
+                                            {% with sl_no=forloop.counter %}
+                                            <td>{{ sl_no }}</td>
+                                            {% endwith %}
                                             <td>{{ location.location_name }}</td>
                                             <td>
                                                 {% if location.status == 1 %}
@@ -287,7 +288,9 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Name</label>
+                                                                        <label class="col-sm-3 col-form-label">Name
+                                                                            <span
+                                                                                    style="font-weight: bold; color: red;">*</span></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    class="form-control"
@@ -384,6 +387,8 @@
     }
 
 
+
+
 </script>
 <script>
     function showPopUpDiv(val1, val2) {
@@ -408,6 +413,8 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
+
 
 
 

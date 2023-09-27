@@ -64,14 +64,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -210,6 +203,9 @@
                                         <thead>
                                         <tr>
                                             <th>
+                                                SL No
+                                            </th>
+                                            <th>
                                                 User
                                             </th>
                                             <th>
@@ -246,6 +242,7 @@
 
                                         {% for kyc in response %}
                                         <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
                                             <td class="py-1">
                                                 <img src="{{MEDIA_URL}}{{ kyc.profile_pic  }}" alt="image"/>
                                             </td>

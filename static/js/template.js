@@ -115,6 +115,21 @@
   $('#navbar-search-icon').click(function() {
     $("#navbar-search-input").focus();
   });
+
+
+     document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('.needs-validation');
+
+        form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+        });
+    });
+
   document.getElementById('backButton').addEventListener('click', function() {
     window.history.back();
 });

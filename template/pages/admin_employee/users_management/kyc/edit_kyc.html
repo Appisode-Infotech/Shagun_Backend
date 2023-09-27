@@ -152,7 +152,7 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="date" id="dob" name="dob" class="form-control"
-                                                           onkeydown="return false">
+                                                           onkeydown="return false" value="{{kyc_data.kyc.dob}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -169,8 +169,7 @@
                                                         <option>Driving License</option>
                                                         <option>Voter ID</option>
                                                         <option>Ration Card</option>
-                                                        {% elif kyc_data.kyc.identification_proof1 == "Driving
-                                                        License"%}
+                                                        {% elif kyc_data.kyc.identification_proof1 == "Driving License"%}
                                                         <option selected>Driving License</option>
                                                         <option>Aadhar Card</option>
                                                         <option>Voter ID</option>
@@ -425,7 +424,13 @@
 <script src="{% static 'vendors/select2/select2.min.js' %}"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
+<script>
+// Get the current date and time in ISO format
+const currentDate = new Date().toISOString().split('T')[0];
 
+// Set the max attribute of the input field to the current date
+document.getElementById("dob").max = currentDate;
+</script>
 <script src="{% static 'js/off-canvas.js' %}"></script>
 <script src="{% static 'js/hoverable-collapse.js' %}"></script>
 <script src="{% static 'js/template.js' %}"></script>

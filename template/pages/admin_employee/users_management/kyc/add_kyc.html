@@ -481,20 +481,15 @@
         }
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
+<script>
+// Get the current date and time in ISO format
+const currentDate = new Date().toISOString().split('T')[0];
+
+// Set the max attribute of the input field to the current date
+document.getElementById("dob").max = currentDate;
+</script>
 
 <script>
         document.getElementById("myForm").addEventListener("submit", function (e) {

@@ -403,7 +403,7 @@
 
                                             <div id="myDropdown4" class="dropdown-content">
                                                 <input type="text" placeholder="Search" id="myInput4"
-                                                       onkeyup="filterFunction('myDropdown4')" class="form-control">
+                                                       onkeyup="filterFunction('myDropdown4')" maxlength="256" class="form-control">
                                                 {% for users in users.user_data %}
                                                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}
                                                     {{users.phone}}</a>

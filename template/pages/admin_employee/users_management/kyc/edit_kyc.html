@@ -424,7 +424,13 @@
 <script src="{% static 'vendors/select2/select2.min.js' %}"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
+<script>
+// Get the current date and time in ISO format
+const currentDate = new Date().toISOString().split('T')[0];
 
+// Set the max attribute of the input field to the current date
+document.getElementById("dob").max = currentDate;
+</script>
 <script src="{% static 'js/off-canvas.js' %}"></script>
 <script src="{% static 'js/hoverable-collapse.js' %}"></script>
 <script src="{% static 'js/template.js' %}"></script>

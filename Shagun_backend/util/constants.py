@@ -1,8 +1,11 @@
 import datetime
 import pytz
 
-ist = pytz.timezone('Asia/Kolkata')
-today = datetime.datetime.now(ist)
+def getIndianTime():
+    ist = pytz.timezone('Asia/Kolkata')
+    today = datetime.datetime.now(ist)
+    return today
+
 
 wishes = [
     "Dear ABC, as you begin this beautiful journey together, may your love shine brighter with each passing day, and may your hearts forever be entwined in happiness and joy.",

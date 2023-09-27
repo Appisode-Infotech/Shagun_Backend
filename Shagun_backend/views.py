@@ -24,7 +24,6 @@ from Shagun_backend.models import registration_model, user_kyc_model, bank_detai
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model, bank_model
 from Shagun_backend.models.create_event_model1 import transform_data_to_json
-from Shagun_backend.util.constants import today
 
 
 def sign_up(request):

@@ -261,7 +261,7 @@ class responseGenerator:
                     {
                         "card_name": cards[0],
                         "card_image_url": cards[1],
-                        "card_price": cards[2],
+                        "card_price": int(cards[2]),
                         "card_id": cards[3],
                         "card_status": cards[4]
                     }

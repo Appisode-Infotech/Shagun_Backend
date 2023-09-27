@@ -216,8 +216,8 @@ def add_user_kyc(kyc_obj):
                 values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.adress1,
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
-                          0, today, kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
-                          kyc_obj.postcode, kyc_obj.country, today, kyc_obj.created_by_uid, kyc_obj.created_by_uid)
+                          0, getIndianTime(), kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
+                          kyc_obj.postcode, kyc_obj.country, getIndianTime(), kyc_obj.created_by_uid, kyc_obj.created_by_uid)
                 cursor.execute(sql_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -272,7 +272,7 @@ def update_user_kyc(kyc_obj):
                               kyc_obj.identification_proof1, kyc_obj.identification_proof2,
                               kyc_obj.identification_number1, kyc_obj.identification_number2,
                               kyc_obj.identification_doc1, kyc_obj.identification_doc2,
-                              today, kyc_obj.uid)
+                              getIndianTime(), kyc_obj.uid)
 
                     cursor.execute(update_query, values)
                     return {
@@ -412,7 +412,7 @@ def add_bank_details(bank_obj):
                 modified_by = VALUES(modified_by)
                 """
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
-                          bank_obj.account_number, True, bank_obj.added_by, today, bank_obj.added_by)
+                          bank_obj.account_number, True, bank_obj.added_by, getIndianTime(), bank_obj.added_by)
                 cursor.execute(sql_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -455,7 +455,7 @@ def edit_bank_details(bank_obj):
                 edit_bank_query = """UPDATE bank_details SET bank_name = %s, ifsc_code = %s, account_holder_name = %s, 
                                 account_number = %s, modified_on = %s, modified_by = %s WHERE id = %s"""
                 values = (bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name, bank_obj.account_number,
-                          today, bank_obj.modified_by, bank_obj.bank_id)
+                          getIndianTime(), bank_obj.modified_by, bank_obj.bank_id)
                 cursor.execute(edit_bank_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -539,7 +539,7 @@ def add_employee(emp_obj):
         with connection.cursor() as cursor:
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 2,
+            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, getIndianTime(), True, 2,
                       emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
@@ -563,7 +563,7 @@ def add_admin(emp_obj):
         with connection.cursor() as cursor:
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, today, True, 1,
+            values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, getIndianTime(), True, 1,
                       emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
             cursor.execute(add_emp_query, values)
             return {
@@ -846,7 +846,7 @@ def edit_user_kyc(obj):
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.modified_by_uid, today.now(), obj.id
+                    obj.postcode, obj.city, obj.country, obj.modified_by_uid, getIndianTime().now(), obj.id
                 ])
             elif obj.identification_doc1 is None:
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
@@ -855,7 +855,7 @@ def edit_user_kyc(obj):
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.adress1, obj.state, obj.adress2, obj.postcode, obj.city, obj.country,
-                    obj.identification_doc2, obj.modified_by_uid, today.now(), obj.id
+                    obj.identification_doc2, obj.modified_by_uid, getIndianTime().now(), obj.id
                 ])
             elif obj.identification_doc2 is None:
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
@@ -864,7 +864,7 @@ def edit_user_kyc(obj):
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid, today.now(),
+                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid, getIndianTime().now(),
                     obj.id
                 ])
             else:
@@ -876,7 +876,7 @@ def edit_user_kyc(obj):
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
                     obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.identification_doc2,
-                    obj.modified_by_uid, today.now(), obj.id
+                    obj.modified_by_uid, getIndianTime().now(), obj.id
                 ])
 
             cursor.execute(sql, values)

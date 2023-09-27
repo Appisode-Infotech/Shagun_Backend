@@ -17,11 +17,11 @@ def admin_dashboard(uid):
                     COALESCE(shagun_today, 0) AS shagun_today
                 FROM (
                     SELECT 
-                        SUM(CASE WHEN DATE(created_on) = '{today.date()}' THEN transaction_amount ELSE 0 END) AS sum_today,
+                        SUM(CASE WHEN DATE(created_on) = '{getIndianTime().date()}' THEN transaction_amount ELSE 0 END) AS sum_today,
                         SUM(transaction_amount) AS total_sum,
                         SUM(shagun_amount) AS total_shagun_amount,
                         SUM(transaction_fee) AS total_transaction_fee,
-                        SUM(CASE WHEN DATE(created_on) = '{today.date()}' THEN shagun_amount ELSE 0 END) AS shagun_today
+                        SUM(CASE WHEN DATE(created_on) = '{getIndianTime().date()}' THEN shagun_amount ELSE 0 END) AS shagun_today
                     FROM transaction_history
                 ) AS subquery;
             """
@@ -31,7 +31,7 @@ def admin_dashboard(uid):
             event_stats_query = f"""
                 SELECT 
                     COUNT(*) AS total_events,
-                    CAST(SUM(DATE(event_date) = '{today.date()}') AS SIGNED) AS events_created_today
+                    CAST(SUM(DATE(event_date) = '{getIndianTime().date()}') AS SIGNED) AS events_created_today
                 FROM event;
                 """
             cursor.execute(event_stats_query)
@@ -41,7 +41,7 @@ def admin_dashboard(uid):
                             SELECT event.event_date, event.event_admin, et.event_type_name, event.id,
                             event.is_approved, event.status FROM event
                             LEFT JOIN events_type AS et ON event.event_type_id = et.id
-                             WHERE DATE(event_date) = '{today.date()}' ORDER BY event.created_on DESC;
+                             WHERE DATE(event_date) = '{getIndianTime().date()}' ORDER BY event.created_on DESC;
                             """
             cursor.execute(today_events_query)
             today_event_stats = cursor.fetchall()

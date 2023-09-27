@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -86,14 +88,7 @@
         .center-button button {
             margin-right: 10px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
         .custom-alert-overlay {
             position: fixed;
             top: 0;
@@ -193,6 +188,9 @@
                                         <thead>
                                         <tr>
                                             <th>
+                                                SL No
+                                            </th>
+                                            <th>
                                                 Card
                                             </th>
                                             <th>
@@ -223,6 +221,7 @@
 
                                         {% for greetings in response %}
                                         <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
                                             <td class="py-1">
                                                 <img src="{{MEDIA_URL}}{{ greetings.card_image_url }}" alt="image"/>
                                             </td>
@@ -264,6 +263,7 @@
                                             <td>
                                                 <button onclick="showPopUpDiv('{{greetings.card_id}}', '{{greetings.card_name}}','{{greetings.card_price}}')"
                                                         class="btn btn-outline-info btn-fw">Edit
+                                                        <i class="fas fa-edit"></i>
                                                 </button>
                                                 <div id="customAlertOverlay" class="custom-alert-overlay">
                                                     <div class="custom-alert">
@@ -274,8 +274,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Location
-                                                                            ID </label>
+                                                                        <label class="col-sm-3 col-form-label">Card ID </label>
                                                                         <div class="col-sm-9">
                                                                             <input readonly id="id" name="id"
                                                                                    type="text"
@@ -285,8 +284,8 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Card
-                                                                            Id</label>
+                                                                        <label class="col-sm-3 col-form-label">Card Name <span
+                                                                        style="font-weight: bold; color: red;">*</span></label>
                                                                         <div class="col-sm-9">
                                                                             <input id="name" type="text"
                                                                                    class="form-control"
@@ -298,7 +297,8 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Price</label>
+                                                                        <label class="col-sm-3 col-form-label">Price <span
+                                                                        style="font-weight: bold; color: red;">*</span></label>
                                                                         <div class="col-sm-9">
                                                                             <input id="price" name="card_price"
                                                                                    type="text"

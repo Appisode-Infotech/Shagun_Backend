@@ -439,7 +439,7 @@ def printer_dashboard(pid):
             event_stats_query = f"""
                 SELECT 
                     COUNT(*) AS total_events,
-                    CAST(SUM(DATE(event_date) = '{today.date()}') AS SIGNED) AS events_created_today
+                    CAST(SUM(DATE(event_date) = '{getIndianTime().date()}') AS SIGNED) AS events_created_today
                 FROM event;
                 """
             cursor.execute(event_stats_query)
@@ -449,7 +449,7 @@ def printer_dashboard(pid):
                             SELECT event.event_date, event.event_admin, et.event_type_name, event.id,
                             event.is_approved, event.status FROM event
                             LEFT JOIN events_type AS et ON event.event_type_id = et.id
-                             WHERE DATE(event_date) = '{today.date()}' ORDER BY event.created_on DESC;
+                             WHERE DATE(event_date) = '{getIndianTime().date()}' ORDER BY event.created_on DESC;
                             """
             cursor.execute(today_events_query)
             today_event_stats = cursor.fetchall()
@@ -496,20 +496,10 @@ def printer_dashboard(pid):
                 "work_done_amount": round(transaction_stats[1], 2),
                 "in_progress_amount": round(transaction_stats[2], 2),
                 "new_amount": round(transaction_stats[3], 2),
-                # "today_created_events": event_stats[1],
-                # "events": responsegenerator.responseGenerator.generateResponse(today_event_stats, EVENT_LIST),
                 "new_jobs": job_stats[0],
                 "open_jobs": job_stats[1],
                 "completed": job_stats[2],
                 "total_jobs": job_stats[3],
-                # "pending_events": events_stat[0],
-                # "approved_events": events_stat[1],
-                # "rejected_events": events_stat[2],
-                # "total_events": events_stat[3],
-                # "active_printers": vendors_stat[0],
-                # "inactive_printers": vendors_stat[1],
-                # "active_delivery_vendors": vendors_stat[2],
-                # "inactive_delivery_vendors": vendors_stat[3]
 
             }, 200
     except pymysql.Error as e:

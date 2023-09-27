@@ -96,7 +96,12 @@
         margin: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        transition: border-color 0.2s;
     }
+    .event-input:focus {
+        border-color: #007bff;
+    }
+
 
     #addSubEventButton,
     #removeEventButton,
@@ -197,7 +202,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Select Event Type</label>
+                                                <label class="col-sm-3 col-form-label">Select Event Type <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="event_type_name" readonly
@@ -218,7 +224,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Select City</label>
+                                                <label class="col-sm-3 col-form-label">Select City <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="city_name" readonly
@@ -241,7 +248,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Select Printing Vendor</label>
+                                                <label class="col-sm-3 col-form-label">Select Printing Vendor <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="printer_name" readonly
@@ -262,7 +270,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Event Date & Time</label>
+                                                <label class="col-sm-3 col-form-label">Event Date & Time <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="datetime-local" id="event_date"
                                                            name="event_date" class="form-control"
@@ -275,7 +284,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address Line1</label>
+                                                <label class="col-sm-3 col-form-label">Address Line1 <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            pattern="[^ ].*" maxlength="256"
@@ -286,7 +296,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address Line2</label>
+                                                <label class="col-sm-3 col-form-label">Address Line2 <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            pattern="[^ ].*" maxlength="256"
@@ -307,7 +318,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Event Lat Lng</label>
+                                                <label class="col-sm-3 col-form-label">Event Lat Lng <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="event_lat_lng"
                                                            name="event_lat_lng" class="form-control" readonly>
@@ -319,17 +331,19 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Delivery Fee</label>
+                                                <label class="col-sm-3 col-form-label">Delivery Fee <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="delivery_fee"
-                                                           placeholder="00.00" pattern="[1-9][0-9]{0,4}"
+                                                           placeholder="₹" pattern="[1-9][0-9]{0,3}"
                                                            title="Please add the amount only"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <label class="col-sm-3 col-form-label">Added By <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input disabled readonly class="form-control"
                                                            value="{{ request.session.name }}">
@@ -341,20 +355,23 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 col-form-label">Delivery Address</label>
+                                        <label class="col-sm-3 col-form-label">Delivery Address <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                         <textarea required class="form-control" id="delivery_address" rows="4"
                                                   maxlength="255"
                                                   name="delivery_address"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 col-form-label">Event Note</label>
+                                        <label class="col-sm-3 col-form-label">Event Note <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                         <textarea required class="form-control" id="event_note" rows="4"
                                                   maxlength="255"
                                                   name="event_note"></textarea>
                                     </div>
 
                                     <div id="sub-events-container">
-                                        <label class="col-sm-3 col-form-label">Sub Events</label>
+                                        <label class="col-sm-3 col-form-label">Sub Events <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                         <div class="event-row">
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
                                                    pattern="[^ ].*" maxlength="256"
@@ -370,14 +387,15 @@
                                                    class="form-control" onkeydown="return false" required>
                                         </div>
                                     </div>
-                                    <button type="button" id="addSubEventButton">Add Sub Event</button>
+                                    <button type="button" id="addSubEventButton">Add Sub Event </button>
                                     <button type="button" id="removeEventButton" style="display: none; margin-top:5px;">
                                         Remove Sub
                                         Event
                                     </button>
 
                                     <div id="event-admin-container">
-                                        <label class="col-sm-3 col-form-label">Event Admins</label>
+                                        <label class="col-sm-3 col-form-label">Event Admins <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                         <div class="event-row">
                                             <input type="text" id="name" name="event_admin[0][name]" readonly
                                                    onclick="toggleDropdown('myDropdown4')"
@@ -399,7 +417,7 @@
                                             <input type="hidden" id="uid" name="event_admin[0][uid]">
                                         </div>
                                     </div>
-                                    <button type="button" id="addEventAdminButton">Add Event Admin</button>
+                                    <button type="button" id="addEventAdminButton">Add Event Admin </button>
                                     <button type="button" id="removeEventAdminButton" style="display: none;">Remove
                                         Event Admin
                                     </button>
@@ -480,14 +498,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             dropdown.classList.remove("show");
         }
     });
-
-
-
-
-
-
-
-
 
 
 </script>

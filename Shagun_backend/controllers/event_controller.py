@@ -40,7 +40,7 @@ def create_event(event_obj):
                                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
-                      event_obj.address_line2, event_obj.event_lat_lng, today, sub_events_json,
+                      event_obj.address_line2, event_obj.event_lat_lng, getIndianTime(), sub_events_json,
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id,
                       event_obj.delivery_fee, event_obj.delivery_address)
 
@@ -83,7 +83,7 @@ def create_event(event_obj):
                 qr.make(fit=True)
 
                 # Create an image from the QR code instance with the desired fill color
-                fill_color = "#9925b9"
+                fill_color = "#671160"
                 img = qr.make_image(fill_color=fill_color, back_color="white")
 
                 # Construct the path to save the image in the media directory

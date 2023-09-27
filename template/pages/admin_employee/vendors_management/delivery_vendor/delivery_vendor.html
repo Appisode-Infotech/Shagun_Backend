@@ -65,14 +65,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
 
 
@@ -151,6 +144,9 @@
                                         <thead>
                                         <tr>
                                             <th>
+                                                SL No
+                                            </th>
+                                            <th>
                                                 Vendor Owner
                                             </th>
                                             <th>
@@ -184,6 +180,7 @@
 
                                         {% for delivery_vendor in response %}
                                         <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
                                             <td>
                                                 {{delivery_vendor.store_owner}}
                                             </td>

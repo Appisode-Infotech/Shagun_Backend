@@ -88,14 +88,7 @@
         .center-button button {
             margin-right: 10px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
       .custom-alert-overlay {
         position: fixed;
@@ -177,7 +170,8 @@
                                                 <div class="row">
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Bank Name </label>
+                                                            <label class="col-sm-3 col-form-label">Bank Name <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                             <div class="col-sm-9">
                                                                 <input required id="bank_name" name="bank_name"
                                                                        type="text"
@@ -215,6 +209,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
+                                            <th>SL No</th>
                                             <th>Bank Name</th>
                                             <th>Status</th>
                                             <th>Active/Inactive</th>
@@ -231,6 +226,9 @@
                                         {% else %}
                                         {% for bank in bank_list %}
                                         <tr>
+                                            {% with sl_no=forloop.counter %}
+                                            <td>{{ sl_no }}</td>
+                                            {% endwith %}
                                             <td>{{ bank.bank_name }}</td>
                                             <td>
                                                 {% if bank.bank_status == 1 %}
@@ -290,7 +288,8 @@
                                                                 </div>
                                                                 <div class="col-md-9">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Name</label>
+                                                                        <label class="col-sm-3 col-form-label">Name <span
+                                                                        style="font-weight: bold; color: red;">*</span></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    class="form-control"

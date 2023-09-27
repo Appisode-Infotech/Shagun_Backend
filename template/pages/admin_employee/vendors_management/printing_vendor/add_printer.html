@@ -8,7 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -124,6 +124,8 @@
 
 
 
+
+
     </style>
 
 </head>
@@ -161,7 +163,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City</label>
+                                                <label class="col-sm-3 col-form-label">City <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
@@ -189,10 +192,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Store Name</label>
+                                                <label class="col-sm-3 col-form-label">Store Name <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="store_name"/>
                                                 </div>
@@ -202,10 +206,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Store Owner</label>
+                                                <label class="col-sm-3 col-form-label">Store Owner <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$" maxlength="255"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="store_owner"/>
                                                 </div>
@@ -213,7 +218,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Store Phone</label>
+                                                <label class="col-sm-3 col-form-label">Store Phone <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="tel" name="contact_number"
                                                            pattern="[0-9]{10}" class="form-control"
@@ -225,10 +231,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address</label>
+                                                <label class="col-sm-3 col-form-label">Address <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="address"/>
                                                 </div>
@@ -236,12 +243,14 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Email</label>
+                                                <label class="col-sm-3 col-form-label">Email <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input required type="email" class="form-control" name="email"
-                                                           pattern="[^ ].*"
-                                                           title="This field can't be Empty"
-                                                           placeholder="example@gmail.com"/>
+                                                    <input required type="text" class="form-control" name="email"
+                                                           maxlength="64" id="emailInput"
+                                                           title="Please enter a valid email address (e.g., example@gmail.com)"
+                                                           placeholder="example@gmail.com">
+
                                                 </div>
                                             </div>
                                         </div>
@@ -250,10 +259,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label"> Store GST</label>
+                                                <label class="col-sm-3 col-form-label"> Store GST <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
                                                 </div>
@@ -261,11 +271,12 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">User Name</label>
+                                                <label class="col-sm-3 col-form-label">User Name <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="email" class="form-control"
                                                            name="printer_user_name"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            placeholder="example@gmail.com"/>
                                                 </div>
@@ -275,16 +286,17 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Password</label>
+                                                <label class="col-sm-3 col-form-label">Password <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="password"
                                                            name="printer_password"
                                                            class="form-control form-control-lg"
                                                            pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,12}$"
-                                                    title="Password must contain at least one uppercase letter, one
+                                                           title="Password must contain at least one uppercase letter, one
                                                     lowercase letter, one number, one special character, and be 8-12
                                                     characters long"
-                                                    placeholder="Password" oninput="validatePasswords()">
+                                                           placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
 
                                                 </div>
@@ -292,7 +304,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Confirm Password</label>
+                                                <label class="col-sm-3 col-form-label">Confirm Password <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
@@ -370,6 +383,8 @@
         }
     });
 
+
+
 </script>
 
 
@@ -406,11 +421,20 @@
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
 
 
-
-
-
 </script>
 
+<script>
+    var emailInput = document.getElementById("emailInput");
+    emailInput.addEventListener("input", function () {
+        var email = emailInput.value;
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (emailPattern.test(email)) {
+            emailInput.setCustomValidity(""); // Input is valid
+        } else {
+            emailInput.setCustomValidity("Please enter a valid email address");
+        }
+    });
+</script>
 
 <script>
         document.getElementById("myForm").addEventListener("submit", function (e) {
@@ -421,6 +445,8 @@
                 e.preventDefault();
             }
         });
+
+
 </script>
 
 <!-- container-scroller -->

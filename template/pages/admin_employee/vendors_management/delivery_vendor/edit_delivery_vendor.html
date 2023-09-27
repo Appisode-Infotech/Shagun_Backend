@@ -8,7 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -132,7 +132,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City </label>
+                                                <label class="col-sm-3 col-form-label">City <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="name" readonly
                                                            class="form-control" value="{{response.city_name}}">
@@ -144,11 +145,12 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Vendor Name</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Name <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="delivery_vendor_name"
-                                                           pattern="[A-Za-z -]+"
+                                                           pattern="[^ ].*"
                                                            title="This field doesn't contain special characters or numbers"
                                                            value="{{response.delivery_vendor_name}}"/>
                                                 </div>
@@ -158,11 +160,12 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Vendor Owner</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Owner <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            name="delivery_vendor_owner"
-                                                           pattern="[A-Za-z -]+"
+                                                           pattern="[^ ].*"
                                                            title="This field doesn't contain special characters or numbers"
                                                            value="{{response.delivery_vendor_owner}}"/>
                                                 </div>
@@ -170,7 +173,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Vendor Phone</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Phone <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="tel" name="contact_number" pattern="[0-9]{10}"
                                                            class="form-control" value="{{response.contact_number}}"
@@ -182,7 +186,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address</label>
+                                                <label class="col-sm-3 col-form-label">Address <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="address"
                                                            pattern="[^ ].*"
@@ -193,7 +198,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label"> Vendor GST</label>
+                                                <label class="col-sm-3 col-form-label"> Vendor GST <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="gst_no"
                                                            pattern="^(?!\s)[\s\S]{15}$"

@@ -165,7 +165,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City</label>
+                                                <label class="col-sm-3 col-form-label">City <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
@@ -193,10 +194,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Vendor Name</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Name <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_name"/>
                                                 </div>
@@ -206,10 +208,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Vendor Owner</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Owner <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^[A-Za-z][A-Za-z ]*$"
+                                                           pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_owner"/>
                                                 </div>
@@ -217,7 +220,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Vendor Phone</label>
+                                                <label class="col-sm-3 col-form-label">Vendor Phone <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="tel" name="contact_number"
                                                            pattern="[0-9]{10}" class="form-control"
@@ -229,10 +233,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address</label>
+                                                <label class="col-sm-3 col-form-label">Address <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="address"/>
                                                 </div>
@@ -240,7 +245,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label"> Vendor GST</label>
+                                                <label class="col-sm-3 col-form-label"> Vendor GST <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            pattern="^(?!\s)[\s\S]{15}$"

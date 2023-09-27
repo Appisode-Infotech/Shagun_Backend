@@ -64,14 +64,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -119,250 +112,265 @@
         }
 
 
+
+
     </style>
 </head>
 
 <body>
 <div class="container-scroller">
-    <!-- partial:../../partials/_navbar.html -->
+    <!-- partial:partials/_navbar.html -->
     {% include 'app_bar.html' %}
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:../../partials/_settings-panel.html -->
+        <!-- partial:partials/_settings-panel.html -->
         {% include 'theme_setting.html' %}
         <!-- partial -->
-        <!-- partial:../../partials/_sidebar.html -->
+        <!-- partial:partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
-        <div id="customAlertOverlay3" class="custom-alert-overlay">
-            <div class="custom-alert">
-                <label class="form-group">
-                    <p>Please confirm if you want to make the employee <span id="event_status"></span></p>
-                </label>
-                <div class="center-button">
-                    <button type="button" onclick="hideActivationPopUpDiv()"
-                            class="btn btn-outline-danger btn-fw">
-                        Cancel
-                    </button>
-                    <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm</button>
-                </div>
-            </div>
-        </div>
-        <div id="customAlertOverlay4" class="custom-alert-overlay">
-            <div class="custom-alert">
-                <label class="form-group">
-                    <p>Please confirm if you want to reset password for <span id="emailSpan"></span></p>
-                </label>
-                <div class="center-button">
-                    <button type="button" onclick="hideReserPasswordPopUpDiv()"
-                            class="btn btn-outline-danger btn-fw">
-                        Cancel
-                    </button>
-                    <button type="submit" id="confirmResetPassword" class="btn btn-outline-success btn-fw">Confirm</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-10 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="header-container">
-                        <h4 class="card-title">Employee List</h4>
-                        <div class="form-group">
-                            <form action="{% url 'dashboard_search_employee' %}" method="POST">
-                                {% csrf_token %}
-                                <div class="input-group">
-                                    <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="Search" value="{{search}}"
-                                           aria-label="Recipient's username">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="form-group">
-                            <label class="mr-2 custom-label"> Employee Filter: </label>
-                            <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false" style="width: 110px; height: 40px;">
-                                {% if status is None %}
-                                All
-                                {% elif status == '0' %}
-                                Inactive
-                                {% elif status == '1' %}
-                                Active
-                                {% endif %}
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div id="customAlertOverlay3" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        <label class="form-group">
+                            <p>Please confirm if you want to make the employee <span id="event_status"></span></p>
+                        </label>
+                        <div class="center-button">
+                            <button type="button" onclick="hideActivationPopUpDiv()"
+                                    class="btn btn-outline-danger btn-fw">
+                                Cancel
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                <a class="dropdown-item"
-                                   href="{% url 'manage_employee'  %}">All</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_employee_status' 1 role %}">Active</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'dashboard_search_employee_status' 0 role %}">Inactive</a>
-                            </div>
-
-                        </div>
-                        {% if request.session.role == 1 %}
-                        <div class="form-group">
-                            <button type="button" class="btn btn-outline-info btn-icon-text"
-                                    onclick="window.location.href='{% url 'add_employee' %}'">
-                                Employee
-                                <i class="ti-plus btn-icon-append"></i>
+                            <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm
                             </button>
                         </div>
-                        {% endif%}
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>
-                                    User
-                                </th>
-                                <th>
-                                    Name
-                                </th>
-                                <th>
-                                    Email
-                                </th>
-                                <th>
-                                    Contact No
-                                </th>
-                                <th>
-                                    User Status
-                                </th>
-                                <th>Activate/Inactivate</th>
-                                {% if request.session.role == 1 %}
-                                <th>Edit</th>
-                                {% endif %}
-                                <th>Reset Password</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% if response|length == 0 %}
-                            <tr>
-                                <td colspan="7" style="text-align: center;">
-                                    <h4>No data found</h4>
-                                </td>
-                            </tr>
-                            {% else %}
-
-                            {% for user in response %}
-                            <tr>
-                                <td class="py-1">
-                                    <a href="{{MEDIA_URL}}{{ user.profile_pic }}" target="_blank">
-                                        <img src="{{MEDIA_URL}}{{ user.profile_pic }}" alt="image"/>
-                                    </a>
-                                </td>
-                                <td>
-                                    {{user.name}}
-                                </td>
-                                <td>
-                                    {{user.email}}
-                                </td>
-                                <td>
-                                    {{user.phone}}
-                                </td>
-                                <td>
-                                    {% if user.status == 1 %}
-                                    <label class="badge badge-success">Active</label>
-                                    {% elif user.status == 0 %}
-                                    <label class="badge badge-danger">Inactive</label>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="dropdown">
+                </div>
+                <div id="customAlertOverlay4" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        <label class="form-group">
+                            <p>Please confirm if you want to reset password for <span id="emailSpan"></span></p>
+                        </label>
+                        <div class="center-button">
+                            <button type="button" onclick="hideReserPasswordPopUpDiv()"
+                                    class="btn btn-outline-danger btn-fw">
+                                Cancel
+                            </button>
+                            <button type="submit" id="confirmResetPassword" class="btn btn-outline-success btn-fw">
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="header-container">
+                                    <h4 class="card-title">Employee List</h4>
+                                    <div class="form-group">
+                                        <form action="{% url 'dashboard_search_employee' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="input-group">
+                                                <input name="search" id="search" type="text" class="form-control"
+                                                       placeholder="Search" value="{{search}}"
+                                                       aria-label="Recipient's username">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-sm btn-primary" type="submit" value="Submit">
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="mr-2 custom-label"> Employee Filter: </label>
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            {% if user.status == 0 %}
+                                                id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" style="width: 110px; height: 40px;">
+                                            {% if status is None %}
+                                            All
+                                            {% elif status == '0' %}
                                             Inactive
-                                            {% elif user.status == 1 %}
+                                            {% elif status == '1' %}
                                             Active
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-employee-id="{{ user.id }}" data-action="1"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-employee-id'), this.getAttribute('data-action'))">Active</a>
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-employee-id="{{ user.id }}" data-action="0"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-employee-id'), this.getAttribute('data-action'))">Inactive</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'manage_employee'  %}">All</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'dashboard_search_employee_status' 1 role %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'dashboard_search_employee_status' 0 role %}">Inactive</a>
                                         </div>
+
                                     </div>
-                                </td>
-                                {% if request.session.role == 1 %}
-                                <td>
-                                    <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="window.location.href='{% url 'edit_employee' user.id %}'">
-                                        Edit
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                                {% endif %}
-                                <td>
-                                    <button class="btn btn-outline-info btn-fw"
-                                            data-emp-email="{{ user.email }}"
-                                            data-action_page="manage_employee"
-                                            onclick="showCustomAlertForResetPassword(this.getAttribute('data-emp-email'), this.getAttribute('data-action_page'))">
-                                        Reset Password
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
-                            </tbody>
-                        </table>
+                                    {% if request.session.role == 1 %}
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-outline-info btn-icon-text"
+                                                onclick="window.location.href='{% url 'add_employee' %}'">
+                                            Employee
+                                            <i class="ti-plus btn-icon-append"></i>
+                                        </button>
+                                    </div>
+                                    {% endif%}
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                SL No
+                                            </th>
+                                            <th>
+                                                User
+                                            </th>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Email
+                                            </th>
+                                            <th>
+                                                Contact No
+                                            </th>
+                                            <th>
+                                                User Status
+                                            </th>
+                                            <th>Activate/Inactivate</th>
+                                            {% if request.session.role == 1 %}
+                                            <th>Edit</th>
+                                            {% endif %}
+                                            <th>Reset Password</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if response|length == 0 %}
+                                        <tr>
+                                            <td colspan="7" style="text-align: center;">
+                                                <h4>No data found</h4>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+
+                                        {% for user in response %}
+                                        <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
+                                            <td class="py-1">
+                                                <a href="{{MEDIA_URL}}{{ user.profile_pic }}" target="_blank">
+                                                    <img src="{{MEDIA_URL}}{{ user.profile_pic }}" alt="image"/>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{user.name}}
+                                            </td>
+                                            <td>
+                                                {{user.email}}
+                                            </td>
+                                            <td>
+                                                {{user.phone}}
+                                            </td>
+                                            <td>
+                                                {% if user.status == 1 %}
+                                                <label class="badge badge-success">Active</label>
+                                                {% elif user.status == 0 %}
+                                                <label class="badge badge-danger">Inactive</label>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                            id="dropdownMenuIconButton2" data-toggle="dropdown"
+                                                            aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        {% if user.status == 0 %}
+                                                        Inactive
+                                                        {% elif user.status == 1 %}
+                                                        Active
+                                                        {% endif %}
+                                                    </button>
+                                                    <div class="dropdown-menu"
+                                                         aria-labelledby="dropdownMenuIconButton3">
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                           data-employee-id="{{ user.id }}" data-action="1"
+                                                           onclick="showCustomAlertForActivateInactive(this.getAttribute('data-employee-id'), this.getAttribute('data-action'))">Active</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                           data-employee-id="{{ user.id }}" data-action="0"
+                                                           onclick="showCustomAlertForActivateInactive(this.getAttribute('data-employee-id'), this.getAttribute('data-action'))">Inactive</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            {% if request.session.role == 1 %}
+                                            <td>
+                                                <button type="button" class="btn btn-outline-info btn-fw"
+                                                        onclick="window.location.href='{% url 'edit_employee' user.id %}'">
+                                                    Edit
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                            {% endif %}
+                                            <td>
+                                                <button class="btn btn-outline-info btn-fw"
+                                                        data-emp-email="{{ user.email }}"
+                                                        data-action_page="manage_employee"
+                                                        onclick="showCustomAlertForResetPassword(this.getAttribute('data-emp-email'), this.getAttribute('data-action_page'))">
+                                                    Reset Password
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
+            <div class="pagination justify-content-center">
+                <ul class="pagination">
+                    {% if response.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; first</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in response.paginator.page_range %}
+                    {% if num == response.number %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if response.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
         </div>
-
+        <!-- main-panel ends -->
     </div>
-</div>
-<div class="pagination justify-content-center">
-    <ul class="pagination">
-        {% if response.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1">&laquo; first</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-        </li>
-        {% endif %}
-
-        {% for num in response.paginator.page_range %}
-        {% if num == response.number %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if response.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-        </li>
-        {% endif %}
-    </ul>
-</div>
-<!-- content-wrapper ends -->
-<!-- partial:../../partials/_footer.html -->
-{% include 'footer.html' %}
-<!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
+    <!-- page-body-wrapper ends -->
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
@@ -424,6 +432,8 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay4");
         customAlertOverlay.style.display = "none";
     }
+
+
 </script>
 <!-- endinject -->
 <!-- Plugin js for this page -->

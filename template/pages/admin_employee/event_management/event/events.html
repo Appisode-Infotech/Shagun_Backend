@@ -48,18 +48,8 @@
             align-items: center;
         }
 
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
-        header {
-        aspect-ratio:3/2;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -110,307 +100,332 @@
 
 
 
+
     </style>
 </head>
 
 <body>
+
 <div class="container-scroller">
-    <!-- partial:../../partials/_navbar.html -->
+    <!-- partial:partials/_navbar.html -->
     {% include 'app_bar.html' %}
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:../../partials/_settings-panel.html -->
+        <!-- partial:partials/_settings-panel.html -->
         {% include 'theme_setting.html' %}
         <!-- partial -->
-        <!-- partial:../../partials/_sidebar.html -->
+        <!-- partial:partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
-        <div id="customAlertOverlay" class="custom-alert-overlay">
-            <div class="custom-alert">
-                You can only Invite to Approved Events
-            </div>
-        </div>
-        <div id="customAlertOverlay1" class="custom-alert-overlay">
-            <div class="custom-alert">
-                You cannot Edit Rejected Events
-            </div>
-        </div>
-        <div id="customAlertOverlay3" class="custom-alert-overlay">
-            <div class="custom-alert">
-                <label class="form-group">
-                    <p>Please confirm if you want to make the event <span id="event_status"></span></p>
-                </label>
-                <div class="center-button">
-                    <button type="button" onclick="hidePopUpDiv()"
-                            class="btn btn-outline-danger btn-fw">
-                        Cancel
-                    </button>
-                    <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm</button>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div id="customAlertOverlay" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        You can only Invite to Approved Events
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div id="customAlertOverlay4" class="custom-alert-overlay">
-            <div class="custom-alert">
-                <label class="form-group">
-                    <p>Please confirm if you want to set event status to <span id="approval_status"></span></p>
-                </label>
-                <div class="center-button">
-                    <button type="button" onclick="hideApprovalPopUpDiv()"
-                            class="btn btn-outline-danger btn-fw">
-                        Cancel
-                    </button>
-                    <button type="submit" id="confirmButton1" class="btn btn-outline-success btn-fw">Confirm</button>
+                <div id="customAlertOverlay1" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        You cannot Edit Rejected Events
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div id="customAlertOverlay2" class="custom-alert-overlay">
-            <div class="custom-alert">
-                You cannot Activate/Inactivate Rejected Events
-            </div>
-        </div>
-        <div class="col-lg-10 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="header-container">
-                        <h4 class="card-title">Events List</h4>
-                        <div class="form-group">
-                            <form action="{% url 'dashboard_search_event' %}" method="POST">
-                                {% csrf_token %}
-                                <div class="input-group">
-                                    <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="Search" value="{{search}}"
-                                           aria-label="Recipient's username">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="form-group">
-                            <label class="mr-2 custom-label"> Event Filter: </label>
-                            <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                    id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false" style="width: 110px; height: 40px;">
-                                {% if status == '%' or status is None %}
-                                All
-                                {% elif status == '0' %}
-                                Pending
-                                {% elif status == '1' %}
-                                Approved
-                                {% elif status == '2' %}
-                                Rejected
-                                {% endif %}
+                <div id="customAlertOverlay3" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        <label class="form-group">
+                            <p>Please confirm if you want to make the event <span id="event_status"></span></p>
+                        </label>
+                        <div class="center-button">
+                            <button type="button" onclick="hidePopUpDiv()"
+                                    class="btn btn-outline-danger btn-fw">
+                                Cancel
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                <a class="dropdown-item"
-                                   href="{% url 'manage_event'  %}">All</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filtered_events_on_approval_status' 0 %}">Pending</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filtered_events_on_approval_status' 1 %}">Approved</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filtered_events_on_approval_status' 2 %}">Rejected</a>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-outline-info btn-icon-text"
-                                    onclick="window.location.href='{% url 'add_events' %}'">
-                                Add Event
-                                <i class="ti-plus btn-icon-append" ></i>
+                            <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm
                             </button>
                         </div>
                     </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Event Name</th>
-                                <th>Event Admins</th>
-                                <th>Status</th>
-                                <th>Set Status</th>
-                                <th>Active</th>
-                                <th>Edit</th>
-                                <th>Invite</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% if response|length == 0 %}
-                            <tr>
-                                <td colspan="7" style="text-align: center;">
-                                    <h4>No data found</h4>
-                                </td>
-                            </tr>
-                            {% else %}
-
-                            {% for event in response %}
-                            <tr>
-                                <td>{{ event.event_name }}</td>
-
-                                <td>
-                                    {% for admin in event.admins %}
-                                    <b>{{ admin.role }}</b> : {{ admin.name }} &nbsp;
-
-                                    <a href="{{ MEDIA_URL }}{{ admin.qr_code }}" target="_blank">
-                                        <i class="fas fa-qrcode" style="color: blue; cursor: pointer;"></i>
-                                    </a><br><br>
-                                    {% endfor %}
-                                    <br><b>Date : </b> {{ event.event_date }}
-                                </td>
-                                <td>
-                                    {% if event.is_approved == 0 %}
-                                    <label class="badge badge-info">Pending</label>
-                                    {% elif event.is_approved == 1 %}
-                                    <label class="badge badge-success">Approved</label>
-                                    {% elif event.is_approved == 2 %}
-                                    <label class="badge badge-danger">Rejected</label>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="dropdown">
+                </div>
+                <div id="customAlertOverlay4" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        <label class="form-group">
+                            <p>Please confirm if you want to set event status to <span id="approval_status"></span>
+                            </p>
+                        </label>
+                        <div class="center-button">
+                            <button type="button" onclick="hideApprovalPopUpDiv()"
+                                    class="btn btn-outline-danger btn-fw">
+                                Cancel
+                            </button>
+                            <button type="submit" id="confirmButton1" class="btn btn-outline-success btn-fw">Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="customAlertOverlay2" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        You cannot Activate/Inactivate Rejected Events
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="header-container">
+                                    <h4 class="card-title">Events List</h4>
+                                    <div class="form-group">
+                                        <form action="{% url 'dashboard_search_event' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="input-group">
+                                                <input name="search" id="search" type="text" class="form-control"
+                                                       placeholder="Search" value="{{search}}"
+                                                       aria-label="Recipient's username">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-sm btn-primary" type="submit" value="Submit">
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="mr-2 custom-label"> Event Filter: </label>
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            {% if event.is_approved == 0 %}
+                                                id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" style="width: 110px; height: 40px;">
+                                            {% if status == '%' or status is None %}
+                                            All
+                                            {% elif status == '0' %}
                                             Pending
-                                            {% elif event.is_approved == 1 %}
+                                            {% elif status == '1' %}
                                             Approved
-                                            {% elif event.is_approved == 2 %}
+                                            {% elif status == '2' %}
                                             Rejected
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-event-id="{{ event.event_id }}" data-action="0"
-                                               onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Pending</a>
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-event-id="{{ event.event_id }}" data-action="1"
-                                               onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Approved</a>
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-event-id="{{ event.event_id }}" data-action="2"
-                                               onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Rejected</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'manage_event'  %}">All</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filtered_events_on_approval_status' 0 %}">Pending</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filtered_events_on_approval_status' 1 %}">Approved</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filtered_events_on_approval_status' 2 %}">Rejected</a>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-outline-info btn-icon-text"
+                                                onclick="window.location.href='{% url 'add_events' %}'">
+                                            Add Event
+                                            <i class="ti-plus btn-icon-append"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>SL No</th>
+                                                    <th>Event Name</th>
+                                                    <th>Event Admins</th>
+                                                    <th>Status</th>
+                                                    <th>Set Status</th>
+                                                    <th>Active</th>
+                                                    <th>Edit</th>
+                                                    <th>Invite</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if response|length == 0 %}
+                                                <tr>
+                                                    <td colspan="7" style="text-align: center;">
+                                                        <h4>No data found</h4>
+                                                    </td>
+                                                </tr>
+                                                {% else %}
+
+                                                {% for event in response %}
+
+                                                <tr>
+                                                    <td>{{ start_sl|add:forloop.counter0 }}</td>
+                                                    <td>{{ event.event_name }}</td>
+
+                                                    <td>
+                                                        {% for admin in event.admins %}
+                                                        <b>{{ admin.role }}</b> : {{ admin.name }} &nbsp;
+
+                                                        <a href="{{ MEDIA_URL }}{{ admin.qr_code }}" target="_blank">
+                                                            <i class="fas fa-qrcode"
+                                                               style="color: blue; cursor: pointer;"></i>
+                                                        </a><br><br>
+                                                        {% endfor %}
+                                                        <br><b>Date : </b> {{ event.event_date }}
+                                                    </td>
+                                                    <td>
+                                                        {% if event.is_approved == 0 %}
+                                                        <label class="badge badge-info">Pending</label>
+                                                        {% elif event.is_approved == 1 %}
+                                                        <label class="badge badge-success">Approved</label>
+                                                        {% elif event.is_approved == 2 %}
+                                                        <label class="badge badge-danger">Rejected</label>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button type="button"
+                                                                    class="btn btn-outline-info dropdown-toggle"
+                                                                    id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                                                    aria-haspopup="true"
+                                                                    aria-expanded="false">
+                                                                {% if event.is_approved == 0 %}
+                                                                Pending
+                                                                {% elif event.is_approved == 1 %}
+                                                                Approved
+                                                                {% elif event.is_approved == 2 %}
+                                                                Rejected
+                                                                {% endif %}
+                                                            </button>
+                                                            <div class="dropdown-menu"
+                                                                 aria-labelledby="dropdownMenuIconButton3">
+                                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                                   data-event-id="{{ event.event_id }}" data-action="0"
+                                                                   onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Pending</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                                   data-event-id="{{ event.event_id }}" data-action="1"
+                                                                   onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Approved</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                                   data-event-id="{{ event.event_id }}" data-action="2"
+                                                                   onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Rejected</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            {% if event.is_approved == 2 %}
+                                                            <button type="button"
+                                                                    class="btn btn-outline-info dropdown-toggle"
+                                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                                    aria-expanded="false"
+                                                                    onclick="showCustomAlertForActivate()">
+                                                                {% if event.status == 0 %}
+                                                                Inactive
+                                                                {% elif event.status == 1 %}
+                                                                Active
+                                                                {% endif %}
+                                                            </button>
+                                                            {% else %}
+                                                            <button type="button"
+                                                                    class="btn btn-outline-info dropdown-toggle"
+                                                                    id="dropdownMenuIconButton2" data-toggle="dropdown"
+                                                                    aria-haspopup="true"
+                                                                    aria-expanded="false">
+                                                                {% if event.status == 0 %}
+                                                                Inactive
+                                                                {% elif event.status == 1 %}
+                                                                Active
+                                                                {% endif %}
+                                                            </button>
+                                                            <div class="dropdown-menu"
+                                                                 aria-labelledby="dropdownMenuIconButton3">
+                                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                                   data-event-id="{{ event.event_id }}" data-action="1"
+                                                                   onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Active</a>
+                                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                                   data-event-id="{{ event.event_id }}" data-action="0"
+                                                                   onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Inactive</a>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+
+                                                    </td>
+                                                    <td>
+                                                        {% if event.is_approved == 2 %}
+                                                        <button type="button" class="btn btn-outline-info btn-fw"
+                                                                onclick="showCustomAlertForEdit()">
+                                                            Edit
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        {% else %}
+                                                        <button type="button" class="btn btn-outline-info btn-fw"
+                                                                onclick="window.location.href='{% url 'edit_event' event.event_id %}'">
+                                                            Edit
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        {% endif%}
+                                                    </td>
+                                                    <td>
+                                                        {% if event.is_approved == 1 %}
+                                                        <button type="button"
+                                                                class="btn btn-social-icon btn-outline-facebook"
+                                                                onclick="window.location.href='{% url 'whatsapp_invite' event.event_id %}'">
+                                                            <i class="fab fa-whatsapp"></i></button>
+                                                        {% else %}
+                                                        <button type="button"
+                                                                class="btn btn-social-icon btn-outline-facebook"
+                                                                onclick="showCustomAlertForInvite()">
+                                                            <i class="fab fa-whatsapp"></i></button>
+                                                        {% endif %}
+
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="dropdown">
-                                        {% if event.is_approved == 2 %}
-                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" onclick="showCustomAlertForActivate()">
-                                            {% if event.status == 0 %}
-                                            Inactive
-                                            {% elif event.status == 1 %}
-                                            Active
-                                            {% endif %}
-                                        </button>
-                                        {% else %}
-                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            {% if event.status == 0 %}
-                                            Inactive
-                                            {% elif event.status == 1 %}
-                                            Active
-                                            {% endif %}
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-event-id="{{ event.event_id }}" data-action="1"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Active</a>
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-event-id="{{ event.event_id }}" data-action="0"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Inactive</a>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-
-                                </td>
-                                <td>
-                                    {% if event.is_approved == 2 %}
-                                    <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="showCustomAlertForEdit()">
-                                        Edit
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    {% else %}
-                                    <button type="button" class="btn btn-outline-info btn-fw"
-                                            onclick="window.location.href='{% url 'edit_event' event.event_id %}'">
-                                        Edit
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    {% endif%}
-                                </td>
-                                <td>
-                                    {% if event.is_approved == 1 %}
-                                    <button type="button" class="btn btn-social-icon btn-outline-facebook"
-                                            onclick="window.location.href='{% url 'whatsapp_invite' event.event_id %}'">
-                                        <i class="fab fa-whatsapp"></i></button>
-                                    {% else %}
-                                    <button type="button" class="btn btn-social-icon btn-outline-facebook"
-                                            onclick="showCustomAlertForInvite()">
-                                        <i class="fab fa-whatsapp"></i></button>
-                                    {% endif %}
-
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
-                            </tbody>
-                        </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="pagination justify-content-center">
+                    <ul class="pagination">
+                        {% if response.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo; first</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in response.paginator.page_range %}
+                        {% if num == response.number %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if response.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:partials/_footer.html -->
+            {% include 'footer.html' %}
+
+            <!-- partial -->
         </div>
-
+        <!-- main-panel ends -->
     </div>
+    <!-- page-body-wrapper ends -->
 </div>
-<div class="pagination justify-content-center">
-    <ul class="pagination">
-        {% if response.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1">&laquo; first</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-        </li>
-        {% endif %}
 
-        {% for num in response.paginator.page_range %}
-        {% if num == response.number %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if response.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-        </li>
-        {% endif %}
-    </ul>
-</div>
-<!-- content-wrapper ends -->
-<!-- partial:../../partials/_footer.html -->
-{% include 'footer.html' %}
-<!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
-</div>
-<!-- container-scroller -->
-<!-- plugins:js -->
 
 <script>
     function showCustomAlertForApproval(eventId, action) {
@@ -447,6 +462,9 @@
         customAlertOverlay.style.display = "none";
     }
 
+
+
+
 </script>
 
 <script>
@@ -482,7 +500,10 @@
         customAlertOverlay.style.display = "none";
     }
 
+
+
 </script>
+
 
 <script>
     document.getElementById("approval-status-dropdown").addEventListener("change", function() {
@@ -490,6 +511,22 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 <script> showCustomAlertForEdit
@@ -520,6 +557,22 @@ function showCustomAlertForActivate() {
     customAlertOverlay.style.display = "none";
   }, 1000);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>

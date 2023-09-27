@@ -128,7 +128,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City</label>
+                                                <label class="col-sm-3 col-form-label">City <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
 
                                                     <input type="text" id="name" readonly onclick="myFunction()"
@@ -143,10 +144,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Store Name</label>
+                                                <label class="col-sm-3 col-form-label">Store Name <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="store_name"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.store_name}}"/>
                                                 </div>
@@ -156,10 +158,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Store Owner</label>
+                                                <label class="col-sm-3 col-form-label">Store Owner <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" name="store_owner"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.store_owner}}" required/>
                                                 </div>
@@ -167,7 +170,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Store Phone</label>
+                                                <label class="col-sm-3 col-form-label">Store Phone <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="tel" name="contact_number" pattern="[0-9]{10}"
                                                            class="form-control"
@@ -180,10 +184,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Address</label>
+                                                <label class="col-sm-3 col-form-label">Address <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="address"
-                                                           pattern="[^ ].*"
+                                                           pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.address}}"/>
                                                 </div>
@@ -191,10 +196,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Email</label>
+                                                <label class="col-sm-3 col-form-label">Email <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input disabled type="text" class="form-control" name="email"
-                                                           pattern="[^ ].*"
+                                                    <input readonly type="text" class="form-control" name="email"
+                                                           pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            value="{{printer_data.store.email}}"
                                                            placeholder="example@gmail.com"/>
@@ -206,10 +212,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label"> Store GST</label>
+                                                <label class="col-sm-3 col-form-label"> Store GST <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="gst_no"
-                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            value="{{printer_data.store.gst_no}}"/>
                                                 </div>
@@ -217,7 +224,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">User Name</label>
+                                                <label class="col-sm-3 col-form-label">User Name <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="email" class="form-control"
                                                            name="printer_user_name"

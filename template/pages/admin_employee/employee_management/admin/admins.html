@@ -64,14 +64,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -124,16 +117,18 @@
 
 <body>
 <div class="container-scroller">
-    <!-- partial:../../partials/_navbar.html -->
+    <!-- partial:partials/_navbar.html -->
     {% include 'app_bar.html' %}
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:../../partials/_settings-panel.html -->
+        <!-- partial:partials/_settings-panel.html -->
         {% include 'theme_setting.html' %}
         <!-- partial -->
-        <!-- partial:../../partials/_sidebar.html -->
+        <!-- partial:partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
         <div id="customAlertOverlay3" class="custom-alert-overlay">
             <div class="custom-alert">
                 <label class="form-group">
@@ -162,7 +157,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-10 grid-margin stretch-card">
+        <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
@@ -171,7 +167,7 @@
                         <div class="form-group">
                             <button type="button" class="btn btn-outline-info btn-icon-text"
                                     onclick="window.location.href='{% url 'add_admin' %}'">
-                                Admin
+                                Add Admin
                                 <i class="ti-plus btn-icon-append"></i>
                             </button>
                         </div>
@@ -181,6 +177,9 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
+                                <th>
+                                    SL No
+                                </th>
                                 <th>
                                     User
                                 </th>
@@ -206,6 +205,7 @@
                             <tbody>
                             {% for user in response %}
                             <tr>
+                                <td>{{ start_sl|add:forloop.counter0 }}</td>
                                 <td class="py-1">
                                     <a href="{{MEDIA_URL}}{{ greetings.card_image_url }}" target="_blank">
                                         <img src="{{MEDIA_URL}}{{ user.profile_pic }}" alt="image"/>

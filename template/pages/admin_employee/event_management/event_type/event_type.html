@@ -86,14 +86,7 @@
           justify-content: center;
 
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -146,174 +139,91 @@
 
 
 
+
+
+
+
     </style>
 </head>
 
 <body>
 <div class="container-scroller">
-    <!-- partial:../../partials/_navbar.html -->
+    <!-- partial:partials/_navbar.html -->
     {% include 'app_bar.html' %}
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:../../partials/_settings-panel.html -->
+        <!-- partial:partials/_settings-panel.html -->
         {% include 'theme_setting.html' %}
         <!-- partial -->
-        <!-- partial:../../partials/_sidebar.html -->
+        <!-- partial:partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
-        <div id="customAlertOverlay3" class="custom-alert-overlay">
-            <div class="custom-alert">
-                <label class="form-group">
-                    <p>Please confirm if you want to make the event type as <span id="event_status"></span></p>
-                </label>
-                <div class="center-button">
-                    <button type="button" onclick="hideActivationPopUpDiv()"
-                            class="btn btn-outline-danger btn-fw">
-                        Cancel
-                    </button>
-                    <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-10 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="header-container">
-                        <h4 class="card-title">Events Type</h4>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-outline-info btn-icon-text"
-                                    onclick="showPopUpDiv1()">
-                                Add Event Type
-                                <i class="ti-plus btn-icon-append"></i>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div id="customAlertOverlay3" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        <label class="form-group">
+                            <p>Please confirm if you want to make the event type as <span id="event_status"></span></p>
+                        </label>
+                        <div class="center-button">
+                            <button type="button" onclick="hideActivationPopUpDiv()"
+                                    class="btn btn-outline-danger btn-fw">
+                                Cancel
+                            </button>
+                            <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm
                             </button>
                         </div>
-                        <div id="customAlertOverlay" class="custom-alert-overlay">
-                            <div class="custom-alert">
-                                <form class="form-sample" action="/add_events_type" method="post">
-                                    {% csrf_token %}
-                                    <div class="text-center">
-                                        <h4 class="card-title">Add Event Type</h4>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Name </label>
-                                                <div class="col-sm-9">
-                                                    <input required id="event_type_name" name="event_type_name"
-                                                           pattern="^[A-Za-z][A-Za-z ]*$"
-                                                           title="Enter Event Type Name" maxlength="256"
-                                                           type="text"
-                                                           class="form-control"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Creator</label>
-                                                <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
-                                                    <input type="hidden" id="created_by_uid" name="created_by_uid"
-                                                           value="{{ request.session.uid }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="center-button">
-                                        <button type="button" onclick="hidePopUpDiv1()"
-                                                class="btn btn-outline-danger btn-fw">Cancel
-                                        </button>
-                                        <input type="submit" value="Submit" class="btn btn-outline-info btn-icon-text">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Event Type Name</th>
-                                <th>Status</th>
-                                <th>Activate/Inactivate</th>
-                                <th>Edit</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% if response|length == 0 %}
-                            <tr>
-                                <td colspan="7" style="text-align: center;">
-                                    <h4>No data found</h4>
-                                </td>
-                            </tr>
-                            {% else %}
-                            {% for event in response %}
-
-                            <tr>
-                                <td>{{ event.event_type_name }}</td>
-                                <td>
-                                    {% if event.status == 1 %}
-                                    <label class="badge badge-success">Active</label>
-                                    {% elif event.status == 0 %}
-                                    <label class="badge badge-danger">Inactive</label>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton2" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            {% if event.status == 0 %}
-                                            Inactive
-                                            {% elif event.status == 1 %}
-                                            Active
-                                            {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="header-container">
+                                    <h4 class="card-title">Events Type</h4>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-outline-info btn-icon-text"
+                                                onclick="showPopUpDiv1()">
+                                            Add Event Type
+                                            <i class="ti-plus btn-icon-append"></i>
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-event-id="{{ event.event_type_id }}" data-action="1"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Active</a>
-                                            <a class="dropdown-item" href="javascript:void(0);"
-                                               data-event-id="{{ event.event_type_id }}" data-action="0"
-                                               onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Inactive</a>
-                                        </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <button onclick="showPopUpDiv('{{event.event_type_id}}', '{{event.event_type_name}}')"
-                                            class="btn btn-outline-info btn-fw">Edit
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <div id="customAlertOverlay1" class="custom-alert-overlay">
+                                    <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample" action="/edit_event_type" method="post">
+                                            <form class="form-sample" action="/add_events_type" method="post">
                                                 {% csrf_token %}
-                                                <h4 class="card-title">Edit Event Type</h4>
+                                                <div class="text-center">
+                                                    <h4 class="card-title">Add Event Type</h4>
+                                                </div>
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Event ID </label>
+                                                            <label class="col-sm-3 col-form-label">Name<span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                             <div class="col-sm-9">
-                                                                <input readonly id="event_type_id" name="id" type="text"
+                                                                <input required id="event_type_name"
+                                                                       name="event_type_name"
+                                                                       pattern="^[A-Za-z][A-Za-z ]*$"
+                                                                       title="Enter Event Type Name" maxlength="256"
+                                                                       type="text"
                                                                        class="form-control"/>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Name</label>
+                                                            <label class="col-sm-3 col-form-label">Creator</label>
                                                             <div class="col-sm-9">
-                                                                <input required id="name" type="text"
-                                                                       class="form-control"
-                                                                       pattern="^[A-Za-z][A-Za-z ]*$"
-                                                                       title="Enter Event Type Name" maxlength="256"
-                                                                       name="name"
-                                                                       value="{{ event.event_type_name }}"/>
+                                                                <label class="form-control">{{ request.session.name }}</label>
+                                                                <input type="hidden" id="created_by_uid"
+                                                                       name="created_by_uid"
+                                                                       value="{{ request.session.uid }}">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="center-button">
-                                                    <button type="button" onclick="hidePopUpDiv()"
+                                                    <button type="button" onclick="hidePopUpDiv1()"
                                                             class="btn btn-outline-danger btn-fw">Cancel
                                                     </button>
                                                     <input type="submit" value="Submit"
@@ -322,60 +232,164 @@
                                             </form>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
-                            </tbody>
-                        </table>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>SL No</th>
+                                            <th>Event Type Name</th>
+                                            <th>Status</th>
+                                            <th>Activate/Inactivate</th>
+                                            <th>Edit</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if response|length == 0 %}
+                                        <tr>
+                                            <td colspan="7" style="text-align: center;">
+                                                <h4>No data found</h4>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        {% for event in response %}
+                                        <tr>
+                                            {% with sl_no=forloop.counter %}
+                                                    <td>{{sl_no}}</td>
+                                                    {% endwith %}
+                                            <td>{{ event.event_type_name }}</td>
+                                            <td>
+                                                {% if event.status == 1 %}
+                                                <label class="badge badge-success">Active</label>
+                                                {% elif event.status == 0 %}
+                                                <label class="badge badge-danger">Inactive</label>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                            id="dropdownMenuIconButton2" data-toggle="dropdown"
+                                                            aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        {% if event.status == 0 %}
+                                                        Inactive
+                                                        {% elif event.status == 1 %}
+                                                        Active
+                                                        {% endif %}
+                                                    </button>
+                                                    <div class="dropdown-menu"
+                                                         aria-labelledby="dropdownMenuIconButton3">
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                           data-event-id="{{ event.event_type_id }}" data-action="1"
+                                                           onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Active</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                           data-event-id="{{ event.event_type_id }}" data-action="0"
+                                                           onclick="showCustomAlertForActivateInactive(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Inactive</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button onclick="showPopUpDiv('{{event.event_type_id}}', '{{event.event_type_name}}')"
+                                                        class="btn btn-outline-info btn-fw">Edit
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <div id="customAlertOverlay1" class="custom-alert-overlay">
+                                                    <div class="custom-alert">
+                                                        <form class="form-sample" action="/edit_event_type"
+                                                              method="post">
+                                                            {% csrf_token %}
+                                                            <h4 class="card-title">Edit Event Type</h4>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Event
+                                                                            ID </label>
+                                                                        <div class="col-sm-9">
+                                                                            <input readonly id="event_type_id" name="id"
+                                                                                   type="text"
+                                                                                   class="form-control"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Name <span
+                                                                            style="font-weight: bold; color: red;">*</span></label>
+                                                                        <div class="col-sm-9">
+                                                                            <input required id="name" type="text"
+                                                                                   class="form-control"
+                                                                                   pattern="^[A-Za-z][A-Za-z ]*$"
+                                                                                   title="Enter Event Type Name"
+                                                                                   maxlength="256"
+                                                                                   name="name"
+                                                                                   value="{{ event.event_type_name }}"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="center-button">
+                                                                <button type="button" onclick="hidePopUpDiv()"
+                                                                        class="btn btn-outline-danger btn-fw">Cancel
+                                                                </button>
+                                                                <input type="submit" value="Submit"
+                                                                       class="btn btn-outline-info btn-icon-text">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="pagination justify-content-center">
+                <ul class="pagination">
+                    {% if response.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; first</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in response.paginator.page_range %}
+                    {% if num == response.number %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if response.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
         </div>
-
+        <!-- main-panel ends -->
     </div>
-</div>
-<div class="pagination justify-content-center">
-    <ul class="pagination">
-        {% if response.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1">&laquo; first</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-        </li>
-        {% endif %}
-
-        {% for num in response.paginator.page_range %}
-        {% if num == response.number %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if response.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-        </li>
-        {% endif %}
-    </ul>
-</div>
-<!-- content-wrapper ends -->
-<!-- partial:../../partials/_footer.html -->
-{% include 'footer.html' %}
-<!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
+    <!-- page-body-wrapper ends -->
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
@@ -431,6 +445,10 @@
         customAlertOverlay.style.display = "none";
     }
 
+
+
+
+
 </script>
 
 
@@ -463,6 +481,10 @@
 
 
 
+
+
+
+
 </script>
 <script>
         function toggleForm() {
@@ -483,6 +505,10 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
+
+
+
 
 
 

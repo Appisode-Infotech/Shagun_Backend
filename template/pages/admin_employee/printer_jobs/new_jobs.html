@@ -64,14 +64,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .table td.wish {
             max-width: 200px;
@@ -81,147 +74,155 @@
         }
 
 
+
     </style>
 </head>
 
 <body>
 <div class="container-scroller">
-    <!-- partial:../../partials/_navbar.html -->
+    <!-- partial:partials/_navbar.html -->
     {% include 'app_bar.html' %}
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:../../partials/_settings-panel.html -->
+        <!-- partial:partials/_settings-panel.html -->
         {% include 'theme_setting.html' %}
         <!-- partial -->
-        <!-- partial:../../partials/_sidebar.html -->
+        <!-- partial:partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
-        <div class="col-lg-10 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="header-container">
-                        <h4 class="card-title">New Jobs List</h4>
-                        <div class="form-group">
-                            <form action="{% url 'search_new_printer_jobs' %}" method="POST">
-                                {% csrf_token %}
-                                <div class="input-group">
-                                    <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="Search" value="{{search}}"
-                                           aria-label="Recipient's username">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="submit" value="Submit">Search
-                                        </button>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="header-container">
+                                    <h4 class="card-title">New Jobs List</h4>
+                                    <div class="form-group">
+                                        <form action="{% url 'search_new_printer_jobs' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="input-group">
+                                                <input name="search" id="search" type="text" class="form-control"
+                                                       placeholder="Search" value="{{search}}"
+                                                       aria-label="Recipient's username">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-sm btn-primary" type="submit" value="Submit">
+                                                        Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                            </form>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>SL No</th>
+                                            <th>Printing Vendor</th>
+                                            <th class="wish">Event Name</th>
+                                            <th>Job Details</th>
+                                            <th>Billing Amount</th>
+                                            <th>Delivery Address</th>
+                                            <th>Job Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if response|length == 0 %}
+                                        <tr>
+                                            <td colspan="7" style="text-align: center;">
+                                                <h4>No data found</h4>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+
+                                        {% for job in response %}
+
+                                        <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
+                                            <td><b>ID: </b>{{ job.printer_id }}<br><br>
+                                                <b>Name: </b>{{job.store_name}}
+                                            </td>
+                                            <td class="wish" title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name
+                                                }}<br><br>
+                                                <b>Wish: </b>{{job.wish}}
+                                            </td>
+                                            <td>
+                                                <b>Card Name</b> : {{ job.card_name }}</br></br>
+                                                <b>Event Date : </b> {{ job.event_date }} </br></br>
+                                                <b>Event ID : </b> {{ job.event_id }}
+                                            </td>
+                                            <td>{{ job.billing_amount }}</td>
+                                            <td> {{ job.delivery_address }}</td>
+
+                                            <td>
+                                                {% if job.status == 1 %}
+                                                <label class="badge badge-warning ">New</label>
+                                                {% elif job.status == 2 %}
+                                                <label class="badge badge-light">Print Started</label>
+                                                {% elif job.status == 3 %}
+                                                <label class="badge badge-secondary">Print Completed</label>
+                                                {% elif job.status == 4 %}
+                                                <label class="badge badge-info">Ready For Dispatch</label>
+                                                {% elif job.status == 5 %}
+                                                <label class="badge badge-success">Dispatched</label>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Printing Vendor</th>
-                                <th class="wish">Event Name</th>
-                                <th>Job Details</th>
-                                <th>Billing Amount</th>
-                                <th>Delivery Address</th>
-                                <th>Job Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% if response|length == 0 %}
-                            <tr>
-                                <td colspan="7" style="text-align: center;">
-                                    <h4>No data found</h4>
-                                </td>
-                            </tr>
-                            {% else %}
-
-                            {% for job in response %}
-
-                            <tr>
-                                <td><b>ID: </b>{{ job.printer_id }}<br><br>
-                                    <b>Name: </b>{{job.store_name}}
-                                </td>
-                                <td class="wish" title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name }}<br><br>
-                                    <b>Wish: </b>{{job.wish}}
-                                </td>
-                                <td>
-                                    <b>Card Name</b> : {{ job.card_name }}</br></br>
-                                    <b>Event Date : </b> {{ job.event_date }} </br></br>
-                                    <b>Event ID : </b> {{ job.event_id }}
-                                </td>
-                                <td>{{ job.billing_amount }}</td>
-                                <td> {{ job.delivery_address }}</td>
-
-                                <td>
-                                    {% if job.status == 1 %}
-                                    <label class="badge badge-warning ">New</label>
-                                    {% elif job.status == 2 %}
-                                    <label class="badge badge-light">Print Started</label>
-                                    {% elif job.status == 3 %}
-                                    <label class="badge badge-secondary">Print Completed</label>
-                                    {% elif job.status == 4 %}
-                                    <label class="badge badge-info">Ready For Dispatch</label>
-                                    {% elif job.status == 5 %}
-                                    <label class="badge badge-success">Dispatched</label>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
-
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
+            <div class="pagination justify-content-center">
+                <ul class="pagination">
+                    {% if response.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; first</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in response.paginator.page_range %}
+                    {% if num == response.number %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if response.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
         </div>
-
+        <!-- main-panel ends -->
     </div>
-</div>
-<div class="pagination justify-content-center">
-    <ul class="pagination">
-        {% if response.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1">&laquo; first</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-        </li>
-        {% endif %}
-
-        {% for num in response.paginator.page_range %}
-        {% if num == response.number %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-
-        {% if response.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-        </li>
-        {% endif %}
-    </ul>
-</div>
-<!-- content-wrapper ends -->
-<!-- partial:../../partials/_footer.html -->
-{% include 'footer.html' %}
-<!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
+    <!-- page-body-wrapper ends -->
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
@@ -231,6 +232,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 

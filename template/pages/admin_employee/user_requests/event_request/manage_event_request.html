@@ -43,14 +43,7 @@
     <!--    &lt;!&ndash; endinject &ndash;&gt;-->
     <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
     <style>
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
 
     </style>
@@ -58,17 +51,20 @@
 
 <body>
 <div class="container-scroller">
-    <!-- partial:../../partials/_navbar.html -->
+    <!-- partial:partials/_navbar.html -->
     {% include 'app_bar.html' %}
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:../../partials/_settings-panel.html -->
+        <!-- partial:partials/_settings-panel.html -->
         {% include 'theme_setting.html' %}
         <!-- partial -->
-        <!-- partial:../../partials/_sidebar.html -->
+        <!-- partial:partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
-        <div class="col-lg-10 grid-margin stretch-card">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="header-container">
@@ -120,6 +116,9 @@
                             <thead>
                             <tr>
                                 <th>
+                                    SL No
+                                </th>
+                                <th>
                                     User
                                 </th>
                                 <th>
@@ -159,6 +158,7 @@
 
                             {% for req in response %}
                             <tr>
+                                <td>{{ start_sl|add:forloop.counter0 }}</td>
                                 <td class="py-1">
                                     <img src="{{MEDIA_URL}}{{ req.profile }}" alt="image"/>
                                 </td>

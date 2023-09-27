@@ -118,16 +118,34 @@
 
 
      document.addEventListener('DOMContentLoaded', function() {
-        var form = document.querySelector('.needs-validation');
+     const forms = document.querySelectorAll('.needs-validation, .needs-password-validation');
+    forms.forEach(form => {
+        form.addEventListener(
+            'submit',
+            event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();   // Prevent submission if the form is not valid.
+                    event.stopPropagation();  // Stop the event from propagating further.
+                }
 
-        form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+                // Password matching validation
+                if (form.classList.contains('needs-password-validation')) {
+                    const passwordField = form.querySelector('#password');
+                    const confirmPasswordField = form.querySelector('#confirmPassword');
+                    if (passwordField.value !== confirmPasswordField.value) {
+                        event.preventDefault(); // Prevent form submission
+                        event.stopPropagation(); // Stop the event from propagating further.
+                        confirmPasswordField.setCustomValidity("Passwords do not match.");
+                    } else {
+                        confirmPasswordField.setCustomValidity("");
+                    }
+                }
 
-            form.classList.add('was-validated');
-        });
+                form.classList.add('was-validated');
+            },
+            false
+        );
+    });
     });
 
   document.getElementById('backButton').addEventListener('click', function() {

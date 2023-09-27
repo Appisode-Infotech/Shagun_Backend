@@ -30621,4 +30621,13 @@ div.tagsinput span.tag a {
             margin-left: 5px;
         }
 
+        thead {
+            background-color: #671160;
+            color: white;
+        }
+
+        th,td {
+            text-align: center;
+        }
+
 /*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */

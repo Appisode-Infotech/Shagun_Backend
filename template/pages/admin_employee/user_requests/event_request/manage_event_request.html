@@ -43,14 +43,7 @@
     <!--    &lt;!&ndash; endinject &ndash;&gt;-->
     <!--    <link rel="stylesheet" href="{% static 'images/favicon.png' %}">-->
     <style>
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
 
     </style>
@@ -123,6 +116,9 @@
                             <thead>
                             <tr>
                                 <th>
+                                    SL No
+                                </th>
+                                <th>
                                     User
                                 </th>
                                 <th>
@@ -162,6 +158,7 @@
 
                             {% for req in response %}
                             <tr>
+                                <td>{{ start_sl|add:forloop.counter0 }}</td>
                                 <td class="py-1">
                                     <img src="{{MEDIA_URL}}{{ req.profile }}" alt="image"/>
                                 </td>

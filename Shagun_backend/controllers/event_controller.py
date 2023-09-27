@@ -83,7 +83,7 @@ def create_event(event_obj):
                 qr.make(fit=True)
 
                 # Create an image from the QR code instance with the desired fill color
-                fill_color = "#9925b9"
+                fill_color = "#671160"
                 img = qr.make_image(fill_color=fill_color, back_color="white")
 
                 # Construct the path to save the image in the media directory

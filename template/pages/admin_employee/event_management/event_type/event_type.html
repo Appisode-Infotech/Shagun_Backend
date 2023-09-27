@@ -86,14 +86,7 @@
           justify-content: center;
 
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -205,7 +198,8 @@
                                                 <div class="row">
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Name </label>
+                                                            <label class="col-sm-3 col-form-label">Name<span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                             <div class="col-sm-9">
                                                                 <input required id="event_type_name"
                                                                        name="event_type_name"
@@ -220,8 +214,7 @@
                                                         <div class="form-group row">
                                                             <label class="col-sm-3 col-form-label">Creator</label>
                                                             <div class="col-sm-9">
-                                                                <label class="form-control">{{ request.session.name
-                                                                    }}</label>
+                                                                <label class="form-control">{{ request.session.name }}</label>
                                                                 <input type="hidden" id="created_by_uid"
                                                                        name="created_by_uid"
                                                                        value="{{ request.session.uid }}">
@@ -244,6 +237,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
+                                            <th>SL No</th>
                                             <th>Event Type Name</th>
                                             <th>Status</th>
                                             <th>Activate/Inactivate</th>
@@ -259,8 +253,10 @@
                                         </tr>
                                         {% else %}
                                         {% for event in response %}
-
                                         <tr>
+                                            {% with sl_no=forloop.counter %}
+                                                    <td>{{sl_no}}</td>
+                                                    {% endwith %}
                                             <td>{{ event.event_type_name }}</td>
                                             <td>
                                                 {% if event.status == 1 %}
@@ -317,7 +313,8 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Name</label>
+                                                                        <label class="col-sm-3 col-form-label">Name <span
+                                                                            style="font-weight: bold; color: red;">*</span></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    class="form-control"

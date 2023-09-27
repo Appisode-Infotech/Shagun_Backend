@@ -48,18 +48,8 @@
             align-items: center;
         }
 
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
-        header {
-        aspect-ratio:3/2;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -105,6 +95,8 @@
         .center-button button {
             margin-right: 10px;
         }
+
+
 
 
 
@@ -235,6 +227,7 @@
                                             <table class="table table-hover">
                                                 <thead>
                                                 <tr>
+                                                    <th>SL No</th>
                                                     <th>Event Name</th>
                                                     <th>Event Admins</th>
                                                     <th>Status</th>
@@ -254,7 +247,9 @@
                                                 {% else %}
 
                                                 {% for event in response %}
+
                                                 <tr>
+                                                    <td>{{ start_sl|add:forloop.counter0 }}</td>
                                                     <td>{{ event.event_name }}</td>
 
                                                     <td>
@@ -470,17 +465,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
 <script>
@@ -518,19 +502,8 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
+
 
 <script>
     document.getElementById("approval-status-dropdown").addEventListener("change", function() {
@@ -538,6 +511,8 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
+
 
 
 
@@ -582,6 +557,8 @@ function showCustomAlertForActivate() {
     customAlertOverlay.style.display = "none";
   }, 1000);
 }
+
+
 
 
 

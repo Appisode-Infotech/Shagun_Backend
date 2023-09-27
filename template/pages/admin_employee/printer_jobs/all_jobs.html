@@ -64,14 +64,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .table td.wish {
             max-width: 200px;
@@ -162,6 +155,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
+                                            <th>SL No</th>
                                             <th>Printing Vendor</th>
                                             <th class="wish">Event Name</th>
                                             <th>Job Details</th>
@@ -182,11 +176,12 @@
                                         {% for job in response %}
 
                                         <tr>
+                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
                                             <td><b>ID: </b>{{ job.printer_id }}<br><br>
                                                 <b>Name: </b>{{job.store_name}}
                                             </td>
-                                            <td class="wish" title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name
-                                                }}<br><br>
+                                            <td class="wish" title="{{job.wish}}"><b>Event: </b>
+                                                {{ job.event_type_name}}<br><br>
                                                 <b>Wish: </b>{{job.wish}}
                                             </td>
                                             <td>

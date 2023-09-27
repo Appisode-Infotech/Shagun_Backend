@@ -64,14 +64,7 @@
         .btn-icon-text i {
             margin-left: 5px;
         }
-        thead {
-            background-color: #9925b9;
-            color: white;
-        }
 
-        th,td {
-            text-align: center;
-        }
 
         .custom-alert-overlay {
             position: fixed;
@@ -185,6 +178,9 @@
                             <thead>
                             <tr>
                                 <th>
+                                    SL No
+                                </th>
+                                <th>
                                     User
                                 </th>
                                 <th>
@@ -209,6 +205,7 @@
                             <tbody>
                             {% for user in response %}
                             <tr>
+                                <td>{{ start_sl|add:forloop.counter0 }}</td>
                                 <td class="py-1">
                                     <a href="{{MEDIA_URL}}{{ greetings.card_image_url }}" target="_blank">
                                         <img src="{{MEDIA_URL}}{{ user.profile_pic }}" alt="image"/>

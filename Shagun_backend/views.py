@@ -62,6 +62,7 @@ def admin_dashboard(request):
     else:
         return redirect('sign_up')
 
+
 def app_settings(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         return render(request, 'pages/admin_employee/app_settings/app_settings.html')
@@ -97,6 +98,7 @@ def update_password(request):
     else:
         return redirect('sign_up')
 
+
 def update_printer_password(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         if request.method == 'POST':
@@ -120,7 +122,12 @@ def manage_event(request):
         paginator = Paginator(response['event_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/event_management/event/events.html', {'response': response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/admin_employee/event_management/event/events.html',
+                      {'response': response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -137,8 +144,12 @@ def manage_event_types(request):
         paginator = Paginator(response['events_type'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/event_type/event_type.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -154,7 +165,6 @@ def manage_location(request):
 def manage_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = bank_controller.get_all_banks_list()
-        print(response)
         return render(request, 'pages/admin_employee/users_management/banks/bank_lists.html',
                       {"bank_list": response['bank_list']})
     else:
@@ -196,15 +206,23 @@ def manage_kyc(request):
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
             response = paginator.get_page(page)
+            if page is not None:
+                start_sl = (int(page) - 1) * 25 + 1
+            else:
+                start_sl = 1
             return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                          {"response": response})
+                          {"response": response, "start_sl": start_sl})
         else:
             response, status_code = user_controller.get_kyc_data('%')
             paginator = Paginator(response['kyc_data'], 25)
             page = request.GET.get('page')
             response = paginator.get_page(page)
+            if page is not None:
+                start_sl = (int(page) - 1) * 25 + 1
+            else:
+                start_sl = 1
             return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                          {"response": response})
+                          {"response": response, 'start_sl': start_sl})
 
     else:
         return redirect('sign_up')
@@ -216,8 +234,12 @@ def filter_kyc(request, status):
         paginator = Paginator(response['kyc_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
 
     else:
         return redirect('sign_up')
@@ -230,8 +252,12 @@ def filter_bank(request, status):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
 
     else:
         return redirect('sign_up')
@@ -244,8 +270,12 @@ def filter_user(request, status):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/users/users.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
 
     else:
         return redirect('sign_up')
@@ -257,8 +287,12 @@ def manage_bank_details(request):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -269,8 +303,12 @@ def manage_greeting_cards(request):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -281,8 +319,12 @@ def manage_users(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/users/users.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -293,8 +335,12 @@ def manage_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {"response": response, "role": 2})
+                      {"response": response, "role": 2, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -305,8 +351,12 @@ def manage_admin(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
-                      {"response": response, "role": 1})
+                      {"response": response, "role": 1, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -317,8 +367,12 @@ def manage_printers(request):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -330,8 +384,12 @@ def manage_delivery_vendors(request):
         paginator = Paginator(response['delivery_vendor_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -376,8 +434,12 @@ def kyc_request(request):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -388,8 +450,12 @@ def search_kyc_request(request):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -400,8 +466,12 @@ def filter_kyc_request(request, status):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -412,8 +482,12 @@ def event_request(request):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response})
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -424,8 +498,12 @@ def search_event_request(request):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -436,8 +514,12 @@ def filter_event_request(request, status):
         paginator = Paginator(response['req_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -448,8 +530,12 @@ def get_settlement_for_event(request, status):
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -460,8 +546,12 @@ def dashboard_search_event_settlement(request):
         paginator = Paginator(response['event_settlement'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -473,7 +563,12 @@ def all_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -485,7 +580,12 @@ def new_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -497,8 +597,12 @@ def search_all_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -510,8 +614,12 @@ def search_new_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -523,7 +631,12 @@ def Open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/open_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/admin_employee/printer_jobs/open_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -535,8 +648,12 @@ def search_open_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -547,8 +664,12 @@ def filter_all_printer_jobs(request, status):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -559,8 +680,12 @@ def filter_open_printer_jobs(request, status):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/printer_jobs/open_jobs.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -572,7 +697,12 @@ def closed_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -584,8 +714,12 @@ def search_closed_printer_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -618,8 +752,13 @@ def search_transactions_settlement(request, event_id):
         paginator = Paginator(response['transactions'], 250)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                      {"response": response, "event_id": event_id, "search": request.POST['search']})
+                      {"response": response, "event_id": event_id, "search": request.POST['search'],
+                       'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1091,8 +1230,12 @@ def dashboard_search_event(request):
         paginator = Paginator(response['event_list'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/event/events.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1103,8 +1246,12 @@ def dashboard_search_kyc(request):
         paginator = Paginator(response['kyc_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
 
     else:
         return redirect('sign_up')
@@ -1116,8 +1263,12 @@ def dashboard_search_bank(request):
         paginator = Paginator(response['bank_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1128,8 +1279,12 @@ def dashboard_search_user(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/users/users.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1140,8 +1295,12 @@ def dashboard_search_employee(request):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {"response": response, "search": request.POST['search'], "role": 2})
+                      {"response": response, "search": request.POST['search'], "role": 2, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1152,8 +1311,12 @@ def dashboard_search_employee_status(request, status, role):
         paginator = Paginator(response['user_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {'response': response, "status": status, "role": role})
+                      {'response': response, "status": status, "role": role, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1164,8 +1327,12 @@ def dashboard_search_printers(request):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1176,8 +1343,12 @@ def dashboard_search_delivery_vendors(request):
         paginator = Paginator(response['delivery_vendor_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1188,8 +1359,12 @@ def dashboard_search_printers_status(request, status):
         paginator = Paginator(response['printer_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
-                      {'response': response, "status": status})
+                      {'response': response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1200,8 +1375,12 @@ def dashboard_search_delivery_vendors_status(request, status):
         paginator = Paginator(response['delivery_vendor_data'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
-                      {'response': response, "status": status})
+                      {'response': response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1212,8 +1391,12 @@ def dashboard_search_greetings(request):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1224,8 +1407,12 @@ def dashboard_search_greetings_status(request, status):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
-                      {'response': response, "status": status})
+                      {'response': response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('sign_up')
 
@@ -1237,8 +1424,12 @@ def printer_search_greetings(request):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
-                      {"response": response, "search": request.POST['search']})
+                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1320,7 +1511,12 @@ def printer_manage_greeting_cards(request):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/greeting_card/greeting_cards.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/greeting_card/greeting_cards.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1333,7 +1529,12 @@ def printer_search_all_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_all_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/print_job/printer_all_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1346,7 +1547,12 @@ def printer_search_open_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_open_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/print_job/printer_open_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1359,7 +1565,11 @@ def printer_search_closed_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1372,7 +1582,12 @@ def printer_search_new_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_new_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/print_job/printer_new_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1383,8 +1598,12 @@ def printer_filter_all_jobs(request, status):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/printer/print_job/printer_all_jobs.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1395,8 +1614,12 @@ def printer_filter_open_jobs(request, status):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/printer/print_job/printer_open_jobs.html',
-                      {"response": response, "status": status})
+                      {"response": response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1438,8 +1661,12 @@ def printer_filter_greetings_cards(request, status):
         paginator = Paginator(response['all_greeting_cards'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
-                      {'response': response, "status": status})
+                      {'response': response, "status": status, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1451,7 +1678,12 @@ def printer_all_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_all_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/print_job/printer_all_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1463,7 +1695,12 @@ def printer_new_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_new_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/print_job/printer_new_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1475,7 +1712,12 @@ def printer_open_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_open_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/print_job/printer_open_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -1487,7 +1729,12 @@ def printer_closed_jobs(request):
         paginator = Paginator(response['jobs'], 25)
         page = request.GET.get('page')
         response = paginator.get_page(page)
-        return render(request, 'pages/printer/print_job/printer_closed_jobs.html', {"response": response})
+        if page is not None:
+            start_sl = (int(page) - 1) * 25 + 1
+        else:
+            start_sl = 1
+        return render(request, 'pages/printer/print_job/printer_closed_jobs.html',
+                      {"response": response, 'start_sl': start_sl})
     else:
         return redirect('printer_login')
 
@@ -2155,4 +2402,3 @@ def enable_disable_vendor(request):
 def event_admin(request):
     response, status_code = test_controller.event_admin(request.data['event_id'])
     return JsonResponse(response)
-

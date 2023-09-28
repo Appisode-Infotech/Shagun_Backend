@@ -158,8 +158,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add Greeting Card </label>
                                 </div>
-                                <form class="form-sample" action="/printer_add_greeting_cards" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/printer_add_greeting_cards" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -170,6 +170,7 @@
                                                     <input required type="text" class="form-control"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty" name="card_name"/>
+                                                    <div class="invalid-feedback">Card Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -181,6 +182,7 @@
                                                     <input required type="text" class="form-control"
                                                            placeholder="00.00" pattern="[1-9][0-9]{0,5}"
                                                             title="Please add the amount only" name="card_price"/>
+                                                    <div class="invalid-feedback">Price is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -194,6 +196,7 @@
                                                            onclick="toggleDropdown('myDropdown')"
                                                            placeholder="Search" class="form-control"
                                                            value="{{request.session.printer_user_name}}">
+                                                    <div class="invalid-feedback">Printing Vendor is mandatory</div>
 
                                                     <input required type="hidden" id="printer_id" name="printer_id"
                                                            value="{{request.session.id}}">

@@ -146,8 +146,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Bank Account</label>
                                 </div>
-                                <form class="form-sample" action="/add_bank" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/add_bank" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Bank info
@@ -194,6 +194,7 @@
                                                            pattern="^(?![\s])[A-Za-z ]+$" maxlength="256"
                                                            title="Enter Name"
                                                            placeholder="Enter Full Name">
+                                                    <div class="invalid-feedback">Full Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,6 +224,7 @@
                                                            pattern="\d{1,15}"
                                                            title="Enter valid Account No(max 15 digit)"
                                                            name="account_number"/>
+                                                    <div class="invalid-feedback">Account Number is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -238,6 +240,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            id="ifsc_code" name="ifsc_code"/>
+                                                    <div class="invalid-feedback">IFSC Code is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>

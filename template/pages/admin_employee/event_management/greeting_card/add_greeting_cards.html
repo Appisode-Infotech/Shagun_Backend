@@ -159,8 +159,8 @@
                                     <label class="ml-2 custom-label"> Add Greeting Card</label>
                                 </div>
 
-                                <form class="form-sample" action="/add_greeting_cards" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/add_greeting_cards" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -172,6 +172,8 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="card_name"/>
+                                                           <div class="invalid-feedback">Card Name is mandatory</div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -184,6 +186,8 @@
                                                            placeholder="00.00" pattern="[1-9][0-9]{0,5}"
                                                            title="Please add the amount only"
                                                            name="card_price"/>
+                                                <div class="invalid-feedback">Price is mandatory</div>
+
                                                 </div>
                                             </div>
                                         </div>

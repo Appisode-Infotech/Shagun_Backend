@@ -156,8 +156,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Delivery Vendor </label>
                                 </div>
-                                <form class="form-sample" action="/add_delivery_vendor" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/add_delivery_vendor" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Delivery Vendor info
@@ -189,6 +189,7 @@
                                                         </ul>
                                                     </div>
                                                     <input type="hidden" id="city" name="city">
+                                                    <div class="invalid-feedback">City is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -201,6 +202,7 @@
                                                            pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_name"/>
+                                                    <div class="invalid-feedback">Vendor Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -215,6 +217,7 @@
                                                            pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_owner"/>
+                                                    <div class="invalid-feedback">Vendor Owner is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -226,6 +229,7 @@
                                                     <input type="tel" name="contact_number"
                                                            pattern="[0-9]{10}" class="form-control"
                                                            title="Please enter a 10-digit phone number" required>
+                                                    <div class="invalid-feedback">Vendor Phone is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -240,6 +244,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="address"/>
+                                                    <div class="invalid-feedback">Address is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,6 +257,7 @@
                                                            pattern="^(?!\s)[\s\S]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
+                                                    <div class="invalid-feedback">Vendor GST is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>

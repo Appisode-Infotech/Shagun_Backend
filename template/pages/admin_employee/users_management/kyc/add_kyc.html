@@ -149,8 +149,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New KYC</label>
                                 </div>
-                                <form class="form-sample" action="/add_kyc" method="post" enctype="multipart/form-data"
-                                      id="myForm">
+                                <form class="form-sample needs-validation" action="/add_kyc" method="post" enctype="multipart/form-data"
+                                      id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -189,6 +189,7 @@
                                                            pattern="^(?![\s])[A-Za-z ]+$" maxlength="256"
                                                            title="Please add valid name"
                                                            placeholder="Full Name">
+                                                    <div class="invalid-feedback">Full Name is mandatory</div>
 
                                                 </div>
                                             </div>
@@ -216,6 +217,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="date" id="dob" name="dob" class="form-control"
                                                            onkeydown="return false">
+                                                    <div class="invalid-feedback">Date of Birth is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -250,6 +252,8 @@
                                                            maxlength="255"
                                                            title="Enter valid ID Proof"
                                                            placeholder="Enter Identification Number">
+                                                    <div class="invalid-feedback">Identification Number1 is mandatory</div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -280,6 +284,7 @@
                                                            maxlength="255"
                                                            title="Enter valid ID Proof"
                                                            placeholder="Enter Identification Number">
+                                                    <div class="invalid-feedback">Identification Number2 is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -335,6 +340,7 @@
                                                     <input required type="text" class="form-control"
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty" name="adress1"/>
+                                                    <div class="invalid-feedback">Address1 is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -347,6 +353,7 @@
                                                            pattern="^(?![\s])[A-Za-z ]+$" maxlength="256"
                                                            title="Enter State Name"
                                                            name="state"/>
+                                                    <div class="invalid-feedback">State is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -361,6 +368,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="adress2"/>
+                                                    <div class="invalid-feedback">Address2 is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -372,6 +380,7 @@
                                                     <input required type="text" class="form-control"
                                                            pattern="^[0-9]{6}$"
                                                            title="Postcode must be 6 digit number" name="postcode"/>
+                                                    <div class="invalid-feedback">Postcode is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -386,6 +395,7 @@
                                                            pattern="^(?![\s])[A-Za-z ]+$" maxlength="256"
                                                            title="Enter City name"
                                                            name="city"/>
+                                                    <div class="invalid-feedback">City is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>

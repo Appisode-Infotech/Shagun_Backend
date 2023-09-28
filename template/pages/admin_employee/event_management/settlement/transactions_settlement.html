@@ -299,7 +299,9 @@
                                             {% for data in response %}
 
                                             <tr>
-                                                <td>{{ start_sl|add:forloop.counter0 }}</td>
+                                                {% with sl_no=forloop.counter %}
+                                                    <td>{{sl_no}}</td>
+                                                    {% endwith %}
                                                 {% if request.session.role == 1 %}
                                                 <td>
                                                     {% if data.is_settled == 0 %}

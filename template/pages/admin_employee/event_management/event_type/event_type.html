@@ -143,6 +143,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -182,6 +183,13 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Events Type</h4>
                                     <div class="form-group">
+                                        <div class="input-group">
+                                            <input name="search" id="search" type="text" class="form-control"
+                                                   placeholder="Search" value="{{search}}"
+                                                   aria-label="Recipient's username">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                                 onclick="showPopUpDiv1()">
                                             Add Event Type
@@ -190,7 +198,7 @@
                                     </div>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample" action="/add_events_type" method="post">
+                                            <form class="form-sample needs-validation" action="/add_events_type" method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="text-center">
                                                     <h4 class="card-title">Add Event Type</h4>
@@ -198,8 +206,8 @@
                                                 <div class="row">
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Name<span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                            <label class="col-sm-3 col-form-label">Name <a
+                                                                                    style="font-weight: bold; color: red;">*</a></label>
                                                             <div class="col-sm-9">
                                                                 <input required id="event_type_name"
                                                                        name="event_type_name"
@@ -207,6 +215,8 @@
                                                                        title="Enter Event Type Name" maxlength="256"
                                                                        type="text"
                                                                        class="form-control"/>
+                                                                       <div class="invalid-feedback">Name is mandatory</div>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -214,7 +224,8 @@
                                                         <div class="form-group row">
                                                             <label class="col-sm-3 col-form-label">Creator</label>
                                                             <div class="col-sm-9">
-                                                                <label class="form-control">{{ request.session.name }}</label>
+                                                                <label class="form-control">{{ request.session.name}}
+                                                                </label>
                                                                 <input type="hidden" id="created_by_uid"
                                                                        name="created_by_uid"
                                                                        value="{{ request.session.uid }}">
@@ -234,7 +245,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="myTable"  class="table table-hover">
+                                    <table id="myTable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>SL No</th>
@@ -255,8 +266,8 @@
                                         {% for event in response %}
                                         <tr>
                                             {% with sl_no=forloop.counter %}
-                                                    <td>{{sl_no}}</td>
-                                                    {% endwith %}
+                                            <td>{{sl_no}}</td>
+                                            {% endwith %}
                                             <td>{{ event.event_type_name }}</td>
                                             <td>
                                                 {% if event.status == 1 %}
@@ -313,8 +324,9 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Name <span
-                                                                            style="font-weight: bold; color: red;">*</span></label>
+                                                                        <label class="col-sm-3 col-form-label">Name
+                                                                            <a
+                                                                                    style="font-weight: bold; color: red;">*</a></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    class="form-control"
@@ -418,6 +430,7 @@
 
 
 
+
 </script>
 
 
@@ -454,6 +467,7 @@
 
 
 
+
 </script>
 <script>
         function toggleForm() {
@@ -474,6 +488,7 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
 
 
 

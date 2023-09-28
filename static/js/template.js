@@ -114,7 +114,7 @@
 
   $(document).ready(function() {
     var table = $('#myTable');
-    var rowsPerPage = 5;
+    var rowsPerPage = 10;
     var currentPage = 1;
     var totalRows = table.find('tbody tr').length;
     var totalPages = Math.ceil(totalRows / rowsPerPage);

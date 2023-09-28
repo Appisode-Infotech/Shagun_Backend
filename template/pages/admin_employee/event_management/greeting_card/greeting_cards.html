@@ -180,19 +180,12 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Greeting Cards List</h4>
                                     <div class="form-group">
-                                        <form action="{% url 'dashboard_search_greetings' %}" method="POST">
-                                            {% csrf_token %}
                                             <div class="input-group">
                                                 <input name="search" id="search" type="text" class="form-control"
                                                        placeholder="Search" value="{{search}}"
                                                        aria-label="Recipient's username">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-sm btn-primary" type="submit" value="Submit">
-                                                        Search
-                                                    </button>
-                                                </div>
+
                                             </div>
-                                        </form>
                                     </div>
                                     <div class="form-group">
                                         <label class="mr-2 custom-label"> Greetings Filter: </label>
@@ -262,7 +255,9 @@
                                         {% else %}
                                         {% for greetings in response %}
                                         <tr>
-                                            <td>{{ start_sl|add:forloop.counter0 }}</td>
+                                            {% with sl_no=forloop.counter %}
+                                                    <td>{{sl_no}}</td>
+                                                    {% endwith %}
                                             <td class="py-1">
                                                 <a href="{{MEDIA_URL}}{{ greetings.card_image_url }}" target="_blank">
                                                     <img src="{{MEDIA_URL}}{{ greetings.card_image_url }}" alt="image"/>
@@ -332,8 +327,8 @@
                                                                 <div class="col-md-10">
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Card
-                                                                            Name <span
-                                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                                            Name <a
+                                                                        style="font-weight: bold; color: red;">*</a></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    pattern="[^ ].*" maxlength="255"
@@ -347,8 +342,8 @@
                                                             <div class="row">
                                                                 <div class="col-md-10">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Price <span
-                                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                                        <label class="col-sm-3 col-form-label">Price <a
+                                                                        style="font-weight: bold; color: red;">*</a></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="price" name="card_price"
                                                                                    type="text"

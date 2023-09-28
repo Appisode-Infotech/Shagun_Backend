@@ -154,8 +154,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Printing Vendor </label>
                                 </div>
-                                <form class="form-sample" action="/add_printer" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/add_printer" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Printer info
@@ -187,6 +187,7 @@
                                                         </ul>
                                                     </div>
                                                     <input type="hidden" id="city" name="city">
+                                                    <div class="invalid-feedback">City is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -199,6 +200,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="store_name"/>
+                                                    <div class="invalid-feedback">Store Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -213,6 +215,7 @@
                                                            pattern="^[A-Za-z][A-Za-z ]*$" maxlength="255"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="store_owner"/>
+                                                    <div class="invalid-feedback">Store Owner is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,6 +227,7 @@
                                                     <input type="tel" name="contact_number"
                                                            pattern="[0-9]{10}" class="form-control"
                                                            title="Please enter a 10-digit phone number" required>
+                                                    <div class="invalid-feedback">Store Phone is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -238,6 +242,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="address"/>
+                                                    <div class="invalid-feedback">Address is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -250,6 +255,7 @@
                                                            maxlength="64" id="emailInput"
                                                            title="Please enter a valid email address (e.g., example@gmail.com)"
                                                            placeholder="example@gmail.com">
+                                                    <div class="invalid-feedback">Email is mandatory</div>
 
                                                 </div>
                                             </div>
@@ -266,6 +272,7 @@
                                                            pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
+                                                    <div class="invalid-feedback">Store GST is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,6 +286,7 @@
                                                            pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            placeholder="example@gmail.com"/>
+                                                    <div class="invalid-feedback">User Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -298,6 +306,7 @@
                                                     characters long"
                                                            placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+                                                    <div class="invalid-feedback">Password is mandatory</div>
 
                                                 </div>
                                             </div>

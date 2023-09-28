@@ -67,8 +67,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Admin </label>
                                 </div>
-                                <form class="form-sample" action="/add_admin" method="post"
-                                      enctype="multipart/form-data">
+                                <form class="form-sample needs-validation" action="/add_admin" method="post"
+                                      enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -95,6 +95,7 @@
                                                            class="form-control" pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            placeholder="Full Name">
+                                                    <div class="invalid-feedback">Full Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -109,6 +110,7 @@
                                                     <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
                                                            class="form-control" placeholder="Phone No"
                                                            title="Please enter a 10-digit phone number" required>
+                                                    <div class="invalid-feedback">Phone is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -119,7 +121,9 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="city" name="city"
                                                            class="form-control" pattern="[^ ].*" maxlength="255"
+                                                           placeholder="Address"
                                                            title="This field can't be Empty">
+                                                    <div class="invalid-feedback">Address is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -138,6 +142,7 @@
                                                     characters long"
                                                            placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+                                                    <div class="invalid-feedback">Password is mandatory</div>
 
                                                 </div>
                                             </div>
@@ -149,8 +154,7 @@
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg" pattern="[^ ].*"
-                                                           placeholder="password" oninput="validatePasswords()">
-
+                                                           placeholder="Confirm Password" oninput="validatePasswords()">
                                                     <div id="passwordMatchMessage" style="color: red; display: none;">
                                                         Passwords do
                                                         not match!

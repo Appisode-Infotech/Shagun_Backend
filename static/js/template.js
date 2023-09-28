@@ -111,6 +111,101 @@
     });
   });
 
+
+  $(document).ready(function() {
+    var table = $('#myTable');
+    var rowsPerPage = 5;
+    var currentPage = 1;
+    var totalRows = table.find('tbody tr').length;
+    var totalPages = Math.ceil(totalRows / rowsPerPage);
+
+    // Function to show/hide rows based on the current page
+    function showPage(page) {
+        table.find('tbody tr').hide();
+        var startIndex = (page - 1) * rowsPerPage;
+        var endIndex = startIndex + rowsPerPage;
+        table.find('tbody tr').slice(startIndex, endIndex).show();
+    }
+
+    // Initialize the table by showing the first page
+    showPage(currentPage);
+
+    // Function to update the pagination controls with page numbers
+    function updatePagination() {
+        var paginationControls = $('#paginationControls');
+        paginationControls.empty();
+
+        // Previous button
+        if (currentPage > 1) {
+            paginationControls.append('<button id="prevPage">Previous</button>');
+        }
+
+        // Page numbers
+        for (var i = 1; i <= totalPages; i++) {
+            var pageButton = $('<button class="page">' + i + '</button>');
+            if (i === currentPage) {
+                pageButton.addClass('active');
+            }
+            paginationControls.append(pageButton);
+        }
+
+        // Next button
+        if (currentPage < totalPages) {
+            paginationControls.append('<button id="nextPage">Next</button>');
+        }
+    }
+
+    // Update pagination on page load
+    updatePagination();
+
+    // Function to handle search
+    function handleSearch() {
+        var searchText = $('#search').val().toLowerCase()
+        if(searchText===""){
+            showPage(1);
+            updatePagination();
+        }else{
+              $("table tbody tr").each(function() {
+                var rowText = $(this).text().toLowerCase();
+                var isVisible = rowText.includes(searchText);
+                $(this).toggle(isVisible);
+            });
+        }
+    }
+
+    // Handle search input
+    $('#search').on('keyup', function() {
+        handleSearch();
+    });
+
+    // Handle Next and Previous buttons
+    $('#paginationControls').on('click', '#nextPage', function() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showPage(currentPage);
+            updatePagination();
+        }
+    });
+
+    $('#paginationControls').on('click', '#prevPage', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+            updatePagination();
+        }
+    });
+
+    // Handle page number clicks
+    $('#paginationControls').on('click', '.page', function() {
+        var newPage = parseInt($(this).text());
+        if (newPage !== currentPage) {
+            currentPage = newPage;
+            showPage(currentPage);
+            updatePagination();
+        }
+    });
+});
+
   // focus input when clicking on search icon
   $('#navbar-search-icon').click(function() {
     $("#navbar-search-input").focus();

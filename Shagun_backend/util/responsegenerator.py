@@ -263,7 +263,8 @@ class responseGenerator:
                         "card_image_url": cards[1],
                         "card_price": int(cards[2]),
                         "card_id": cards[3],
-                        "card_status": cards[4]
+                        "card_status": cards[4],
+                        "printer": cards[5]
                     }
                 )
             return greeting_cards

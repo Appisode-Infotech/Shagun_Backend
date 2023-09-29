@@ -8,7 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -32,9 +32,12 @@
         .toggle-password {
           position: absolute;
           top: 10px;
-          right: 30px;
+          right: 50px;
           cursor: pointer;
         }
+
+
+
 
 
 
@@ -66,7 +69,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Employee </label>
                                 </div>
-                                <form class="form-sample needs-validation" action="/add_employee" method="post"
+                                <form class="form-sample needs-validation needs-password-validation"
+                                      action="/add_employee" method="post"
                                       enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -78,7 +82,7 @@
                                                 <label class="col-sm-3 col-form-label">Email <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" id="email" name="email"
+                                                    <input required type="email" id="email" name="email"
                                                            class="form-control"
                                                            placeholder="User Name">
                                                     <div class="invalid-feedback">Email is mandatory</div>
@@ -91,7 +95,7 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="name" name="name"
-                                                           class="form-control"
+                                                           class="form-control" pattern="[^ ].*"
                                                            placeholder="Full Name">
                                                     <div class="invalid-feedback">Full Name is mandatory</div>
                                                 </div>
@@ -104,9 +108,12 @@
                                                 <label class="col-sm-3 col-form-label">Phone <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
-                                                           class="form-control" placeholder="Phone No"
-                                                           title="Please enter a 10-digit phone number" required>
+                                                    <input type="number" id="phone" name="phone"
+                                                           class="form-control" placeholder="Phone Number"
+                                                           title="Please enter a 10-digit phone number" required
+                                                           oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);">
+
+
                                                     <div class="invalid-feedback">Phone is mandatory</div>
                                                 </div>
                                             </div>
@@ -117,7 +124,7 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="city" name="city"
-                                                           class="form-control"
+                                                           class="form-control" pattern="[^ ].*"
                                                            placeholder="City Name">
                                                     <div class="invalid-feedback">City is mandatory</div>
                                                 </div>
@@ -133,35 +140,32 @@
                                                     <input required type="password" id="password" name="password"
                                                            class="form-control form-control-lg"
                                                            pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,12}$"
-                                                           title="Password must contain at least one uppercase letter, one
-                                                            lowercase letter, one number, one special character, and be 8-12
-                                                            characters long"
                                                            placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
-                                                    <div class="invalid-feedback">Password is mandatory</div>
+                                                    <div class="invalid-feedback">Password Requirements: 8-12
+                                                        characters, at least one uppercase letter, one lowercase letter,
+                                                        one number, one special character.
+                                                    </div>
 
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Confirm Password <span
+                                                <label class="col-sm-3 col-form-label">Confirm </br>Password <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
                                                            class="form-control form-control-lg"
                                                            placeholder="Password" oninput="validatePasswords()">
-                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
-                                                        Passwords do
-                                                        not match!
-                                                    </div>
+                                                    <div class="invalid-feedback">Passwords should match</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mr-2"
-                                               id="submitButton" disabled>
+                                               id="submitButton">
                                     </div>
                                 </form>
                             </div>
@@ -187,29 +191,8 @@
       } else {
         field.type = 'password';
       }
-      validatePasswords(); // Validate passwords after toggling visibility
     }
 
-    function validatePasswords() {
-      var password = document.getElementById('password').value;
-      var confirmPassword = document.getElementById('confirmPassword').value;
-      var passwordMatchMessage = document.getElementById('passwordMatchMessage');
-
-      if (password === confirmPassword) {
-        // Passwords match, hide error message
-        passwordMatchMessage.style.display = 'none';
-        submitButton.disabled = false;
-
-      } else {
-        // Passwords do not match, show error message
-        passwordMatchMessage.style.display = 'block';
-        submitButton.disabled = true;
-
-      }
-    }
-
-    // Add event listeners to trigger validation when input changes
-    document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
 
 
 

@@ -126,6 +126,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -154,7 +155,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Printing Vendor </label>
                                 </div>
-                                <form class="form-sample needs-validation" action="/add_printer" method="post"
+                                <form class="form-sample needs-validation needs-password-validation"
+                                      action="/add_printer" method="post"
                                       enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -224,10 +226,11 @@
                                                 <label class="col-sm-3 col-form-label">Store Phone <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel" name="contact_number"
-                                                           pattern="[0-9]{10}" class="form-control"
-                                                           title="Please enter a 10-digit phone number" required>
-                                                    <div class="invalid-feedback">Store Phone is mandatory</div>
+                                                    <input type="number" id="phone" name="contact_number"
+                                                           class="form-control" placeholder="Phone Number"
+                                                           title="Please enter a 10-digit phone number" required
+                                                           oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);">
+                                                    <div class="invalid-feedback">Please enter a 10-digit phone number</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -306,7 +309,10 @@
                                                     characters long"
                                                            placeholder="Password" oninput="validatePasswords()">
                                                     <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
-                                                    <div class="invalid-feedback">Password is mandatory</div>
+                                                    <div class="invalid-feedback">Password Requirements: 8-12
+                                                        characters, at least one uppercase letter, one lowercase letter,
+                                                        one number, one special character.
+                                                    </div>
 
                                                 </div>
                                             </div>
@@ -322,9 +328,7 @@
                                                            title="This field can't be Empty"
                                                            placeholder="Password" oninput="validatePasswords()">
 
-                                                    <div id="passwordMatchMessage" style="color: red; display: none;">
-                                                        Passwords do not match!
-                                                    </div>
+                                                    <div class="invalid-feedback">Passwords should match</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -394,6 +398,7 @@
 
 
 
+
 </script>
 
 
@@ -430,6 +435,7 @@
     document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
 
 
+
 </script>
 
 <script>
@@ -443,6 +449,7 @@
             emailInput.setCustomValidity("Please enter a valid email address");
         }
     });
+
 </script>
 
 <script>
@@ -454,6 +461,7 @@
                 e.preventDefault();
             }
         });
+
 
 
 </script>

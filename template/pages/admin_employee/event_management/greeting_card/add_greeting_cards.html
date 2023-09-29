@@ -246,18 +246,13 @@
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                 </span>
                                                     </div>
+                                                    <div id="error-message" style="color: #dc3545; font-size: 14px;
+                                                    margin-top:5px"></div>
+
                                                 </div>
                                             </div>
                                         </div>
 
-                                    </div>
-                                    <div class="messages-container">
-                                        <ul class="messages">
-                                            <li>
-                                                <div id="error-message">
-                                                </div>
-                                            </li>
-                                        </ul>
                                     </div>
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mt-2">
@@ -282,6 +277,8 @@
 <script>
         document.getElementById('card_image_url').addEventListener('change', function(e) {
             var file = e.target.files[0];
+            var errorMessage = document.getElementById('error-message');
+            errorMessage.style.display = "none";
             if (file) {
                 var reader = new FileReader();
                 reader.onload = function(e) {

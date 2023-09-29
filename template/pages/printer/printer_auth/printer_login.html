@@ -85,18 +85,20 @@
                         <h4>Hello! let's get started</h4>
                         <h6 class="font-weight-light">Sign in to continue.</h6>
 
-                        <form class="pt-3" action="/printer_login" method="post">
+                        <form class="pt-3 needs-validation" action="/printer_login" method="post" novalidate>
                             {% csrf_token %}
                             <div class="form-group">
-                                <input type="text" id="printer_user_name" name="printer_user_name" class="form-control form-control-lg"
-                                       placeholder="username"></div>
+                                <input required type="email" id="printer_user_name" name="printer_user_name" class="form-control form-control-lg"
+                                       placeholder="User Name" pattern="[^ ].*">
+                                <div class="invalid-feedback">Please enter username/email</div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
                                         <div class="col-sm-12">
                                             <input required type="password" id="printer_password" name="printer_password"
                                                    class="form-control form-control-lg"
-                                                   placeholder="Password">
+                                                   placeholder="Password" pattern="[^ ].*">
                                             <div class="invalid-feedback">Password should not be blank.</div>
                                             <i class="toggle-password"
                                                onclick="toggleVisibility('printer_password')">&#x1f441;</i>

@@ -68,7 +68,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Edit Employee {{emp.id}} </label>
                                 </div>
-                                <form class="form-sample" action="{% url 'edit_employee' emp.id %}" method="post">
+                                <form class="form-sample needs-validation" action="{% url 'edit_employee' emp.id %}"
+                                      method="post" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -77,7 +78,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
                                                     <input readonly type="text" id="email" name="email"
                                                            class="form-control"
@@ -93,6 +94,7 @@
                                                     <input required type="text" id="name" name="name"
                                                            class="form-control"
                                                            value="{{emp.name}}">
+                                                    <div class="invalid-feedback">Full Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -109,6 +111,7 @@
                                                     <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
                                                            class="form-control" value="{{emp.phone}}"
                                                            title="Please enter a 10-digit phone number" required>
+                                                    <div class="invalid-feedback">Please enter a 10-digit phone number</div>
 
                                                 </div>
                                             </div>
@@ -121,6 +124,7 @@
                                                     <input type="text" id="city" name="city"
                                                            class="form-control"
                                                            value="{{emp.city}}" required>
+                                                    <div class="invalid-feedback">City is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>

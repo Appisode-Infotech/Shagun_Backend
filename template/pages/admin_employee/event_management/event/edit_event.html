@@ -187,9 +187,9 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Edit Event </label>
                                 </div>
-                                <form class="form-sample" action="{% url 'edit_event' event.event_data.id %}"
+                                <form class="form-sample needs-validation" action="{% url 'edit_event' event.event_data.id %}"
                                       method="post"
-                                      enctype="multipart/form-data">
+                                      enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Event info
@@ -198,7 +198,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select Event Type <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="event_type_name" readonly
                                                            onclick="toggleDropdown('myDropdown1')"
@@ -222,7 +222,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select City <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="city_name" readonly
                                                            onclick="toggleDropdown('myDropdown2')"
@@ -247,7 +247,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Printing Vendor <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
 
                                                     <input required type="text" id="printer_name" readonly
@@ -276,6 +276,7 @@
                                                            name="event_date"
                                                            class="form-control"
                                                            value="{{event.event_data.event_date}}">
+                                                    <div class="invalid-feedback">Event date & Time is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -291,6 +292,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            value="{{event.event_data.address_line1}}"/>
+                                                    <div class="invalid-feedback">Address line is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -304,6 +306,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            value="{{event.event_data.address_line2}}"/>
+                                                    <div class="invalid-feedback">Address line is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -319,7 +322,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Lat Lng <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="event_lat_lng"
                                                            value="{{event.event_data.event_lat_lng}}"
@@ -339,6 +342,7 @@
                                                            pattern="[1-9][0-9]{0,4}"
                                                             title="Please add the amount only"
                                                            value="{{event.event_data.delivery_fee}}"/>
+                                                    <div class="invalid-feedback">Delivery Fee is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -359,13 +363,16 @@
                                         <textarea required class="form-control" id="delivery_address" rows="4"
                                                   maxlength="255"
                                                   name="delivery_address">{{event.event_data.delivery_address}}</textarea>
+                                        <div class="invalid-feedback">Delivery Address  is mandatory</div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                         <textarea required class="form-control" id="event_note" rows="4"
                                                   name="event_note">{{event.event_data.event_note}}</textarea>
+                                        <div class="invalid-feedback">Event Note is mandatory</div>
                                     </div>
+
 
                                     <div id="sub-events-container">
                                         <label class="col-sm-3 col-form-label">Sub Events <span
@@ -378,12 +385,15 @@
                                                    title="This field can't be Empty"
                                                    name="sub_events[{{ forloop.counter0 }}][sub_event_name]"
                                                    value="{{sub_event.sub_event_name}}">
+                                            <div class="invalid-feedback">Sub Event Name is mandatory</div>
                                             <input required class="event-input" type="datetime-local"
                                                    name="sub_events[{{ forloop.counter0 }}][start]"
                                                    value="{{sub_event.start_time}}">
+                                            <div class="invalid-feedback">Start Time is mandatory</div>
                                             <input required class="event-input" type="datetime-local"
                                                    name="sub_events[{{ forloop.counter0 }}][end]"
                                                    value="{{sub_event.end_time}}">
+                                            <div class="invalid-feedback">End Time is mandatory</div>
                                         </div>
                                         {% endfor %}
                                         <input type="hidden" id="maxSubEventIndex"
@@ -402,7 +412,6 @@
                                             <input readonly type="text" id="name"
                                                    onclick="toggleDropdown('myDropdown4')"
                                                    value="{{admin.name}}" class="event-input">
-
                                             <input readonly class="event-input" type="text"
                                                    value="{{admin.role}}">
                                             <input type="hidden" id="uid" value="{{admin.uid}}">

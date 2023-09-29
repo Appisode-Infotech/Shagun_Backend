@@ -235,6 +235,9 @@
                                                 Price
                                             </th>
                                             <th>
+                                                Printer
+                                            </th>
+                                            <th>
                                                 Status
                                             </th>
                                             <th>
@@ -269,6 +272,9 @@
                                             </td>
                                             <td>₹
                                                 {{greetings.card_price}}
+                                            </td>
+                                            <td>
+                                                {{greetings.printer}}
                                             </td>
                                             <td>
                                                 {% if greetings.card_status == 1 %}
@@ -307,8 +313,8 @@
                                                 </button>
                                                 <div id="customAlertOverlay" class="custom-alert-overlay">
                                                     <div class="custom-alert">
-                                                        <form class="form-sample" action="/edit_greeting_cards"
-                                                              method="post">
+                                                        <form class="form-sample needs-validation" action="/edit_greeting_cards"
+                                                              method="post" novalidate>
                                                             {% csrf_token %}
                                                             <h4 class="card-title">Edit Greeting Card</h4>
 
@@ -335,6 +341,7 @@
                                                                                    title="This field can't be Empty"
                                                                                    class="form-control"
                                                                                    name="card_name"/>
+                                                                            <div class="invalid-feedback">Card Name is mandatory</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -350,6 +357,7 @@
                                                                                    pattern="[1-9][0-9]{0,5}"
                                                                                    title="Please add the amount only"
                                                                                    class="form-control"/>
+                                                                            <div class="invalid-feedback">Price is mandatory</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>

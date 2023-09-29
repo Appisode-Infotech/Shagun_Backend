@@ -231,8 +231,8 @@
                                     {{event_data.id}} </label>
                                 </div>
 
-                                <form class="form-sample" action="/whatsapp_invite/{{event_data.id}}/" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/whatsapp_invite/{{event_data.id}}/" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -244,6 +244,7 @@
                                                     <input type="text" id="name" name="invited_by" readonly
                                                            onclick="myFunction()"
                                                            placeholder="Search" class="form-control">
+                                                    <div class="invalid-feedback">Invited BY is mandatory</div>
 
                                                     <div id="myDropdown" class="dropdown-content"
                                                          style="cursor: pointer;">
@@ -263,24 +264,25 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                         <textarea required class="form-control" id="invite_msg" rows="4" maxlength="255"
                                                   name="invite_msg"></textarea>
+                                        <div class="invalid-feedback">Invited Message is mandatory</div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Phone No <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                <label class="col-sm-3 col-form-label">Phone Number <span
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
                                                     <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
-                                                           class="form-control" placeholder="Phone No"
-                                                           title="Please enter a 10-digit phone number">
+                                                           class="form-control" placeholder="Phone Number" >
+                                                    <div class="invalid-feedback">Please enter a 10-digit phone number</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">CSV file <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
                                                     <input type="file" name="csv_file" accept=".csv"
                                                            class="file-upload-default">

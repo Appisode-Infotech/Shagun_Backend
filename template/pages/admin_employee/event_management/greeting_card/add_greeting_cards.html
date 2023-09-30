@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="{% static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -130,6 +132,13 @@
 
 
 
+
+
+
+
+
+
+
     </style>
 
 </head>
@@ -172,7 +181,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="card_name"/>
-                                                           <div class="invalid-feedback">Card Name is mandatory</div>
+                                                    <div class="invalid-feedback">Card Name is mandatory</div>
 
                                                 </div>
                                             </div>
@@ -183,10 +192,10 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           placeholder="00.00" pattern="[1-9][0-9]{0,5}"
+                                                           placeholder="₹" pattern="[1-9][0-9]{0,5}"
                                                            title="Please add the amount only"
                                                            name="card_price"/>
-                                                <div class="invalid-feedback">Price is mandatory</div>
+                                                    <div class="invalid-feedback">Price is mandatory</div>
 
                                                 </div>
                                             </div>
@@ -195,29 +204,29 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Select Printer <span
+                                                <label class="col-sm-3 col-form-label">Printing Vendor <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" id="printer_name" readonly
-                                                           onclick="toggleDropdown('myDropdown')"
-                                                           placeholder="Search" class="form-control">
-
-                                                    <div id="myDropdown" class="dropdown-content"
-                                                         style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search" id="myInput"
-                                                               onkeyup="filterFunction('myDropdown')"
-                                                               class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="printerSelect" required>
+                                                        <option value="" >Select an option</option>
                                                         {% for printers in printer_data %}
-                                                        <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
+                                                        <option data-store-name="{{printers.store_name}}"
+                                                                data-printer-id="{{printers.id}}">
+                                                            {{printers.store_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
+                                                    </select>
                                                     <input type="hidden" id="printer_id" name="printer_id">
+                                                    <div id="error-message1" style="color: #dc3545; font-size: 14px;
+                                                    margin-top:5px"></div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <label class="col-sm-3 col-form-label">Created By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{ request.session.name }}</label>
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
@@ -273,6 +282,21 @@
     <!-- page-body-wrapper ends -->
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var printerSelect = document.getElementById("printerSelect");
+    var invalidFeedback = document.querySelector(".invalid-feedback");
+    console.log(printerSelect.value);
+
+    printerSelect.addEventListener("change", function () {
+        if (printerSelect.value !== "") {
+            invalidFeedback.style.display = "none";
+        } else {
+            invalidFeedback.style.display = "block";
+        }
+    });
+});
+</script>
 
 <script>
         document.getElementById('card_image_url').addEventListener('change', function(e) {
@@ -296,75 +320,52 @@
 
 
 <script>
-// Function to toggle a specific dropdown based on its ID
-function toggleDropdown(dropdownId) {
-  var dropdown = document.getElementById(dropdownId);
-  dropdown.classList.toggle("show");
-}
+    document.addEventListener("DOMContentLoaded", function () {
+    var printerSelect = document.getElementById("printerSelect");
+    var printerIdInput = document.getElementById("printer_id");
 
-// Function to filter the dropdown content based on the input value
-function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
+    printerSelect.addEventListener("change", function () {
+        var errorMessage = document.getElementById('error-message1');
+        errorMessage.style.display = "none";
+        var selectedOption = printerSelect.options[printerSelect.selectedIndex];
+        var printerId = selectedOption.getAttribute("data-printer-id");
 
-function setValue(value1, value2, inputField1Id, inputField2Id) {
-  if (value1 && value2) {
-    document.getElementById(inputField1Id).value = value1;
-    document.getElementById(inputField2Id).value = value2;
-    // Optionally, you can hide the dropdown after selecting a value
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    for (var i = 0; i < dropdowns.length; i++) {
-      dropdowns[i].classList.remove("show");
-    }
-  }
-}
-
-  document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("myDropdown");
-        const nameInput = document.getElementById("printer_name");
-        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
+        if (printerId) {
+            printerIdInput.value = printerId;
         }
     });
-
-
+});
 
 </script>
 
 
 <script>
-        document.getElementById("myForm").addEventListener("submit", function (e) {
-            var img = document.getElementById("img").value;
-            var printer_name = document.getElementById("printer_name").value;
-            var errorContainer = document.querySelector('.messages-container');
-            var errorMessage = document.getElementById('error-message');
+    document.getElementById("myForm").addEventListener("submit", function (e) {
+        var img = document.getElementById("img").value;
+        var printerSelect = document.getElementById("printer_id").value;
+        var errorContainer = document.querySelector('.messages-container');
+        var errorMessage = document.getElementById('error-message');
+        var errorMessage1 = document.getElementById('error-message1');
 
-            if (!printer_name) {
-                errorMessage.textContent = "Please select printing vendor";
-                errorContainer.style.display = "block";
-                e.preventDefault();
-            }
-            else if (!img) {
-                errorMessage.textContent = "Please upload the greeting card design";
-                errorContainer.style.display = "block";
-                e.preventDefault();
-            }
-        });
+        if (!img) {
+            errorMessage.textContent = "Please upload the greeting card design";
+            errorMessage.style.display = "block";
+            e.preventDefault();
+        } else {
+            errorMessage.style.display = "none";
+        }
 
-
+        if (printerSelect === "") {
+            errorMessage1.textContent = "Please select a printing vendor";
+            errorMessage1.style.display = "block";
+            e.preventDefault();
+        } else {
+            errorMessage1.style.display = "none";
+        }
+    });
 </script>
+
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
@@ -387,6 +388,22 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/css/tempusdominus-bootstrap-4.min.css"
+      rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
 
 </body>
 

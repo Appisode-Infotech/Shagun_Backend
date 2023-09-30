@@ -630,9 +630,10 @@ def add_bank(request):
             return redirect('manage_bank_details')
         else:
             user, status_code = user_controller.get_all_users('%')
+            print(user)
             bank, status_code = bank_controller.get_active_banks_list()
             context = {
-                "user": user,
+                "user": user['user_data'],
                 "banks": bank
             }
             return render(request, 'pages/admin_employee/users_management/banks/add_bank.html', context)

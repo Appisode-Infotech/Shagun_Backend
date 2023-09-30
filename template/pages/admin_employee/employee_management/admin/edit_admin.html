@@ -66,7 +66,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Edit Admin </label>
                                 </div>
-                                <form class="form-sample" action="{% url 'edit_admin' emp.id %}" method="post">
+                                <form class="form-sample needs-validation" action="{% url 'edit_admin' emp.id %}"
+                                      method="post" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -75,9 +76,9 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Email <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
-                                                    <input disabled type="text" id="email" name="email"
+                                                    <input readonly type="text" id="email" name="email"
                                                            class="form-control" pattern="[^ ].*" maxlength="64"
                                                            title="This field can't be Empty"
                                                            value="{{emp.email}}">
@@ -92,6 +93,7 @@
                                                     <input type="text" id="name" name="name"
                                                            class="form-control"  pattern="[^ ].*" maxlength="64"
                                                            value="{{emp.name}}">
+                                                    <div class="invalid-feedback">Full Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -105,6 +107,7 @@
                                                     <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
                                                            class="form-control" value="{{emp.phone}}"
                                                            title="Please enter a 10-digit phone number" required>
+                                                    <div class="invalid-feedback">Please enter a 10-digit phone number</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -116,6 +119,7 @@
                                                     <input required type="text" id="city" name="city"
                                                            class="form-control" pattern="[^ ].*" maxlength="255"
                                                            value="{{emp.city}}">
+                                                    <div class="invalid-feedback">Address is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,42 +186,6 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-
-<script>
-    function toggleVisibility(fieldId) {
-      var field = document.getElementById(fieldId);
-      if (field.type === 'password') {
-        field.type = 'text';
-      } else {
-        field.type = 'password';
-      }
-      validatePasswords(); // Validate passwords after toggling visibility
-    }
-
-    function validatePasswords() {
-      var password = document.getElementById('password').value;
-      var confirmPassword = document.getElementById('confirmPassword').value;
-      var passwordMatchMessage = document.getElementById('passwordMatchMessage');
-
-      if (password === confirmPassword) {
-        // Passwords match, hide error message
-        passwordMatchMessage.style.display = 'none';
-        submitButton.disabled = false;
-
-      } else {
-        // Passwords do not match, show error message
-        passwordMatchMessage.style.display = 'block';
-        submitButton.disabled = true;
-
-      }
-    }
-
-    // Add event listeners to trigger validation when input changes
-    document.getElementById('confirmPassword').addEventListener('input', validatePasswords);
-
-
-
-</script>
 
 <!-- container-scroller -->
 <!-- plugins:js -->

@@ -187,6 +187,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -265,7 +266,7 @@
                                       id="myForm">
                                     {% csrf_token %}
                                     <div class="table-responsive">
-                                        <table class="table table-hover">
+                                        <table id="myTable"  class="table table-hover">
                                             <thead>
                                             <tr>
                                                 <td>SL No</td>
@@ -298,7 +299,9 @@
                                             {% for data in response %}
 
                                             <tr>
-                                                <td>{{ start_sl|add:forloop.counter0 }}</td>
+                                                {% with sl_no=forloop.counter %}
+                                                    <td>{{sl_no}}</td>
+                                                    {% endwith %}
                                                 {% if request.session.role == 1 %}
                                                 <td>
                                                     {% if data.is_settled == 0 %}
@@ -317,8 +320,7 @@
                                                 </td>
                                                 <td>{{ data.receiver_name }}</td>
                                                 <td>
-                                                    <b>Transaction Amount : </b>₹ {{ data.transaction_amount
-                                                    }}</br></br>
+                                                    <b>Transaction Amount : </b>₹ {{ data.transaction_amount}}</br></br>
                                                     <b>Shagun Amount: </b>₹ {{ data.shagun_amount }}</br></br>
                                                     <b>Transaction Fee: </b>₹ {{ data.transaction_fee }}</br></br>
                                                     <b>Delivery Fee: </b>₹ {{ data.delivery_fee }}</br></br>
@@ -412,39 +414,7 @@
                     </div>
                 </div>
             </div>
-            <div class="pagination justify-content-center">
-                <ul class="pagination">
-                    {% if response.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1">&laquo; first</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-                    </li>
-                    {% endif %}
 
-                    {% for num in response.paginator.page_range %}
-                    {% if num == response.number %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-                    </li>
-                    {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-
-                    {% if response.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
             <!-- content-wrapper ends -->
             <!-- partial:../../partials/_footer.html -->
             {% include 'footer.html' %}
@@ -522,6 +492,7 @@
 
 
 
+
 </script>
 
 
@@ -569,6 +540,7 @@
 
 
 
+
 </script>
 
 
@@ -578,6 +550,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 
@@ -660,6 +633,7 @@
             console.error(error);
         });
     });
+
 
 
 

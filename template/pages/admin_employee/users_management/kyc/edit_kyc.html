@@ -93,8 +93,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Edit KYC </label>
                                 </div>
-                                <form class="form-sample" action="{% url 'edit_kyc' kyc_data.kyc.id %}" method="post"
-                                      enctype="multipart/form-data">
+                                <form class="form-sample needs-validation" action="{% url 'edit_kyc' kyc_data.kyc.id %}" method="post"
+                                      enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Personal info
@@ -124,6 +124,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            value="{{kyc_data.kyc.full_name}}">
+                                                    <div class="invalid-feedback">Full Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,6 +144,7 @@
                                                         <option selected>Female</option>
                                                         {% endif %}
                                                     </select>
+                                                    <div class="invalid-feedback">Gender is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -152,7 +154,8 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="date" id="dob" name="dob" class="form-control"
-                                                           onkeydown="return false">
+                                                           onkeydown="return false" value="{{kyc_data.kyc.dob}}">
+                                                    <div class="invalid-feedback">Date of Birth is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -169,8 +172,7 @@
                                                         <option>Driving License</option>
                                                         <option>Voter ID</option>
                                                         <option>Ration Card</option>
-                                                        {% elif kyc_data.kyc.identification_proof1 == "Driving
-                                                        License"%}
+                                                        {% elif kyc_data.kyc.identification_proof1 == "Driving License"%}
                                                         <option selected>Driving License</option>
                                                         <option>Aadhar Card</option>
                                                         <option>Voter ID</option>
@@ -187,6 +189,7 @@
                                                         <option>Voter ID</option>
                                                         {% endif %}
                                                     </select>
+                                                    <div class="invalid-feedback">Indentfication Proof is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -202,6 +205,7 @@
                                                            maxlength="255"
                                                            title="Enter valid ID Proof"
                                                            value="{{kyc_data.kyc.identification_number1}}">
+                                                     <div class="invalid-feedback">Indentfication Number is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -215,6 +219,7 @@
                                                     <select class="form-control" name="identification_proof2" required>
                                                         <option value="PAN CARD" selected>PAN CARD</option>
                                                     </select>
+                                                     <div class="invalid-feedback">Indentfication Proof is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -230,6 +235,7 @@
                                                            maxlength="255"
                                                            title="Enter valid ID Proof"
                                                            value="{{kyc_data.kyc.identification_number2}}">
+                                                     <div class="invalid-feedback">Indentfication Number is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -289,6 +295,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{kyc_data.kyc.address_line1}}"/>
+                                                     <div class="invalid-feedback">Address is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -301,6 +308,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            value="{{kyc_data.kyc.state}}"/>
+                                                     <div class="invalid-feedback">State is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -315,6 +323,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            value="{{kyc_data.kyc.address_line2}}"/>
+                                                     <div class="invalid-feedback">Address is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -325,8 +334,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control" name="postcode"
                                                            pattern="\d{6}"
-                                                           title="Postcode must be 6 digit number"
                                                            value="{{kyc_data.kyc.postcode}}"/>
+                                                     <div class="invalid-feedback">Postcode must be 6 digit number</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -341,6 +350,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            value="{{kyc_data.kyc.city}}"/>
+                                                     <div class="invalid-feedback">City is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -352,6 +362,7 @@
                                                     <select class="form-control" name="country">
                                                         <option>India</option>
                                                     </select>
+                                                     <div class="invalid-feedback">Country is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -425,7 +436,13 @@
 <script src="{% static 'vendors/select2/select2.min.js' %}"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
+<script>
+// Get the current date and time in ISO format
+const currentDate = new Date().toISOString().split('T')[0];
 
+// Set the max attribute of the input field to the current date
+document.getElementById("dob").max = currentDate;
+</script>
 <script src="{% static 'js/off-canvas.js' %}"></script>
 <script src="{% static 'js/hoverable-collapse.js' %}"></script>
 <script src="{% static 'js/template.js' %}"></script>

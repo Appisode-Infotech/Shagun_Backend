@@ -122,15 +122,9 @@ def update_printer_password(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-        paginator = Paginator(response['event_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/event_management/event/events.html',
-                      {'response': response, 'start_sl': start_sl})
+                      {'response': response['event_list']})
     else:
         return redirect('sign_up')
 
@@ -144,15 +138,9 @@ def manage_settlement(request):
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
-        paginator = Paginator(response['events_type'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/event_management/event_type/event_type.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['events_type']})
     else:
         return redirect('sign_up')
 
@@ -206,26 +194,12 @@ def manage_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             response, status_code = user_controller.get_kyc_data('%')
-            paginator = Paginator(response['kyc_data'], 25)
-            page = request.GET.get('page')
-            response = paginator.get_page(page)
-            if page is not None:
-                start_sl = (int(page) - 1) * 25 + 1
-            else:
-                start_sl = 1
             return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                          {"response": response, "start_sl": start_sl})
+                          {"response": response['kyc_data']})
         else:
             response, status_code = user_controller.get_kyc_data('%')
-            paginator = Paginator(response['kyc_data'], 25)
-            page = request.GET.get('page')
-            response = paginator.get_page(page)
-            if page is not None:
-                start_sl = (int(page) - 1) * 25 + 1
-            else:
-                start_sl = 1
             return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                          {"response": response, 'start_sl': start_sl})
+                          {"response": response['kyc_data']})
 
     else:
         return redirect('sign_up')
@@ -234,15 +208,8 @@ def manage_kyc(request):
 def filter_kyc(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_kyc_data(status)
-        paginator = Paginator(response['kyc_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
         return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['kyc_data'], "status": status})
 
     else:
         return redirect('sign_up')
@@ -252,15 +219,9 @@ def filter_bank(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
 
         response, status_code = user_controller.get_all_bank_data(status)
-        paginator = Paginator(response['bank_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['bank_data'], "status": status})
 
     else:
         return redirect('sign_up')
@@ -270,15 +231,9 @@ def filter_user(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
 
         response, status_code = user_controller.filter_users(status)
-        paginator = Paginator(response['user_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/users_management/users/users.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['user_data'], "status": status})
 
     else:
         return redirect('sign_up')
@@ -287,15 +242,9 @@ def filter_user(request, status):
 def manage_bank_details(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_bank_data('%')
-        paginator = Paginator(response['bank_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['bank_data']})
     else:
         return redirect('sign_up')
 
@@ -303,15 +252,9 @@ def manage_bank_details(request):
 def manage_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
-        paginator = Paginator(response['all_greeting_cards'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['all_greeting_cards']})
     else:
         return redirect('sign_up')
 
@@ -319,15 +262,9 @@ def manage_greeting_cards(request):
 def manage_users(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_users('%')
-        paginator = Paginator(response['user_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/users_management/users/users.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['user_data']})
     else:
         return redirect('sign_up')
 
@@ -335,15 +272,9 @@ def manage_users(request):
 def manage_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_employees()
-        paginator = Paginator(response['user_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {"response": response, "role": 2, 'start_sl': start_sl})
+                      {"response": response['user_data'], "role": 2})
     else:
         return redirect('sign_up')
 
@@ -351,15 +282,9 @@ def manage_employee(request):
 def manage_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_admins()
-        paginator = Paginator(response['user_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
-                      {"response": response, "role": 1, 'start_sl': start_sl})
+                      {"response": response['user_data'], "role": 1})
     else:
         return redirect('sign_up')
 
@@ -367,15 +292,9 @@ def manage_admin(request):
 def manage_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.get_printers_by_status('%')
-        paginator = Paginator(response['printer_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['printer_data']})
     else:
         return redirect('sign_up')
 
@@ -384,15 +303,9 @@ def manage_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.get_delivery_vendor()
         print(response)
-        paginator = Paginator(response['delivery_vendor_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['delivery_vendor_data']})
     else:
         return redirect('sign_up')
 
@@ -434,15 +347,9 @@ def printer_login(request):
 def kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('KYC')
-        paginator = Paginator(response['req_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['req_list']})
     else:
         return redirect('sign_up')
 
@@ -450,15 +357,9 @@ def kyc_request(request):
 def search_kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.search_user_requests('KYC', request.POST['search'])
-        paginator = Paginator(response['req_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['req_list'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -466,15 +367,9 @@ def search_kyc_request(request):
 def filter_kyc_request(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.filter_user_requests('KYC', status)
-        paginator = Paginator(response['req_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['req_list'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -482,15 +377,9 @@ def filter_kyc_request(request, status):
 def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
-        paginator = Paginator(response['req_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['req_list']})
     else:
         return redirect('sign_up')
 
@@ -498,15 +387,9 @@ def event_request(request):
 def search_event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.search_user_requests('event', request.POST['search'])
-        paginator = Paginator(response['req_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['req_list'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -514,15 +397,9 @@ def search_event_request(request):
 def filter_event_request(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.filter_user_requests('event', status)
-        paginator = Paginator(response['req_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['req_list'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -530,15 +407,9 @@ def filter_event_request(request, status):
 def get_settlement_for_event(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement(status)
-        paginator = Paginator(response['event_settlement'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['event_settlement'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -546,15 +417,9 @@ def get_settlement_for_event(request, status):
 def dashboard_search_event_settlement(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.search_event_settlement(request.POST['search'])
-        paginator = Paginator(response['event_settlement'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['event_settlement'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -563,15 +428,9 @@ def all_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4, 5]
         response, status_code = store_controller.get_all_jobs(status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('sign_up')
 
@@ -580,15 +439,9 @@ def new_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1]
         response, status_code = store_controller.get_all_jobs(status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('sign_up')
 
@@ -597,15 +450,9 @@ def search_all_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4, 5]
         response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['jobs'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -614,15 +461,9 @@ def search_new_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1]
         response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/new_jobs.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['jobs'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -631,15 +472,9 @@ def Open_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [2, 3, 4]
         response, status_code = store_controller.get_all_jobs(status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/open_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('sign_up')
 
@@ -648,15 +483,9 @@ def search_open_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [1, 2, 3, 4]
         response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['jobs'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -664,15 +493,9 @@ def search_open_printer_jobs(request):
 def filter_all_printer_jobs(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.filter_all_jobs(status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/all_jobs.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['jobs'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -680,15 +503,9 @@ def filter_all_printer_jobs(request, status):
 def filter_open_printer_jobs(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.filter_all_jobs(status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/open_jobs.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['jobs'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -697,15 +514,9 @@ def closed_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [5]
         response, status_code = store_controller.get_all_jobs(status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('sign_up')
 
@@ -714,15 +525,9 @@ def search_closed_printer_jobs(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         status = [5]
         response, status_code = store_controller.search_all_jobs(status, request.POST['search'])
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/printer_jobs/closed_jobs.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['jobs'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -739,12 +544,10 @@ def transactions_settlement(request, event_id):
                 return JsonResponse(settlement)
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
-            paginator = Paginator(response['transactions'], 250)
-            page = request.GET.get('page')
-            response = paginator.get_page(page)
+
             return render(request,
                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                          {"response": response, "event_id": event_id})
+                          {"response": response['transactions'], "event_id": event_id})
     else:
         return redirect('sign_up')
 
@@ -752,16 +555,9 @@ def transactions_settlement(request, event_id):
 def search_transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = transactions_controller.search_transaction_list(event_id, request.POST['search'])
-        paginator = Paginator(response['transactions'], 250)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                      {"response": response, "event_id": event_id, "search": request.POST['search'],
-                       'start_sl': start_sl})
+                      {"response": response['transactions'], "event_id": event_id, "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -834,9 +630,10 @@ def add_bank(request):
             return redirect('manage_bank_details')
         else:
             user, status_code = user_controller.get_all_users('%')
+            print(user)
             bank, status_code = bank_controller.get_active_banks_list()
             context = {
-                "user": user,
+                "user": user['user_data'],
                 "banks": bank
             }
             return render(request, 'pages/admin_employee/users_management/banks/add_bank.html', context)
@@ -1211,34 +1008,22 @@ def edit_event(request, event_id):
 
 def filtered_events_on_approval_status(request, status):
     response, status_code = event_controller.get_event_by_approval_status(status)
-    paginator = Paginator(response['event_list'], 25)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
     return render(request, 'pages/admin_employee/event_management/event/events.html',
-                  {'response': response, "status": status})
+                  {'response': response['event_list'], "status": status})
 
 
 def filter_transaction_lists(request, event_id, status):
     response, status_code = transactions_controller.get_transaction_list(event_id, status)
-    paginator = Paginator(response['transactions'], 250)
-    page = request.GET.get('page')
-    response = paginator.get_page(page)
     return render(request, 'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                  {"response": response, "event_id": event_id, "status": status})
+                  {"response": response['transactions'], "event_id": event_id, "status": status})
 
 
 def dashboard_search_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.dashboard_search_event(request.POST['search'])
-        paginator = Paginator(response['event_list'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/event_management/event/events.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['event_list'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -1246,15 +1031,9 @@ def dashboard_search_event(request):
 def dashboard_search_kyc(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.search_kyc_data(request.POST['search'])
-        paginator = Paginator(response['kyc_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/users_management/kyc/kyc.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['kyc_data'], "search": request.POST['search']})
 
     else:
         return redirect('sign_up')
@@ -1263,15 +1042,9 @@ def dashboard_search_kyc(request):
 def dashboard_search_bank(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_bank(request.POST['search'])
-        paginator = Paginator(response['bank_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['bank_data'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -1279,15 +1052,9 @@ def dashboard_search_bank(request):
 def dashboard_search_user(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_user(request.POST['search'])
-        paginator = Paginator(response['user_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/users_management/users/users.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['user_data'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -1295,15 +1062,9 @@ def dashboard_search_user(request):
 def dashboard_search_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_employee(request.POST['search'])
-        paginator = Paginator(response['user_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {"response": response, "search": request.POST['search'], "role": 2, 'start_sl': start_sl})
+                      {"response": response['user_data'], "search": request.POST['search'], "role": 2})
     else:
         return redirect('sign_up')
 
@@ -1311,15 +1072,9 @@ def dashboard_search_employee(request):
 def dashboard_search_employee_status(request, status, role):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_employee_status(status)
-        paginator = Paginator(response['user_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
-                      {'response': response, "status": status, "role": role, 'start_sl': start_sl})
+                      {'response': response['user_data'], "status": status, "role": role})
     else:
         return redirect('sign_up')
 
@@ -1327,15 +1082,9 @@ def dashboard_search_employee_status(request, status, role):
 def dashboard_search_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.dashboard_search_printers(request.POST['search'])
-        paginator = Paginator(response['printer_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['printer_data'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -1343,15 +1092,9 @@ def dashboard_search_printers(request):
 def dashboard_search_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor(request.POST['search'])
-        paginator = Paginator(response['delivery_vendor_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['delivery_vendor_data'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -1359,15 +1102,9 @@ def dashboard_search_delivery_vendors(request):
 def dashboard_search_printers_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.dashboard_search_printers_status(status)
-        paginator = Paginator(response['printer_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
-                      {'response': response, "status": status, 'start_sl': start_sl})
+                      {'response': response['printer_data'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -1375,15 +1112,9 @@ def dashboard_search_printers_status(request, status):
 def dashboard_search_delivery_vendors_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor_status(status)
-        paginator = Paginator(response['delivery_vendor_data'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
-                      {'response': response, "status": status, 'start_sl': start_sl})
+                      {'response': response['delivery_vendor_data'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -1391,15 +1122,9 @@ def dashboard_search_delivery_vendors_status(request, status):
 def dashboard_search_greetings(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.dashboard_search_greetings(request.POST['search'])
-        paginator = Paginator(response['all_greeting_cards'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['all_greeting_cards'], "search": request.POST['search']})
     else:
         return redirect('sign_up')
 
@@ -1407,15 +1132,9 @@ def dashboard_search_greetings(request):
 def dashboard_search_greetings_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.dashboard_filter_greetings(status)
-        paginator = Paginator(response['all_greeting_cards'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
-                      {'response': response, "status": status, 'start_sl': start_sl})
+                      {'response': response['all_greeting_cards'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -1424,15 +1143,9 @@ def printer_search_greetings(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.printer_search_greetings(request.POST['search'],
                                                                                    request.session.get('id'))
-        paginator = Paginator(response['all_greeting_cards'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
-                      {"response": response, "search": request.POST['search'], 'start_sl': start_sl})
+                      {"response": response['all_greeting_cards'], "search": request.POST['search']})
     else:
         return redirect('printer_login')
 
@@ -1511,15 +1224,9 @@ def printer_home_page(request):
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
-        paginator = Paginator(response['all_greeting_cards'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['all_greeting_cards']})
     else:
         return redirect('printer_login')
 
@@ -1529,15 +1236,9 @@ def printer_search_all_jobs(request):
         status = [1, 2, 3, 4, 5]
         response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
                                                                          request.session.get('id'))
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_all_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('printer_login')
 
@@ -1545,17 +1246,10 @@ def printer_search_all_jobs(request):
 def printer_search_open_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [2, 3, 4]
-        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
-                                                                         request.session.get('id'))
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'], {request.session.get('id')})
+
         return render(request, 'pages/printer/print_job/printer_open_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('printer_login')
 
@@ -1565,14 +1259,8 @@ def printer_search_closed_jobs(request):
         status = [5]
         response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
                                                                          request.session.get('id'))
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
-        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response, 'start_sl': start_sl})
+
+        return render(request, 'pages/printer/printer_closed_jobs.html', {"response": response['jobs']})
     else:
         return redirect('printer_login')
 
@@ -1582,15 +1270,9 @@ def printer_search_new_jobs(request):
         status = [1]
         response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
                                                                          request.session.get('id'))
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_new_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('printer_login')
 
@@ -1598,15 +1280,9 @@ def printer_search_new_jobs(request):
 def printer_filter_all_jobs(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = store_controller.printer_filter_jobs(status, request.session.get('id'))
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_all_jobs.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['jobs'], "status": status})
     else:
         return redirect('printer_login')
 
@@ -1614,15 +1290,9 @@ def printer_filter_all_jobs(request, status):
 def printer_filter_open_jobs(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = store_controller.printer_filter_jobs(status, request.session.get('id'))
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_open_jobs.html',
-                      {"response": response, "status": status, 'start_sl': start_sl})
+                      {"response": response['jobs'], "status": status})
     else:
         return redirect('printer_login')
 
@@ -1661,15 +1331,9 @@ def printer_filter_greetings_cards(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.printer_filter_greeting_cards(status,
                                                                                         request.session.get('id'))
-        paginator = Paginator(response['all_greeting_cards'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
-                      {'response': response, "status": status, 'start_sl': start_sl})
+                      {'response': response['all_greeting_cards'], "status": status})
     else:
         return redirect('printer_login')
 
@@ -1678,15 +1342,9 @@ def printer_all_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1, 2, 3, 4, 5]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_all_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('printer_login')
 
@@ -1695,15 +1353,9 @@ def printer_new_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_new_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('printer_login')
 
@@ -1712,15 +1364,9 @@ def printer_open_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [2, 3, 4]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_open_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('printer_login')
 
@@ -1729,15 +1375,9 @@ def printer_closed_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [5]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        paginator = Paginator(response['jobs'], 25)
-        page = request.GET.get('page')
-        response = paginator.get_page(page)
-        if page is not None:
-            start_sl = (int(page) - 1) * 25 + 1
-        else:
-            start_sl = 1
+        
         return render(request, 'pages/printer/print_job/printer_closed_jobs.html',
-                      {"response": response, 'start_sl': start_sl})
+                      {"response": response['jobs']})
     else:
         return redirect('printer_login')
 

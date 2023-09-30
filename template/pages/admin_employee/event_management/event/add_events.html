@@ -8,6 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="{% static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -164,6 +166,12 @@
 
 
 
+
+
+
+
+
+
     </style>
 
 </head>
@@ -193,8 +201,8 @@
                                     <label class="ml-2 custom-label"> Add New Event </label>
                                 </div>
 
-                                <form class="form-sample" action="/add_events" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/add_events" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Event info
@@ -205,42 +213,41 @@
                                                 <label class="col-sm-3 col-form-label">Select Event Type <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-
-                                                    <input type="text" id="event_type_name" readonly
-                                                           onclick="toggleDropdown('myDropdown1')"
-                                                           placeholder="Search" class="form-control">
-
-                                                    <div id="myDropdown1" class="dropdown-content">
-                                                        <input type="text" placeholder="Search" id="myInput1"
-                                                               onkeyup="filterFunction('myDropdown1')"
-                                                               class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="selector1" required>
+                                                        <option value="" disabled selected>Select an option</option>
                                                         {% for events_type in event_types.event_type_list %}
-                                                        <a onclick="setValue('{{events_type.event_type_name}}', '{{events_type.id}}', 'event_type_name', 'event_type_id')">{{events_type.event_type_name}}</a>
+                                                        <option data-name="{{events_type.event_type_name}}"
+                                                                data-id="{{events_type.id}}">
+                                                            {{events_type.event_type_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="event_type_id" name="event_type_id">
+                                                    </select>
+                                                    <input type="hidden" id="selectorId1" name="event_type_id">
+                                                    <div id="error-message1"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select City <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-
-                                                    <input type="text" id="city_name" readonly
-                                                           onclick="toggleDropdown('myDropdown2')"
-                                                           placeholder="Search" class="form-control">
-
-                                                    <div id="myDropdown2" class="dropdown-content">
-                                                        <input type="text" placeholder="Search" id="myInput2"
-                                                               onkeyup="filterFunction('myDropdown2')"
-                                                               class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="selector2" required>
+                                                        <option value="" disabled selected>Select an option</option>
                                                         {% for city in location.city_list %}
-                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
+                                                        <option data-name="{{city.city_name}}"
+                                                                data-id="{{city.city_id}}">
+                                                            {{city.city_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="city_id" name="city_id">
+                                                    </select>
+                                                    <input type="hidden" id="selectorId2" name="city_id">
+                                                    <div id="error-message2"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -251,23 +258,23 @@
                                                 <label class="col-sm-3 col-form-label">Select Printing Vendor <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-
-                                                    <input type="text" id="printer_name" readonly
-                                                           onclick="toggleDropdown('myDropdown3')"
-                                                           placeholder="Search" class="form-control">
-
-                                                    <div id="myDropdown3" class="dropdown-content">
-                                                        <input type="text" placeholder="Search" id="myInput3"
-                                                               onkeyup="filterFunction('myDropdown3')"
-                                                               class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="selector3" required>
+                                                        <option value="" disabled selected>Select an option</option>
                                                         {% for printers in printers.printer_data %}
-                                                        <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
+                                                        <option data-name="{{printers.store_name}}"
+                                                                data-id="{{printers.id}}">
+                                                            {{printers.store_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="printer_id" name="printer_id">
+                                                    </select>
+                                                    <input type="hidden" id="selectorId3" name="printer_id">
+                                                    <div id="error-message3"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Date & Time <span
@@ -277,10 +284,13 @@
                                                            name="event_date" class="form-control"
                                                            onkeydown="return false"
                                                            placeholder="Select a date and time">
+                                                    <div class="invalid-feedback">Event Date is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
@@ -291,6 +301,7 @@
                                                            pattern="[^ ].*" maxlength="256"
                                                            title="This field can't be Empty"
                                                            name="address_line1"/>
+                                                    <div class="invalid-feedback">Address Line is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -303,6 +314,7 @@
                                                            pattern="[^ ].*" maxlength="256"
                                                            title="This field can't be Empty"
                                                            name="address_line2"/>
+                                                    <div class="invalid-feedback">Address Line2 is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -321,8 +333,10 @@
                                                 <label class="col-sm-3 col-form-label">Event Lat Lng <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="event_lat_lng"
+                                                    <input required type="text" id="event_lat_lng"
                                                            name="event_lat_lng" class="form-control" readonly>
+                                                    <div id="error-message5" style="color: #dc3545; font-size: 14px;
+                                                    margin-top:5px"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -337,13 +351,13 @@
                                                     <input required type="text" class="form-control" name="delivery_fee"
                                                            placeholder="₹" pattern="[1-9][0-9]{0,3}"
                                                            title="Please add the amount only"/>
+                                                    <div class="invalid-feedback">Delivery Fee is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                <label class="col-sm-3 col-form-label">Created By </label>
                                                 <div class="col-sm-9">
                                                     <input disabled readonly class="form-control"
                                                            value="{{ request.session.name }}">
@@ -356,68 +370,95 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Delivery Address <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                style="font-weight: bold; color: red;">*</span></label>
                                         <textarea required class="form-control" id="delivery_address" rows="4"
                                                   maxlength="255"
                                                   name="delivery_address"></textarea>
+                                        <div class="invalid-feedback">Delivery Address is mandatory</div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                style="font-weight: bold; color: red;">*</span></label>
                                         <textarea required class="form-control" id="event_note" rows="4"
                                                   maxlength="255"
                                                   name="event_note"></textarea>
+                                        <div class="invalid-feedback">Event Note is mandatory</div>
                                     </div>
 
                                     <div id="sub-events-container">
                                         <label class="col-sm-3 col-form-label">Sub Events <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                style="font-weight: bold; color: red;">*</span></label>
                                         <div class="event-row">
                                             <input class="event-input" type="text" name="sub_events[0][sub_event_name]"
                                                    pattern="[^ ].*" maxlength="256"
                                                    title="This field can't be Empty"
                                                    placeholder="Sub Event Name" required>
+                                            <div class="invalid-feedback">Sub Event Name is mandatory</div>
                                             <input class="event-input" type="datetime-local"
                                                    name="sub_events[0][start]"
                                                    id="sub_event_start_date"
                                                    class="form-control" onkeydown="return false" required>
+                                            <div class="invalid-feedback">Start time is mandatory</div>
 
                                             <input class="event-input" type="datetime-local" name="sub_events[0][end]"
                                                    placeholder="End Time" id="sub_event_end_date"
                                                    class="form-control" onkeydown="return false" required>
+                                            <div class="invalid-feedback">End time is mandatory</div>
+
                                         </div>
                                     </div>
-                                    <button type="button" id="addSubEventButton">Add Sub Event </button>
-                                    <button type="button" id="removeEventButton" style="display: none; margin-top:5px;">
+                                    <button type="button" id="addSubEventButton" class="btn btn-primary mb-4">Add Sub
+                                        Event
+                                    </button>
+                                    <button type="button" id="removeEventButton" class="btn btn-primary mb-4"
+                                            style="display: none;">
                                         Remove Sub
                                         Event
                                     </button>
 
                                     <div id="event-admin-container">
                                         <label class="col-sm-3 col-form-label">Event Admins <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                style="font-weight: bold; color: red;">*</span></label>
                                         <div class="event-row">
-                                            <input type="text" id="name" name="event_admin[0][name]" readonly
-                                                   onclick="toggleDropdown('myDropdown4')"
-                                                   placeholder="Search" class="event-input">
-
-                                            <div id="myDropdown4" class="dropdown-content">
-                                                <input type="text" placeholder="Search" id="myInput4"
-                                                       onkeyup="filterFunction('myDropdown4')" class="form-control">
-                                                {% for users in users.user_data %}
-                                                <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}
-                                                    {{users.phone}}</a>
-                                                {% endfor %}
+                                            <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12">
+                                                        <select class="form-control selectpicker"
+                                                                data-live-search="true"
+                                                                id="selector4" required>
+                                                            <option value="" disabled selected>Select an Admin</option>
+                                                            {% for users in users.user_data %}
+                                                            <option data-name="{{users.name}}"
+                                                                    data-id="{{users.uid}}">
+                                                                {{users.name}} {{users.phone}}
+                                                            </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <input type="hidden" id="selectorId4"
+                                                               name="event_admin[0][uid]">
+                                                        <div id="error-message4"
+                                                             style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <input required class="event-input" type="text" maxlength="256"
-                                                   pattern="[^ ].*"
-                                                   title="This field can't be Empty"
-                                                   name="event_admin[0][role]" placeholder="Bride, Groom etc ">
-
-                                            <input type="hidden" id="uid" name="event_admin[0][uid]">
+                                            <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12">
+                                                        <input required class="event-input" type="text"
+                                                               maxlength="256"
+                                                               pattern="[^ ].*"
+                                                               title="This field can't be Empty"
+                                                               name="event_admin[0][role]"
+                                                               placeholder="Bride, Groom etc ">
+                                                        <div class="invalid-feedback"> Event Admin role is
+                                                            mandatory
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <button type="button" id="addEventAdminButton">Add Event Admin </button>
+                                    <button type="button" id="addEventAdminButton">Add Event Admin</button>
                                     <button type="button" id="removeEventAdminButton" style="display: none;">Remove
                                         Event Admin
                                     </button>
@@ -448,59 +489,34 @@
     <!-- page-body-wrapper ends -->
 </div>
 
+
 <!-- my_template.html -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
 
 <script>
-// Function to toggle a specific dropdown based on its ID
-function toggleDropdown(dropdownId) {
-  var dropdown = document.getElementById(dropdownId);
-  dropdown.classList.toggle("show");
-}
+    document.addEventListener("DOMContentLoaded", function () {
+        for (var i = 1; i <= 4; i++) {
+            (function(index) {
+                var selectId = document.getElementById("selector" + index);
+                var inputId = document.getElementById("selectorId" + index);
+                var errorMessage = document.getElementById("error-message" + index);
 
-// Function to filter the dropdown content based on the input value
-function filterFunction(dropdownId) {
-  var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput" + dropdownId.slice(-1));
-  filter = input.value.toUpperCase();
-  div = document.getElementById(dropdownId);
-  console.log(input)
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
-    }
-  }
-}
+                selectId.addEventListener("change", function () {
+                    errorMessage.style.display = "none";
+                    var selectedOption = selectId.options[selectId.selectedIndex];
+                    var value = selectedOption.getAttribute("data-id");
 
-function setValue(value1, value2, inputField1Id, inputField2Id) {
-  if (value1 && value2) {
-    document.getElementById(inputField1Id).value = value1;
-    console.log(inputField1Id)
-    console.log(inputField2Id)
-    console.log(value1)
-    console.log(value2)
-    document.getElementById(inputField2Id).value = value2;
-    // Optionally, you can hide the dropdown after selecting a value
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    for (var i = 0; i < dropdowns.length; i++) {
-      dropdowns[i].classList.remove("show");
-    }
-  }
-}
-
-  document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("dropdownId");
-        const nameInput = document.getElementById("name");
-        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
+                    if (value) {
+                        inputId.value = value;
+                    }
+                });
+            })(i);
         }
     });
 
-
 </script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -536,8 +552,11 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             subEventRow.classList.add('event-row');
             subEventRow.innerHTML = `
                 <input class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
+                <div class="invalid-feedback">Sub Event Name is mandatory</div>
                 <input class="event-input sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" required>
+                <div class="invalid-feedback">Start time Name is mandatory</div>
                 <input class="event-input sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" required>
+                <div class="invalid-feedback">End time Name is mandatory</div>
             `;
             subEventsContainer.appendChild(subEventRow);
             const currentDate = new Date().toISOString().slice(0, 16);
@@ -559,23 +578,43 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         }
 
         function addEventAdmin() {
-            const eventAdminRow = document.createElement('div');
-            eventAdminRow.classList.add('event-row');
-            eventAdminRow.innerHTML = `
-            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search" class="event-input">
-            <div id="myDropdown5" class="dropdown-content">
-                <input type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
-                {% for users in users.user_data %}
-                <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
-                {% endfor %}
+    const eventAdminRow = document.createElement('div');
+    eventAdminRow.classList.add('event-row');
+    eventAdminRow.innerHTML = `
+        <div class="col-md-6">
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <select class="form-control admin-select" required>
+                        <option value="">Select an Admin</option>
+                        {% for users in users.user_data %}
+                        <option value="{{users.uid}}">{{users.name}} {{users.phone}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="event_admin[${eventAdminIndex}][uid]">
+                    <div class="invalid-feedback">Admin selection is required.</div>
+                </div>
             </div>
-            <input class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ...." required>
-            <input type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]">
-        `;
-            eventAdminContainer.appendChild(eventAdminRow);
-            eventAdminIndex++;
-            updateButtonVisibility();
-        }
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <input required class="event-input" type="text" maxlength="256" pattern="[^ ].*"
+                        title="This field can't be Empty" name="event_admin[${eventAdminIndex}][role]"
+                        placeholder="Bride, Groom, etc">
+                    <div class="invalid-feedback">Event Admin role is mandatory</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    eventAdminContainer.appendChild(eventAdminRow);
+    eventAdminIndex++;
+    updateButtonVisibility();
+
+    // Initialize Select2 for the newly added select element
+    $(eventAdminRow).find('.admin-select').select2();
+}
+
 
         function removeEventAdmin() {
             if (eventAdminIndex > 1) {
@@ -591,11 +630,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         addEventAdminButton.addEventListener('click', addEventAdmin);
         removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
-
-
-
-
-
 
 
 </script>
@@ -676,46 +710,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         }
 
 
-
-
-
-
 </script>
 
-<script>
-        const datePicker = document.getElementById('datePicker');
-        const calendarContainer = document.getElementById('calendarContainer');
-        const dateTimePicker = document.getElementById('dateTimePicker');
-
-        datePicker.addEventListener('click', () => {
-            calendarContainer.style.display = 'block';
-        });
-
-        dateTimePicker.addEventListener('change', () => {
-            const selectedDate = new Date(dateTimePicker.value);
-            const currentDate = new Date();
-
-            if (selectedDate < currentDate) {
-                alert('Please select a future date and time.');
-                dateTimePicker.value = '';
-            } else {
-                datePicker.value = dateTimePicker.value;
-                calendarContainer.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('click', (event) => {
-            if (event.target !== datePicker && event.target !== calendarContainer) {
-                calendarContainer.style.display = 'none';
-            }
-        });
-
-
-
-
-
-
-</script>
 <script>
         // Get the current date and time in ISO format
         const currentDate = new Date().toISOString().slice(0, 16);
@@ -724,60 +720,76 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("event_date").min = currentDate;
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
-
-
-
-
-
-
 </script>
-
-
 <script>
         document.getElementById("myForm").addEventListener("submit", function (e) {
-            var event_type_name = document.getElementById("event_type_name").value;
-            var city_name = document.getElementById("city_name").value;
-            var printer_name = document.getElementById("printer_name").value;
-            var event_lat_lng = document.getElementById("event_lat_lng").value;
-            var name = document.getElementById("name").value;
-            var errorContainer = document.querySelector('.messages-container');
-            var errorMessage = document.getElementById('error-message');
+            var eventTypeSelect = document.getElementById("selectorId1").value;
+            var citySelect = document.getElementById("selectorId2").value;
+            var printingVendorSelect = document.getElementById("selectorId3").value;
+            var eventAdminSelect = document.getElementById("selectorId4").value;
+            var latLngSelect = document.getElementById("event_lat_lng").value;
+            var errorMessage1 = document.getElementById('error-message1');
+            var errorMessage2 = document.getElementById('error-message2');
+            var errorMessage3 = document.getElementById('error-message3');
+            var errorMessage4 = document.getElementById('error-message4');
+            var errorMessage5 = document.getElementById('error-message5');
 
-            if (!event_type_name) {
-                errorMessage.textContent = "Please select the type of event";
-                errorContainer.style.display = "block";
+            if (eventTypeSelect === "") {
+                errorMessage1.textContent = "Please select event type";
+                errorMessage1.style.display = "block";
                 e.preventDefault();
+            } else {
+                errorMessage1.style.display = "none";
             }
-            else if (!city_name) {
-                errorMessage.textContent = "Please select the city for event";
-                errorContainer.style.display = "block";
+            if (citySelect === "") {
+                errorMessage2.textContent = "Please select event city";
+                errorMessage2.style.display = "block";
                 e.preventDefault();
+            } else {
+                errorMessage2.style.display = "none";
             }
-            else if (!printer_name) {
-                errorMessage.textContent = "Please select the printing vendor for event";
-                errorContainer.style.display = "block";
+            if (printingVendorSelect === "") {
+                errorMessage3.textContent = "Please select printing vendor";
+                errorMessage3.style.display = "block";
                 e.preventDefault();
+            } else {
+                errorMessage3.style.display = "none";
             }
-            else if (!event_lat_lng) {
-                errorMessage.textContent = "Please select the event location on map";
-                errorContainer.style.display = "block";
+            if (eventAdminSelect === "") {
+                errorMessage4.textContent = "Please select event Admin";
+                errorMessage4.style.display = "block";
                 e.preventDefault();
+            } else {
+                errorMessage4.style.display = "none";
             }
-            else if (!name) {
-                errorMessage.textContent = "Please select the admin for the event";
-                errorContainer.style.display = "block";
+            if (latLngSelect === "") {
+                errorMessage5.textContent = "Please select latitude longitude";
+                errorMessage5.style.display = "block";
                 e.preventDefault();
+            } else {
+                errorMessage5.style.display = "none";
             }
-
-
         });
 
-
-
-
-
-
 </script>
+
+
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/css/tempusdominus-bootstrap-4.min.css"
+      rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
 
 </body>
 

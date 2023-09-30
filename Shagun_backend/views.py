@@ -982,7 +982,9 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
             json_data = transform_data_to_json(request.POST)
+            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             response = event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')

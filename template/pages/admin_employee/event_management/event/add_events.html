@@ -67,11 +67,11 @@
           background-color: #f6f6f6;
           min-width: 100%;
           max-width: 100%;
-          max-height: 400px; /* Limit the maximum height to 400px */
-          overflow-y: auto; /* Add a vertical scrollbar when needed */
+          max-height: 400px;
+          overflow-y: auto;
           border: 1px solid #ddd;
           z-index: 1;
-          height: auto; /* Allow the height to wrap content */
+          height: auto;
         }
 
 
@@ -168,7 +168,7 @@
         .dropdown-content {
           display: none;
           position: absolute;
-          background-color: #f6f6f6;
+          background-color: #ffffff;
           min-width: 230px;
           max-width: 300px;
           max-height: 400px; /* Limit the maximum height to 400px */
@@ -184,10 +184,18 @@
           padding: 12px 16px;
           text-decoration: none;
           display: block;
+          cursor: pointer;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
         }
         .dropdown a:hover {background-color: #ddd;}
 
         .show {display: block;}
+
+
+
+
 
     </style>
 
@@ -407,18 +415,24 @@
                                         <label class="col-sm-3 col-form-label">Sub Events</label>
                                         <div class="event-row mb-3">
                                             <div class="col-md-4">
-                                            <input class="form-control" type="text" name="sub_events[0][sub_event_name]"
-                                                   pattern="[^ ].*" maxlength="256"
-                                                   title="This field can't be Empty"
-                                                   placeholder="Sub Event Name" required></div>
-                                            <div class="col-md-4">
-                                            <input class="form-control" type="datetime-local"
-                                                   name="sub_events[0][start]" placeholder="Start Time"
-                                                   id="sub_event_start_date" required>
+                                                <input class="form-control" type="text"
+                                                       name="sub_events[0][sub_event_name]"
+                                                       pattern="[^ ].*" maxlength="256"
+                                                       title="This field can't be Empty"
+                                                       placeholder="Sub Event Name" required>
+                                                <div class="invalid-feedback">Sub Event name is mandatory</div>
                                             </div>
                                             <div class="col-md-4">
-                                            <input class="form-control" type="datetime-local" name="sub_events[0][end]"
-                                                   placeholder="End Time" id="sub_event_end_date" required>
+                                                <input class="form-control" type="datetime-local"
+                                                       name="sub_events[0][start]" placeholder="Start Time"
+                                                       id="sub_event_start_date" required>
+                                                <div class="invalid-feedback">Sub Event start time is mandatory</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input class="form-control" type="datetime-local"
+                                                       name="sub_events[0][end]"
+                                                       placeholder="End Time" id="sub_event_end_date" required>
+                                                <div class="invalid-feedback">Sub Event End time is mandatory</div>
                                             </div>
                                         </div>
                                     </div>
@@ -430,23 +444,30 @@
 
                                     <div id="event-admin-container">
                                         <label class="col-sm-3 col-form-label">Event Admins</label>
-                                        <div class="event-row">
-                                            <input type="text" id="name" name="event_admin[0][name]" readonly
-                                                   onclick="toggleDropdown('myDropdown4')"
-                                                   placeholder="Search" class="event-input">
+                                        <div class="event-row mb-3">
+                                            <div class="col-md-6 mb-3">
+                                                <input required type="text" id="name" name="event_admin[0][name]" readonly
+                                                       onclick="toggleDropdown('myDropdown4')"
+                                                       placeholder="Search" class="form-control">
 
-                                            <div id="myDropdown4" class="dropdown-content">
-                                                <input type="text" placeholder="Search" id="myInput4"
-                                                       onkeyup="filterFunction('myDropdown4')" class="form-control">
-                                                {% for users in users.user_data %}
-                                                <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}
-                                                    {{users.phone}}</a>
-                                                {% endfor %}
+                                                <div id="myDropdown4" class="dropdown-content">
+                                                    <input type="text" placeholder="Search" id="myInput4"
+                                                           onkeyup="filterFunction('myDropdown4')" class="form-control">
+                                                    {% for users in users.user_data %}
+                                                    <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name', 'uid')">{{users.name}}
+                                                        {{users.phone}}</a>
+                                                    {% endfor %}
+                                                </div>
+                                                <div id="error-message4"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                             </div>
-                                            <input required class="event-input" type="text" maxlength="256"
-                                                   pattern="[^ ].*"
-                                                   title="This field can't be Empty"
-                                                   name="event_admin[0][role]" placeholder="Bride, Groom etc ">
+                                            <div class="col-md-6">
+                                                <input required class="form-control" type="text" maxlength="256"
+                                                       pattern="[^ ].*"
+                                                       title="This field can't be Empty"
+                                                       name="event_admin[0][role]" placeholder="Bride, Groom etc ">
+                                                <div class="invalid-feedback">Admin role is mandatory</div>
+                                            </div>
 
                                             <input type="hidden" id="uid" name="event_admin[0][uid]">
                                         </div>
@@ -505,6 +526,10 @@
 
 
 
+
+
+
+
 </script>
 
 
@@ -541,9 +566,12 @@
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
             subEventRow.innerHTML = `
-                <div class="col-md-4 mb-3"><input class="form-control" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required></div>
-                <div class="col-md-4 mb-3"><input class="form-control sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" required></div>
-                <div class="col-md-4 mb-3"><input class="form-control sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" required></div>
+                <div class="col-md-4 mb-3"><input class="form-control" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
+                <div class="invalid-feedback">Sub Event name is mandatory</div></div>
+                <div class="col-md-4 mb-3"><input class="form-control sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" required>
+                <div class="invalid-feedback">Sub Event start time is mandatory</div></div>
+                <div class="col-md-4 mb-3"><input class="form-control sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" required>
+                <div class="invalid-feedback">Sub Event end time is mandatory</div></div>
             `;
             subEventsContainer.appendChild(subEventRow);
             const currentDate = new Date().toISOString().slice(0, 16);
@@ -568,19 +596,40 @@
             const eventAdminRow = document.createElement('div');
             eventAdminRow.classList.add('event-row');
             eventAdminRow.innerHTML = `
-            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search" class="event-input">
-            <div id="myDropdown5" class="dropdown-content">
-                <input type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
+            <div class="col-md-6 mb-3">
+            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown2')" placeholder="Search" class="form-control">
+            <div id="myDropdown2" class="dropdown-content">
+                <input type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown2')" class="form-control">
                 {% for users in users.user_data %}
                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
                 {% endfor %}
             </div>
-            <input class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ...." required>
-            <input type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]">
+            <div id="error-message6"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+            <input class="form-control" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ...." required>
+            <div class="invalid-feedback">Admin role is mandatory</div>
+            <input type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]"></div>
         `;
             eventAdminContainer.appendChild(eventAdminRow);
             eventAdminIndex++;
             updateButtonVisibility();
+
+                var secondAdminSelect = eventAdminRow.querySelector("#name1");
+                var errorMessage6 = eventAdminRow.querySelector("#error-message6");
+
+                secondAdminSelect.addEventListener("click", function () {
+                if (secondAdminSelect.value === "") {
+                    console.log('second event liistner'+secondAdminSelect.value)
+                    errorMessage6.textContent = "Please select an event Admin";
+                    errorMessage6.style.display = "block";
+                } else {
+                console.log('second else event listner'+secondAdminSelect.value)
+                    errorMessage6.style.display = "none";
+                }
+            });
+
         }
 
         function removeEventAdmin() {
@@ -602,8 +651,11 @@
 
 
 
-</script>
 
+
+
+
+</script>
 
 
 <script>
@@ -619,7 +671,6 @@ function filterFunction(dropdownId) {
   input = document.getElementById("myInput" + dropdownId.slice(-1));
   filter = input.value.toUpperCase();
   div = document.getElementById(dropdownId);
-  console.log(input)
   a = div.getElementsByTagName("a");
   for (i = 0; i < a.length; i++) {
     txtValue = a[i].textContent || a[i].innerText;
@@ -634,11 +685,14 @@ function filterFunction(dropdownId) {
 function setValue(value1, value2, inputField1Id, inputField2Id) {
   if (value1 && value2) {
     document.getElementById(inputField1Id).value = value1;
-    console.log(inputField1Id)
-    console.log(inputField2Id)
-    console.log(value1)
-    console.log(value2)
     document.getElementById(inputField2Id).value = value2;
+    if (inputField1Id === "name") {
+      var errorMessage4 = document.getElementById("error-message4");
+      errorMessage4.style.display = "none";
+    } else if (inputField1Id === "name1") {
+      var errorMessage6 = document.getElementById("error-message6");
+      errorMessage6.style.display = "none";
+    }
     // Optionally, you can hide the dropdown after selecting a value
     var dropdowns = document.getElementsByClassName("dropdown-content");
     for (var i = 0; i < dropdowns.length; i++) {
@@ -656,6 +710,10 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
       }
     }
   });
+
+
+
+
 
 
 
@@ -749,6 +807,10 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
+
+
 </script>
 
 <script>
@@ -760,11 +822,9 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
 
-
-
-
-
 </script>
+
+
 <script>
         document.getElementById("myForm").addEventListener("submit", function (e) {
             var eventTypeSelect = document.getElementById("selectorId1").value;
@@ -777,6 +837,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             var errorMessage3 = document.getElementById('error-message3');
             var errorMessage4 = document.getElementById('error-message4');
             var errorMessage5 = document.getElementById('error-message5');
+            var errorMessage6 = document.getElementById('error-message6');
+
 
             if (eventTypeSelect === "") {
                 errorMessage1.textContent = "Please select event type";
@@ -813,14 +875,20 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             } else {
                 errorMessage5.style.display = "none";
             }
+
+            var secondAdminSelect = document.getElementById("name1").value;
+            if ( secondAdminSelect === "") {
+                errorMessage6.textContent = "Please select event Admin";
+                errorMessage6.style.display = "block";
+                e.preventDefault();
+            } else {
+                errorMessage6.style.display = "none";
+            }
+
         });
 
-
-
-
-
-
 </script>
+
 
 
 <!-- Latest compiled and minified CSS -->

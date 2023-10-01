@@ -370,32 +370,38 @@
                                         <div class="invalid-feedback">Event Note is mandatory</div>
                                     </div>
 
-
                                     <div id="sub-events-container">
-                                        <label class="col-sm-3 col-form-label">Sub Events <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
-
+                                        <label class="col-sm-3 col-form-label">Sub Events</label>
                                         {% for sub_event in event.event_data.sub_events %}
-                                        <div class="event-row">
-                                            <input required class="event-input" type="text"
-                                                   pattern="[^ ].*"
-                                                   title="This field can't be Empty"
-                                                   name="sub_events[{{ forloop.counter0 }}][sub_event_name]"
-                                                   value="{{sub_event.sub_event_name}}">
-                                            <div class="invalid-feedback">Sub Event Name is mandatory</div>
-                                            <input required class="event-input" type="datetime-local"
-                                                   name="sub_events[{{ forloop.counter0 }}][start]"
-                                                   value="{{sub_event.start_time}}">
-                                            <div class="invalid-feedback">Start Time is mandatory</div>
-                                            <input required class="event-input" type="datetime-local"
-                                                   name="sub_events[{{ forloop.counter0 }}][end]"
-                                                   value="{{sub_event.end_time}}">
-                                            <div class="invalid-feedback">End Time is mandatory</div>
+                                        <div class="event-row mb-3">
+                                            <div class="col-md-4">
+                                                <input class="form-control" type="text"
+                                                       name="sub_events[{{ forloop.counter0 }}][sub_event_name]"
+                                                       pattern="[^ ].*" maxlength="256" value="{{sub_event.sub_event_name}}"
+                                                       title="This field can't be Empty"
+                                                       placeholder="Sub Event Name" required>
+                                                <div class="invalid-feedback">Sub Event name is mandatory</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input class="form-control" type="datetime-local"
+                                                       name="sub_events[{{ forloop.counter0 }}][start]" placeholder="Start Time"
+                                                       id="sub_event_start_date" onkeydown="return false"
+                                                       value="{{sub_event.start_time}}" required>
+                                                <div class="invalid-feedback">Sub Event start time is mandatory</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input class="form-control" type="datetime-local"
+                                                       name="sub_events[{{ forloop.counter0 }}][end]" onkeydown="return false"
+                                                       placeholder="End Time" id="sub_event_end_date"
+                                                       value="{{sub_event.end_time}}" required>
+                                                <div class="invalid-feedback">Sub Event End time is mandatory</div>
+                                            </div>
                                         </div>
                                         {% endfor %}
                                         <input type="hidden" id="maxSubEventIndex"
                                                value="{{ event.event_data.sub_events|length }}">
                                     </div>
+
                                     <button type="button" id="addSubEventButton">Add Sub Event</button>
                                     <button type="button" id="removeEventButton"
                                             style="display: none; margin-top: 5px;">Remove Sub
@@ -519,7 +525,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 </script>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const addSubEventButton = document.getElementById('addSubEventButton');
@@ -529,9 +534,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         const subEventsContainer = document.getElementById('sub-events-container');
         const eventAdminContainer = document.getElementById('event-admin-container');
         const maxSubEventIndex = parseInt(document.getElementById('maxSubEventIndex').value);
-
         let subEventIndex = maxSubEventIndex;
-        let eventAdminIndex = 1;
 
         function updateButtonVisibility() {
             if (subEventIndex > 1) {
@@ -555,9 +558,12 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
             subEventRow.innerHTML = `
-                <input class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
-                <input class="event-input sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" required>
-                <input class="event-input sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" required>
+                <div class="col-md-4 mb-3"><input class="form-control" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
+                <div class="invalid-feedback">Sub Event name is mandatory</div></div>
+                <div class="col-md-4 mb-3"><input class="form-control sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" onkeydown="return false" required>
+                <div class="invalid-feedback">Sub Event start time is mandatory</div></div>
+                <div class="col-md-4 mb-3"><input class="form-control sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" onkeydown="return false" required>
+                <div class="invalid-feedback">Sub Event end time is mandatory</div></div>
             `;
             subEventsContainer.appendChild(subEventRow);
             const currentDate = new Date().toISOString().slice(0, 16);
@@ -578,40 +584,10 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             }
         }
 
-        function addEventAdmin() {
-            const eventAdminRow = document.createElement('div');
-            eventAdminRow.classList.add('event-row');
-            eventAdminRow.innerHTML = `
-            <input required type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search" class="event-input">
-            <div id="myDropdown5" class="dropdown-content">
-                <input required type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
-                {% for users in users.user_data %}
-                <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
-                {% endfor %}
-            </div>
-            <input required class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ....">
-            <input required type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]">
-        `;
-            eventAdminContainer.appendChild(eventAdminRow);
-            eventAdminIndex++;
-            updateButtonVisibility();
-        }
-
-        function removeEventAdmin() {
-            if (eventAdminIndex > 1) {
-                eventAdminIndex--;
-                const eventAdminRows = eventAdminContainer.getElementsByClassName('event-row');
-                eventAdminContainer.removeChild(eventAdminRows[eventAdminIndex]);
-                updateButtonVisibility();
-            }
-        }
 
         addSubEventButton.addEventListener('click', addSubEvent);
         removeEventButton.addEventListener('click', removeSubEvent);
-        addEventAdminButton.addEventListener('click', addEventAdmin);
-        removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
-
 
 
 </script>

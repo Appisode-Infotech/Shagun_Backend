@@ -3,6 +3,7 @@ from django.db import connection
 import json
 import os
 import qrcode
+from PIL import Image
 from django.conf import settings
 
 from Shagun_backend.util import responsegenerator
@@ -70,28 +71,41 @@ def create_event(event_obj):
                 # Replace this with your desired text
                 text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
 
-                # Generate QR code
-                qr = qrcode.QRCode(
-                    version=1,  # QR code version (controls size)
-                    error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
-                    box_size=10,  # Size of each box in pixels
-                    border=4,  # Border size in boxes
+                logo_path = "static/images/square_logo.jpg"
+                logo = Image.open(logo_path)
+
+                basewidth = 100
+
+                # adjust image size
+                wpercent = (basewidth / float(logo.size[0]))
+                hsize = int((float(logo.size[1]) * float(wpercent)))
+
+                logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
+                QRcode = qrcode.QRCode(
+                    error_correction=qrcode.constants.ERROR_CORRECT_H
                 )
 
-                # Add data to the QR code
-                qr.add_data(text)
-                qr.make(fit=True)
+                QRcode.add_data(text)
 
-                # Create an image from the QR code instance with the desired fill color
-                fill_color = "#671160"
-                img = qr.make_image(fill_color=fill_color, back_color="white")
+                QRcode.make()
+                QRcolor = '#671160'
+
+                # adding color to QR code
+                QRimg = QRcode.make_image(
+                    fill_color=QRcolor, back_color="white").convert('RGB')
+
+                # set size of QR code
+                pos = ((QRimg.size[0] - logo.size[0]) // 2,
+                       (QRimg.size[1] - logo.size[1]) // 2)
+                QRimg.paste(logo, pos)
 
                 # Construct the path to save the image in the media directory
                 media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
                 os.makedirs(media_dir, exist_ok=True)
                 image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
 
-                img.save(image_path)
+
+                QRimg.save(image_path)
 
                 # The relative URL to the saved image
                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
@@ -109,6 +123,89 @@ def create_event(event_obj):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+#
+#
+# def create_event(event_obj):
+#     try:
+#         with connection.cursor() as cursor:
+#             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
+#             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
+#
+#             create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
+#                                         address_line2, event_lat_lng, created_on, sub_events, event_date, event_note,
+#                                         event_admin, is_approved, status, printer_id, delivery_fee, delivery_address)
+#                                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+#
+#             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
+#                       event_obj.address_line2, event_obj.event_lat_lng, getIndianTime(), sub_events_json,
+#                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id,
+#                       event_obj.delivery_fee, event_obj.delivery_address)
+#
+#             cursor.execute(create_event_query, values)
+#             event_id = cursor.lastrowid
+#             event_admin_query = f"""SELECT e.event_admin, et.event_type_name FROM event AS e
+#                                     LEFT JOIN events_type AS et ON e.event_type_id = et.id
+#                                     WHERE  e.id = '{event_id}'"""
+#             cursor.execute(event_admin_query)
+#             admin = cursor.fetchone()
+#             event_admins = json.loads(admin[0])
+#             for item in event_admins:
+#                 uid = item["uid"]
+#                 event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message)
+#                             VALUES ('{uid}', 'event',
+#                             'Event has been created',
+#                             ' Event created for {admin[1]} on {event_obj.event_date}')"""
+#                 cursor.execute(event_created_notification_query)
+#
+#                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
+#                 cursor.execute(phone_query)
+#                 user_data = cursor.fetchone()
+#                 title = f"Event has been created"
+#                 message = f"Event created for {admin[1]} on {event_obj.event_date}"
+#                 send_push_notification(user_data[1], title, message)
+#
+#                 # Replace this with your desired text
+#                 text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
+#
+#                 # Generate QR code
+#                 qr = qrcode.QRCode(
+#                     version=1,  # QR code version (controls size)
+#                     error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
+#                     box_size=10,  # Size of each box in pixels
+#                     border=4,  # Border size in boxes
+#                 )
+#
+#                 # Add data to the QR code
+#                 qr.add_data(text)
+#                 qr.make(fit=True)
+#
+#                 # Create an image from the QR code instance with the desired fill color
+#                 fill_color = "#671160"
+#                 img = qr.make_image(fill_color=fill_color, back_color="white")
+#
+#                 # Construct the path to save the image in the media directory
+#                 media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
+#                 os.makedirs(media_dir, exist_ok=True)
+#                 image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
+#
+#                 img.save(image_path)
+#
+#                 # The relative URL to the saved image
+#                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
+#                 item["qr_code"] = image_url
+#
+#             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
+#             cursor.execute(update_qr_sql)
+#             return {
+#                 "status": True,
+#                 "message": "Event Created successfully"
+#             }, 200
+#
+#     except pymysql.Error as e:
+#         return {"status": False, "message": str(e)}, 301
+#     except Exception as e:
+#         return {"status": False, "message": str(e)}, 301
+#
 
 def edit_event(event_obj, event_id):
     print(event_obj)
@@ -116,6 +213,8 @@ def edit_event(event_obj, event_id):
     try:
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
+            print("from controller")
+            print(sub_events_json)
             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
             update_event_query = """
                         UPDATE event

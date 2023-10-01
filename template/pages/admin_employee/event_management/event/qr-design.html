@@ -274,25 +274,23 @@ body {
     <div class="rectangle-34-bCu">
     </div>
     <img class="rectangle-33-LAV" src="./assets/rectangle-33-857.png"/>
-    <div class="rectangle-35-TW1">
+    <div class="rectangle-35-TW1" style="margin-top:10px;">
     </div>
-    <div class="group-26-PuT">
+    <div class="group-26-PuT" style="height: auto;">
       <div class="auto-group-ivhw-5nH">
         <div class="group-27-pzm">
           <div class="ellipse-7-z8Z">
           </div>
-          <p class="bharath-kumar-h2y">
-          Roop Raj Thapa From Nepal
+          <p class="bharath-kumar-h2y" id="truncate-text">
+          Santhosh Kumar Murthy
           </p>
         </div>
         <div class="auto-group-9ffx-naD">
           <div class="group-28-vgR">
             <div class="ellipse-8-ra5">
             </div>
-            <p class="smitha-rao-ZUV">
-            Smitha
-            <br/>
-            Rao
+            <p class="smitha-rao-ZUV" id="truncate-text1">
+            Smitha Rao From Pakistan
             </p>
           </div>
           <p class="weds-g3K">WEDS</p>
@@ -315,3 +313,26 @@ body {
   </div>
 </div>
 </body>
+<script>
+  function truncateText(text, maxLength) {
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  var truncatedText = text.substring(0, maxLength);
+  var lastSpaceIndex = truncatedText.lastIndexOf(" ");
+
+  if (lastSpaceIndex !== -1) {
+    truncatedText = truncatedText.substring(0, lastSpaceIndex);
+  }
+
+  return truncatedText;
+}
+
+var element = document.getElementById("truncate-text");
+var element1 = document.getElementById("truncate-text1");
+
+element.textContent = truncateText(element.textContent, 26);
+element1.textContent = truncateText(element1.textContent, 26);
+
+</script>

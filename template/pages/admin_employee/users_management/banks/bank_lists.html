@@ -154,6 +154,13 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Banks List </h4>
                                     <div class="form-group">
+                                            <div class="input-group">
+                                                <input name="search" id="search" type="text" class="form-control"
+                                                       placeholder="Search" value="{{search}}"
+                                                       aria-label="Recipient's username">
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
                                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                                 onclick="showPopUpDiv1()">
                                             Add Bank
@@ -162,7 +169,7 @@
                                     </div>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample" action="/add_bank_list" method="post">
+                                            <form class="form-sample needs-validation" action="/add_bank_list" method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="text-center">
                                                     <h4 class="card-title">Add Bank</h4>
@@ -178,6 +185,7 @@
                                                                        pattern="^[A-Za-z][A-Za-z ]*$"
                                                                        title="Enter Bank Name" maxlength="256"
                                                                        class="form-control"/>
+                                                                <div class="invalid-feedback">Bank Name is mandatory</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -206,7 +214,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
+                                    <table id="myTable"  class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>SL No</th>
@@ -269,8 +277,8 @@
                                                 </button>
                                                 <div id="customAlertOverlay1" class="custom-alert-overlay">
                                                     <div class="custom-alert">
-                                                        <form class="form-sample" action="/edit_bank_list"
-                                                              method="post">
+                                                        <form class="form-sample needs-validation" action="/edit_bank_list"
+                                                              method="post" novalidate>
                                                             {% csrf_token %}
                                                             <h4 class="card-title">Edit Bank</h4>
                                                             <div class="row">
@@ -297,6 +305,7 @@
                                                                                    title="Enter Bank Name"
                                                                                    maxlength="256"
                                                                                    name="name"/>
+                                                                            <div class="invalid-feedback">Bank Name is mandatory</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -321,6 +330,7 @@
                             </div>
                         </div>
                     </div>
+                    <div class="pagination justify-content-center col-12" id="paginationControls"></div>
 
                 </div>
             </div>

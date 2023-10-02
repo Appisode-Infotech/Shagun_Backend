@@ -143,6 +143,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -182,6 +183,13 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Events Type</h4>
                                     <div class="form-group">
+                                        <div class="input-group">
+                                            <input name="search" id="search" type="text" class="form-control"
+                                                   placeholder="Search" value="{{search}}"
+                                                   aria-label="Recipient's username">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <button type="button" class="btn btn-outline-info btn-icon-text"
                                                 onclick="showPopUpDiv1()">
                                             Add Event Type
@@ -190,7 +198,7 @@
                                     </div>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample" action="/add_events_type" method="post">
+                                            <form class="form-sample needs-validation" action="/add_events_type" method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="text-center">
                                                     <h4 class="card-title">Add Event Type</h4>
@@ -198,23 +206,26 @@
                                                 <div class="row">
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Name<span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                            <label class="col-sm-3 col-form-label">Name <a
+                                                                                    style="font-weight: bold; color: red;">*</a></label>
                                                             <div class="col-sm-9">
-                                                                <input required id="event_type_name"
+                                                                  <input required id="event_type_name"
                                                                        name="event_type_name"
                                                                        pattern="^[A-Za-z][A-Za-z ]*$"
                                                                        title="Enter Event Type Name" maxlength="256"
                                                                        type="text"
                                                                        class="form-control"/>
+                                                                       <div class="invalid-feedback">Event Type Name is mandatory</div>
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Creator</label>
+                                                            <label class="col-sm-3 col-form-label">Created By</label>
                                                             <div class="col-sm-9">
-                                                                <label class="form-control">{{ request.session.name }}</label>
+                                                                <label class="form-control">{{ request.session.name}}
+                                                                </label>
                                                                 <input type="hidden" id="created_by_uid"
                                                                        name="created_by_uid"
                                                                        value="{{ request.session.uid }}">
@@ -234,7 +245,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
+                                    <table id="myTable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>SL No</th>
@@ -255,8 +266,8 @@
                                         {% for event in response %}
                                         <tr>
                                             {% with sl_no=forloop.counter %}
-                                                    <td>{{sl_no}}</td>
-                                                    {% endwith %}
+                                            <td>{{sl_no}}</td>
+                                            {% endwith %}
                                             <td>{{ event.event_type_name }}</td>
                                             <td>
                                                 {% if event.status == 1 %}
@@ -295,8 +306,8 @@
                                                 </button>
                                                 <div id="customAlertOverlay1" class="custom-alert-overlay">
                                                     <div class="custom-alert">
-                                                        <form class="form-sample" action="/edit_event_type"
-                                                              method="post">
+                                                        <form class="form-sample needs-validation" action="/edit_event_type"
+                                                              method="post" novalidate>
                                                             {% csrf_token %}
                                                             <h4 class="card-title">Edit Event Type</h4>
                                                             <div class="row">
@@ -313,8 +324,9 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Name <span
-                                                                            style="font-weight: bold; color: red;">*</span></label>
+                                                                        <label class="col-sm-3 col-form-label">Name
+                                                                            <a
+                                                                                    style="font-weight: bold; color: red;">*</a></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    class="form-control"
@@ -323,6 +335,7 @@
                                                                                    maxlength="256"
                                                                                    name="name"
                                                                                    value="{{ event.event_type_name }}"/>
+                                                                            <div class="invalid-feedback">Name is mandatory</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -347,41 +360,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="pagination justify-content-center col-12" id="paginationControls"></div>
                 </div>
             </div>
-            <div class="pagination justify-content-center">
-                <ul class="pagination">
-                    {% if response.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1">&laquo; first</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ response.previous_page_number }}">previous</a>
-                    </li>
-                    {% endif %}
 
-                    {% for num in response.paginator.page_range %}
-                    {% if num == response.number %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
-                    </li>
-                    {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-
-                    {% if response.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ response.next_page_number }}">next</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ response.paginator.num_pages }}">last &raquo;</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
             <!-- content-wrapper ends -->
             <!-- partial:../../partials/_footer.html -->
             {% include 'footer.html' %}
@@ -449,6 +431,7 @@
 
 
 
+
 </script>
 
 
@@ -485,6 +468,7 @@
 
 
 
+
 </script>
 <script>
         function toggleForm() {
@@ -505,6 +489,7 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
 
 
 

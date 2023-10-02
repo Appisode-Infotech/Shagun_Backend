@@ -8,7 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -130,6 +130,11 @@
 
 
 
+
+
+
+
+
     </style>
 
 </head>
@@ -158,8 +163,9 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add Greeting Card </label>
                                 </div>
-                                <form class="form-sample" action="/printer_add_greeting_cards" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/printer_add_greeting_cards"
+                                      method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -170,6 +176,7 @@
                                                     <input required type="text" class="form-control"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty" name="card_name"/>
+                                                    <div class="invalid-feedback">Card Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -180,7 +187,8 @@
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
                                                            placeholder="00.00" pattern="[1-9][0-9]{0,5}"
-                                                            title="Please add the amount only" name="card_price"/>
+                                                           title="Please add the amount only" name="card_price"/>
+                                                    <div class="invalid-feedback">Price is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -194,6 +202,7 @@
                                                            onclick="toggleDropdown('myDropdown')"
                                                            placeholder="Search" class="form-control"
                                                            value="{{request.session.printer_user_name}}">
+                                                    <div class="invalid-feedback">Printing Vendor is mandatory</div>
 
                                                     <input required type="hidden" id="printer_id" name="printer_id"
                                                            value="{{request.session.id}}">
@@ -202,7 +211,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <label class="col-sm-3 col-form-label">Created By</label>
                                                 <div class="col-sm-9">
                                                     <label class="form-control">{{request.session.printer_user_name}}</label>
                                                     <input required type="hidden" id="created_by_uid"
@@ -226,24 +235,18 @@
                                                            class="file-upload-default">
                                                     <div class="input-group col-xs-12">
                                                         <input type="text" class="form-control file-upload-info"
-                                                               disabled
+                                                               readonly
                                                                placeholder="Upload Image" id="img">
                                                         <span class="input-group-append">
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                 </span>
                                                     </div>
+                                                    <div id="error-message" style="color: #dc3545; font-size: 14px;
+                                                    margin-top:5px"></div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                    </div>
-                                    <div class="messages-container">
-                                        <ul class="messages">
-                                            <li>
-                                                <div id="error-message">
-                                                </div>
-                                            </li>
-                                        </ul>
                                     </div>
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mt-2">
@@ -268,6 +271,9 @@
 <script>
         document.getElementById('card_image_url').addEventListener('change', function(e) {
             var file = e.target.files[0];
+
+            var errorMessage = document.getElementById('error-message');
+            errorMessage.style.display = "none";
             if (file) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
@@ -275,57 +281,11 @@
                     uploadedImage.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-            }
+            }else {
+                var uploadedImage = document.getElementById('uploadedImage');
+                uploadedImage.src = "{% static 'images/greeting_logo.png' %}";
+        }
         });
-
-
-</script>
-
-
-<script>
-// Function to toggle a specific dropdown based on its ID
-function toggleDropdown(dropdownId) {
-  var dropdown = document.getElementById(dropdownId);
-  dropdown.classList.toggle("show");
-}
-
-// Function to filter the dropdown content based on the input value
-function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
-
-function setValue(value1, value2, inputField1Id, inputField2Id) {
-  if (value1 && value2) {
-    document.getElementById(inputField1Id).value = value1;
-    document.getElementById(inputField2Id).value = value2;
-    // Optionally, you can hide the dropdown after selecting a value
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    for (var i = 0; i < dropdowns.length; i++) {
-      dropdowns[i].classList.remove("show");
-    }
-  }
-}
-
-  document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("myDropdown");
-        const nameInput = document.getElementById("printer_name");
-        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
-        }
-    });
-
 
 </script>
 
@@ -342,6 +302,11 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
                 e.preventDefault();
             }
         });
+
+
+
+
+
 
 </script>
 <!-- container-scroller -->

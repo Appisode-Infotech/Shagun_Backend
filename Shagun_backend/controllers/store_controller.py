@@ -39,8 +39,8 @@ def printer_login(uname, pwd):
 
 
 def add_printer(store_obj):
-    # Hash the password using bcrypt
     hashed_password = bcrypt.hashpw(store_obj.printer_password.encode('utf-8'), bcrypt.gensalt())
+    print(hashed_password)
     try:
         with connection.cursor() as cursor:
             add_printer_query = """INSERT INTO printer (store_name, city, address, email, gst_no, store_owner,

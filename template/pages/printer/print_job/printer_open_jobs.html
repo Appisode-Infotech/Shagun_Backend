@@ -75,6 +75,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -99,11 +100,11 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Open Jobs List</h4>
                                     <div class="form-group">
-                                            <div class="input-group">
-                                                <input name="search" id="search" type="text" class="form-control"
-                                                       placeholder="Search" value="{{search}}"
-                                                       aria-label="Recipient's username">
-                                            </div>
+                                        <div class="input-group">
+                                            <input name="search" id="search" type="text" class="form-control"
+                                                   placeholder="Search" value="{{search}}"
+                                                   aria-label="Recipient's username">
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="mr-2 custom-label"> Job Filter: </label>
@@ -133,9 +134,8 @@
 
                                     </div>
                                 </div>
-
                                 <div class="table-responsive">
-                                    <table id="myTable"  class="table table-hover">
+                                    <table id="myTable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>SL No</th>
@@ -145,6 +145,7 @@
                                             <th>Delivery Address</th>
                                             <th>Job Status</th>
                                             <th>Set Status</th>
+                                            <th>Print Card</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -160,10 +161,10 @@
 
                                         <tr>
                                             {% with sl_no=forloop.counter %}
-                                                    <td>{{sl_no}}</td>
-                                                    {% endwith %}
-                                            <td class="wish" title="{{job.wish}}"><b>Event: </b>{{ job.event_type_name
-                                                }}<br><br>
+                                            <td>{{sl_no}}</td>
+                                            {% endwith %}
+                                            <td class="wish" title="{{job.wish}}"><b>Event: </b>
+                                                {{ job.event_type_name}}<br><br>
                                                 <b>Wish: </b>{{job.wish}}
                                             </td>
                                             <td>
@@ -222,7 +223,12 @@
                                                            href="{% url 'change_printer_jobs_status' job.id 5 'printer_open_jobs' %}">Dispatched</a>
                                                     </div>
                                                 </div>
+                                            </td>
 
+                                            <td>
+                                                <a class="btn btn-outline-info"
+                                                href="{% url 'previewPrint' %}?imageUrl={{ job.card_image_url }}&wish={{ job.wish }}">Print
+                                                    Card</a>
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -256,6 +262,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 

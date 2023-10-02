@@ -44,6 +44,11 @@ def logout(request):
     return redirect('sign_up')
 
 
+def previewPrint(request):
+    print(request.GET['imageUrl'])
+    return render(request, 'pages/printer/print_job/print_card.html')
+
+
 def printerLogout(request):
     request.session.clear()
     return redirect('printer_login')

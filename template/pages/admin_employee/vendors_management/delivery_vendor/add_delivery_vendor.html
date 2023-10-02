@@ -156,8 +156,8 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Delivery Vendor </label>
                                 </div>
-                                <form class="form-sample" action="/add_delivery_vendor" method="post"
-                                      enctype="multipart/form-data" id="myForm">
+                                <form class="form-sample needs-validation" action="/add_delivery_vendor" method="post"
+                                      enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Delivery Vendor info
@@ -165,33 +165,26 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">City <span
+                                                <label class="col-sm-3 col-form-label"> Select City <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-
-                                                    <input type="text" id="name" readonly onclick="myFunction()"
-                                                           placeholder="Search" class="form-control">
-
-                                                    <div id="myDropdown" class="dropdown-content"
-                                                         style="cursor: pointer;">
-                                                        <input type="text" placeholder="Search" id="myInput"
-                                                               onkeyup="filterFunction()" class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="citySelect" required>
+                                                        <option value="">Select an option</option>
                                                         {% for city in city_list %}
-                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
+                                                        <option data-name="{{city.city_name}}"
+                                                                data-id="{{city.city_id}}">
+                                                            {{city.city_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
-                                                    <div class="messages-container">
-                                                        <ul class="messages">
-                                                            <li>
-                                                                <div id="error-message"> Please select City
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                    </select>
                                                     <input type="hidden" id="city" name="city">
+                                                    <div id="error-message" style="color: #dc3545; font-size: 14px;
+                                                    margin-top:5px"></div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Vendor Name <span
@@ -201,6 +194,7 @@
                                                            pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_name"/>
+                                                    <div class="invalid-feedback">Vendor Name is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -215,6 +209,7 @@
                                                            pattern="^[A-Za-z][A-Za-z ]*$" maxlength="64"
                                                            title="This field doesn't contain special characters or numbers"
                                                            name="delivery_vendor_owner"/>
+                                                    <div class="invalid-feedback">Vendor Owner is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -226,6 +221,7 @@
                                                     <input type="tel" name="contact_number"
                                                            pattern="[0-9]{10}" class="form-control"
                                                            title="Please enter a 10-digit phone number" required>
+                                                    <div class="invalid-feedback">Please enter a 10-digit phone number</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -240,6 +236,7 @@
                                                            pattern="[^ ].*" maxlength="255"
                                                            title="This field can't be Empty"
                                                            name="address"/>
+                                                    <div class="invalid-feedback">Address is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -249,9 +246,10 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" class="form-control"
-                                                           pattern="^(?!\s)[\s\S]{15}$"
+                                                           pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
+                                                    <div class="invalid-feedback">Vendor GST is mandatory and must have 15 digits</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -259,7 +257,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <label class="col-sm-3 col-form-label">Created By</label>
                                                 <div class="col-sm-9">
                                                     <input disabled class="form-control" value="{{ request.session.name }}" >
                                                     <input required type="hidden" id="created_by" name="created_by"
@@ -288,56 +286,22 @@
     <!-- page-body-wrapper ends -->
 </div>
 
-
 <script>
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-        const dropdown = document.getElementById("myDropdown");
-        dropdown.classList.toggle("show");
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+    var citySelect = document.getElementById("citySelect");
+    var cityIdInput = document.getElementById("city");
 
-    function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
+    citySelect.addEventListener("change", function () {
+        var errorMessage = document.getElementById('error-message');
+        errorMessage.style.display = "none";
+        var selectedOption = citySelect.options[citySelect.selectedIndex];
+        var cityId = selectedOption.getAttribute("data-id");
 
-    function setValue(value1, value2) {
-        document.getElementById("name").value = value1;
-        document.getElementById("city").value = value2;
-        var errorContainer = document.querySelector('.messages-container');
-        errorContainer.style.display = "none";
-        myFunction();
-    }
-
-    // Add an event listener to the document to close the dropdown when clicking outside
-    document.addEventListener("click", function(event) {
-        const dropdown = document.getElementById("myDropdown");
-        const nameInput = document.getElementById("name");
-        console.log(dropdown)
-        console.log(nameInput)
-        if (event.target !== dropdown && event.target !== nameInput && !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
+        if (cityId) {
+            cityIdInput.value = cityId;
         }
     });
-
-
-
-
-
-
-
+});
 
 
 
@@ -345,18 +309,16 @@
 
 <script>
         document.getElementById("myForm").addEventListener("submit", function (e) {
-            var name = document.getElementById("name").value;
-            var errorContainer = document.querySelector('.messages-container');
-            if (!name) {
-                errorContainer.style.display = "block";
+            var citySelect = document.getElementById("city").value;
+            var errorMessage = document.getElementById('error-message');
+            if (citySelect === "") {
+                errorMessage.textContent = "Please select a city";
+                errorMessage.style.display = "block";
                 e.preventDefault();
+            } else {
+                errorMessage.style.display = "none";
             }
         });
-
-
-
-
-
 
 </script>
 

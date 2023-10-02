@@ -18,7 +18,6 @@ def convert_datetime(dt_str):
 
 def sub_events(data):
     sub_events_count = sum(key.startswith('sub_events[') for key in data.keys())
-    print(sub_events_count)
     sub_events_count //= 3
     sub_events_list = []
     for i in range(sub_events_count):
@@ -34,7 +33,6 @@ def sub_events(data):
 def event_admins(data):
     event_admins_count = sum(key.startswith('event_admin[') for key in data.keys())
     event_admins_count //= 3
-    print(event_admins_count)
     event_admins_list = []
     for i in range(event_admins_count):
         with connection.cursor() as cursor:

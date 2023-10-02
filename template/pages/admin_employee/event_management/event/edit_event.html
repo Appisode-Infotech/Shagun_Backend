@@ -187,9 +187,9 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Edit Event </label>
                                 </div>
-                                <form class="form-sample" action="{% url 'edit_event' event.event_data.id %}"
+                                <form class="form-sample needs-validation" action="{% url 'edit_event' event.event_data.id %}"
                                       method="post"
-                                      enctype="multipart/form-data">
+                                      enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Event info
@@ -200,70 +200,67 @@
                                                 <label class="col-sm-3 col-form-label">Select Event Type <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="event_type_name" readonly
-                                                           onclick="toggleDropdown('myDropdown1')"
-                                                           value="{{event.event_data.event_type_name}}"
-                                                           class="form-control">
-
-                                                    <div id="myDropdown1" class="dropdown-content">
-                                                        <input type="text"
-                                                               id="myInput1"
-                                                               onkeyup="filterFunction('myDropdown1')"
-                                                               class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="selector1" required>
+                                                        <option value="{{event.event_data.event_type_name}}" selected>{{event.event_data.event_type_name}}</option>
                                                         {% for events_type in event_types.event_type_list %}
-                                                        <a onclick="setValue('{{events_type.event_type_name}}', '{{events_type.id}}', 'event_type_name', 'event_type_id')">{{events_type.event_type_name}}</a>
+                                                        <option data-name="{{events_type.event_type_name}}"
+                                                                data-id="{{events_type.id}}">
+                                                            {{events_type.event_type_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="event_type_id" name="event_type_id"
-                                                           value="{{event.event_data.event_type_id}}">
+                                                    </select>
+                                                    <input type="hidden" id="selectorId1" name="event_type_id" value="{{event.event_data.event_type_id}}">
+                                                    <div id="error-message1"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Select City <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" id="city_name" readonly
-                                                           onclick="toggleDropdown('myDropdown2')"
-                                                           value="{{event.event_data.city_name}}" class="form-control">
-
-                                                    <div id="myDropdown2" class="dropdown-content">
-                                                        <input type="text" value="{{event.event_data.city_id}}"
-                                                               id="myInput2"
-                                                               onkeyup="filterFunction('myDropdown2')"
-                                                               class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="selector2" >
+                                                        <option value="{{event.event_data.city_name}}" selected>{{event.event_data.city_name}}</option>
                                                         {% for city in location.city_list %}
-                                                        <a onclick="setValue('{{city.city_name}}', '{{city.city_id}}', 'city_name', 'city_id')">{{city.city_name}}</a>
+                                                        <option data-name="{{city.city_name}}"
+                                                                data-id="{{city.city_id}}">
+                                                            {{city.city_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="city_id" name="city_id"
+                                                    </select>
+                                                    <input type="hidden" id="selectorId2" name="city_id"
                                                            value="{{event.event_data.city_id}}">
+                                                    <div id="error-message2"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Printing Vendor <span
+                                                <label class="col-sm-3 col-form-label">Select Printing Vendor <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-
-                                                    <input required type="text" id="printer_name" readonly
-                                                           onclick="toggleDropdown('myDropdown3')"
-                                                           value="{{event.event_data.store_name}}" class="form-control">
-
-                                                    <div id="myDropdown3" class="dropdown-content">
-                                                        <input type="text" placeholder="Search" id="myInput3"
-                                                               onkeyup="filterFunction('myDropdown3')"
-                                                               class="form-control">
+                                                    <select class="form-control selectpicker" data-live-search="true"
+                                                            id="selector3" required>
+                                                        <option value="{{event.event_data.store_name}}" selected>{{event.event_data.store_name}}</option>
                                                         {% for printers in printers.printer_data %}
-                                                        <a onclick="setValue('{{printers.store_name}}', '{{printers.id}}', 'printer_name', 'printer_id')">{{printers.store_name}}</a>
+                                                        <option data-name="{{printers.store_name}}"
+                                                                data-id="{{printers.id}}">
+                                                            {{printers.store_name}}
+                                                        </option>
                                                         {% endfor %}
-                                                    </div>
-                                                    <input type="hidden" id="printer_id" name="printer_id"
+                                                    </select>
+                                                    <input type="hidden" id="selectorId3" name="printer_id"
                                                            value="{{event.event_data.printer_id}}">
+                                                    <div id="error-message3"
+                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -276,6 +273,7 @@
                                                            name="event_date"
                                                            class="form-control"
                                                            value="{{event.event_data.event_date}}">
+                                                    <div class="invalid-feedback">Event date & Time is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -291,6 +289,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            value="{{event.event_data.address_line1}}"/>
+                                                    <div class="invalid-feedback">Address line is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -304,6 +303,7 @@
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            value="{{event.event_data.address_line2}}"/>
+                                                    <div class="invalid-feedback">Address line is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -319,7 +319,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Lat Lng <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                        style="font-weight: bold; color: red;"></span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="text" id="event_lat_lng"
                                                            value="{{event.event_data.event_lat_lng}}"
@@ -339,12 +339,13 @@
                                                            pattern="[1-9][0-9]{0,4}"
                                                             title="Please add the amount only"
                                                            value="{{event.event_data.delivery_fee}}"/>
+                                                    <div class="invalid-feedback">Delivery Fee is mandatory</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Added By</label>
+                                                <label class="col-sm-3 col-form-label">Created By</label>
                                                 <div class="col-sm-9">
                                                     <input disabled readonly class="form-control" value="{{event.event_data.created_by_uid}}">
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
@@ -359,36 +360,48 @@
                                         <textarea required class="form-control" id="delivery_address" rows="4"
                                                   maxlength="255"
                                                   name="delivery_address">{{event.event_data.delivery_address}}</textarea>
+                                        <div class="invalid-feedback">Delivery Address  is mandatory</div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 col-form-label">Event Note <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                         <textarea required class="form-control" id="event_note" rows="4"
                                                   name="event_note">{{event.event_data.event_note}}</textarea>
+                                        <div class="invalid-feedback">Event Note is mandatory</div>
                                     </div>
 
                                     <div id="sub-events-container">
-                                        <label class="col-sm-3 col-form-label">Sub Events <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
-
+                                        <label class="col-sm-3 col-form-label">Sub Events</label>
                                         {% for sub_event in event.event_data.sub_events %}
-                                        <div class="event-row">
-                                            <input required class="event-input" type="text"
-                                                   pattern="[^ ].*"
-                                                   title="This field can't be Empty"
-                                                   name="sub_events[{{ forloop.counter0 }}][sub_event_name]"
-                                                   value="{{sub_event.sub_event_name}}">
-                                            <input required class="event-input" type="datetime-local"
-                                                   name="sub_events[{{ forloop.counter0 }}][start]"
-                                                   value="{{sub_event.start_time}}">
-                                            <input required class="event-input" type="datetime-local"
-                                                   name="sub_events[{{ forloop.counter0 }}][end]"
-                                                   value="{{sub_event.end_time}}">
+                                        <div class="event-row mb-3">
+                                            <div class="col-md-4">
+                                                <input class="form-control" type="text"
+                                                       name="sub_events[{{ forloop.counter0 }}][sub_event_name]"
+                                                       pattern="[^ ].*" maxlength="256" value="{{sub_event.sub_event_name}}"
+                                                       title="This field can't be Empty"
+                                                       placeholder="Sub Event Name" required>
+                                                <div class="invalid-feedback">Sub Event name is mandatory</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input class="form-control" type="datetime-local"
+                                                       name="sub_events[{{ forloop.counter0 }}][start]" placeholder="Start Time"
+                                                       id="sub_event_start_date" onkeydown="return false"
+                                                       value="{{sub_event.start_time}}" required>
+                                                <div class="invalid-feedback">Sub Event start time is mandatory</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input class="form-control" type="datetime-local"
+                                                       name="sub_events[{{ forloop.counter0 }}][end]" onkeydown="return false"
+                                                       placeholder="End Time" id="sub_event_end_date"
+                                                       value="{{sub_event.end_time}}" required>
+                                                <div class="invalid-feedback">Sub Event End time is mandatory</div>
+                                            </div>
                                         </div>
                                         {% endfor %}
                                         <input type="hidden" id="maxSubEventIndex"
                                                value="{{ event.event_data.sub_events|length }}">
                                     </div>
+
                                     <button type="button" id="addSubEventButton">Add Sub Event</button>
                                     <button type="button" id="removeEventButton"
                                             style="display: none; margin-top: 5px;">Remove Sub
@@ -402,7 +415,6 @@
                                             <input readonly type="text" id="name"
                                                    onclick="toggleDropdown('myDropdown4')"
                                                    value="{{admin.name}}" class="event-input">
-
                                             <input readonly class="event-input" type="text"
                                                    value="{{admin.role}}">
                                             <input type="hidden" id="uid" value="{{admin.uid}}">
@@ -438,6 +450,29 @@
 
 <!-- my_template.html -->
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        for (var i = 1; i <= 4; i++) {
+            (function(index) {
+                var selectId = document.getElementById("selector" + index);
+                var inputId = document.getElementById("selectorId" + index);
+                var errorMessage = document.getElementById("error-message" + index);
+
+                selectId.addEventListener("change", function () {
+                    errorMessage.style.display = "none";
+                    var selectedOption = selectId.options[selectId.selectedIndex];
+                    var value = selectedOption.getAttribute("data-id");
+
+                    if (value) {
+                        inputId.value = value;
+                    }
+                });
+            })(i);
+        }
+    });
+
+
+</script>
 <script>
 // Function to toggle a specific dropdown based on its ID
 function toggleDropdown(dropdownId) {
@@ -490,7 +525,6 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 </script>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const addSubEventButton = document.getElementById('addSubEventButton');
@@ -500,9 +534,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         const subEventsContainer = document.getElementById('sub-events-container');
         const eventAdminContainer = document.getElementById('event-admin-container');
         const maxSubEventIndex = parseInt(document.getElementById('maxSubEventIndex').value);
-
         let subEventIndex = maxSubEventIndex;
-        let eventAdminIndex = 1;
 
         function updateButtonVisibility() {
             if (subEventIndex > 1) {
@@ -526,9 +558,12 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             const subEventRow = document.createElement('div');
             subEventRow.classList.add('event-row');
             subEventRow.innerHTML = `
-                <input class="event-input" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
-                <input class="event-input sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" required>
-                <input class="event-input sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" required>
+                <div class="col-md-4 mb-3"><input class="form-control" type="text" name="sub_events[${subEventIndex}][sub_event_name]" placeholder="Sub Event Name" required>
+                <div class="invalid-feedback">Sub Event name is mandatory</div></div>
+                <div class="col-md-4 mb-3"><input class="form-control sub-event-start" type="datetime-local" name="sub_events[${subEventIndex}][start]" placeholder="Start Time" id="sub_event_start_date" onkeydown="return false" required>
+                <div class="invalid-feedback">Sub Event start time is mandatory</div></div>
+                <div class="col-md-4 mb-3"><input class="form-control sub-event-end" type="datetime-local" name="sub_events[${subEventIndex}][end]" placeholder="End Time" id="sub_event_end_date" onkeydown="return false" required>
+                <div class="invalid-feedback">Sub Event end time is mandatory</div></div>
             `;
             subEventsContainer.appendChild(subEventRow);
             const currentDate = new Date().toISOString().slice(0, 16);
@@ -549,40 +584,10 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
             }
         }
 
-        function addEventAdmin() {
-            const eventAdminRow = document.createElement('div');
-            eventAdminRow.classList.add('event-row');
-            eventAdminRow.innerHTML = `
-            <input required type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search" class="event-input">
-            <div id="myDropdown5" class="dropdown-content">
-                <input required type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
-                {% for users in users.user_data %}
-                <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
-                {% endfor %}
-            </div>
-            <input required class="event-input" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ....">
-            <input required type="hidden" id="uid1" name="event_admin[${eventAdminIndex}][uid]">
-        `;
-            eventAdminContainer.appendChild(eventAdminRow);
-            eventAdminIndex++;
-            updateButtonVisibility();
-        }
-
-        function removeEventAdmin() {
-            if (eventAdminIndex > 1) {
-                eventAdminIndex--;
-                const eventAdminRows = eventAdminContainer.getElementsByClassName('event-row');
-                eventAdminContainer.removeChild(eventAdminRows[eventAdminIndex]);
-                updateButtonVisibility();
-            }
-        }
 
         addSubEventButton.addEventListener('click', addSubEvent);
         removeEventButton.addEventListener('click', removeSubEvent);
-        addEventAdminButton.addEventListener('click', addEventAdmin);
-        removeEventAdminButton.addEventListener('click', removeEventAdmin);
     });
-
 
 
 </script>
@@ -739,6 +744,23 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("sub_event_end_date").min = currentDate;
 
 </script>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/css/tempusdominus-bootstrap-4.min.css"
+      rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
+
 </body>
 
 </html>

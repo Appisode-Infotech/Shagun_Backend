@@ -120,8 +120,6 @@ def create_event(event_obj):
 
                 if len(event_admins) == 1:
                     print("single admin")
-                    wkhtml_to_image = os.path.join(
-                        settings.BASE_DIR, "wkhtmltoimage.exe")
                     template_path = 'pages/admin_employee/event_management/event/qr_design_single.html'
                     template = get_template(template_path)
 
@@ -139,13 +137,9 @@ def create_event(event_obj):
                         'quality': 100,
                     }
 
-                    imgkit.from_string(html, f"media/{image_url}", options=options,
-                                       config=imgkit.config(wkhtmltoimage=wkhtml_to_image, xvfb='/opt/bin/xvfb-run'))
-
+                    imgkit.from_string(html, f"media/{image_url}", options=options)
                 else:
                     print("multi admin")
-                    wkhtml_to_image = os.path.join(
-                        settings.BASE_DIR, "wkhtmltoimage.exe")
                     template_path = 'pages/admin_employee/event_management/event/qr_design.html'
                     template = get_template(template_path)
 
@@ -164,8 +158,7 @@ def create_event(event_obj):
                         'quality': 100,
                     }
 
-                    imgkit.from_string(html, f"media/{image_url}", options=options,
-                                       config=imgkit.config(wkhtmltoimage=wkhtml_to_image, xvfb='/opt/bin/xvfb-run'))
+                    imgkit.from_string(html, f"media/{image_url}", options=options)
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)

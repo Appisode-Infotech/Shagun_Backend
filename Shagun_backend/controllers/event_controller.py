@@ -98,6 +98,7 @@ def create_event(event_obj):
 
                 QRimg = QRcode.make_image(
                     fill_color=QRcolor, back_color="white").convert('RGB')
+                print(QRimg,"case4")
 
                 pos = ((QRimg.size[0] - logo.size[0]) // 2,
                        (QRimg.size[1] - logo.size[1]) // 2)
@@ -106,17 +107,20 @@ def create_event(event_obj):
                 media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
                 os.makedirs(media_dir, exist_ok=True)
                 image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
+                print(image_path,"case3")
 
                 QRimg.save(image_path)
 
                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
                 item["qr_code"] = image_url
+                print(image_url,"case2")
 
                 date_obj = datetime.datetime.strptime(event_obj.event_date, "%Y-%m-%d %H:%M:%S")
                 month = date_obj.strftime("%b")
                 day = date_obj.strftime("%a")
                 date = date_obj.strftime("%d")
                 hour = date_obj.strftime("%I:%M %p")
+                print(len(event_admins),"case1")
 
                 if len(event_admins) == 1:
                     print("single admin")

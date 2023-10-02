@@ -122,47 +122,47 @@ def create_event(event_obj):
                 hour = date_obj.strftime("%I:%M %p")
                 print(len(event_admins),"case1")
 
-                if len(event_admins) == 1:
-                    print("single admin")
-                    template_path = 'pages/admin_employee/event_management/event/qr_design_single.html'
-                    template = get_template(template_path)
-
-                    context = {"admin": event_admins[0]['name'],
-                               "profile": 'http://127.0.0.1:8000/media/' + event_admins[0]['profile'],
-                               "qrCode": 'http://127.0.0.1:8000/media/' + image_url, "event": admin[1],
-                               "month": month, "day": day, "date": date, "hour": hour}
-                    html = template.render(context)
-
-                    options = {
-                        'zoom': 3,
-                        'width': 450 * 3,
-                        'height': 932 * 3,
-                        'format': 'png',
-                        'quality': 100,
-                    }
-
-                    imgkit.from_string(html, f"media/{image_url}", options=options)
-                else:
-                    print("multi admin")
-                    template_path = 'pages/admin_employee/event_management/event/qr_design.html'
-                    template = get_template(template_path)
-
-                    context = {"admin1": event_admins[0]['name'], "admin2": event_admins[1]['name'],
-                               "profile1": 'http://127.0.0.1:8000/media/' + event_admins[0]['profile'],
-                               "profile2": 'http://127.0.0.1:8000/media/' + event_admins[1]['profile'],
-                               "qrCode": 'http://127.0.0.1:8000/media/' + image_url, "event": admin[1],
-                               "month": month, "day": day, "date": date, "hour": hour}
-                    html = template.render(context)
-
-                    options = {
-                        'zoom': 3,
-                        'width': 450*3,
-                        'height': 932*3,
-                        'format': 'png',
-                        'quality': 100,
-                    }
-
-                    imgkit.from_string(html, f"media/{image_url}", options=options)
+                # if len(event_admins) == 1:
+                #     print("single admin")
+                #     template_path = 'pages/admin_employee/event_management/event/qr_design_single.html'
+                #     template = get_template(template_path)
+                #
+                #     context = {"admin": event_admins[0]['name'],
+                #                "profile": 'http://127.0.0.1:8000/media/' + event_admins[0]['profile'],
+                #                "qrCode": 'http://127.0.0.1:8000/media/' + image_url, "event": admin[1],
+                #                "month": month, "day": day, "date": date, "hour": hour}
+                #     html = template.render(context)
+                #
+                #     options = {
+                #         'zoom': 3,
+                #         'width': 450 * 3,
+                #         'height': 932 * 3,
+                #         'format': 'png',
+                #         'quality': 100,
+                #     }
+                #
+                #     imgkit.from_string(html, f"media/{image_url}", options=options)
+                # else:
+                #     print("multi admin")
+                #     template_path = 'pages/admin_employee/event_management/event/qr_design.html'
+                #     template = get_template(template_path)
+                #
+                #     context = {"admin1": event_admins[0]['name'], "admin2": event_admins[1]['name'],
+                #                "profile1": 'http://127.0.0.1:8000/media/' + event_admins[0]['profile'],
+                #                "profile2": 'http://127.0.0.1:8000/media/' + event_admins[1]['profile'],
+                #                "qrCode": 'http://127.0.0.1:8000/media/' + image_url, "event": admin[1],
+                #                "month": month, "day": day, "date": date, "hour": hour}
+                #     html = template.render(context)
+                #
+                #     options = {
+                #         'zoom': 3,
+                #         'width': 450*3,
+                #         'height': 932*3,
+                #         'format': 'png',
+                #         'quality': 100,
+                #     }
+                #
+                #     imgkit.from_string(html, f"media/{image_url}", options=options)
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)

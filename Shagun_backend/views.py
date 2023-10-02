@@ -83,13 +83,6 @@ def admin_dashboard(request):
                     "uid": "wjkkjhgfdserty",
                     "profile": "images/profile_pic/circular_logo.png",
                     "QR_code": "qr code"
-                },
-                {
-                    "name": "john Doe",
-                    "role": "test2",
-                    "uid": "wjkkjhgkjhgfdserty",
-                    "profile": "images/profile_pic/circular_logo.png",
-                    "QR_code": "qr code"
                 }
             ],
             "delivery_fee": "900",

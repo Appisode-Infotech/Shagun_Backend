@@ -5,10 +5,10 @@ import qrcode
 import os
 from PIL import Image
 from django.conf import settings
+from datetime import datetime
 
 from django.template.loader import get_template
 import imgkit
-
 
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
@@ -17,12 +17,10 @@ from Shagun_backend.util.responsegenerator import responseGenerator
 import firebase_admin
 from firebase_admin import credentials, messaging
 
-
 firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json"
 full_firebase_cred_path = os.path.join(settings.MEDIA_ROOT, firebase_cred_path)
 cred = credentials.Certificate(full_firebase_cred_path)
 firebase_admin.initialize_app(cred)
-
 
 
 def send_push_notification(device_token, title, message):
@@ -35,7 +33,7 @@ def send_push_notification(device_token, title, message):
         print(f"Error sending FCM notification: {str(e)}")
 
 
-async def create_event(event_obj):
+def create_event(event_obj):
     try:
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
@@ -59,6 +57,7 @@ async def create_event(event_obj):
             cursor.execute(event_admin_query)
             admin = cursor.fetchone()
             event_admins = json.loads(admin[0])
+            print(event_admins)
 
             for item in event_admins:
                 uid = item["uid"]
@@ -97,39 +96,50 @@ async def create_event(event_obj):
                 QRcode.make()
                 QRcolor = '#671160'
 
-                # adding color to QR code
                 QRimg = QRcode.make_image(
                     fill_color=QRcolor, back_color="white").convert('RGB')
 
-                # set size of QR code
                 pos = ((QRimg.size[0] - logo.size[0]) // 2,
                        (QRimg.size[1] - logo.size[1]) // 2)
                 QRimg.paste(logo, pos)
 
-                # Construct the path to save the image in the media directory
                 media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
                 os.makedirs(media_dir, exist_ok=True)
                 image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
 
                 QRimg.save(image_path)
 
-                # The relative URL to the saved image
                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
                 item["qr_code"] = image_url
 
+                date_obj = datetime.datetime.strptime(event_obj.event_date, "%Y-%m-%d %H:%M:%S")
+                month = date_obj.strftime("%b")
+                day = date_obj.strftime("%a")
+                date = date_obj.strftime("%d")
+                hour = date_obj.strftime("%I:%M %p")
 
-                print(event_admins, image_url)
                 wkhtml_to_image = os.path.join(
                     settings.BASE_DIR, "wkhtmltoimage.exe")
                 template_path = 'pages/admin_employee/event_management/event/qr_design.html'
                 template = get_template(template_path)
 
-                context = {"name": "Areeba Seher"}
+                context = {"admin1": event_admins[0]['name'], "admin2": event_admins[1]['name'],
+                           "profile1": 'http://127.0.0.1:8000/media/' + event_admins[0]['profile'],
+                           "profile2": 'http://127.0.0.1:8000/media/' + event_admins[1]['profile'],
+                           "qrCode": 'http://127.0.0.1:8000/media/' + image_url, "event": admin[1],
+                           "month": month, "day": day, "date": date, "hour": hour}
                 html = template.render(context)
 
-                config = imgkit.config(wkhtmltoimage=wkhtml_to_image, xvfb='/opt/bin/xvfb-run')
+                options = {
+                    'width': 450,
+                    'height': 932,
+                    'format': 'png',
+                    'quality': 100,
+                }
 
-                image = imgkit.from_string(html, image_url, config=config)
+                # Use imgkit to render the HTML to an image
+                imgkit.from_string(html, f"media/{image_url}", options=options,
+                                   config=imgkit.config(wkhtmltoimage=wkhtml_to_image, xvfb='/opt/bin/xvfb-run'))
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)

@@ -3,8 +3,6 @@ import os
 import time
 from datetime import datetime, timedelta
 
-
-
 import jwt
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
@@ -83,14 +81,14 @@ def admin_dashboard(request):
                     "name": "David Willey",
                     "role": "test1",
                     "uid": "wjkkjhgfdserty",
-                    "profile": "http://cdn.onlinewebfonts.com/svg/img_504768.png",
+                    "profile": "images/profile_pic/circular_logo.png",
                     "QR_code": "qr code"
                 },
                 {
                     "name": "john Doe",
                     "role": "test2",
                     "uid": "wjkkjhgkjhgfdserty",
-                    "profile": "http://cdn.onlinewebfonts.com/svg/img_504768.png",
+                    "profile": "images/profile_pic/circular_logo.png",
                     "QR_code": "qr code"
                 }
             ],

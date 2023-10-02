@@ -3,11 +3,12 @@ import os
 import time
 from datetime import datetime, timedelta
 
+
+
 import jwt
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.core.files.storage import default_storage
-from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view
@@ -60,6 +61,45 @@ def custom_404(request, slug=None):
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
+        json_data = {
+            "created_by_uid": "admin@shagun.com",
+            "event_type_id": "13",
+            "city_id": "12",
+            "printer_id": "21",
+            "address_line1": "4rd Cross",
+            "address_line2": "#A148",
+            "event_lat_lng": "Latitude: 15.3647083, Longitude: 75.1239547",
+            "sub_events": [
+                {
+                    "sub_event_name": "test",
+                    "start_time": "2023-10-01 23:19:00",
+                    "end_time": "2023-10-01 23:20:00"
+                }
+            ],
+            "event_date": "2023-10-01 23:19:00",
+            "event_note": "test event",
+            "event_admin": [
+                {
+                    "name": "David Willey",
+                    "role": "test1",
+                    "uid": "wjkkjhgfdserty",
+                    "profile": "http://cdn.onlinewebfonts.com/svg/img_504768.png",
+                    "QR_code": "qr code"
+                },
+                {
+                    "name": "john Doe",
+                    "role": "test2",
+                    "uid": "wjkkjhgkjhgfdserty",
+                    "profile": "http://cdn.onlinewebfonts.com/svg/img_504768.png",
+                    "QR_code": "qr code"
+                }
+            ],
+            "delivery_fee": "900",
+            "delivery_address": "4rd Cross #A148"
+        }
+        event_obj = create_event_model.create_event_model_from_dict(json_data)
+        resp = event_controller.create_event(event_obj)
+        print(resp)
         return render(request, 'index.html', response)
     else:
         return redirect('sign_up')
@@ -122,7 +162,7 @@ def update_printer_password(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-        
+
         return render(request, 'pages/admin_employee/event_management/event/events.html',
                       {'response': response['event_list']})
     else:
@@ -138,7 +178,7 @@ def manage_settlement(request):
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
-        
+
         return render(request, 'pages/admin_employee/event_management/event_type/event_type.html',
                       {"response": response['events_type']})
     else:
@@ -219,7 +259,7 @@ def filter_bank(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
 
         response, status_code = user_controller.get_all_bank_data(status)
-        
+
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
                       {"response": response['bank_data'], "status": status})
 
@@ -272,7 +312,7 @@ def manage_users(request):
 def manage_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_employees()
-        
+
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
                       {"response": response['user_data'], "role": 2})
     else:
@@ -282,7 +322,7 @@ def manage_employee(request):
 def manage_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_admins()
-        
+
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
                       {"response": response['user_data'], "role": 1})
     else:
@@ -292,7 +332,7 @@ def manage_admin(request):
 def manage_printers(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.get_printers_by_status('%')
-        
+
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
                       {"response": response['printer_data']})
     else:
@@ -303,7 +343,7 @@ def manage_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.get_delivery_vendor()
         print(response)
-        
+
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
                       {"response": response['delivery_vendor_data']})
     else:
@@ -347,7 +387,7 @@ def printer_login(request):
 def kyc_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('KYC')
-        
+
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
                       {"response": response['req_list']})
     else:
@@ -367,7 +407,7 @@ def search_kyc_request(request):
 def filter_kyc_request(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.filter_user_requests('KYC', status)
-        
+
         return render(request, 'pages/admin_employee/user_requests/kyc_request/manage_kyc_request.html',
                       {"response": response['req_list'], "status": status})
     else:
@@ -377,7 +417,7 @@ def filter_kyc_request(request, status):
 def event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_user_requests('event')
-        
+
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
                       {"response": response['req_list']})
     else:
@@ -387,7 +427,7 @@ def event_request(request):
 def search_event_request(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.search_user_requests('event', request.POST['search'])
-        
+
         return render(request, 'pages/admin_employee/user_requests/event_request/manage_event_request.html',
                       {"response": response['req_list'], "search": request.POST['search']})
     else:
@@ -417,7 +457,7 @@ def get_settlement_for_event(request, status):
 def dashboard_search_event_settlement(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.search_event_settlement(request.POST['search'])
-        
+
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
                       {"response": response['event_settlement'], "search": request.POST['search']})
     else:
@@ -565,7 +605,9 @@ def search_transactions_settlement(request, event_id):
 def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
             json_data = transform_data_to_json(request.POST)
+            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             event_controller.create_event(event_obj)
             return redirect('manage_event')
@@ -1044,7 +1086,7 @@ def dashboard_search_kyc(request):
 def dashboard_search_bank(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_bank(request.POST['search'])
-        
+
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
                       {"response": response['bank_data'], "search": request.POST['search']})
     else:
@@ -1064,7 +1106,7 @@ def dashboard_search_user(request):
 def dashboard_search_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_employee(request.POST['search'])
-        
+
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
                       {"response": response['user_data'], "search": request.POST['search'], "role": 2})
     else:
@@ -1074,7 +1116,7 @@ def dashboard_search_employee(request):
 def dashboard_search_employee_status(request, status, role):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.dashboard_search_employee_status(status)
-        
+
         return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
                       {'response': response['user_data'], "status": status, "role": role})
     else:
@@ -1094,7 +1136,7 @@ def dashboard_search_printers(request):
 def dashboard_search_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor(request.POST['search'])
-        
+
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
                       {"response": response['delivery_vendor_data'], "search": request.POST['search']})
     else:
@@ -1104,7 +1146,7 @@ def dashboard_search_delivery_vendors(request):
 def dashboard_search_printers_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = store_controller.dashboard_search_printers_status(status)
-        
+
         return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
                       {'response': response['printer_data'], "status": status})
     else:
@@ -1114,7 +1156,7 @@ def dashboard_search_printers_status(request, status):
 def dashboard_search_delivery_vendors_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.dashboard_search_delivery_vendor_status(status)
-        
+
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
                       {'response': response['delivery_vendor_data'], "status": status})
     else:
@@ -1124,7 +1166,7 @@ def dashboard_search_delivery_vendors_status(request, status):
 def dashboard_search_greetings(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.dashboard_search_greetings(request.POST['search'])
-        
+
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards'], "search": request.POST['search']})
     else:
@@ -1134,7 +1176,7 @@ def dashboard_search_greetings(request):
 def dashboard_search_greetings_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.dashboard_filter_greetings(status)
-        
+
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
                       {'response': response['all_greeting_cards'], "status": status})
     else:
@@ -1226,7 +1268,7 @@ def printer_home_page(request):
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
-        
+
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:
@@ -1238,7 +1280,7 @@ def printer_search_all_jobs(request):
         status = [1, 2, 3, 4, 5]
         response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
                                                                          request.session.get('id'))
-        
+
         return render(request, 'pages/printer/print_job/printer_all_jobs.html',
                       {"response": response['jobs']})
     else:
@@ -1248,7 +1290,8 @@ def printer_search_all_jobs(request):
 def printer_search_open_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [2, 3, 4]
-        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'], {request.session.get('id')})
+        response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
+                                                                         {request.session.get('id')})
 
         return render(request, 'pages/printer/print_job/printer_open_jobs.html',
                       {"response": response['jobs']})
@@ -1272,7 +1315,7 @@ def printer_search_new_jobs(request):
         status = [1]
         response, status_code = store_controller.printer_search_all_jobs(status, request.POST['search'],
                                                                          request.session.get('id'))
-        
+
         return render(request, 'pages/printer/print_job/printer_new_jobs.html',
                       {"response": response['jobs']})
     else:
@@ -1282,7 +1325,7 @@ def printer_search_new_jobs(request):
 def printer_filter_all_jobs(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = store_controller.printer_filter_jobs(status, request.session.get('id'))
-        
+
         return render(request, 'pages/printer/print_job/printer_all_jobs.html',
                       {"response": response['jobs'], "status": status})
     else:
@@ -1292,7 +1335,7 @@ def printer_filter_all_jobs(request, status):
 def printer_filter_open_jobs(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = store_controller.printer_filter_jobs(status, request.session.get('id'))
-        
+
         return render(request, 'pages/printer/print_job/printer_open_jobs.html',
                       {"response": response['jobs'], "status": status})
     else:
@@ -1333,7 +1376,7 @@ def printer_filter_greetings_cards(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.printer_filter_greeting_cards(status,
                                                                                         request.session.get('id'))
-        
+
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {'response': response['all_greeting_cards'], "status": status})
     else:
@@ -1344,7 +1387,7 @@ def printer_all_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1, 2, 3, 4, 5]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        
+
         return render(request, 'pages/printer/print_job/printer_all_jobs.html',
                       {"response": response['jobs']})
     else:
@@ -1355,7 +1398,7 @@ def printer_new_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [1]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        
+
         return render(request, 'pages/printer/print_job/printer_new_jobs.html',
                       {"response": response['jobs']})
     else:
@@ -1366,7 +1409,7 @@ def printer_open_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [2, 3, 4]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        
+
         return render(request, 'pages/printer/print_job/printer_open_jobs.html',
                       {"response": response['jobs']})
     else:
@@ -1377,7 +1420,7 @@ def printer_closed_jobs(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         status = [5]
         response, status_code = store_controller.get_printers_jobs(request.session.get('id'), status)
-        
+
         return render(request, 'pages/printer/print_job/printer_closed_jobs.html',
                       {"response": response['jobs']})
     else:

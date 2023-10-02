@@ -1,10 +1,14 @@
 import pymysql
 from django.db import connection
 import json
-import os
 import qrcode
+import os
 from PIL import Image
 from django.conf import settings
+
+from django.template.loader import get_template
+import imgkit
+
 
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
@@ -13,10 +17,12 @@ from Shagun_backend.util.responsegenerator import responseGenerator
 import firebase_admin
 from firebase_admin import credentials, messaging
 
+
 firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json"
 full_firebase_cred_path = os.path.join(settings.MEDIA_ROOT, firebase_cred_path)
 cred = credentials.Certificate(full_firebase_cred_path)
 firebase_admin.initialize_app(cred)
+
 
 
 def send_push_notification(device_token, title, message):
@@ -29,7 +35,7 @@ def send_push_notification(device_token, title, message):
         print(f"Error sending FCM notification: {str(e)}")
 
 
-def create_event(event_obj):
+async def create_event(event_obj):
     try:
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
@@ -53,6 +59,7 @@ def create_event(event_obj):
             cursor.execute(event_admin_query)
             admin = cursor.fetchone()
             event_admins = json.loads(admin[0])
+
             for item in event_admins:
                 uid = item["uid"]
                 event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -68,7 +75,7 @@ def create_event(event_obj):
                 message = f"Event created for {admin[1]} on {event_obj.event_date}"
                 send_push_notification(user_data[1], title, message)
 
-                # Replace this with your desired text
+                # Replace this with deep link
                 text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
 
                 logo_path = "static/images/square_logo.jpg"
@@ -104,12 +111,25 @@ def create_event(event_obj):
                 os.makedirs(media_dir, exist_ok=True)
                 image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
 
-
                 QRimg.save(image_path)
 
                 # The relative URL to the saved image
                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
                 item["qr_code"] = image_url
+
+
+                print(event_admins, image_url)
+                wkhtml_to_image = os.path.join(
+                    settings.BASE_DIR, "wkhtmltoimage.exe")
+                template_path = 'pages/admin_employee/event_management/event/qr_design.html'
+                template = get_template(template_path)
+
+                context = {"name": "Areeba Seher"}
+                html = template.render(context)
+
+                config = imgkit.config(wkhtmltoimage=wkhtml_to_image, xvfb='/opt/bin/xvfb-run')
+
+                image = imgkit.from_string(html, image_url, config=config)
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)
@@ -123,8 +143,7 @@ def create_event(event_obj):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
-#
-#
+
 # def create_event(event_obj):
 #     try:
 #         with connection.cursor() as cursor:
@@ -208,14 +227,9 @@ def create_event(event_obj):
 #
 
 def edit_event(event_obj, event_id):
-    print(event_obj)
-    print(event_id)
     try:
         with connection.cursor() as cursor:
             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
-            print("from controller")
-            print(sub_events_json)
-            event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
             update_event_query = """
                         UPDATE event
                         SET

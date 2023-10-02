@@ -16,3 +16,4 @@ pip~=23.1.2
 docutils~=0.15.2
 qrcode~=7.4.2
 bcrypt~=4.0.1
+imgkit

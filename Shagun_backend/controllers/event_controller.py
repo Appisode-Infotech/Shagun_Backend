@@ -123,14 +123,15 @@ def create_event(event_obj):
 
                 if len(event_admins) == 1:
                     print("single admin")
-                    template_path = 'pages/admin_employee/event_management/event/qr_design_single.html'
-                    template = get_template(template_path)
-
+                    template_single_path = 'pages/admin_employee/event_management/event/qr_design_single.html'
+                    single_template = get_template(template_single_path)
+                    print("case-1")
                     context = {"admin": event_admins[0]['name'],
                                "profile": 'http://127.0.0.1:8000/media/' + event_admins[0]['profile'],
                                "qrCode": 'http://127.0.0.1:8000/media/' + image_url, "event": admin[1],
                                "month": month, "day": day, "date": date, "hour": hour}
-                    html = template.render(context)
+                    html = single_template.render(context)
+                    print("case-2")
 
                     options = {
                         'zoom': 1,
@@ -139,12 +140,13 @@ def create_event(event_obj):
                         'format': 'png',
                         'quality': 100,
                     }
-
+                    print("case-3")
                     imgkit.from_string(html, f"media/{image_url}", options=options)
                 else:
                     print("multi admin")
                     template_path = 'pages/admin_employee/event_management/event/qr_design.html'
                     template = get_template(template_path)
+                    print("case-s1")
 
                     context = {"admin1": event_admins[0]['name'], "admin2": event_admins[1]['name'],
                                "profile1": 'http://127.0.0.1:8000/media/' + event_admins[0]['profile'],
@@ -152,6 +154,7 @@ def create_event(event_obj):
                                "qrCode": 'http://127.0.0.1:8000/media/' + image_url, "event": admin[1],
                                "month": month, "day": day, "date": date, "hour": hour}
                     html = template.render(context)
+                    print("case-s2")
 
                     options = {
                         'zoom': 1,
@@ -160,6 +163,7 @@ def create_event(event_obj):
                         'format': 'png',
                         'quality': 100,
                     }
+                    print("case-s3")
 
                     imgkit.from_string(html, f"media/{image_url}", options=options)
 

@@ -210,6 +210,7 @@ urlpatterns = [
     path('edit_printer', edit_printer, name='edit_printer'),
     path('get_greetings_by_id', get_greetings_by_id, name='get_greetings_by_id'),
 
+    path('previewPrint', previewPrint, name='previewPrint'),
     path('event_admin', event_admin, name='event_admin'),
     path('manage_vendor', manage_vendor, name='manage_vendor'),
     path('enable_disable_vendor', enable_disable_vendor, name='enable_disable_vendor'),

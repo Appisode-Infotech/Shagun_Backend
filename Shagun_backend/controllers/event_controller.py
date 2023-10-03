@@ -129,9 +129,9 @@ def create_event(event_obj):
                     html = template.render(context)
 
                     options = {
-                        'zoom': 3,
-                        'width': 450 * 3,
-                        'height': 932 * 3,
+                        'zoom': 1,
+                        'width': 450,
+                        'height': 932,
                         'format': 'png',
                         'quality': 100,
                     }
@@ -150,9 +150,9 @@ def create_event(event_obj):
                     html = template.render(context)
 
                     options = {
-                        'zoom': 3,
-                        'width': 450*3,
-                        'height': 932*3,
+                        'zoom': 1,
+                        'width': 450,
+                        'height': 932,
                         'format': 'png',
                         'quality': 100,
                     }

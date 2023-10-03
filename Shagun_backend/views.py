@@ -1275,7 +1275,6 @@ def printer_home_page(request):
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
-
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:
@@ -1361,7 +1360,7 @@ def printer_add_greeting_cards(request):
                     for chunk in file_obj.chunks():
                         destination.write(chunk)
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(form_data)
-            greeting_cards_controller.add_greeting_card(grt_obj)
+            resp = greeting_cards_controller.add_greeting_card(grt_obj)
             return redirect('printer_manage_greeting_cards')
         else:
             printers_list, status_code = store_controller.get_printers_by_status(1)

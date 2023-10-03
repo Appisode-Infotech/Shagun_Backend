@@ -2,7 +2,7 @@ import pymysql
 from django.db import connection
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes
+from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes, GETGREETING_CARDS
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 
@@ -21,7 +21,7 @@ def get_greeting_cards(event_id):
 
             return {
                 "status": True,
-                "active_greeting_cards": responseGenerator.generateResponse(greeting_cards, GREETING_CARDS),
+                "active_greeting_cards": responseGenerator.generateResponse(greeting_cards, GETGREETING_CARDS),
                 "wishes": wishes
 
             }, 200

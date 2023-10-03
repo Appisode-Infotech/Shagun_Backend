@@ -269,6 +269,20 @@ class responseGenerator:
                 )
             return greeting_cards
 
+        if controller_type == GETGREETING_CARDS:
+            greeting_cards = []
+            for cards in data:
+                greeting_cards.append(
+                    {
+                        "card_name": cards[0],
+                        "card_image_url": cards[1],
+                        "card_price": int(cards[2]),
+                        "card_id": cards[3],
+                        "card_status": cards[4]
+                    }
+                )
+            return greeting_cards
+
         if controller_type == GREETING_CARDS_BY_ID:
             return {
                 "id": data[0],

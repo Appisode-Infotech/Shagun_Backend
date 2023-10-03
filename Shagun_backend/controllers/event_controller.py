@@ -119,7 +119,6 @@ def create_event(event_obj):
                 hour = date_obj.strftime("%I:%M %p")
 
                 if len(event_admins) == 1:
-                    print("single admin")
                     wkhtml_to_image = os.path.join(
                         settings.BASE_DIR, "wkhtmltoimage.exe")
                     template_path = 'pages/admin_employee/event_management/event/qr_design_single.html'
@@ -143,7 +142,6 @@ def create_event(event_obj):
                                        config=imgkit.config(wkhtmltoimage=wkhtml_to_image, xvfb='/opt/bin/xvfb-run'))
 
                 else:
-                    print("multi admin")
                     wkhtml_to_image = os.path.join(
                         settings.BASE_DIR, "wkhtmltoimage.exe")
                     template_path = 'pages/admin_employee/event_management/event/qr_design.html'

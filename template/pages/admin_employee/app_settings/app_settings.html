@@ -22,6 +22,52 @@
 
     <!-- endinject -->
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <style>
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure the overlay is on top of other content */
+          }
+
+          .custom-alert {
+            background-color: #ffffe0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          }
+
+          .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between icons and text */
+        }
+
+        /* Center the text vertically */
+        .custom-alert span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px; /* Add spacing between text and button */
+        }
+        .center-button {
+          display: flex;
+          justify-content: center;
+
+        }
+        .center-button button {
+            margin-right: 10px;
+        }
+
+    </style>
 
 </head>
 
@@ -32,28 +78,51 @@
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial:../../partials/_settings-panel.html -->
-        {% include 'theme_setting.html' %}
+
         <!-- partial -->
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper">
+                <div id="customAlertOverlay3" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        <label class="form-group">
+                            <p>Please confirm if you want to save the changes</p>
+                        </label>
+                        <div class="center-button">
+                            <button type="button" onclick="hideActivationPopUpDiv()"
+                                    class="btn btn-outline-danger btn-fw">
+                                Cancel
+                            </button>
+                            <button type="submit" id="confirmButton" class="btn btn-outline-success btn-fw">Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">App Settings</h4>
+                                <div class="form-group">
+                                    <button id="backButton" class="btn btn-outline-info">
+                                        <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
+                                    </button>
+                                    <label class="ml-2 custom-label"> <h4 class="card-title">App Settings</h4> </label>
+                                </div>
+
                                 <p style="margin-bottom:25px;">
                                     <b>Map API Details
                                     </b>
                                 </p>
-                                <form class="forms-sample" action="/app_settings" method="post" enctype="multipart/form-data">
-                                        {% csrf_token %}
+                                <form class="forms-sample needs-validation" action="/app_settings" method="post"
+                                      enctype="multipart/form-data" id="myForm">
+                                    {% csrf_token %}
                                     <div class="form-group">
                                         <label for="map_api_key">Google Map API Key</label>
-                                        <input required type="text" class="form-control" id="map_api_key" name="map_api_key"
-                                               placeholder="Google Map API Key">
+                                        <input type="text" class="form-control" id="map_api_key"
+                                               name="map_api_key"
+                                               placeholder="Google Map API Key" value="{{ credentials.map_api_key }}">
                                     </div>
                                     <p style="margin-bottom:25px;">
                                         <b>Email JS Details
@@ -64,7 +133,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Service Id</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="service_id" placeholder="Email JS service Id"/>
+                                                    <input type="text" class="form-control"
+                                                           value="{{ credentials.emailjs_service_id }}"
+                                                           name="emailjs_service_id" placeholder="Email JS service Id"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,7 +143,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Template Id</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="template_id" placeholder="Email JS template Id"/>
+                                                    <input type="text" class="form-control"
+                                                           name="emailjs_template_id"
+                                                           value="{{ credentials.emailjs_template_id }}"
+                                                           placeholder="Email JS template Id"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -82,7 +156,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">User Id</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="user_id" placeholder="Email JS user Id"/>
+                                                    <input type="text" class="form-control"
+                                                           value="{{ credentials.emailjs_user_id }}"
+                                                           name="emailjs_user_id" placeholder="Email JS user Id"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -90,8 +166,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">G-recaptcha</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control"
-                                                           name="g-recaptcha-response" placeholder="Email JS G-recaptcha"/>
+                                                    <input type="text" class="form-control"
+                                                           name="emailjs_grecaptcha_response"
+                                                           value="{{ credentials.emailjs_grecaptcha_response }}"
+                                                           placeholder="Email JS G-recaptcha"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -104,7 +182,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Package Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="package_name" placeholder=" Android app package name"/>
+                                                    <input type="text" class="form-control"
+                                                           name="android_app_package_name"
+                                                           value="{{ credentials.android_app_package_name }}"
+                                                           placeholder=" Android app package name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,7 +193,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">App Name</label>
                                                 <div class="col-sm-9">
-                                                    <input  required type="text" class="form-control" name="app_name" placeholder=" Android app name"/>
+                                                    <input type="text" class="form-control"
+                                                           value="{{ credentials.android_app_name }}"
+                                                           name="android_app_name" placeholder=" Android app name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,7 +205,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Min Version</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="min_version" placeholder=" Android min app version"/>
+                                                    <input type="text" class="form-control"
+                                                           name="android_min_version"
+                                                           value="{{ credentials.android_min_version }}"
+                                                           placeholder=" Android min app version"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -130,8 +216,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Max Version</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control"
-                                                           name="max_version" placeholder=" Android max app version"/>
+                                                    <input type="text" class="form-control"
+                                                           name="android_max_version"
+                                                           value="{{ credentials.android_max_version }}"
+                                                           placeholder=" Android max app version"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -144,7 +232,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Package Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="package_name" placeholder=" IOS app package name"/>
+                                                    <input type="text" class="form-control"
+                                                           name="ios_app_package_name"
+                                                           value="{{ credentials.ios_app_package_name }}"
+                                                           placeholder=" IOS app package name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -152,7 +243,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">App Name</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="app_name" placeholder=" IOS app name"/>
+                                                    <input type="text" class="form-control" name="ios_app_name"
+                                                           value="{{ credentials.ios_app_name }}"
+                                                           placeholder=" IOS app name"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -162,7 +255,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Min Version</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="min_version" placeholder=" IOS min app version"/>
+                                                    <input type="text" class="form-control"
+                                                           value="{{ credentials.ios_min_version }}"
+                                                           name="ios_min_version" placeholder=" IOS min app version"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,8 +265,9 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Max Version</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control"
-                                                           name="max_version" placeholder=" IOS max app version"/>
+                                                    <input type="text" class="form-control"
+                                                           value="{{ credentials.ios_max_version }}"
+                                                           name="ios_max_version" placeholder=" IOS max app version"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -181,7 +277,9 @@
                                     </p>
                                     <div class="form-group">
                                         <label for="cashfree_api">Cashfree API URL</label>
-                                        <input required type="text" class="form-control" id="cashfree_api" name="cashfree_api"
+                                        <input type="text" class="form-control" id="cashfree_api"
+                                               name="cashfree_api_url"
+                                               value="{{ credentials.cashfree_api_url }}"
                                                placeholder="Cashfree API URL">
                                     </div>
                                     <div class="row">
@@ -189,7 +287,10 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Secret Key</label>
                                                 <div class="col-sm-9">
-                                                    <input required type="text" class="form-control" name="secret_key" placeholder=" Cashfree Secret Key"/>
+                                                    <input type="text" class="form-control"
+                                                           name="cashfree_secret_key"
+                                                           value="{{ credentials.cashfree_secret_key }}"
+                                                           placeholder=" Cashfree Secret Key"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -197,30 +298,40 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Client Key</label>
                                                 <div class="col-sm-9">
-                                                    <input  required type="text" class="form-control" name="client_key" placeholder=" Cashfree Client Key"/>
+                                                    <input type="text" class="form-control"
+                                                           name="cashfree_client_key"
+                                                           value="{{ credentials.cashfree_client_key }}"
+                                                           placeholder=" Cashfree Client Key"/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Firebase Credentials</label>
-                                        <input required type="file" accept=".json" name="firebase_cred"
+                                        <input type="file" accept=".json" name="firebase_cred"
+                                               value="{{ credentials.firebase_cred }}"
                                                class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input required type="text" class="form-control file-upload-info" disabled
+                                            <input type="text" class="form-control file-upload-info" disabled
                                                    placeholder="Upload firebase credential file">
                                             <span class="input-group-append">
-                                              <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                              <button class="file-upload-browse btn btn-primary"
+                                                      type="button">Upload</button>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="deep_link">Deep Link</label>
                                         <input type="text" class="form-control" id="deep_link" name="deep_link"
+                                               value="{{ credentials.deep_link }}"
                                                placeholder="Deep Link">
                                     </div>
-                                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                    <button class="btn btn-light">Cancel</button>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-outline-info mb-4"
+                                                onclick="showCustomAlertForActivateInactive(); return false;">Submit
+                                        </button>
+                                    </div>
+
                                 </form>
                             </div>
                         </div>
@@ -239,6 +350,55 @@
 
 <!-- my_template.html -->
 
+<!--<script>-->
+<!--    function showCustomAlertForActivateInactive() {-->
+<!--        var customAlertOverlay = document.getElementById("customAlertOverlay3");-->
+<!--        customAlertOverlay.style.display = "flex";-->
+<!--    }-->
+
+<!--    var confirmButton = document.getElementById("confirmButton");-->
+<!--    confirmButton.addEventListener("click", function() {-->
+<!--        var url = '/app_settings/';-->
+<!--        console.log(url);-->
+
+<!--        // Get the form data-->
+<!--        var formData = new FormData(document.getElementById("myForm"));-->
+<!--        console.log(formData);-->
+
+<!--        // Create a POST request-->
+<!--        fetch(url, {-->
+<!--            method: 'POST',-->
+<!--            body: formData,-->
+<!--        })-->
+<!--        .then(response => {-->
+<!--            console.log("Response status: " + response.status);-->
+<!--            console.log("Response headers: " + response.data);-->
+<!--            return response.json();-->
+<!--        })-->
+<!--        .then(data => {-->
+<!--            console.log(data);-->
+
+<!--            if (data.status) {-->
+<!--                console.log("success")-->
+<!--                var url = '/admin_dashboard/';-->
+<!--                console.log(url);-->
+<!--                window.location.href = url;-->
+<!--            } else {-->
+<!--                console.log("fail")-->
+<!--                var url = '/app_settings/';-->
+<!--                console.log(url);-->
+<!--                window.location.href = url;-->
+<!--            }-->
+<!--            // After handling the response, hide the popup-->
+<!--            hideActivationPopUpDiv();-->
+<!--        });-->
+<!--    });-->
+
+<!--    function hideActivationPopUpDiv() {-->
+<!--        var customAlertOverlay = document.getElementById("customAlertOverlay3");-->
+<!--        customAlertOverlay.style.display = "none";-->
+<!--    }-->
+<!--</script>-->
 
 <!-- container-scroller -->
 <!-- plugins:js -->

@@ -56,8 +56,10 @@ def get_all_greeting_cards():
 def get_printer_greeting_cards(p_id):
     try:
         with connection.cursor() as cursor:
-            greeting_cards_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards 
-                                        WHERE printer_id = '{p_id}' ORDER BY created_on DESC"""
+            greeting_cards_query = f"""SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status, p.store_name 
+                                        FROM greeting_cards AS gc
+                                        LEFT JOIN printer AS p ON gc.printer_id = p.id
+                                        WHERE gc.printer_id = '{p_id}' ORDER BY created_on DESC"""
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
 

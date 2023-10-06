@@ -270,15 +270,28 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Phone Number <span
-                                                        style="font-weight: bold; color: red;"></span></label>
+                                                <label class="col-sm-3 col-form-label">Phone <span
+                                                        style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
-                                                           class="form-control" placeholder="Phone Number" >
-                                                    <div class="invalid-feedback">Please enter a 10-digit phone number</div>
+                                                    <div class="form-group row">
+                                                        <div class="col-1 col-sm-2"
+                                                             style="display: flex; align-items: center;">
+                                                            +91
+                                                        </div>
+                                                        <div class="col-8 col-sm-10">
+                                                            <input type="tel" name="phone"
+                                                                   pattern="[0-9]{10}" class="form-control"
+                                                                   title="Please enter a 10-digit phone number"
+                                                                   required>
+                                                            <div class="invalid-feedback"> Phone
+                                                                number is mandatory
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">CSV file <span

@@ -8,7 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
@@ -35,6 +35,7 @@
           right: 30px;
           cursor: pointer;
         }
+
 
 
 
@@ -91,7 +92,7 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input type="text" id="name" name="name"
-                                                           class="form-control"  pattern="[^ ].*" maxlength="64"
+                                                           class="form-control" pattern="[^ ].*" maxlength="64"
                                                            value="{{emp.name}}">
                                                     <div class="invalid-feedback">Full Name is mandatory</div>
                                                 </div>
@@ -104,10 +105,21 @@
                                                 <label class="col-sm-3 col-form-label">Phone <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}"
-                                                           class="form-control" value="{{emp.phone}}"
-                                                           title="Please enter a 10-digit phone number" required>
-                                                    <div class="invalid-feedback">Please enter a 10-digit phone number</div>
+                                                    <div class="form-group row">
+                                                        <div class="col-1 col-sm-2"
+                                                             style="display: flex; align-items: center;">
+                                                            +91
+                                                        </div>
+                                                        <div class="col-8 col-sm-10">
+                                                            <input type="text" id="phone" name="contact_number"
+                                                                   class="form-control" placeholder="Phone Number"
+                                                                   title="Please enter a 10-digit phone number" required
+                                                                   pattern="[0-9]{10}"
+                                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);">
+
+                                                        </div>
+                                                        <div class="invalid-feedback">Phone is mandatory</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,36 +136,36 @@
                                             </div>
                                         </div>
                                     </div>
-<!--                                    <div class="row">-->
-<!--                                        <div class="col-md-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label class="col-sm-3 col-form-label">Password</label>-->
-<!--                                                <div class="col-sm-9">-->
-<!--                                                    <input type="password" id="password" name="password"-->
-<!--                                                           class="form-control form-control-lg" pattern="[^ ].*"-->
-<!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
-<!--                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>-->
+                                    <!--                                    <div class="row">-->
+                                    <!--                                        <div class="col-md-6">-->
+                                    <!--                                            <div class="form-group row">-->
+                                    <!--                                                <label class="col-sm-3 col-form-label">Password</label>-->
+                                    <!--                                                <div class="col-sm-9">-->
+                                    <!--                                                    <input type="password" id="password" name="password"-->
+                                    <!--                                                           class="form-control form-control-lg" pattern="[^ ].*"-->
+                                    <!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
+                                    <!--                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>-->
 
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-md-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label class="col-sm-3 col-form-label">Confirm Password</label>-->
-<!--                                                <div class="col-sm-9">-->
-<!--                                                    <input type="password" id="confirmPassword"-->
-<!--                                                           class="form-control form-control-lg" pattern="[^ ].*"-->
-<!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
-<!--                                                    <i class="toggle-password"-->
-<!--                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>-->
-<!--                                                    <div id="passwordMatchMessage" style="color: red; display: none;">-->
-<!--                                                        Passwords do-->
-<!--                                                        not match!-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <!--                                                </div>-->
+                                    <!--                                            </div>-->
+                                    <!--                                        </div>-->
+                                    <!--                                        <div class="col-md-6">-->
+                                    <!--                                            <div class="form-group row">-->
+                                    <!--                                                <label class="col-sm-3 col-form-label">Confirm Password</label>-->
+                                    <!--                                                <div class="col-sm-9">-->
+                                    <!--                                                    <input type="password" id="confirmPassword"-->
+                                    <!--                                                           class="form-control form-control-lg" pattern="[^ ].*"-->
+                                    <!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
+                                    <!--                                                    <i class="toggle-password"-->
+                                    <!--                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>-->
+                                    <!--                                                    <div id="passwordMatchMessage" style="color: red; display: none;">-->
+                                    <!--                                                        Passwords do-->
+                                    <!--                                                        not match!-->
+                                    <!--                                                    </div>-->
+                                    <!--                                                </div>-->
+                                    <!--                                            </div>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </div>-->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">

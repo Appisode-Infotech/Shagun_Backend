@@ -245,7 +245,7 @@
                                             </td>
                                             <td>
                                                 <b>Store Name: </b>{{printer.store_name}}</br></br>
-                                                <b>Store GST: </b>{{printer.gst_no}}
+                                                <b>Store GST: </b><span class="masked-number">{{printer.gst_no}}</span>
 
 
                                             </td>
@@ -365,5 +365,17 @@
 <!-- End custom js for this page-->
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elements = document.querySelectorAll('.masked-number');
+        elements.forEach(function (element) {
+            var number = element.textContent;
+            if (number.length >= 4) {
+                var maskedNumber = "*".repeat(number.length - 4) + number.slice(-4);
+                element.textContent = maskedNumber;
+            }
+        });
+    });
+</script>
 
 </html>

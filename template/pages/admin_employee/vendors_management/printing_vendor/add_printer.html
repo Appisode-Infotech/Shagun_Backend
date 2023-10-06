@@ -218,18 +218,26 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Store Phone <span
+                                                <label class="col-sm-3 col-form-label">Phone <span
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="number" id="phone" name="contact_number"
+                                                    <div class="form-group row">
+                                                        <div class="col-1 col-sm-2"
+                                                             style="display: flex; align-items: center;">
+                                                            +91
+                                                        </div>
+                                                        <div class="col-8 col-sm-10">
+                                                            <input type="number" id="phone" name="contact_number"
                                                            class="form-control" placeholder="Phone Number"
                                                            title="Please enter a 10-digit phone number" required
                                                            oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);">
                                                     <div class="invalid-feedback">Please enter a 10-digit phone number
                                                     </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">

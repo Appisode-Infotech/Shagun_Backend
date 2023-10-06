@@ -250,7 +250,7 @@
                                                 <div style="display: flex;">
                                                     <div style="flex: 90;">
                                                         <b>{{kyc.identification_proof1}} :</b><br><br>
-                                                        {{kyc.identification_number1}}
+                                                        <span class="masked-number">{{kyc.identification_number1}}</span>
                                                     </div>
 
                                                     <div style="flex: 10;">
@@ -269,7 +269,7 @@
                                                 <div style="display: flex;">
                                                     <div style="flex: 90;">
                                                         <b>{{kyc.identification_proof2}} :</b><br><br>
-                                                        {{kyc.identification_number2}}
+                                                        <span class="masked-number">{{kyc.identification_number2}}</span>
                                                     </div>
 
                                                     <div style="flex: 10;">
@@ -411,6 +411,8 @@
 
 
 </script>
+
+
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <!-- End plugin js for this page -->
@@ -427,4 +429,16 @@
 
 </body>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elements = document.querySelectorAll('.masked-number');
+        elements.forEach(function (element) {
+            var number = element.textContent;
+            if (number.length >= 4) {
+                var maskedNumber = "*".repeat(number.length - 4) + number.slice(-4);
+                element.textContent = maskedNumber;
+            }
+        });
+    });
+</script>
 </html>

@@ -687,12 +687,12 @@ def dashboard_search_employee_status(status):
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        emp_login_query = """SELECT password, name, profile_pic, role FROM users WHERE uid = %s AND 
+        emp_login_query = """SELECT password, name, profile_pic, role, status FROM users WHERE uid = %s AND 
                             ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
         print(result)
-        if result is not None:
+        if result is not None and result[4] == 1:
             stored_password = result[0].encode('utf-8')
             if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
                 return {
@@ -706,6 +706,10 @@ def employee_login(uname, pwd):
                 return {
                     "msg": "Invalid Password, please try again"
                 }
+        elif result is not None and result[4] == 0:
+            return {
+                "msg": "You Account is blocked, please contact your Admin"
+            }
         else:
             return {
                 "msg": "Invalid Credentials, please try again"

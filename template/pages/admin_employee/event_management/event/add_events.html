@@ -597,15 +597,14 @@
             eventAdminRow.classList.add('event-row');
             eventAdminRow.innerHTML = `
             <div class="col-md-6 mb-3">
-            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown2')" placeholder="Search" class="form-control">
-            <div id="myDropdown2" class="dropdown-content">
-                <input type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown2')" class="form-control">
+            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search" class="form-control">
+            <div id="myDropdown5" class="dropdown-content">
+                <input type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
                 {% for users in users.user_data %}
                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
                 {% endfor %}
             </div>
-            <div id="error-message6"
-                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
+            <div id="error-message6" style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
             </div>
             <div class="col-md-6 mb-3">
             <input class="form-control" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ...." required>
@@ -659,14 +658,13 @@
 
 
 <script>
-// Function to toggle a specific dropdown based on its ID
 function toggleDropdown(dropdownId) {
   var dropdown = document.getElementById(dropdownId);
   dropdown.classList.toggle("show");
 }
 
-// Function to filter the dropdown content based on the input value
 function filterFunction(dropdownId) {
+  console.log(dropdownId)
   var input, filter, ul, li, a, i;
   input = document.getElementById("myInput" + dropdownId.slice(-1));
   filter = input.value.toUpperCase();

@@ -121,6 +121,10 @@ def app_settings(request):
 
 def reset_password(request, email, action_page):
     resp, status_code = reset_password_controller.reset_password(email, action_page)
+    return redirect(action_page)
+
+def reset_my_password(request, email, action_page):
+    resp, status_code = reset_password_controller.reset_password(email, action_page)
     return JsonResponse(resp)
 
 
@@ -663,7 +667,7 @@ def add_kyc(request):
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
             user_controller.add_user_kyc(kyc_obj)
-            return redirect('add_bank')
+            return redirect('manage_kyc')
         else:
             response, status_code = user_controller.get_users_for_kyc('%')
             return render(request, 'pages/admin_employee/users_management/kyc/add_kyc.html', response)

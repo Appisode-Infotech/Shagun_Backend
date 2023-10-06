@@ -48,6 +48,7 @@ urlpatterns = [
     path('printer_login', printer_login, name='printer_login'),
     path('app_settings', app_settings, name='app_settings'),
     path('reset_password/<str:email>/<str:action_page>/', reset_password, name='reset_password'),
+    path('reset_my_password/<str:email>/<str:action_page>/', reset_my_password, name='reset_my_password'),
     path('forgot_password/<str:action_page>/', forgot_password, name='forgot_password'),
     path('logout', logout, name='logout'),
     path('printer_logout', printerLogout, name='printer_logout'),

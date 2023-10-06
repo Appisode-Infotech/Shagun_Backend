@@ -13,11 +13,11 @@ from datetime import datetime
 
 def printer_login(uname, pwd):
     with connection.cursor() as cursor:
-        printer_login_query = f"""SELECT id,printer_user_name, printer_password, store_name FROM printer 
+        printer_login_query = f"""SELECT id,printer_user_name, printer_password, store_name, status FROM printer 
                                     WHERE printer_user_name = '{uname}' """
         cursor.execute(printer_login_query)
         result = cursor.fetchone()
-        if result is not None:
+        if result is not None and result[4] == 1:
             stored_password = result[2].encode('utf-8')
             if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
                 return {
@@ -31,7 +31,10 @@ def printer_login(uname, pwd):
                 return {
                     "msg": "Invalid Password, please try again",
                 }
-
+        elif result is not None and result[4] == 0:
+            return {
+                "msg": "You Account is blocked, please contact your Admin"
+            }
         else:
             return {
                 "msg": "Invalid Credentials, please try again",

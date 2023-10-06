@@ -8,8 +8,8 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
@@ -89,7 +89,7 @@
 
         .toggle-password {
           position: absolute;
-          top: 10px;
+          top: 15px;
           right: 50px;
           cursor: pointer;
         }
@@ -116,6 +116,7 @@
           border-radius: 3px;
           margin: 3px;
         }
+
 
 
 
@@ -157,13 +158,14 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Printing Vendor </label>
                                 </div>
-                                <form class="form-sample needs-validation needs-password-validation"
+                                <form class="form-sample form-sample needs-validation needs-password-validation"
                                       action="/add_printer" method="post"
                                       enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
                                         Printer info
                                     </p>
+
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
@@ -269,7 +271,9 @@
                                                            pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
-                                                    <div class="invalid-feedback">Store GST is mandatory and must have 15 digits</div>
+                                                    <div class="invalid-feedback">Store GST is mandatory and must have
+                                                        15 digits
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -296,13 +300,10 @@
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="password"
                                                            name="printer_password"
-                                                           class="form-control form-control-lg"
+                                                           class="form-control"
                                                            pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,12}$"
-                                                           title="Password must contain at least one uppercase letter, one
-                                                    lowercase letter, one number, one special character, and be 8-12
-                                                    characters long"
                                                            placeholder="Password" oninput="validatePasswords()">
-                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>
+                                                    <i class="toggle-password fas fa-eye" onclick="toggleVisibility('password')"></i>
                                                     <div class="invalid-feedback">Password Requirements: 8-12
                                                         characters, at least one uppercase letter, one lowercase letter,
                                                         one number, one special character.
@@ -317,7 +318,7 @@
                                                         style="font-weight: bold; color: red;">*</span></label>
                                                 <div class="col-sm-9">
                                                     <input required type="password" id="confirmPassword"
-                                                           class="form-control form-control-lg"
+                                                           class="form-control"
                                                            pattern="[^ ].*"
                                                            title="This field can't be Empty"
                                                            placeholder="Password" oninput="validatePasswords()">
@@ -326,6 +327,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton">
@@ -366,6 +368,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -377,6 +380,7 @@
         field.type = 'password';
       }
     }
+
 
 
 
@@ -396,6 +400,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -410,6 +415,7 @@
                 errorMessage.style.display = "none";
             }
         });
+
 
 </script>
 

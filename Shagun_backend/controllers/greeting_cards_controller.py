@@ -5,7 +5,6 @@ from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes, GETGREETING_CARDS
 from Shagun_backend.util.responsegenerator import responseGenerator
 
-
 def get_greeting_cards(event_id):
     try:
         with connection.cursor() as cursor:

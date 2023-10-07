@@ -141,6 +141,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -180,12 +181,12 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Greeting Cards List</h4>
                                     <div class="form-group">
-                                            <div class="input-group">
-                                                <input name="search" id="search" type="text" class="form-control"
-                                                       placeholder="Search" value="{{search}}"
-                                                       aria-label="Recipient's username">
+                                        <div class="input-group">
+                                            <input name="search" id="search" type="text" class="form-control"
+                                                   placeholder="Search" value="{{search}}"
+                                                   aria-label="Recipient's username">
 
-                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="mr-2 custom-label"> Greetings Filter: </label>
@@ -219,7 +220,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="myTable"  class="table table-hover">
+                                    <table id="myTable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>
@@ -259,8 +260,8 @@
                                         {% for greetings in response %}
                                         <tr>
                                             {% with sl_no=forloop.counter %}
-                                                    <td>{{sl_no}}</td>
-                                                    {% endwith %}
+                                            <td>{{sl_no}}</td>
+                                            {% endwith %}
                                             <td class="py-1">
                                                 <a href="{{MEDIA_URL}}{{ greetings.card_image_url }}" target="_blank">
                                                     <img src="{{MEDIA_URL}}{{ greetings.card_image_url }}" alt="image"/>
@@ -307,13 +308,14 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <button onclick="showPopUpDiv('{{greetings.card_id}}', '{{greetings.card_name}}','{{greetings.card_price}}')"
+                                                <button onclick="showPopUpDiv('{{greetings.card_id}}', '{{greetings.card_name}}','{{greetings.card_price}}','{{greetings.updator}}')"
                                                         class="btn btn-outline-info btn-fw">Edit
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <div id="customAlertOverlay" class="custom-alert-overlay">
                                                     <div class="custom-alert">
-                                                        <form class="form-sample needs-validation" action="/edit_greeting_cards"
+                                                        <form class="form-sample needs-validation"
+                                                              action="/edit_greeting_cards"
                                                               method="post" novalidate>
                                                             {% csrf_token %}
                                                             <h4 class="card-title">Edit Greeting Card</h4>
@@ -334,14 +336,16 @@
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Card
                                                                             Name <a
-                                                                        style="font-weight: bold; color: red;">*</a></label>
+                                                                                    style="font-weight: bold; color: red;">*</a></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    pattern="[^ ].*" maxlength="255"
                                                                                    title="This field can't be Empty"
                                                                                    class="form-control"
                                                                                    name="card_name"/>
-                                                                            <div class="invalid-feedback">Card Name is mandatory</div>
+                                                                            <div class="invalid-feedback">Card Name is
+                                                                                mandatory
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -350,14 +354,31 @@
                                                                 <div class="col-md-10">
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Price <a
-                                                                        style="font-weight: bold; color: red;">*</a></label>
+                                                                                style="font-weight: bold; color: red;">*</a></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="price" name="card_price"
                                                                                    type="text"
                                                                                    pattern="[1-9][0-9]{0,5}"
                                                                                    title="Please add the amount only"
                                                                                    class="form-control"/>
-                                                                            <div class="invalid-feedback">Price is mandatory</div>
+                                                                            <div class="invalid-feedback">Price is
+                                                                                mandatory
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-10">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Updated
+                                                                            By </label>
+                                                                        <div class="col-sm-9">
+                                                                            <input disabled readonly
+                                                                                   class="form-control" id="updator">
+                                                                            <input type="hidden" id="updated_by"
+                                                                                   name="updated_by"
+                                                                                   value="{{ request.session.uid }}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -451,10 +472,11 @@
 
 
 
+
 </script>
 
 <script>
-    function showPopUpDiv(val1, val2, val3) {
+    function showPopUpDiv(val1, val2, val3, val4) {
         // Display the popup by changing its style to "display: block"
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "flex";
@@ -463,12 +485,14 @@
         document.getElementById("id").value = val1;
         document.getElementById("name").value = val2;
         document.getElementById("price").value = val3;
+        document.getElementById("updator").value = val4;
     }
 
     function hidePopUpDiv() {
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
 
 
 

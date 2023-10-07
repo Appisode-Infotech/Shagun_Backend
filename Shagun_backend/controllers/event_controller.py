@@ -885,12 +885,19 @@ def get_city_list_for_user():
         return {"status": False, "message": str(e)}, 301
 
 
-def set_event_status(event_id, status):
+def set_event_status(event_id, status, approver):
+    print(approver)
+    print(status)
+    print(type(status))
     try:
         with connection.cursor() as cursor:
             event_status_query = "UPDATE event SET is_approved = %s WHERE id = %s"
             values = (status, event_id)
             cursor.execute(event_status_query, values)
+            if status == 1:
+                event_approve_query = f"UPDATE event SET approved_by = '{approver}' WHERE id = '{event_id}'"
+                cursor.execute(event_approve_query)
+                print(event_approve_query)
             return {
                 "status": True,
                 "message": "Event Status changed successfully"

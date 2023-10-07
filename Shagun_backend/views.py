@@ -303,7 +303,7 @@ def manage_bank_details(request):
 def manage_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
-
+        print(response)
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:
@@ -364,11 +364,15 @@ def manage_delivery_vendors(request):
 def edit_delivery_vendors(request, vid):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
+            print(request.POST)
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
-            delivery_vendor_controller.update_vendor(vendor_obj)
+            print(vendor_obj)
+            resp = delivery_vendor_controller.update_vendor(vendor_obj)
+            print(resp)
             return redirect('manage_delivery_vendors')
         else:
             response, status_code = delivery_vendor_controller.edit_delivery_vendor(vid)
+            print(response)
             location, status_code = event_controller.get_city_list_for_user()
 
             return render(request,
@@ -711,6 +715,7 @@ def add_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get(
             'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
+            print(request.POST)
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
             print(admin_obj)
             response = user_controller.add_admin(admin_obj)
@@ -741,6 +746,7 @@ def add_delivery_vendor(request):
         if request.method == 'POST':
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
             response = delivery_vendor_controller.add_vendor(vendor_obj)
+            print(response)
             return redirect('manage_delivery_vendors')
         else:
             location, status_code = event_controller.get_city_list_for_user()
@@ -890,7 +896,8 @@ def edit_kyc(request, kyc_id):
 
 def set_event_status(request, event_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        event_controller.set_event_status(event_id, status)
+        event_controller.set_event_status(event_id, status, request.session.get('uid'))
+        print(request.session.get('uid'))
         return redirect('manage_event')
     else:
         return redirect('sign_up')
@@ -953,6 +960,7 @@ def edit_employee(request, user_id):
             return redirect('manage_employee')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
+            print(response)
             return render(request, 'pages/admin_employee/employee_management/employee/edit_employee.html',
                           response)
     else:
@@ -1015,10 +1023,12 @@ def edit_printer(request, printer_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
+            print(store_obj)
             response, status_code = store_controller.edit_printer(store_obj)
             return redirect('manage_printers')
         else:
             printer_data, status_code = store_controller.get_printer_by_id(printer_id)
+            print(printer_data)
             location, status_code = event_controller.get_city_list_for_user()
             context = {
                 "printer_data": printer_data,
@@ -1279,6 +1289,7 @@ def printer_home_page(request):
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
+        print(response)
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:
@@ -1437,46 +1448,10 @@ def printer_closed_jobs(request):
         return redirect('printer_login')
 
 
-#
-# def get_all_jobs(request):
-#     response, status_code = store_controller.get_all_jobs()
-#     paginator = Paginator(response['jobs'], 25)
-#     page = request.GET.get('page')
-#     response = paginator.get_page(page)
-#     return render(request, 'event_management/event_management/test.html', {"response": response})
-
-#
-# def get_closed_jobs(request, status):
-#     response, status_code = store_controller.get_closed_jobs(status)
-#     paginator = Paginator(response['jobs'], 25)
-#     page = request.GET.get('page')
-#     response = paginator.get_page(page)
-#     return render(request, 'event_management/event_management/test.html', {"response": response, "status": status})
-
-
-# @api_view(['POST'])
-# def get_closed_jobs(request):
-#     response, status_code = store_controller.get_closed_jobs(request.data['status'])
-#     return JsonResponse(response, status=status_code)
-
-# @api_view(['POST'])
-# def add_employee(request):
-#     emp_obj = employee_model.add_employee_model_from_dict(request.data)
-#     response, status_code = user_controller.add_employee(emp_obj)
-#     return JsonResponse(response, status=status_code)
-
-
 @api_view(['POST'])
 def enable_disable_employee(request):
     response, status_code = user_controller.enable_disable_employee(request.data['uid'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
-
-# @api_view(['POST'])
-# def edit_employee(request):
-#     emp_obj = employee_model.add_employee_model_from_dict(request.data)
-#     response, status_code = user_controller.edit_employee(emp_obj)
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -1822,13 +1797,6 @@ def get_location_by_id(request):
 def enable_disable_printer(request):
     response, status_code = store_controller.disable_printer(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
-
-# @api_view(['POST'])
-# def edit_printer(request):
-#     store_obj = add_printer_model.add_printer_model_from_dict(request.data)
-#     response, status_code = store_controller.edit_printer(store_obj)
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])

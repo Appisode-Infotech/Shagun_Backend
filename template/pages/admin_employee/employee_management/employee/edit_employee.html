@@ -138,36 +138,6 @@
                                             </div>
                                         </div>
                                     </div>
-<!--                                    <div class="row">-->
-<!--                                        <div class="col-md-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label class="col-sm-3 col-form-label">Password</label>-->
-<!--                                                <div class="col-sm-9">-->
-<!--                                                    <input required type="password" id="password" name="password"-->
-<!--                                                           class="form-control form-control-lg"-->
-<!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
-<!--                                                    <i class="toggle-password" onclick="toggleVisibility('password')">&#x1f441;</i>-->
-
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-md-6">-->
-<!--                                            <div class="form-group row">-->
-<!--                                                <label class="col-sm-3 col-form-label">Confirm Password</label>-->
-<!--                                                <div class="col-sm-9">-->
-<!--                                                    <input required type="password" id="confirmPassword"-->
-<!--                                                           class="form-control form-control-lg"-->
-<!--                                                           value="{{emp.password}}" oninput="validatePasswords()">-->
-<!--                                                    <i class="toggle-password"-->
-<!--                                                       onclick="toggleVisibility('confirmPassword')">&#x1f441;</i>-->
-<!--                                                    <div id="passwordMatchMessage" style="color: red; display: none;">-->
-<!--                                                        Passwords do not match!-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
@@ -180,6 +150,29 @@
                                             </div>
                                         </div>
 
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Created By </label>
+                                                <div class="col-sm-9">
+                                                    <input disabled readonly class="form-control"
+                                                           value="{{ emp.creator }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Updated By </label>
+                                                <div class="col-sm-9">
+                                                    <input disabled readonly class="form-control"
+                                                           value="{{ emp.updator }} ">
+                                                    <input type="hidden" id="updated_by"
+                                                           name="updated_by"
+                                                           value="{{ request.session.uid }}">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="center-button">
                                         <input type="submit" value="Submit" class="btn btn-primary mr-2"

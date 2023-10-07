@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional, Any, TypeVar, Type, cast
 
-
 T = TypeVar("T")
 
 
@@ -36,6 +35,8 @@ class AddEmployeeModel:
     phone: Optional[str] = None
     password: Optional[str] = None
     city: Optional[str] = None
+    created_by: Optional[str] = None
+    updated_by: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'AddEmployeeModel':
@@ -45,7 +46,9 @@ class AddEmployeeModel:
         phone = from_union([from_str, from_none], obj.get("phone"))
         password = from_union([from_str, from_none], obj.get("password"))
         city = from_union([from_str, from_none], obj.get("city"))
-        return AddEmployeeModel(email, name, phone, password, city)
+        created_by = from_union([from_str, from_none], obj.get("created_by"))
+        updated_by = from_union([from_str, from_none], obj.get("updated_by"))
+        return AddEmployeeModel(email, name, phone, password, city, created_by, updated_by)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -59,6 +62,10 @@ class AddEmployeeModel:
             result["password"] = from_union([from_str, from_none], self.password)
         if self.city is not None:
             result["city"] = from_union([from_str, from_none], self.city)
+        if self.created_by is not None:
+            result["created_by"] = from_union([from_str, from_none], self.created_by)
+        if self.updated_by is not None:
+            result["updated_by"] = from_union([from_str, from_none], self.updated_by)
         return result
 
 

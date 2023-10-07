@@ -16,7 +16,9 @@ class responseGenerator:
                 "profile": data[7],
                 "user_id": data[1],
                 "created_on": data[8],
-                "user_status": data[9]
+                "user_status": data[9],
+                "creator": data[10],
+                "updator": data[11],
             }
 
         if controller_type == EMPLOYEE_BY_ID:
@@ -31,7 +33,8 @@ class responseGenerator:
                 "status": data[7],
                 "role": data[8],
                 "city": data[9],
-                # "password": data[10].encode('utf-8')
+                "creator": data[10],
+                "updator": data[11],
             }
 
         if controller_type == EVENT_LIST:
@@ -264,7 +267,9 @@ class responseGenerator:
                         "card_price": int(cards[2]),
                         "card_id": cards[3],
                         "card_status": cards[4],
-                        "printer": cards[5]
+                        "printer": cards[5],
+                        "creator": cards[6],
+                        "updator": cards[7],
                     }
                 )
             return greeting_cards
@@ -504,8 +509,9 @@ class responseGenerator:
                 "store_owner": data[7],
                 "contact_number": data[8],
                 "printer_user_name": data[9],
-                "printer_password": data[10].encode('utf-8'),
-                "city_name": data[11]
+                "city_name": data[15],
+                "creator": data[16],
+                "updator": data[17],
 
             }
         if controller_type == DELIVERY_VENDOR_DATA:
@@ -521,7 +527,8 @@ class responseGenerator:
                 "contact_number": data[8],
                 "created_by": data[9],
                 "created_on": data[10],
-                "city_name": data[11]
+                "city_name": data[13],
+                "updator": data[14]
             }
 
         if controller_type == ALL_JOBS:

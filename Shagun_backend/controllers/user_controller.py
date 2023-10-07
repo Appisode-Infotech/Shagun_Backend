@@ -217,7 +217,8 @@ def add_user_kyc(kyc_obj):
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
                           0, getIndianTime(), kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
-                          kyc_obj.postcode, kyc_obj.country, getIndianTime(), kyc_obj.created_by_uid, kyc_obj.created_by_uid)
+                          kyc_obj.postcode, kyc_obj.country, getIndianTime(), kyc_obj.created_by_uid,
+                          kyc_obj.created_by_uid)
                 cursor.execute(sql_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -537,10 +538,12 @@ def add_employee(emp_obj):
     hashed_password = bcrypt.hashpw(emp_obj.password.encode('utf-8'), bcrypt.gensalt())
     try:
         with connection.cursor() as cursor:
-            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, 
+                                profile_pic, created_by, updated_by) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, getIndianTime(), True, 2,
-                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png', emp_obj.created_by,
+                      emp_obj.updated_by)
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
             # cursor.execute(query, 2)
@@ -557,14 +560,14 @@ def add_employee(emp_obj):
 
 
 def add_admin(emp_obj):
-    # Hash the password using bcrypt
     hashed_password = bcrypt.hashpw(emp_obj.password.encode('utf-8'), bcrypt.gensalt())
     try:
         with connection.cursor() as cursor:
-            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, 
+                                profile_pic, created_by, updated_by) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, getIndianTime(), True, 1,
-                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png', emp_obj.created_by, emp_obj.updated_by)
             cursor.execute(add_emp_query, values)
             return {
                 "status": True,
@@ -580,7 +583,7 @@ def edit_employee(emp_obj, user_id):
     try:
         with connection.cursor() as cursor:
             edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
-                                phone = '{emp_obj.phone}', city = '{emp_obj.city}'
+                                phone = '{emp_obj.phone}', city = '{emp_obj.city}', updated_by = '{emp_obj.updated_by}'
                                 WHERE id = '{user_id}'"""
             cursor.execute(edit_emp_query)
             return {
@@ -719,10 +722,14 @@ def employee_login(uname, pwd):
 def get_employee_by_id(emp_id):
     try:
         with connection.cursor() as cursor:
-            emp_data_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city
-             FROM users WHERE id = '{emp_id}'"""
+            emp_data_query = f""" SELECT u.id, u.uid, u.name, u.email, u.phone, u.profile_pic, u.created_on, u.status, 
+                                    u.role, u.city, creator.name, updator.name FROM users AS u
+                                    LEFT JOIN users AS creator ON u.created_by = creator.uid
+                                    LEFT JOIN users AS updator ON u.updated_by = updator.uid
+                                    WHERE u.id = '{emp_id}'"""
             cursor.execute(emp_data_query)
             emp_data = cursor.fetchone()
+            print(emp_data)
             if emp_data is not None:
                 return {
                     "status": True,
@@ -868,7 +875,8 @@ def edit_user_kyc(obj):
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid, getIndianTime().now(),
+                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid,
+                    getIndianTime().now(),
                     obj.id
                 ])
             else:

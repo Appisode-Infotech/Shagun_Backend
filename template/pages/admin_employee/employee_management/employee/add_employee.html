@@ -42,6 +42,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -172,6 +173,24 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Created By </label>
+                                                <div class="col-sm-9">
+                                                    <input disabled readonly class="form-control"
+                                                           value="{{ request.session.name }}">
+                                                    <input required type="hidden" id="created_by"
+                                                           name="created_by"
+                                                           value="{{ request.session.uid }}">
+                                                    <input required type="hidden" id="updated_by"
+                                                           name="updated_by"
+                                                           value="{{ request.session.uid }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton">
@@ -201,6 +220,7 @@
         field.type = 'password';
       }
     }
+
 
 
 

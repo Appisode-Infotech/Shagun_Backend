@@ -18,38 +18,87 @@ def reset_password(email, user):
     try:
         with connection.cursor() as cursor:
             new_pwd = generate_random_string()
-            print(new_pwd)
             hashed_password = bcrypt.hashpw(new_pwd.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-            print(hashed_password)
             if user == 'printer_login':
-                print("reset pwd for printing vendor")
-                sql_query = f"""UPDATE printer SET printer_password	 = '{hashed_password}' WHERE email = '{email}' """
-                cursor.execute(sql_query)
+                printer_check_query = f"""SELECT id, status FROM printer 
+                                                    WHERE email = '{email}' """
+                cursor.execute(printer_check_query)
+                result = cursor.fetchone()
+                if result is not None and result[1] == 1:
+                    sql_query = f"""UPDATE printer SET printer_password	 = '{hashed_password}' WHERE email = '{email}' """
+                    cursor.execute(sql_query)
+                    url = 'https://api.emailjs.com/api/v1.0/email/send'
+                    data = {
+                        'service_id': 'default_service',
+                        'template_id': 'template_ycnjmqh',
+                        'user_id': 'qbWAgwqHOFbcgoJRF',
+                        'template_params': {
+                            'to_email': email,
+                            'new_password': new_pwd,
+                            'g-recaptcha-response': '03AHJ_ASjnLA214KSNKFJAK12sfKASfehbmfd...'
+                        }
+                    }
+
+                    headers = {'Content-Type': 'application/json'}
+
+                    response = requests.post(url, data=json.dumps(data), headers=headers)
+
+                    return {
+                        "status": True,
+                        "message": "Password reset successful. We have sent you an email with new password, please click OK to login using new password"
+                    }, 200
+                elif result is not None and result[1] == 0:
+                    return {
+                        "status": False,
+                        "message": "Password reset Failed due to Inactive Account. Please contact your Admin"
+                    }, 200
+
+                else:
+                    return {
+                        "status": False,
+                        "message": "Please enter the valid email to reset the password"
+                    }, 200
+
             else:
-                print("reset pwd for shagun staff")
-                sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """
-                cursor.execute(sql_query)
+                user_check_query = f"""SELECT id, status FROM users 
+                                                                    WHERE email = '{email}' """
+                cursor.execute(user_check_query)
+                result = cursor.fetchone()
+                if result is not None and result[1] == 1:
+                    sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """
+                    cursor.execute(sql_query)
+                    url = 'https://api.emailjs.com/api/v1.0/email/send'
+                    data = {
+                        'service_id': 'default_service',
+                        'template_id': 'template_ycnjmqh',
+                        'user_id': 'qbWAgwqHOFbcgoJRF',
+                        'template_params': {
+                            'to_email': email,
+                            'new_password': new_pwd,
+                            'g-recaptcha-response': '03AHJ_ASjnLA214KSNKFJAK12sfKASfehbmfd...'
+                        }
+                    }
 
-            url = 'https://api.emailjs.com/api/v1.0/email/send'
-            data = {
-                'service_id': 'default_service',
-                'template_id': 'template_ycnjmqh',
-                'user_id': 'qbWAgwqHOFbcgoJRF',
-                'template_params': {
-                    'to_email': email,
-                    'new_password': new_pwd,
-                    'g-recaptcha-response': '03AHJ_ASjnLA214KSNKFJAK12sfKASfehbmfd...'
-                }
-            }
+                    headers = {'Content-Type': 'application/json'}
 
-            headers = {'Content-Type': 'application/json'}
+                    response = requests.post(url, data=json.dumps(data), headers=headers)
 
-            response = requests.post(url, data=json.dumps(data), headers=headers)
+                    return {
+                        "status": True,
+                        "message": "Password reset successful. We have sent you an email with new password, please click OK to login using new password"
+                    }, 200
+                elif result is not None and result[1] == 0:
+                    return {
+                        "status": False,
+                        "message": "Password reset Failed due to Inactive Account. Please contact your Admin"
+                    }, 200
+                else:
+                    return {
+                        "status": False,
+                        "message": "Please enter the valid email to reset the password"
+                    }, 200
 
-            return {
-                "status": True,
-                "message": "Password reset successful. We have sent you an email with new password, please click OK to login using new password"
-            }, 200
+
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

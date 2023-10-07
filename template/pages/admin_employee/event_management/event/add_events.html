@@ -197,6 +197,7 @@
 
 
 
+
     </style>
 
 </head>
@@ -299,7 +300,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Date And Time <span
@@ -308,8 +308,10 @@
                                                     <input required type="datetime-local" id="event_date"
                                                            name="event_date" class="form-control"
                                                            onkeydown="return false"
-                                                           placeholder="Select a date and time">
-                                                    <div class="invalid-feedback">Event Date is mandatory & Please choose a future date.</div>
+                                                           placeholder="22/12/1996 00:00">
+                                                    <div class="invalid-feedback">Event Date is mandatory & Please
+                                                        choose a future date.
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -426,13 +428,17 @@
                                                 <input class="form-control" type="datetime-local"
                                                        name="sub_events[0][start]" placeholder="Start Time"
                                                        id="sub_event_start_date" onkeydown="return false" required>
-                                                <div class="invalid-feedback">Sub Event start time is mandatory & Please choose a future date.</div>
+                                                <div class="invalid-feedback">Sub Event start time is mandatory & Please
+                                                    choose a future date.
+                                                </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <input class="form-control" type="datetime-local"
                                                        name="sub_events[0][end]" onkeydown="return false"
                                                        placeholder="End Time" id="sub_event_end_date" required>
-                                                <div class="invalid-feedback">Sub Event End time is mandatory & Please choose a future date.</div>
+                                                <div class="invalid-feedback">Sub Event End time is mandatory & Please
+                                                    choose a future date.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -446,7 +452,8 @@
                                         <label class="col-sm-3 col-form-label">Event Admins</label>
                                         <div class="event-row mb-3">
                                             <div class="col-md-6 mb-3">
-                                                <input required type="text" id="name" name="event_admin[0][name]" readonly
+                                                <input required type="text" id="name" name="event_admin[0][name]"
+                                                       readonly
                                                        onclick="toggleDropdown('myDropdown4')"
                                                        placeholder="Search" class="form-control">
 
@@ -459,7 +466,7 @@
                                                     {% endfor %}
                                                 </div>
                                                 <div id="error-message4"
-                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
+                                                     style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <input required class="form-control" type="text" maxlength="256"
@@ -499,7 +506,6 @@
 <!-- my_template.html -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         for (var i = 1; i <= 4; i++) {
@@ -520,6 +526,7 @@
             })(i);
         }
     });
+
 
 
 
@@ -654,6 +661,7 @@
 
 
 
+
 </script>
 
 
@@ -708,6 +716,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
       }
     }
   });
+
 
 
 
@@ -809,6 +818,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
 </script>
 
 <script>
@@ -819,6 +829,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("event_date").min = currentDate;
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
+
 
 </script>
 
@@ -885,8 +896,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
         });
 
-</script>
 
+</script>
 
 
 <!-- Latest compiled and minified CSS -->

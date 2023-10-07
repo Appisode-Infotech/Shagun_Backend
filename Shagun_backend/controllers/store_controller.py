@@ -387,7 +387,7 @@ def change_print_jobs_status(pjid, status):
                                              VALUES (%s, %s)"""
             cursor.execute(add_printer_query, [transaction_id, status])
 
-            fcm_query = f"""SELECT u.name, u.fcm_token FROM transaction_history AS th
+            fcm_query = f"""SELECT u.name, u.fcm_token, u.uid FROM transaction_history AS th
                             LEFT JOIN users as u ON th.sender_uid = u.uid
                             WHERE th.id = %s"""
             cursor.execute(fcm_query, (transaction_id,))
@@ -408,8 +408,11 @@ def change_print_jobs_status(pjid, status):
             else:
                 title = f"Order {transaction_id} status: Dispatched"
                 message = "Your card has been dispatched."
-                print("fcm token=================================")
-            print(fcm_data[1])
+
+            sender_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                    VALUES ('{fcm_data[2]}', '{title}', '{message}')"""
+            cursor.execute(sender_notification_query)
+
             send_push_notification(fcm_data[1], title, message)
 
             return {

@@ -1494,17 +1494,6 @@ def app_compatibility(request):
     return JsonResponse(response, status=status_code)
 
 
-#
-# @api_view(['POST'])
-# def update_callback_request(request):
-#     callback_obj = request_callback_model.request_callback_model_from_dict(request.data)
-#     response, status_code = request_controller.update_callback_request(callback_obj)
-#     return JsonResponse(response, status=status_code)
-
-
-# This API is used to verify the existence of a user. It checks if the provided user details or credentials match
-# any registered user in the backend system.
-
 @api_view(['POST'])
 def check_user(request):
     user, status_code = user_controller.check_user_exist(request.data.get('uid'), request.data['fcm_token'])

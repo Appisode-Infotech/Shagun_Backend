@@ -652,6 +652,7 @@ class responseGenerator:
                         "event_type": req[8],
                         "city_name": req[9],
                         "email": req[10],
+                        "selected_reason": req[11],
                     }
                 )
             return req_list

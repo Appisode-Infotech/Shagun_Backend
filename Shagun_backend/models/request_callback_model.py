@@ -44,6 +44,7 @@ class RequestCallbackModel:
     event_date: Optional[str] = None
     event_type: Optional[str] = None
     city: Optional[int] = None
+    selected_reason: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'RequestCallbackModel':
@@ -56,7 +57,8 @@ class RequestCallbackModel:
         event_date = from_union([from_str, from_none], obj.get("event_date"))
         event_type = from_union([from_str, from_none], obj.get("event_type"))
         city = from_union([from_int, from_none], obj.get("city"))
-        return RequestCallbackModel(id, completed_by, status, uid, type, event_date, event_type, city)
+        selected_reason = from_union([from_int, from_none], obj.get("selected_reason"))
+        return RequestCallbackModel(id, completed_by, status, uid, type, event_date, event_type, city, selected_reason)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -76,6 +78,8 @@ class RequestCallbackModel:
             result["event_type"] = from_union([from_str, from_none], self.event_type)
         if self.city is not None:
             result["city"] = from_union([from_int, from_none], self.city)
+        if self.selected_reason is not None:
+            result["selected_reason"] = from_union([from_int, from_none], self.selected_reason)
         return result
 
 

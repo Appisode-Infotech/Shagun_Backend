@@ -130,6 +130,8 @@
 
 
 
+
+
     </style>
 
 </head>
@@ -228,16 +230,18 @@
                                                         </div>
                                                         <div class="col-8 col-sm-10">
                                                             <input type="number" id="phone" name="contact_number"
-                                                           class="form-control" placeholder="Phone Number"
-                                                           title="Please enter a 10-digit phone number" required
-                                                           oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);">
-                                                    <div class="invalid-feedback">Please enter a 10-digit phone number
-                                                    </div>
+                                                                   class="form-control" placeholder="Phone Number"
+                                                                   title="Please enter a 10-digit phone number" required
+                                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);">
+                                                            <div class="invalid-feedback">Please enter a 10-digit phone
+                                                                number
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -279,7 +283,8 @@
                                                            pattern="^[A-Za-z0-9]{15}$"
                                                            title="Please enter valid 15 digit GST No."
                                                            name="gst_no"/>
-                                                    <div class="invalid-feedback">Store GST is mandatory and must have
+                                                    <div class="invalid-feedback">Store GST is mandatory and must
+                                                        have
                                                         15 digits
                                                     </div>
                                                 </div>
@@ -311,9 +316,11 @@
                                                            class="form-control"
                                                            pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,12}$"
                                                            placeholder="Password" oninput="validatePasswords()">
-                                                    <i class="toggle-password fas fa-eye" onclick="toggleVisibility('password')"></i>
+                                                    <i class="toggle-password fas fa-eye"
+                                                       onclick="toggleVisibility('password')"></i>
                                                     <div class="invalid-feedback">Password Requirements: 8-12
-                                                        characters, at least one uppercase letter, one lowercase letter,
+                                                        characters, at least one uppercase letter, one lowercase
+                                                        letter,
                                                         one number, one special character.
                                                     </div>
 
@@ -334,12 +341,28 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Created By </label>
+                                                <div class="col-sm-9">
+                                                    <input disabled readonly class="form-control"
+                                                           value="{{ request.session.name }}">
+                                                    <input required type="hidden" id="created_by"
+                                                           name="created_by_uid"
+                                                           value="{{ request.session.uid }}">
+                                                    <input required type="hidden" id="updated_by"
+                                                           name="created_by_uid"
+                                                           value="{{ request.session.uid }}">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="center-button">
                                         <input required type="submit" value="Submit" class="btn btn-primary mr-2"
                                                id="submitButton">
                                     </div>
+
                                 </form>
                             </div>
                         </div>
@@ -377,6 +400,8 @@
 
 
 
+
+
 </script>
 
 <script>
@@ -388,6 +413,8 @@
         field.type = 'password';
       }
     }
+
+
 
 
 
@@ -409,6 +436,8 @@
 
 
 
+
+
 </script>
 
 <script>
@@ -423,6 +452,8 @@
                 errorMessage.style.display = "none";
             }
         });
+
+
 
 
 </script>

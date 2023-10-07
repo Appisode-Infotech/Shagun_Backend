@@ -918,7 +918,7 @@ def get_user_requests(param):
                             SELECT
                                 u.name, u.phone, u.profile_pic, ucr.type,
                                 ucr.status, ucr.created_on, ucr.id,
-                                ucr.event_date, ucr.event_type, l.city_name, u.email
+                                ucr.event_date, ucr.event_type, l.city_name, u.email, ucr.selected_reason
                             FROM
                                 user_callback_request AS ucr
                             LEFT JOIN

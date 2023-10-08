@@ -516,11 +516,12 @@ def get_single_event(event_id, phone):
         return {"status": False, "message": str(e)}, 301
 
 
-def create_events_type(event_name, created_by):
+def create_events_type(event_name, created_by, updated_by):
     try:
         with connection.cursor() as cursor:
-            events_type_query = "INSERT INTO events_type (event_type_name, status,created_by) VALUES (%s,%s,%s)"
-            values = (event_name, True, created_by)
+            events_type_query = """INSERT INTO events_type (event_type_name, status, created_by, created_on, updated_by, 
+                                    updated_on) VALUES (%s,%s,%s,%s,%s,%s)"""
+            values = (event_name, True, created_by, getIndianTime(), updated_by, getIndianTime())
             cursor.execute(events_type_query, values)
             return {
                 "status": True,
@@ -550,10 +551,11 @@ def disable_events_type(event_id, e_status):
         return {"status": False, "message": str(e)}, 301
 
 
-def edit_events_type(lid, event_type_name):
+def edit_events_type(lid, event_type_name, updated_by):
     try:
         with connection.cursor() as cursor:
-            edit_query = f"""UPDATE events_type SET event_type_name = '{event_type_name}' where id= '{lid}'"""
+            edit_query = f"""UPDATE events_type SET event_type_name = '{event_type_name}' , updated_by = '{updated_by}', 
+                            updated_on = '{getIndianTime()}' where id= '{lid}'"""
             cursor.execute(edit_query)
             return {
                 "status": True,
@@ -607,11 +609,13 @@ def get_event_type_list_for_user():
         return {"status": False, "message": str(e)}, 301
 
 
-def add_location(city_name, created_by):
+def add_location(city_name, created_by, updated_by):
     try:
         with connection.cursor() as cursor:
-            add_location_query = "INSERT INTO locations (city_name, status, created_by) VALUES (%s,%s, %s)"
-            values = (city_name, True, created_by)
+            add_location_query = """INSERT INTO locations (city_name, status, created_by, created_on, updated_by, 
+                                    updated_on) 
+                                    VALUES (%s, %s, %s,%s ,%s , %s)"""
+            values = (city_name, True, created_by, getIndianTime(), updated_by, getIndianTime())
             cursor.execute(add_location_query, values)
             return {
                 "status": True,
@@ -641,10 +645,11 @@ def disable_location(location_id, loc_status):
         return {"status": False, "message": str(e)}, 301
 
 
-def edit_location(lid, city_name):
+def edit_location(lid, city_name, updated_by):
     try:
         with connection.cursor() as cursor:
-            edit_location_query = f"""UPDATE locations SET city_name = '{city_name}' where id= '{lid}' """
+            edit_location_query = f"""UPDATE locations SET city_name = '{city_name}' , updated_by = '{updated_by}',
+                                        updated_on = '{getIndianTime()}' where id= '{lid}' """
             cursor.execute(edit_location_query)
             return {
                 "status": True,
@@ -682,7 +687,10 @@ def get_location_by_id(loc_id):
 def get_event_type_list_for_admin():
     try:
         with connection.cursor() as cursor:
-            event_type_for_admin_query = "SELECT id, event_type_name, status FROM events_type "
+            event_type_for_admin_query = """SELECT e.id, e.event_type_name, e.status, creator.name, updator.name 
+                                            FROM events_type AS e
+                                            LEFT JOIN users AS creator ON e.created_by = creator.uid
+                                            LEFT JOIN users AS updator ON e.updated_by = updator.uid"""
             cursor.execute(event_type_for_admin_query)
             events = cursor.fetchall()
             return {
@@ -698,7 +706,9 @@ def get_event_type_list_for_admin():
 def get_locations_list():
     try:
         with connection.cursor() as cursor:
-            location_list_query = "SELECT id, city_name, status FROM locations"
+            location_list_query = """SELECT l.id, l.city_name, l.status, creator.name, updator.name FROM locations AS l
+                                        LEFT JOIN users AS creator ON l.created_by = creator.uid
+                                        LEFT JOIN users AS updator ON l.updated_by = updator.uid"""
             cursor.execute(location_list_query)
             events = cursor.fetchall()
             return {

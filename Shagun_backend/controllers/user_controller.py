@@ -635,10 +635,15 @@ def get_all_employees():
 def get_all_admins():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 1 ORDER BY created_on DESC """
+            users_data_query = """ SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 1 ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
+            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)

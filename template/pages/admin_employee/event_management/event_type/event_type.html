@@ -144,6 +144,8 @@
 
 
 
+
+
     </style>
 </head>
 
@@ -198,7 +200,8 @@
                                     </div>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample needs-validation" action="/add_events_type" method="post" novalidate>
+                                            <form class="form-sample needs-validation" action="/add_events_type"
+                                                  method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="text-center">
                                                     <h4 class="card-title">Add Event Type</h4>
@@ -207,27 +210,32 @@
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
                                                             <label class="col-sm-3 col-form-label">Name <a
-                                                                                    style="font-weight: bold; color: red;">*</a></label>
+                                                                    style="font-weight: bold; color: red;">*</a></label>
                                                             <div class="col-sm-9">
-                                                                  <input required id="event_type_name"
+                                                                <input required id="event_type_name"
                                                                        name="event_type_name"
                                                                        pattern="^[A-Za-z][A-Za-z ]*$"
                                                                        title="Enter Event Type Name" maxlength="256"
                                                                        type="text"
                                                                        class="form-control"/>
-                                                                       <div class="invalid-feedback">Event Type Name is mandatory</div>
+                                                                <div class="invalid-feedback">Event Type Name is
+                                                                    mandatory
+                                                                </div>
 
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Created By</label>
+                                                            <label class="col-sm-3 col-form-label">Created By </label>
                                                             <div class="col-sm-9">
-                                                                <label class="form-control">{{ request.session.name}}
-                                                                </label>
-                                                                <input type="hidden" id="created_by_uid"
-                                                                       name="created_by_uid"
+                                                                <input disabled readonly class="form-control"
+                                                                       value="{{ request.session.name }}">
+                                                                <input required type="hidden" id="created_by"
+                                                                       name="created_by"
+                                                                       value="{{ request.session.uid }}">
+                                                                <input required type="hidden" id="updated_by"
+                                                                       name="updated_by"
                                                                        value="{{ request.session.uid }}">
                                                             </div>
                                                         </div>
@@ -300,18 +308,19 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <button onclick="showPopUpDiv('{{event.event_type_id}}', '{{event.event_type_name}}')"
+                                                <button onclick="showPopUpDiv('{{event.event_type_id}}', '{{event.event_type_name}}', '{{event.updator}}')"
                                                         class="btn btn-outline-info btn-fw">Edit
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <div id="customAlertOverlay1" class="custom-alert-overlay">
                                                     <div class="custom-alert">
-                                                        <form class="form-sample needs-validation" action="/edit_event_type"
+                                                        <form class="form-sample needs-validation"
+                                                              action="/edit_event_type"
                                                               method="post" novalidate>
                                                             {% csrf_token %}
                                                             <h4 class="card-title">Edit Event Type</h4>
                                                             <div class="row">
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-10">
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Event
                                                                             ID </label>
@@ -322,7 +331,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-10">
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Name
                                                                             <a
@@ -335,7 +344,22 @@
                                                                                    maxlength="256"
                                                                                    name="name"
                                                                                    value="{{ event.event_type_name }}"/>
-                                                                            <div class="invalid-feedback">Name is mandatory</div>
+                                                                            <div class="invalid-feedback">Name is
+                                                                                mandatory
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Updated
+                                                                            By </label>
+                                                                        <div class="col-sm-9">
+                                                                            <input disabled readonly id="updator"
+                                                                                   class="form-control">
+                                                                            <input type="hidden"
+                                                                                   name="updated_by"
+                                                                                   value="{{ request.session.uid }}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -432,16 +456,19 @@
 
 
 
+
+
 </script>
 
 
 <script>
-    function showPopUpDiv(val1, val2) {
+    function showPopUpDiv(val1, val2, val3) {
         var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
         customAlertOverlay1.style.display = "flex";
 
         document.getElementById("event_type_id").value = val1;
         document.getElementById("name").value = val2;
+        document.getElementById("updator").value = val3;
     }
 
     function hidePopUpDiv() {
@@ -458,6 +485,8 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
+
 
 
 
@@ -489,6 +518,8 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
+
 
 
 

@@ -189,7 +189,7 @@ def manage_settlement(request):
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
-
+        print(response)
         return render(request, 'pages/admin_employee/event_management/event_type/event_type.html',
                       {"response": response['events_type']})
     else:
@@ -207,6 +207,7 @@ def manage_location(request):
 def manage_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = bank_controller.get_all_banks_list()
+        print(response)
         return render(request, 'pages/admin_employee/users_management/banks/bank_lists.html',
                       {"bank_list": response['bank_list']})
     else:
@@ -216,8 +217,8 @@ def manage_bank_list(request):
 def add_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
-            resp = bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by_uid'])
+            resp = bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by'],
+                                                 request.POST['updated_by'])
             print(resp)
             return redirect('manage_bank_list')
     else:
@@ -227,7 +228,7 @@ def add_bank_list(request):
 def edit_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            bank_controller.edit_bank_list(request.POST['id'], request.POST['name'])
+            bank_controller.edit_bank_list(request.POST['id'], request.POST['name'], request.POST['updated_by'])
             return redirect('manage_bank_list')
     else:
         return redirect('sign_up')
@@ -333,7 +334,7 @@ def manage_employee(request):
 def manage_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_admins()
-
+        print(response)
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
                       {"response": response['user_data'], "role": 1})
     else:
@@ -646,7 +647,9 @@ def add_events(request):
 def add_events_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by_uid'])
+            res = event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by'],
+                                                request.POST['updated_by'])
+            print(res)
             return redirect('manage_event_types')
         else:
             return render(request, 'event_management/event_management/add_events_type.html')
@@ -700,7 +703,7 @@ def add_bank(request):
 
 def add_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get(
-            'is_logged_in') is True and request.session.get('role'):
+            'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
             user_controller.add_employee(emp_obj)
@@ -784,7 +787,8 @@ def add_greeting_cards(request):
 def add_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.add_location(request.POST['city_name'], request.POST['created_by_uid'])
+            event_controller.add_location(request.POST['city_name'], request.POST['created_by'],
+                                          request.POST['updated_by'])
             return redirect('manage_location')
     else:
         return redirect('sign_up')
@@ -984,7 +988,7 @@ def edit_admin(request, user_id):
 def edit_event_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.edit_events_type(request.POST['id'], request.POST['name'])
+            event_controller.edit_events_type(request.POST['id'], request.POST['name'], request.POST['updated_by'])
             return redirect('manage_event_types')
     else:
         return redirect('sign_up')
@@ -993,7 +997,7 @@ def edit_event_type(request):
 def edit_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.edit_location(request.POST['id'], request.POST['name'])
+            event_controller.edit_location(request.POST['id'], request.POST['name'], request.POST['updated_by'])
             return redirect('manage_location')
     else:
         return redirect('sign_up')

@@ -313,7 +313,9 @@ class responseGenerator:
                     {
                         "event_type_id": event_type[0],
                         "event_type_name": event_type[1],
-                        "status": event_type[2]
+                        "status": event_type[2],
+                        "creator": event_type[3],
+                        "updator": event_type[4],
                     }
                 )
             return event_type_lists
@@ -325,7 +327,9 @@ class responseGenerator:
                     {
                         "location_id": event_type[0],
                         "location_name": event_type[1],
-                        "status": event_type[2]
+                        "status": event_type[2],
+                        "creator": event_type[3],
+                        "updator": event_type[4],
                     }
                 )
             return location_lists
@@ -439,7 +443,9 @@ class responseGenerator:
                         "profile_pic": user[7],
                         "created_on": user[8],
                         "status": user[9],
-                        "role": user[10]
+                        "role": user[10],
+                        "creator": user[11],
+                        "updator": user[12],
 
                     }
                 )
@@ -609,7 +615,9 @@ class responseGenerator:
                         "bank_id": bank[0],
                         "bank_name": bank[1],
                         "bank_logo": bank[2],
-                        "bank_status": bank[3]
+                        "bank_status": bank[3],
+                        "creator": bank[8],
+                        "updator": bank[9],
                     }
 
                 )

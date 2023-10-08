@@ -85,11 +85,11 @@ def edit_printer(store_obj):
         with connection.cursor() as cursor:
             edit_printer_query = """UPDATE printer SET store_name = %s, city = %s, address = %s, email = %s, 
                                     gst_no= %s, store_owner= %s, contact_number= %s, printer_user_name= %s,
-                                    updated_by = %s
+                                    updated_by = %s, updated_on = %s
                                   WHERE id = %s"""
             values = (store_obj.store_name, store_obj.city, store_obj.address, store_obj.email, store_obj.gst_no,
                       store_obj.store_owner, store_obj.contact_number, store_obj.printer_user_name,
-                      store_obj.updated_by, store_obj.store_id)
+                      store_obj.updated_by, getIndianTime(), store_obj.store_id)
             cursor.execute(edit_printer_query, values)
             return {
                 "status": True,
@@ -130,7 +130,10 @@ def get_printers_by_status(status):
     try:
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.store_owner, p.contact_number, p.email FROM printer AS p
+            p.store_owner, p.contact_number, p.email, creator.name, updator.name, p.created_on, p.updated_on
+            FROM printer AS p
+            LEFT JOIN users AS creator ON p.created_by = creator.uid
+            LEFT JOIN users AS updator ON p.updated_by = updator.uid
             LEFT JOIN locations AS l ON p.city = l.id WHERE p.status LIKE '{status}' ORDER BY p.id DESC """
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()

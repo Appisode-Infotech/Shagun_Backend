@@ -65,6 +65,7 @@ def transform_data_to_json(data):
         "event_note": data['event_note'],
         "event_admin": event_admins(data),
         "delivery_fee": data['delivery_fee'],
-        "delivery_address": data['delivery_address']
+        "delivery_address": data['delivery_address'],
+        "updated_by": data['updated_by']
     }
     return result

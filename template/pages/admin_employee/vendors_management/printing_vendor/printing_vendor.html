@@ -214,6 +214,7 @@
                                             <th>
                                                 Status
                                             </th>
+                                            <th>Creator/Updator</th>
                                             <th>
                                                 Activate/Inactivate
                                             </th>
@@ -258,6 +259,10 @@
                                                 {% elif printer.status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{printer.creator}} <b><br/>on: </b>{{printer.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{printer.updator}} <b><br/>on: </b>{{printer.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">

@@ -216,6 +216,9 @@
                                             <th>
                                                 status
                                             </th>
+                                            <th>
+                                                Creator/Updator
+                                            </th>
 
                                             <th>
                                                 Activate/Inactivate
@@ -262,6 +265,10 @@
                                                 {% elif bank.status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{bank.creator}} <b><br/>on: </b>{{bank.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{bank.updator}} <b><br/>on: </b>{{bank.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">

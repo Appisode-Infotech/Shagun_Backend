@@ -112,6 +112,7 @@ class CreateEventModel:
     event_note: Optional[str] = None
     event_admin: Optional[List[EventAdmin]] = None
     delivery_address: Optional[str] = None
+    updated_by: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'CreateEventModel':
@@ -129,7 +130,10 @@ class CreateEventModel:
         event_note = from_union([from_str, from_none], obj.get("event_note"))
         event_admin = from_union([lambda x: from_list(EventAdmin.from_dict, x), from_none], obj.get("event_admin"))
         delivery_address = from_union([from_str, from_none], obj.get("delivery_address"))
-        return CreateEventModel(event_type_id, city_id, printer_id, delivery_fee, created_by_uid, address_line1, address_line2, event_lat_lng, sub_events, event_date, event_note, event_admin, delivery_address)
+        updated_by = from_union([from_str, from_none], obj.get("updated_by"))
+        return CreateEventModel(event_type_id, city_id, printer_id, delivery_fee, created_by_uid, address_line1,
+                                address_line2, event_lat_lng, sub_events, event_date, event_note, event_admin,
+                                delivery_address, updated_by)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -159,6 +163,8 @@ class CreateEventModel:
             result["event_admin"] = from_union([lambda x: from_list(lambda x: to_class(EventAdmin, x), x), from_none], self.event_admin)
         if self.delivery_address is not None:
             result["delivery_address"] = from_union([from_str, from_none], self.delivery_address)
+        if self.updated_by is not None:
+            result["updated_by"] = from_union([from_str, from_none], self.updated_by)
         return result
 
 

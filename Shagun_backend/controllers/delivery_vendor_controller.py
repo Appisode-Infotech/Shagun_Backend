@@ -103,7 +103,10 @@ def get_delivery_vendor():
     try:
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.delivery_vendor_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.delivery_vendor_owner, p.contact_number FROM delivery_vendors AS p
+            p.delivery_vendor_owner, p.contact_number, creator.name, updator.name, p.created_on, p.updated_on 
+            FROM delivery_vendors AS p
+            LEFT JOIN users AS creator ON p.created_by = creator.uid
+            LEFT JOIN users AS updator ON p.updated_by = updator.uid
             LEFT JOIN locations AS l ON p.city = l.id ORDER BY p.created_on DESC """
             cursor.execute(printers_data_query)
             delivery_vendor_data = cursor.fetchall()

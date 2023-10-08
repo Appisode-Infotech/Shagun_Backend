@@ -41,13 +41,14 @@ def create_event(event_obj):
 
             create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
                                         address_line2, event_lat_lng, created_on, sub_events, event_date, event_note, 
-                                        event_admin, is_approved, status, printer_id, delivery_fee, delivery_address) 
-                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                        event_admin, is_approved, status, printer_id, delivery_fee, delivery_address, 
+                                        updated_by, updated_on) 
+                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
                       event_obj.address_line2, event_obj.event_lat_lng, getIndianTime(), sub_events_json,
                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id,
-                      event_obj.delivery_fee, event_obj.delivery_address)
+                      event_obj.delivery_fee, event_obj.delivery_address, event_obj.updated_by, getIndianTime())
 
             cursor.execute(create_event_query, values)
             event_id = cursor.lastrowid
@@ -277,7 +278,9 @@ def edit_event(event_obj, event_id):
                             event_date = %s,
                             event_note = %s,
                             delivery_fee = %s,
-                            delivery_address = %s
+                            delivery_address = %s,
+                            updated_by = %s,
+                            updated_on = %s
                         WHERE
                             id = %s
                     """
@@ -286,8 +289,7 @@ def edit_event(event_obj, event_id):
                 event_obj.event_type_id, event_obj.city_id, event_obj.printer_id,
                 event_obj.address_line1, event_obj.address_line2, event_obj.event_lat_lng,
                 sub_events_json, event_obj.event_date, event_obj.event_note, event_obj.delivery_fee,
-                event_obj.delivery_address, event_id
-            )
+                event_obj.delivery_address, event_obj.updated_by, getIndianTime(), event_id)
             cursor.execute(update_event_query, values)
 
             event_admin_query = f"""SELECT e.event_admin, et.event_type_name FROM event AS e
@@ -345,7 +347,9 @@ def get_event_by_id(et_id):
     try:
         with connection.cursor() as cursor:
             get_event_query = f""" SELECT e.*, et.event_type_name,
-            l.city_name, p.store_name FROM event e
+            l.city_name, p.store_name, creator.name, updator.name FROM event e
+            LEFT JOIN users AS creator ON e.created_by_uid = creator.uid
+            LEFT JOIN users AS updator ON e.updated_by = updator.uid
             LEFT JOIN events_type et ON e.event_type_id = et.id
             LEFT JOIN locations l ON e.city_id = l.id
             LEFT JOIN printer p ON e.printer_id = p.id
@@ -687,12 +691,14 @@ def get_location_by_id(loc_id):
 def get_event_type_list_for_admin():
     try:
         with connection.cursor() as cursor:
-            event_type_for_admin_query = """SELECT e.id, e.event_type_name, e.status, creator.name, updator.name 
+            event_type_for_admin_query = """SELECT e.id, e.event_type_name, e.status, creator.name, updator.name, 
+                                            e.created_on, e.updated_on 
                                             FROM events_type AS e
                                             LEFT JOIN users AS creator ON e.created_by = creator.uid
                                             LEFT JOIN users AS updator ON e.updated_by = updator.uid"""
             cursor.execute(event_type_for_admin_query)
             events = cursor.fetchall()
+            print(events)
             return {
                 "status": True,
                 "events_type": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_TYPE_LIST)
@@ -706,7 +712,8 @@ def get_event_type_list_for_admin():
 def get_locations_list():
     try:
         with connection.cursor() as cursor:
-            location_list_query = """SELECT l.id, l.city_name, l.status, creator.name, updator.name FROM locations AS l
+            location_list_query = """SELECT l.id, l.city_name, l.status, creator.name, updator.name, l.created_on, 
+                                        l.updated_on FROM locations AS l
                                         LEFT JOIN users AS creator ON l.created_by = creator.uid
                                         LEFT JOIN users AS updator ON l.updated_by = updator.uid"""
             cursor.execute(location_list_query)
@@ -819,9 +826,13 @@ def search_user_event(uid):
 def get_all_event_list():
     try:
         with connection.cursor() as cursor:
-            event_list_query = """SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id, 
-                                  event.is_approved, event.status FROM event LEFT JOIN events_type ON 
-                                  event.event_type_id = events_type.id ORDER BY event.id DESC """
+            event_list_query = """SELECT e.event_date, e.event_admin, et.event_type_name, e.id, 
+                                  e.is_approved, e.status, creator.name, updator.name, e.created_on, e.updated_on  
+                                  FROM event AS e
+                                    LEFT JOIN users AS creator ON e.created_by_uid = creator.uid
+                                    LEFT JOIN users AS updator ON e.updated_by = updator.uid
+                                    LEFT JOIN events_type AS et ON e.event_type_id = et.id 
+                                  ORDER BY e.id DESC """
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {

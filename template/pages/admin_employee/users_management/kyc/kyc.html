@@ -215,6 +215,7 @@
                                             <th>
                                                 Verification Status
                                             </th>
+                                            <th>Creator/Updator</th>
                                             {% if request.session.role == 1 %}
                                             <th>
                                                 Activate/Inactivate
@@ -222,6 +223,9 @@
                                             {% endif %}
                                             <th>
                                                 Edit
+                                            </th>
+                                            <th>
+                                                KYC Activation Data
                                             </th>
                                         </tr>
                                         </thead>
@@ -290,6 +294,10 @@
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
                                             </td>
+                                            <td>
+                                                <b>created By: </b>{{kyc.creator}} <b><br/>on: </b>{{kyc.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{kyc.updator}} <b><br/>on: </b>{{kyc.updated_on}}
+                                            </td>
                                             {% if request.session.role == 1 %}
                                             <td>
                                                 <div class="dropdown">
@@ -321,6 +329,9 @@
                                                     Edit
                                                     <i class="fas fa-edit"></i>
                                                 </button>
+                                            </td>
+                                            <td>
+                                                <b>Activated By: </b>{{kyc.approver}} <b><br/>on: </b>{{kyc.approved_on}}
                                             </td>
                                         </tr>
                                         {% endfor %}

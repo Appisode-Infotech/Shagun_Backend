@@ -230,6 +230,7 @@
                                             <th>SL No</th>
                                             <th>Location Name</th>
                                             <th>Status</th>
+                                            <th>Creator/Updator</th>
                                             <th>Active/Inactive</th>
                                             <th>Edit</th>
                                         </tr>
@@ -255,6 +256,10 @@
                                                 {% elif location.status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{location.creator}} <b><br/>on: </b>{{location.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{location.updator}} <b><br/>on: </b>{{location.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">

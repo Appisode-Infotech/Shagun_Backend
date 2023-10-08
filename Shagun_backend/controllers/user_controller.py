@@ -87,8 +87,12 @@ def edit_user(edit_reg_obj, file_name):
 def get_all_users(kyc):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 3 AND kyc LIKE '{kyc}' ORDER BY created_on DESC  """
+            users_data_query = f""" SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 3 AND a.kyc LIKE '{kyc}' ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -296,14 +300,23 @@ def update_user_kyc(kyc_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-def enable_disable_kyc(kyc_id, v_status):
+def enable_disable_kyc(kyc_id, v_status, approved_by):
     try:
         with connection.cursor() as cursor:
-            sql_query = f"""UPDATE user_kyc AS uk
-                JOIN users AS u ON uk.uid = u.uid
-                SET uk.verification_status = '{v_status}', u.kyc = '{v_status}'
-                WHERE uk.id = '{kyc_id}' """
-            cursor.execute(sql_query)
+            if v_status == 1:
+                sql_query = f"""UPDATE user_kyc AS uk
+                    JOIN users AS u ON uk.uid = u.uid
+                    SET uk.verification_status = '{v_status}', u.kyc = '{v_status}', uk.approved_by = '{approved_by}', 
+                    uk.approved_on = '{getIndianTime()}'
+                    WHERE uk.id = '{kyc_id}' """
+                cursor.execute(sql_query)
+
+            else:
+                sql_query = f"""UPDATE user_kyc AS uk
+                                    JOIN users AS u ON uk.uid = u.uid
+                                    SET uk.verification_status = '{v_status}', u.kyc = '{v_status}'
+                                    WHERE uk.id = '{kyc_id}' """
+                cursor.execute(sql_query)
             return {''
                     "status": True,
                     "message": "User Kyc status changed successfully"
@@ -323,8 +336,12 @@ def get_kyc_data(status):
                 kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.address_line1, 
                 kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
-                kyc.verification_status, users.profile_pic
+                kyc.verification_status, users.profile_pic, creator.name, updator.name, approver.name, kyc.created_on, 
+                kyc.updated_on, kyc.approved_on
                 FROM user_kyc AS kyc
+                LEFT JOIN users AS creator ON kyc.created_by = creator.uid
+                LEFT JOIN users AS updator ON kyc.updated_by = updator.uid
+                LEFT JOIN users AS approver ON kyc.approved_by = approver.uid
                 INNER JOIN users ON kyc.uid = users.uid WHERE verification_status LIKE '{status}' ORDER BY 
                 kyc.created_on DESC """
 
@@ -517,8 +534,11 @@ def get_all_bank_data(status):
     try:
         with connection.cursor() as cursor:
             bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
-                bnk.account_number, bnk.status, users.profile_pic
+                bnk.account_number, bnk.status, users.profile_pic, creator.name, updator.name, bnk.created_on, 
+                bnk.modified_on
                 FROM bank_details AS bnk
+                LEFT JOIN users AS creator ON bnk.added_by = creator.uid
+                LEFT JOIN users AS updator ON bnk.modified_by = updator.uid
                 LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.status LIKE '{status}' ORDER BY bnk.created_on DESC """
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()
@@ -583,7 +603,8 @@ def edit_employee(emp_obj, user_id):
     try:
         with connection.cursor() as cursor:
             edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
-                                phone = '{emp_obj.phone}', city = '{emp_obj.city}', updated_by = '{emp_obj.updated_by}'
+                                phone = '{emp_obj.phone}', city = '{emp_obj.city}', updated_by = '{emp_obj.updated_by}', 
+                                updated_on = '{getIndianTime()}'
                                 WHERE id = '{user_id}'"""
             cursor.execute(edit_emp_query)
             return {
@@ -617,8 +638,12 @@ def enable_disable_employee(uid, status):
 def get_all_employees():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 2 ORDER BY created_on DESC"""
+            users_data_query = """ SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 2 ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -636,7 +661,7 @@ def get_all_admins():
     try:
         with connection.cursor() as cursor:
             users_data_query = """ SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
-                a.created_on, a.status, a.role, creator.name, updator.name
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
                 FROM users AS a 
                 LEFT JOIN users AS creator ON a.created_by = creator.uid
                 LEFT JOIN users AS updator ON a.updated_by = updator.uid

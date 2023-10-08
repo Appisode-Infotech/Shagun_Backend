@@ -35,7 +35,7 @@ def get_all_greeting_cards():
     try:
         with connection.cursor() as cursor:
             greeting_cards_query = f"""SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status, 
-                                        p.store_name, creator.name, updator.name 
+                                        p.store_name, creator.name, updator.name, gc.created_on, gc.updated_on 
                                         FROM greeting_cards AS gc
                                         LEFT JOIN users AS creator ON gc.created_by = creator.uid
                                         LEFT JOIN users AS updator ON gc.updated_by = updator.uid
@@ -59,7 +59,7 @@ def get_printer_greeting_cards(p_id):
     try:
         with connection.cursor() as cursor:
             greeting_cards_query = f"""SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status, 
-                                        p.store_name, creator.name, updator.name 
+                                        p.store_name, creator.name, updator.name, gc.created_on, gc.updated_on 
                                         FROM greeting_cards AS gc
                                         LEFT JOIN users AS creator ON gc.created_by = creator.uid
                                         LEFT JOIN users AS updator ON gc.updated_by = updator.uid
@@ -194,7 +194,8 @@ def edit_greeting_cards(grt_obj):
     try:
         with connection.cursor() as cursor:
             edit_cards_query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', 
-            card_price = '{grt_obj.card_price}' WHERE id = '{grt_obj.id}' """
+            card_price = '{grt_obj.card_price}', updated_by = '{grt_obj.updated_by}', updated_on = '{getIndianTime()}' 
+            WHERE id = '{grt_obj.id}' """
             cursor.execute(edit_cards_query)
             return {
                 "status": True,

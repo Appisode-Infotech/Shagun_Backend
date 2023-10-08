@@ -173,7 +173,7 @@ def update_printer_password(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-
+        print(response)
         return render(request, 'pages/admin_employee/event_management/event/events.html',
                       {'response': response['event_list']})
     else:
@@ -199,6 +199,7 @@ def manage_event_types(request):
 def manage_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_locations_list()
+        print(response)
         return render(request, 'pages/admin_employee/event_management/location/location.html', response)
     else:
         return redirect('sign_up')
@@ -294,7 +295,7 @@ def filter_user(request, status):
 def manage_bank_details(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_bank_data('%')
-
+        print(response)
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
                       {"response": response['bank_data']})
     else:
@@ -314,7 +315,7 @@ def manage_greeting_cards(request):
 def manage_users(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_users('%')
-
+        print(response)
         return render(request, 'pages/admin_employee/users_management/users/users.html',
                       {"response": response['user_data']})
     else:
@@ -365,15 +366,11 @@ def manage_delivery_vendors(request):
 def edit_delivery_vendors(request, vid):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
-            print(vendor_obj)
             resp = delivery_vendor_controller.update_vendor(vendor_obj)
-            print(resp)
             return redirect('manage_delivery_vendors')
         else:
             response, status_code = delivery_vendor_controller.edit_delivery_vendor(vid)
-            print(response)
             location, status_code = event_controller.get_city_list_for_user()
 
             return render(request,
@@ -933,7 +930,7 @@ def activate_deactivate_greeting_cards(request, card_id, status):
 
 def activate_deactivate_kyc(request, kyc_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        user_controller.enable_disable_kyc(kyc_id, status)
+        user_controller.enable_disable_kyc(kyc_id, status, request.session.get('uid'))
         return redirect('manage_kyc')
     else:
         return redirect('sign_up')
@@ -1007,7 +1004,8 @@ def edit_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
-            greeting_cards_controller.edit_greeting_cards(grt_obj)
+            res = greeting_cards_controller.edit_greeting_cards(grt_obj)
+            print(res)
             return redirect('manage_greeting_cards')
     else:
         return redirect('sign_up')
@@ -1053,6 +1051,7 @@ def edit_event(request, event_id):
             json_data = transform_data_to_json(request.POST)
             print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
+            print(event_obj.updated_by)
             response = event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
         else:
@@ -1061,6 +1060,7 @@ def edit_event(request, event_id):
             users_list, status_code = user_controller.get_all_users(1)
             printers_list, status_code = store_controller.get_printers_by_status(1)
             event_data, status_code = event_controller.get_event_by_id(event_id)
+            print(event_data)
 
             context = {
                 "event_types": event_types,

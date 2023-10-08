@@ -226,6 +226,7 @@
                                             <th>SL No</th>
                                             <th>Bank Name</th>
                                             <th>Status</th>
+                                            <th>Creator/Updator</th>
                                             <th>Active/Inactive</th>
                                             <th>Edit</th>
                                         </tr>
@@ -250,6 +251,10 @@
                                                 {% elif bank.bank_status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{bank.creator}} <b><br/>on: </b>{{bank.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{bank.updator}} <b><br/>on: </b>{{bank.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">

@@ -95,7 +95,11 @@ class responseGenerator:
                         "admins": json.loads(events[1]),
                         "event_id": events[3],
                         "is_approved": events[4],
-                        "status": events[5]
+                        "status": events[5],
+                        "creator": events[6],
+                        "updator": events[7],
+                        "created_on": events[8],
+                        "updated_on": events[9],
                     }
                 )
             return event_list
@@ -157,9 +161,12 @@ class responseGenerator:
                 "status": data[16],
                 "delivery_fee": int(data[17]),
                 "delivery_address": data[18],
-                "event_type_name": data[19],
-                "city_name": data[20],
-                "store_name": data[21]
+                "event_type_name": data[21],
+                "city_name": data[22],
+                "store_name": data[23],
+                "creator": data[24],
+                "updator": data[25],
+                "updated_on": data[20],
             }
 
         if controller_type == GIFT_EVENT:
@@ -270,6 +277,8 @@ class responseGenerator:
                         "printer": cards[5],
                         "creator": cards[6],
                         "updator": cards[7],
+                        "created_on": cards[8],
+                        "updated_on": cards[9],
                     }
                 )
             return greeting_cards
@@ -316,6 +325,8 @@ class responseGenerator:
                         "status": event_type[2],
                         "creator": event_type[3],
                         "updator": event_type[4],
+                        "created_on": event_type[5],
+                        "updated_on": event_type[6],
                     }
                 )
             return event_type_lists
@@ -330,6 +341,8 @@ class responseGenerator:
                         "status": event_type[2],
                         "creator": event_type[3],
                         "updator": event_type[4],
+                        "created_on": event_type[5],
+                        "updated_on": event_type[6],
                     }
                 )
             return location_lists
@@ -357,7 +370,13 @@ class responseGenerator:
                         "identification_doc1": kyc[9],
                         "identification_doc2": kyc[10],
                         "verification_status": kyc[11],
-                        "profile_pic": kyc[12]
+                        "profile_pic": kyc[12],
+                        "creator": kyc[13],
+                        "updator": kyc[14],
+                        "approver": kyc[15],
+                        "created_on": kyc[16],
+                        "updated_on": kyc[17],
+                        "approved_on": kyc[18],
 
                     }
                 )
@@ -404,7 +423,11 @@ class responseGenerator:
                         "account_holder_name": bank[4],
                         "account_number": bank[5],
                         "status": bank[6],
-                        "profile_pic": bank[7]
+                        "profile_pic": bank[7],
+                        "creator": bank[8],
+                        "updator": bank[9],
+                        "created_on": bank[10],
+                        "updated_on": bank[11],
 
                     }
                 )
@@ -446,6 +469,7 @@ class responseGenerator:
                         "role": user[10],
                         "creator": user[11],
                         "updator": user[12],
+                        "updated_on": user[13],
 
                     }
                 )
@@ -479,7 +503,11 @@ class responseGenerator:
                         "gst_no": printer[5],
                         "store_owner": printer[6],
                         "contact_number": printer[7],
-                        "email": printer[8]
+                        "email": printer[8],
+                        "creator": printer[9],
+                        "updator": printer[10],
+                        "created_on": printer[11],
+                        "updated_on": printer[12],
                     }
 
                 )
@@ -497,7 +525,11 @@ class responseGenerator:
                         "status": printer[4],
                         "gst_no": printer[5],
                         "store_owner": printer[6],
-                        "contact_number": printer[7]
+                        "contact_number": printer[7],
+                        "creator": printer[8],
+                        "updator": printer[9],
+                        "created_on": printer[10],
+                        "updated_on": printer[11],
                     }
 
                 )
@@ -618,6 +650,8 @@ class responseGenerator:
                         "bank_status": bank[3],
                         "creator": bank[8],
                         "updator": bank[9],
+                        "created_on": bank[4],
+                        "updated_on": bank[7],
                     }
 
                 )

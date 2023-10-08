@@ -102,6 +102,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -224,6 +225,7 @@
                                                     <th>Event Name</th>
                                                     <th>Event Admins</th>
                                                     <th>Status</th>
+                                                    <th>Creator/Updator</th>
                                                     <th>Set Status</th>
                                                     <th>Active</th>
                                                     <th>Edit</th>
@@ -266,6 +268,10 @@
                                                         {% elif event.is_approved == 2 %}
                                                         <label class="badge badge-danger">Rejected</label>
                                                         {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <b>created By: </b>{{event.creator}} <b><br/>on: </b>{{event.created_on}}<br/><br/>
+                                                        <b>Updated By: </b>{{event.updator}} <b><br/>on: </b>{{event.updated_on}}
                                                     </td>
                                                     <td>
                                                         <div class="dropdown">
@@ -429,6 +435,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -467,6 +474,7 @@
 
 
 
+
 </script>
 
 
@@ -476,6 +484,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 
@@ -523,6 +532,7 @@ function showCustomAlertForActivate() {
     customAlertOverlay.style.display = "none";
   }, 1000);
 }
+
 
 
 

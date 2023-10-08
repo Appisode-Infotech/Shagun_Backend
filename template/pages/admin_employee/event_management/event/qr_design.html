@@ -1,53 +1,235 @@
-<meta name="viewport" content="width=450,height=932, initial-scale=1"/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito%3A700"/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A700"/>
-<div style="width: 100%; height: 100%; position: relative; background: white">
-    <div style="width: 430px; height: 466px; left: 0px; top: 466px; position: absolute; background: #EAB948"></div>
-    <img style="width: 368px; height: 368px; left: 31px; top: 158px; position: absolute; border-radius: 20px; border: 5px #42033D solid" src="{{qrCode}}" />
-    <div style="left: 107px; top: 63px; position: absolute; color: black; font-size: 40px; font-family: Nunito; font-weight: 700; word-wrap: break-word">e-Shubham</div>
-    <div style="left: 114px; top: 104px; position: absolute; color: black; font-size: 20px; font-family: Nunito; font-weight: 700; word-wrap: break-word">Your Shagun Express!</div>
-    <div style="width: 430px; height: 75px; left: 0px; top: 858px; position: absolute; background: #42033D"></div>
-    <div style="width: 400px; height: 261px; left: 31px; top: 568px; position: absolute">
-        <div style="width: 368px; height: 241px; left: 0px; top: 0px; position: absolute; background: #42033D; border-radius: 20px"></div>
-        <div style="width: 171px; height: 80px; left: 28px; top: 28px; position: absolute">
-            <img style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; border-radius: 9999px; border: 5px #9F813C solid" src="{{profile1}}" />
-            <div style="width: 75px; left: 96px; top: 13px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Nunito; font-weight: 700; word-wrap: break-word" id="truncate-text" >{{admin1}}</div>
+<!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary-color: #42033D;
+        --secondary-color:#EAB948;
+    }
+    *::after,
+    *::before {
+        box-sizing: border-box;
+    }
+
+    body {
+    -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+        position: relative;
+        min-height: 100vh; /* Ensure the body takes up at least the viewport height */
+        width: 430px;
+        height: 932px;
+        font-family: "Nunito", sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
+    .logo {
+        margin-top: 16px;
+        color: black;
+        width: 100%;
+        text-align: center;
+    }
+
+    .sub-title {
+        font-size: xx-large;
+    }
+    .qr-wrapper {
+        padding: 16px;
+        width: 80%;
+        height: 80%;
+        border: 4px solid var(--primary-color);
+        border-radius: 20px;
+        margin: 32px;
+        box-sizing: border-box; /* Add this line */
+    }
+
+    .event-info-container {
+        width: 100%;
+        height: 100%;
+        background-color: var(--secondary-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .event-type-container {
+        margin-top: 32px;
+        width: 80%;
+        padding: 16px;
+        background-color: var(--primary-color);
+        box-sizing: border-box;
+        align-items: center;
+        align-content: center;
+        text-align: center;
+        color: white;
+        border-top-left-radius: 20px; /* Adjust the radius as needed */
+        border-top-right-radius: 20px; /* Adjust the radius as needed */
+        border-bottom: 2px solid var(--secondary-color); /* Adjust the border color and thickness as needed */
+    }
+
+
+    .admins-card {
+        padding: 16px;
+        width: 80%;
+        display: flex;
+        justify-content: space-between; /* Align items with space between */
+        align-items: center; /* Vertically center items */
+        padding-left: 16px;
+        padding-right: 16px;
+        background-color: var(--primary-color);
+        border-radius: 20px;
+    }
+
+
+    .vertical-divider{
+        width: 4px;
+        border-radius: 4px;
+        height: 50px; /* Adjust the height of the divider as needed */
+        background-color: var(--secondary-color);
+        margin: 0 16px; /* Adjust the margin to control spacing */
+    }
+    .admin-info{
+        margin-left: 16px;
+        height: 100%;
+        width: 100%;
+    }
+
+    .event-info {
+        width: 25%;
+        border-radius: 20px;
+        padding: 12px;
+        color: var(--primary-color);
+        background-color: var(--secondary-color);
+        display: flex; /* Add this */
+        flex-direction: column; /* Add this */
+    }
+
+    .time-container{
+        columns: var(--primary-color);
+        background-color: white;
+        border-radius: 10px;
+        padding: 6px;
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        background-color: var(--primary-color);
+        color: white;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .horizontal-container {
+        align-items: center;
+        align-content: center;
+        display: flex; /* Use flexbox to align items horizontally */
+        justify-content: center; /* Center items horizontally within the container */
+    }
+
+    .admins-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* Vertically align to the start */
+        align-items: flex-start; /* Horizontally center */
+        box-sizing: border-box;
+    }
+
+    .admin-name {
+        color: white;
+        align-items: center;
+        align-content: center;
+        padding: 10px;
+        margin: 5px;
+        flex-grow: 1; /* Allow the name to expand and push the circular image */
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Show an ellipsis (...) for overflowed text */
+        max-height: 2em; /* Adjust the max-height as needed to fit 2 lines */
+    }
+
+
+    .circular-image {
+        width: 50px; /* Adjust the width and height as needed */
+        height: 50px;
+        border-radius: 50%; /* This creates the circular clipping effect */
+        object-fit: cover; /* Maintain aspect ratio and cover the circular area */
+    }
+
+</style>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>̥̥
+<div class="logo"><h1>e-Shubham</h1></div>
+<span class="sub-title">Your shagun express</span>
+<img class="qr-wrapper img" src="{{qrCode}}">
+<div class="event-info-container">
+    <div class="event-type-container"><span>{{event}}</span></div>
+    <div class="admins-card">
+        <div class="admins-container">
+            <div class="admin-info">
+                <div class="horizontal-container">
+                    <img class="circular-image" src="{{base_url}}{{admin.profile}}" alt="Circe Image">
+                    <div id="truncate-text" class="admin-name">Thilakarathne Dilshan</div>
+                </div>
+            </div>
+            <br>
         </div>
-        <div style="width: 2px; height: 140px; left: 226px; top: 52px; position: absolute; background: #EEF7FC"></div>
-        <div style="width: 162px; height: 80px; left: 28px; top: 143px; position: absolute">
-            <div style="width: 66px; left: 96px; top: 14px; position: absolute; text-align: center; color: white; font-size: 20px; font-family: Nunito; font-weight: 700; word-wrap: break-word" id="truncate-text1">{{admin2}}</div>
-            <img style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; border-radius: 9999px; border: 5px #9F813C solid" src="{{profile2}}" />
+        <div class="vertical-divider"></div>
+        <div class="event-info">
+            <span>{{date}}</span>
+            <span>{{month}}</span>
+            <span>{{day}}</span>
+            <span class="time-container">{{hour}}</span>
         </div>
-        <div style="width: 300px; left: 0px; top: 115px; right: 5px; position: absolute; text-align: center; color: #EAB948; font-size: 20px; font-family: Nunito; font-weight: 700; word-wrap: break-word" id="truncate-text3">{{event}}</div>
-        <div style="width: 100px; height: 140px; left: 248px; top: 52px; position: absolute; background: #EAB948; border-radius: 20px"></div>
-        <div style="left: 267px; top: 68px; position: absolute; color: #42033D; font-size: 20px; font-family: Nunito; font-weight: 700; word-wrap: break-word">{{date}}<br/>{{month}}<br/>{{day}}</div>
-        <div style="width: 70px; height: 18px; left: 264px; top: 154px; position: absolute; background: #EEF7FC; border-radius: 10px"></div>
-        <div style="left: 270px; top: 154px; position: absolute; color: black; font-size: 13px; font-family: Nunito; font-weight: 700; word-wrap: break-word text-align: center; display: flex; align-items: center; justify-content: center;">{{hour}}</div>
     </div>
-    <div style="left: 50px; top: 881px; position: absolute; color: white; font-size: 20px; font-family: Nunito; font-weight: 700; word-wrap: break-word">Scan to wish them and send shagun</div>
 </div>
+<div class="footer"><span>Scan to wish Bharath and send shagun</span>
+</div>
+</body>
+</html>
+
+
 <script>
-  function truncateText(text, maxLength) {
-  if (text.length <= maxLength) {
-    return text;
+    function truncateText(text, maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    }
+
+    var truncatedText = text.substring(0, maxLength);
+    var lastSpaceIndex = truncatedText.lastIndexOf(" ");
+
+    if (lastSpaceIndex !== -1) {
+      truncatedText = truncatedText.substring(0, lastSpaceIndex);
+    }
+
+    return truncatedText;
   }
 
-  var truncatedText = text.substring(0, maxLength);
-  var lastSpaceIndex = truncatedText.lastIndexOf(" ");
+  var element = document.getElementById("truncate-text");
+  var element1 = document.getElementById("truncate-text1");
+  var element2 = document.getElementById("truncate-text2");
 
-  if (lastSpaceIndex !== -1) {
-    truncatedText = truncatedText.substring(0, lastSpaceIndex);
-  }
+  element.textContent = truncateText(element.textContent, 30);
+  element1.textContent = truncateText(element1.textContent, 30);
+  element2.textContent = truncateText(element2.textContent, 25);
 
-  return truncatedText;
-}
-
-var element = document.getElementById("truncate-text");
-var element1 = document.getElementById("truncate-text1");
-var element2 = document.getElementById("truncate-text2");
-
-element.textContent = truncateText(element.textContent, 20);
-element1.textContent = truncateText(element1.textContent, 20);
-element2.textContent = truncateText(element2.textContent, 25);
 
 </script>

@@ -88,6 +88,13 @@ def admin_dashboard(request):
                     "uid": "wjkkjhgfdserty",
                     "profile": "images/profile_pic/circular_logo.png",
                     "QR_code": "qr code"
+                },
+                {
+                    "name": "David Willey",
+                    "role": "test1",
+                    "uid": "wjkkjhgfdserty",
+                    "profile": "images/profile_pic/circular_logo.png",
+                    "QR_code": "qr code"
                 }
             ],
             "delivery_fee": "900",

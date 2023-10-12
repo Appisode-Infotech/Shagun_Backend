@@ -193,9 +193,42 @@
 
         .show {display: block;}
 
+        .spinner-border {
+            width: 2rem;
+            height: 2rem;
+        }
 
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            z-index: 9999; /* Ensure the overlay is on top of other elements */
+            display: none; /* Initially hidden */
+        }
 
+        .loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Add your other loader styles here */
+            z-index: 10000; /* Ensure the loader is on top of the overlay */
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
 
     </style>
@@ -214,6 +247,9 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <div class="overlay" id="overlay"></div> <!-- Overlay -->
+        <div id="loading" class="loader" style="display: none;">
+        </div>
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="row">
@@ -224,7 +260,7 @@
                                     <button id="backButton" class="btn btn-outline-info">
                                         <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
                                     </button>
-                                    <label class="ml-2 custom-label"> Add New Event </label>
+                                    <label class="ml-2 custom-label"> Add New Event</label>
                                 </div>
 
                                 <form class="form-sample needs-validation" action="/add_events" method="post"
@@ -488,7 +524,8 @@
                                     </button>
 
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input type="submit" value="Submit" class="btn btn-primary mr-2"
+                                               id="submitButton">
                                     </div>
                                 </form>
                             </div>
@@ -529,6 +566,7 @@
             })(i);
         }
     });
+
 
 
 
@@ -665,6 +703,7 @@
 
 
 
+
 </script>
 
 
@@ -728,6 +767,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
 </script>
 <!-- container-scroller -->
 <!-- plugins:js -->
@@ -750,7 +790,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 <script src="{% static 'js/typeahead.js' %}"></script>
 <script src="{% static 'js/select2.js' %}"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6O2CG9zBAksJH4SCgCZlbx3XRWVwzY1E&libraries=places&callback=initMap"
+<script src="{{map_api_key}}"
         async defer></script>
 <script>
         var map, marker, event_lat_lng, searchInput;
@@ -822,6 +862,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
 </script>
 
 <script>
@@ -832,6 +873,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("event_date").min = currentDate;
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
+
 
 
 </script>
@@ -900,6 +942,16 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         });
 
 
+
+</script>
+<script>
+document.getElementById("myForm").addEventListener("submit", function (event) {
+<!--    document.getElementById("submitButton").disabled = true;-->
+
+<!--    document.getElementById("overlay").style.display = "block";-->
+<!--    document.getElementById("loading").style.display = "block";-->
+
+});
 </script>
 
 

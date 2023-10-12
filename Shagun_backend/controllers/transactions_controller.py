@@ -337,11 +337,11 @@ def settle_payment(transactions_list):
         return {"status": False, "message": str(e)}, 301
 
 
-def update_transactions(transactions_list):
+def update_transactions(transactions_list, settled_by):
     try:
         with connection.cursor() as cursor:
             transactions_string = ', '.join(transactions_list)
-            track_order_query = f"""UPDATE transaction_history SET is_settled = 1 
+            track_order_query = f"""UPDATE transaction_history SET is_settled = 1, settled_by = '{settled_by}' 
                                     WHERE id IN ({transactions_string})"""
             cursor.execute(track_order_query)
 

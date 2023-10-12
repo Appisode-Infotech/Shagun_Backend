@@ -85,42 +85,6 @@
 
         .show {display: block;}
 
-
-.messages-container {
-  background-color: #ffe6e6; /* Light pink background color */
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 20px;
-  display: none;
-}
-
-/* Style the error messages */
-.messages {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.messages li {
-  color: #b30000; /* Dark red text color for error messages */
-  background-color: #ffd9d9; /* Light red background color for error messages */
-  border: 1px solid #ff8080; /* Dark red border for error messages */
-  padding: 10px;
-  border-radius: 3px;
-  margin-bottom: 5px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
     </style>
 
 </head>
@@ -149,6 +113,12 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New KYC</label>
                                 </div>
+
+                                {% if message %}
+                                <div style="border: 1px solid #dc3545; color: #dc3545; font-size: 16px; display: flex; justify-content: center; align-items: center;
+                                                    text-align: center;padding: 20px;margin-bottom:20px">{{message}} </div>
+                                {% endif %}
+
                                 <form class="form-sample needs-validation" action="/add_kyc" method="post" enctype="multipart/form-data"
                                       id="myForm" novalidate>
                                     {% csrf_token %}

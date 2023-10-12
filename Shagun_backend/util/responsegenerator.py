@@ -132,10 +132,10 @@ class responseGenerator:
                         "printer_id": events[14],
                         "approved_date_time": events[15],
                         "status": events[16],
-                        "total_received_amount": round(events[19], 2),
-                        "balance_shagun_amount": round(events[20], 2),
-                        "settled_amount": round(events[21], 2),
-                        "event_type_name": events[22]
+                        "total_received_amount": round(events[21], 2),
+                        "balance_shagun_amount": round(events[22], 2),
+                        "settled_amount": round(events[23], 2),
+                        "event_type_name": events[24]
                     }
                 )
             return active_event
@@ -702,6 +702,7 @@ class responseGenerator:
                         "city_name": req[9],
                         "email": req[10],
                         "selected_reason": req[11],
+                        "completed_by": req[12],
                     }
                 )
             return req_list
@@ -727,10 +728,11 @@ class responseGenerator:
                     "created_on": trans[14],
                     "gifter_name": trans[15],
                     "card_price": trans[16],
-                    "event_date": trans[17],
-                    "event_type": trans[18],
-                    "sender_name": trans[19],
-                    "receiver_name": trans[20]
+                    "settled_by": trans[17],
+                    "event_date": trans[18],
+                    "event_type": trans[19],
+                    "sender_name": trans[20],
+                    "receiver_name": trans[21]
                 }
                 )
             return transaction_list

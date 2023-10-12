@@ -64,45 +64,45 @@ def custom_404(request, slug=None):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        json_data = {
-            "created_by_uid": "admin@shagun.com",
-            "event_type_id": "13",
-            "city_id": "12",
-            "printer_id": "21",
-            "address_line1": "4rd Cross",
-            "address_line2": "#A148",
-            "event_lat_lng": "Latitude: 15.3647083, Longitude: 75.1239547",
-            "sub_events": [
-                {
-                    "sub_event_name": "test",
-                    "start_time": "2023-10-01 23:19:00",
-                    "end_time": "2023-10-01 23:20:00"
-                }
-            ],
-            "event_date": "2023-10-01 23:19:00",
-            "event_note": "test event",
-            "event_admin": [
-                {
-                    "name": "David Willey",
-                    "role": "test1",
-                    "uid": "wjkkjhgfdserty",
-                    "profile": "images/profile_pic/circular_logo.png",
-                    "QR_code": "qr code"
-                },
-                {
-                    "name": "David Willey",
-                    "role": "test1",
-                    "uid": "wjkkjhgfdserty",
-                    "profile": "images/profile_pic/circular_logo.png",
-                    "QR_code": "qr code"
-                }
-            ],
-            "delivery_fee": "900",
-            "delivery_address": "4rd Cross #A148"
-        }
-        event_obj = create_event_model.create_event_model_from_dict(json_data)
-        resp = event_controller.create_event(event_obj)
-        print(resp)
+        # json_data = {
+        #     "created_by_uid": "admin@shagun.com",
+        #     "event_type_id": "13",
+        #     "city_id": "12",
+        #     "printer_id": "21",
+        #     "address_line1": "4rd Cross",
+        #     "address_line2": "#A148",
+        #     "event_lat_lng": "Latitude: 15.3647083, Longitude: 75.1239547",
+        #     "sub_events": [
+        #         {
+        #             "sub_event_name": "test",
+        #             "start_time": "2023-10-01 23:19:00",
+        #             "end_time": "2023-10-01 23:20:00"
+        #         }
+        #     ],
+        #     "event_date": "2023-10-01 23:19:00",
+        #     "event_note": "test event",
+        #     "event_admin": [
+        #         {
+        #             "name": "David Willey",
+        #             "role": "test1",
+        #             "uid": "wjkkjhgfdserty",
+        #             "profile": "images/profile_pic/circular_logo.png",
+        #             "QR_code": "qr code"
+        #         },
+        #         {
+        #             "name": "David Willey",
+        #             "role": "test1",
+        #             "uid": "wjkkjhgfdserty",
+        #             "profile": "images/profile_pic/circular_logo.png",
+        #             "QR_code": "qr code"
+        #         }
+        #     ],
+        #     "delivery_fee": "900",
+        #     "delivery_address": "4rd Cross #A148"
+        # }
+        # event_obj = create_event_model.create_event_model_from_dict(json_data)
+        # resp = event_controller.create_event(event_obj)
+        # print(resp)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
@@ -111,12 +111,12 @@ def admin_dashboard(request):
 
 def app_settings(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        print(request.POST)
 
         if request.method == 'POST':
             data = request.POST
             credentials = {
                 "map_api_key": data.get("map_api_key"),
+                "emailjs_url": data.get("emailjs_url"),
                 "emailjs_service_id": data.get("emailjs_service_id"),
                 "emailjs_template_id": data.get("emailjs_template_id"),
                 "emailjs_user_id": data.get("emailjs_user_id"),
@@ -140,7 +140,6 @@ def app_settings(request):
             json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util/credentials.json')
             with open(json_file_path, 'w') as file:
                 json.dump(credentials, file)
-            print("Credentials saved successfully")
 
             return redirect('app_settings')
         else:
@@ -148,7 +147,6 @@ def app_settings(request):
             try:
                 with open(json_file_path, 'r') as file:
                     credentials = json.load(file)
-                print(credentials)
                 return render(request, 'pages/admin_employee/app_settings/app_settings.html',
                               {"credentials": credentials})
             except FileNotFoundError:
@@ -158,9 +156,20 @@ def app_settings(request):
         return redirect('sign_up')
 
 
+def get_credentials(field):
+    try:
+        json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util/credentials.json')
+        with open(json_file_path, 'r') as file:
+            credentials = json.load(file)
+        return credentials[field]
+    except FileNotFoundError:
+        return redirect('get_credentials')
+
+
 def reset_password(request, email, action_page):
     resp, status_code = reset_password_controller.reset_password(email, action_page)
     return redirect(action_page)
+
 
 def reset_my_password(request, email, action_page):
     resp, status_code = reset_password_controller.reset_password(email, action_page)
@@ -334,7 +343,6 @@ def filter_user(request, status):
 def manage_bank_details(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_bank_data('%')
-        print(response)
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
                       {"response": response['bank_data']})
     else:
@@ -499,6 +507,7 @@ def filter_event_request(request, status):
 def get_settlement_for_event(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement(status)
+        print(response)
 
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
                       {"response": response['event_settlement'], "status": status})
@@ -630,7 +639,8 @@ def transactions_settlement(request, event_id):
             transaction_id = request.POST.getlist('selected_ids')
             settlement, status_code = transactions_controller.settle_payment(transaction_id)
             if status_code == 200:
-                response, status_code = transactions_controller.update_transactions(transaction_id)
+                response, status_code = transactions_controller.update_transactions(transaction_id,
+                                                                                    request.session.get('uid'))
                 return JsonResponse(response)
             else:
                 return JsonResponse(settlement)
@@ -657,9 +667,7 @@ def search_transactions_settlement(request, event_id):
 def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
-            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             event_controller.create_event(event_obj)
             return redirect('manage_event')
@@ -672,7 +680,8 @@ def add_events(request):
                 "event_types": event_types,
                 "location": location,
                 "users": users_list,
-                "printers": printers_list
+                "printers": printers_list,
+                "map_api_key": get_credentials('map_api_key')
             }
             return render(request, 'pages/admin_employee/event_management/event/add_events.html', context)
 
@@ -684,7 +693,7 @@ def add_events_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             res = event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by'],
-                                                request.POST['updated_by'])
+                                                      request.POST['updated_by'])
             print(res)
             return redirect('manage_event_types')
         else:
@@ -709,8 +718,14 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            user_controller.add_user_kyc(kyc_obj)
-            return redirect('manage_kyc')
+            response, status_code = user_controller.add_user_kyc(kyc_obj)
+            if status_code == 200:
+                return redirect('manage_kyc')
+            else:
+                response, status_code = user_controller.get_users_for_kyc('%')
+                msg = "Either proof1 or proof2 is already associated with another user or the user has a pending KYC awaiting approval"
+                return render(request, 'pages/admin_employee/users_management/kyc/add_kyc.html',
+                              {"message": msg, "user_data": response['user_data']})
         else:
             response, status_code = user_controller.get_users_for_kyc('%')
             return render(request, 'pages/admin_employee/users_management/kyc/add_kyc.html', response)
@@ -722,11 +737,18 @@ def add_bank(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             bank_obj = bank_details_model.bank_details_model_from_dict(request.POST)
-            user_controller.add_bank_details(bank_obj)
-            return redirect('manage_bank_details')
+            response, status_code = user_controller.add_bank_details(bank_obj)
+            print(response)
+            if status_code == 200:
+                return redirect('manage_bank_details')
+            else:
+                user, status_code = user_controller.get_all_users('%')
+                bank, status_code = bank_controller.get_active_banks_list()
+                msg = "The account number already exists with this bank for same or different user"
+                return render(request, 'pages/admin_employee/users_management/banks/add_bank.html',
+                              {"message": msg, "user": user['user_data'], "banks": bank})
         else:
             user, status_code = user_controller.get_all_users('%')
-            print(user)
             bank, status_code = bank_controller.get_active_banks_list()
             context = {
                 "user": user['user_data'],
@@ -742,8 +764,14 @@ def add_employee(request):
             'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
-            user_controller.add_employee(emp_obj)
-            return redirect('manage_employee')
+            response, status_code = user_controller.add_employee(emp_obj)
+            if status_code == 200:
+                return redirect('manage_employee')
+            else:
+                msg = "Either phone or email is already associated with another user"
+                return render(request, 'pages/admin_employee/employee_management/employee/add_employee.html',
+                              {"message": msg})
+
         else:
             return render(request, 'pages/admin_employee/employee_management/employee/add_employee.html')
     else:
@@ -754,12 +782,15 @@ def add_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get(
             'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
-            print(request.POST)
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
-            print(admin_obj)
-            response = user_controller.add_admin(admin_obj)
-            print(response)
-            return redirect('manage_admin')
+            response, status_code = user_controller.add_admin(admin_obj)
+            if status_code == 200:
+                return redirect('manage_admin')
+            else:
+                msg = "Either phone or email is already associated with another user"
+                return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html',
+                              {"message": msg})
+
         else:
             return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html')
     else:
@@ -937,7 +968,6 @@ def edit_kyc(request, kyc_id):
 def set_event_status(request, event_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         event_controller.set_event_status(event_id, status, request.session.get('uid'))
-        print(request.session.get('uid'))
         return redirect('manage_event')
     else:
         return redirect('sign_up')
@@ -1086,11 +1116,8 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
-            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
-            print(event_obj.updated_by)
             response = event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
         else:
@@ -1099,14 +1126,14 @@ def edit_event(request, event_id):
             users_list, status_code = user_controller.get_all_users(1)
             printers_list, status_code = store_controller.get_printers_by_status(1)
             event_data, status_code = event_controller.get_event_by_id(event_id)
-            print(event_data)
 
             context = {
                 "event_types": event_types,
                 "location": location,
                 "users": users_list,
                 "printers": printers_list,
-                "event": event_data
+                "event": event_data,
+                "map_api_key": get_credentials('map_api_key')
             }
             return render(request, 'pages/admin_employee/event_management/event/edit_event.html', context)
 
@@ -1584,9 +1611,6 @@ def get_user_profile(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-# This API enables users to modify their credentials or update their user information. It provides the functionality
-# to edit user details such as name, contact information, profile picture, or any other relevant data associated with
-# their account.
 @api_view(['POST'])
 def edit_user(request):
     token = request.headers.get('Authorization').split(' ')[1]

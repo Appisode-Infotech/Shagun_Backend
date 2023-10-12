@@ -146,6 +146,11 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add New Bank Account</label>
                                 </div>
+                                {% if message %}
+                                <div style="border: 1px solid #dc3545; color: #dc3545; font-size: 16px; display: flex; justify-content: center; align-items: center;
+                                                    text-align: center;padding: 20px;margin-bottom:20px">{{message}} </div>
+                                {% endif %}
+
                                 <form class="form-sample needs-validation" action="/add_bank" method="post"
                                       enctype="multipart/form-data" id="myForm" novalidate>
                                     {% csrf_token %}

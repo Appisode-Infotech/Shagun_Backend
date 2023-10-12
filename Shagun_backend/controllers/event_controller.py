@@ -10,6 +10,7 @@ from datetime import datetime
 from django.template.loader import get_template
 import imgkit
 
+from Shagun_backend.controllers.reset_password_controller import get_credentials
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
@@ -76,7 +77,7 @@ def create_event(event_obj):
                 send_push_notification(user_data[1], title, message)
 
                 # Replace this with deep link
-                text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
+                text = get_credentials('deep_link') + "eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
 
                 logo_path = "static/images/square_logo.jpg"
                 logo = Image.open(logo_path)
@@ -386,7 +387,7 @@ def event_settlement(status):
                     LEFT JOIN transaction_history th ON e.id = th.event_id
                     LEFT JOIN events_type et ON e.event_type_id = et.id
                     WHERE e.status = '{status}'
-                    GROUP BY e.id, e.event_date ORDER BY e.created_on DESC ;
+                    GROUP BY e.id, e.event_date ORDER BY e.id DESC ;
                     """
             cursor.execute(event_settlement_query)
             amount = cursor.fetchall()

@@ -30,7 +30,10 @@ def get_all_banks_list():
 def get_active_banks_list():
     try:
         with connection.cursor() as cursor:
-            query = "SELECT * FROM bank_list WHERE status = 1 "
+            query = """SELECT b.*, creator.name, updator.name FROM bank_list AS b
+                        LEFT JOIN users AS creator ON b.created_by = creator.uid
+                        LEFT JOIN users AS updator ON b.updated_by = updator.uid WHERE b.status = 1"""
+
             cursor.execute(query)
             bank_list = cursor.fetchall()
             return {

@@ -803,7 +803,7 @@ def add_printer(request):
             if status_code == 200:
                 return redirect('manage_printers')
             else:
-                msg = "Either phone or email or username is already associated with another user"
+                msg = "Either phone or email or username is already associated with another Printing Vendor"
                 return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html',
                               {"message": msg})
 
@@ -819,9 +819,14 @@ def add_delivery_vendor(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
-            response = delivery_vendor_controller.add_vendor(vendor_obj)
-            print(response)
-            return redirect('manage_delivery_vendors')
+            response, status_code = delivery_vendor_controller.add_vendor(vendor_obj)
+            if status_code == 200:
+                return redirect('manage_delivery_vendors')
+            else:
+                location, status_code = event_controller.get_city_list_for_user()
+                msg = "Phone is already associated with another Delivery Vendor"
+                return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/add_delivery_vendor.html',
+                              {"message": msg, "city_list": location['city_list']})
         else:
             location, status_code = event_controller.get_city_list_for_user()
             return render(request,
@@ -1856,12 +1861,6 @@ def get_location_by_id(request):
     response, status_code = event_controller.get_location_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
 
-
-# @api_view(['POST'])
-# def add_printer(request):
-#     store_obj = add_printer_model.add_printer_model_from_dict(request.data)
-#     response, status_code = store_controller.add_printer(store_obj)
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])

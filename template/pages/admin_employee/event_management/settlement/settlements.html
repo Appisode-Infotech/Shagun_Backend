@@ -142,6 +142,9 @@
                                             <th>Total Shagun Amount</th>
                                             <th>Settled Amount</th>
                                             <th>Balance Amount</th>
+                                            {% if status == 0 %}
+                                            <th>Closed By</th>
+                                            {% endif %}
                                             <th>View Transactions</th>
                                         </tr>
                                         </thead>
@@ -170,6 +173,9 @@
                                             <td>₹ {{event.total_received_amount}}</td>
                                             <td>₹ {{event.settled_amount}}</td>
                                             <td>₹ {{event.balance_shagun_amount}}</td>
+                                            {% if status == 0 %}
+                                            <th>{{event.updated_by}}</th>
+                                            {% endif %}
                                             <td>
                                                 {% if event.total_received_amount > 0 %}
                                                 <button type="button" class="btn btn-outline-info btn-fw"

@@ -135,7 +135,8 @@ class responseGenerator:
                         "total_received_amount": round(events[21], 2),
                         "balance_shagun_amount": round(events[22], 2),
                         "settled_amount": round(events[23], 2),
-                        "event_type_name": events[24]
+                        "event_type_name": events[24],
+                        "updated_by": events[19],
                     }
                 )
             return active_event

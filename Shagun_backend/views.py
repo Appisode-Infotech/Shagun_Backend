@@ -507,8 +507,6 @@ def filter_event_request(request, status):
 def get_settlement_for_event(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement(status)
-        print(response)
-
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
                       {"response": response['event_settlement'], "status": status})
     else:
@@ -936,7 +934,7 @@ def activate_deactivate_event_type(request, event_type_id, status):
 
 def activate_deactivate_event(request, event_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        event_controller.enable_disable_event(event_id, status)
+        event_controller.enable_disable_event(event_id, status, request.session.get('uid'))
         return redirect('manage_event')
     else:
         return redirect('sign_up')

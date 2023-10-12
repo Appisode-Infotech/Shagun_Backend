@@ -326,11 +326,11 @@ def edit_event(event_obj, event_id):
         return {"status": False, "message": str(e)}, 301
 
 
-def enable_disable_event(e_id, et_status):
+def enable_disable_event(e_id, et_status, updated_by):
     try:
         with connection.cursor() as cursor:
-            disable_event_query = "UPDATE event SET status = %s WHERE id = %s"
-            values = (et_status, e_id)
+            disable_event_query = "UPDATE event SET status = %s,updated_by = %s WHERE id = %s"
+            values = (et_status, updated_by, e_id)
             cursor.execute(disable_event_query, values)
             return {
                 "status": True,

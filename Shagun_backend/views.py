@@ -801,8 +801,14 @@ def add_printer(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
-            store_controller.add_printer(store_obj)
-            return redirect('manage_printers')
+            response, status_code = store_controller.add_printer(store_obj)
+            if status_code == 200:
+                return redirect('manage_printers')
+            else:
+                msg = "Either phone or email or username is already associated with another user"
+                return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html',
+                              {"message": msg})
+
         else:
             location, status_code = event_controller.get_city_list_for_user()
             return render(request, 'pages/admin_employee/vendors_management/printing_vendor/add_printer.html',

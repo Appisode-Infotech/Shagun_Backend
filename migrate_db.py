@@ -4,7 +4,7 @@ import pymysql
 # Database connection parameters
 host = 'localhost'  # Replace with your MySQL host
 user = 'root'  # Replace with your MySQL user
-password = ''  # Replace with your MySQL password
+password = 'Shagun@#123'  # Replace with your MySQL password
 database = 'shagun'
 
 password_hash = bcrypt.hashpw('Shagun@#123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')

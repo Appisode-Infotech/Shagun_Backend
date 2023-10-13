@@ -7,10 +7,11 @@ from Shagun_backend.util.constants import *
 def request_callback(request_obj):
     try:
         with connection.cursor() as cursor:
-            request_query = """ INSERT INTO user_callback_request (uid,type,event_date,event_type,status, created_on)
-             VALUES (%s,%s,%s,%s,%s,%s) """
+            request_query = """ INSERT INTO user_callback_request (uid,type,event_date,event_type,status, created_on, selected_reason)
+             VALUES (%s,%s,%s,%s,%s,%s,%s) """
             values = (
-            request_obj.uid, request_obj.type, request_obj.event_date, request_obj.event_type, False, getIndianTime(),)
+                request_obj.uid, request_obj.type, request_obj.event_date, request_obj.event_type, False,
+                getIndianTime(), request_obj.selected_reason)
             cursor.execute(request_query, values)
             return {
                 "status": True,

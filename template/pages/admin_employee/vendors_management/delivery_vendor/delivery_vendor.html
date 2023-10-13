@@ -153,6 +153,7 @@
                                             <th>
                                                 Status
                                             </th>
+                                            <th>Creator/Updator</th>
                                             <th>
                                                 Activate/Inactivate
                                             </th>
@@ -183,7 +184,7 @@
                                             </td>
                                             <td>
                                                 <b>Vendor Name: </b>{{delivery_vendor.store_name}}</br></br>
-                                                <b>Vendor GST: </b>{{delivery_vendor.gst_no}}
+                                                <b>Vendor GST: </b> <span class="masked-number">{{delivery_vendor.gst_no}}</span>
 
 
                                             </td>
@@ -196,6 +197,10 @@
                                                 {% elif delivery_vendor.status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{delivery_vendor.creator}} <b><br/>on: </b>{{delivery_vendor.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{delivery_vendor.updator}} <b><br/>on: </b>{{delivery_vendor.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">
@@ -269,5 +274,17 @@
 <!-- End custom js for this page-->
 
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elements = document.querySelectorAll('.masked-number');
+        elements.forEach(function (element) {
+            var number = element.textContent;
+            if (number.length >= 4) {
+                var maskedNumber = "*".repeat(number.length - 4) + number.slice(-4);
+                element.textContent = maskedNumber;
+            }
+        });
+    });
+</script>
 
 </html>

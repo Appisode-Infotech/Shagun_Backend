@@ -215,6 +215,7 @@
                                             <th>
                                                 Verification Status
                                             </th>
+                                            <th>Creator/Updator</th>
                                             {% if request.session.role == 1 %}
                                             <th>
                                                 Activate/Inactivate
@@ -222,6 +223,9 @@
                                             {% endif %}
                                             <th>
                                                 Edit
+                                            </th>
+                                            <th>
+                                                KYC Activation Data
                                             </th>
                                         </tr>
                                         </thead>
@@ -250,7 +254,7 @@
                                                 <div style="display: flex;">
                                                     <div style="flex: 90;">
                                                         <b>{{kyc.identification_proof1}} :</b><br><br>
-                                                        {{kyc.identification_number1}}
+                                                        <span class="masked-number">{{kyc.identification_number1}}</span>
                                                     </div>
 
                                                     <div style="flex: 10;">
@@ -269,7 +273,7 @@
                                                 <div style="display: flex;">
                                                     <div style="flex: 90;">
                                                         <b>{{kyc.identification_proof2}} :</b><br><br>
-                                                        {{kyc.identification_number2}}
+                                                        <span class="masked-number">{{kyc.identification_number2}}</span>
                                                     </div>
 
                                                     <div style="flex: 10;">
@@ -289,6 +293,10 @@
                                                 {% elif kyc.verification_status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{kyc.creator}} <b><br/>on: </b>{{kyc.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{kyc.updator}} <b><br/>on: </b>{{kyc.updated_on}}
                                             </td>
                                             {% if request.session.role == 1 %}
                                             <td>
@@ -321,6 +329,9 @@
                                                     Edit
                                                     <i class="fas fa-edit"></i>
                                                 </button>
+                                            </td>
+                                            <td>
+                                                <b>Activated By: </b>{{kyc.approver}} <b><br/>on: </b>{{kyc.approved_on}}
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -411,6 +422,8 @@
 
 
 </script>
+
+
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <!-- End plugin js for this page -->
@@ -427,4 +440,16 @@
 
 </body>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elements = document.querySelectorAll('.masked-number');
+        elements.forEach(function (element) {
+            var number = element.textContent;
+            if (number.length >= 4) {
+                var maskedNumber = "*".repeat(number.length - 4) + number.slice(-4);
+                element.textContent = maskedNumber;
+            }
+        });
+    });
+</script>
 </html>

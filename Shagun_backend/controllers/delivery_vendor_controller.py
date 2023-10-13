@@ -2,18 +2,20 @@ import pymysql
 from django.db import connection
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import ALL_DELIVERY_VENDOR_DATA, DELIVERY_VENDOR_DATA
+from Shagun_backend.util.constants import ALL_DELIVERY_VENDOR_DATA, DELIVERY_VENDOR_DATA, getIndianTime
 
 
 def add_vendor(vendor_obj):
     try:
         with connection.cursor() as cursor:
             add_printer_query = """INSERT INTO delivery_vendors (delivery_vendor_name, city, address, 
-                                   gst_no, delivery_vendor_owner, contact_number, created_by) 
-                                 VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+                                   gst_no, delivery_vendor_owner, contact_number, created_by, updated_by, updated_on, 
+                                   created_on) 
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(add_printer_query, [vendor_obj.delivery_vendor_name, vendor_obj.city, vendor_obj.address,
                                                vendor_obj.gst_no, vendor_obj.delivery_vendor_owner,
-                                               vendor_obj.contact_number, vendor_obj.created_by])
+                                               vendor_obj.contact_number, vendor_obj.created_by, vendor_obj.updated_by,
+                                               getIndianTime(), getIndianTime()])
             return {
                 "status": True,
                 "Vendor": "Vendor added successfully"
@@ -101,7 +103,10 @@ def get_delivery_vendor():
     try:
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.delivery_vendor_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.delivery_vendor_owner, p.contact_number FROM delivery_vendors AS p
+            p.delivery_vendor_owner, p.contact_number, creator.name, updator.name, p.created_on, p.updated_on 
+            FROM delivery_vendors AS p
+            LEFT JOIN users AS creator ON p.created_by = creator.uid
+            LEFT JOIN users AS updator ON p.updated_by = updator.uid
             LEFT JOIN locations AS l ON p.city = l.id ORDER BY p.created_on DESC """
             cursor.execute(printers_data_query)
             delivery_vendor_data = cursor.fetchall()
@@ -119,9 +124,12 @@ def get_delivery_vendor():
 def edit_delivery_vendor(vendor_id):
     try:
         with connection.cursor() as cursor:
-            printers_data_query = f""" SELECT d.*, l.city_name FROM delivery_vendors AS d
-            LEFT JOIN locations AS l ON d.city = l.id
-            WHERE d.id = '{vendor_id}' """
+            printers_data_query = f""" SELECT d.*, l.city_name, creator.name, updator.name 
+                                        FROM delivery_vendors AS d
+                                        LEFT JOIN users AS creator ON d.created_by = creator.uid
+                                        LEFT JOIN users AS updator ON d.updated_by = updator.uid
+                                        LEFT JOIN locations AS l ON d.city = l.id
+                                        WHERE d.id = '{vendor_id}' """
             cursor.execute(printers_data_query)
             delivery_vendor_data = cursor.fetchone()
             return {
@@ -142,7 +150,8 @@ def update_vendor(vendor_obj):
                         UPDATE  delivery_vendors SET delivery_vendor_name = '{vendor_obj.delivery_vendor_name}',
                         city = '{vendor_obj.city}', address = '{vendor_obj.address}', gst_no = '{vendor_obj.gst_no}', 
                         delivery_vendor_owner = '{vendor_obj.delivery_vendor_owner}', 
-                        contact_number = '{vendor_obj.contact_number}', created_by = '{vendor_obj.created_by}'
+                        contact_number = '{vendor_obj.contact_number}', updated_by = '{vendor_obj.updated_by}',
+                        updated_on = '{getIndianTime()}'
                          WHERE id = '{vendor_obj.id}' 
                         """
             cursor.execute(update_vendor_query)

@@ -13,11 +13,11 @@ from datetime import datetime
 
 def printer_login(uname, pwd):
     with connection.cursor() as cursor:
-        printer_login_query = f"""SELECT id,printer_user_name, printer_password, store_name FROM printer 
+        printer_login_query = f"""SELECT id,printer_user_name, printer_password, store_name, status FROM printer 
                                     WHERE printer_user_name = '{uname}' """
         cursor.execute(printer_login_query)
         result = cursor.fetchone()
-        if result is not None:
+        if result is not None and result[4] == 1:
             stored_password = result[2].encode('utf-8')
             if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
                 return {
@@ -31,7 +31,10 @@ def printer_login(uname, pwd):
                 return {
                     "msg": "Invalid Password, please try again",
                 }
-
+        elif result is not None and result[4] == 0:
+            return {
+                "msg": "You Account is blocked, please contact your Admin"
+            }
         else:
             return {
                 "msg": "Invalid Credentials, please try again",
@@ -44,12 +47,13 @@ def add_printer(store_obj):
     try:
         with connection.cursor() as cursor:
             add_printer_query = """INSERT INTO printer (store_name, city, address, email, gst_no, store_owner,
-                                 contact_number, printer_user_name, printer_password) 
-                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                 contact_number, printer_user_name, printer_password, created_by, updated_by) 
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address,
                                                store_obj.email, store_obj.gst_no, store_obj.store_owner,
                                                store_obj.contact_number,
-                                               store_obj.printer_user_name, hashed_password])
+                                               store_obj.printer_user_name, hashed_password, store_obj.created_by,
+                                               store_obj.updated_by])
             return {
                 "status": True,
                 "user": "store added successfully"
@@ -80,10 +84,12 @@ def edit_printer(store_obj):
     try:
         with connection.cursor() as cursor:
             edit_printer_query = """UPDATE printer SET store_name = %s, city = %s, address = %s, email = %s, 
-                                    gst_no= %s, store_owner= %s, contact_number= %s, printer_user_name= %s
+                                    gst_no= %s, store_owner= %s, contact_number= %s, printer_user_name= %s,
+                                    updated_by = %s, updated_on = %s
                                   WHERE id = %s"""
             values = (store_obj.store_name, store_obj.city, store_obj.address, store_obj.email, store_obj.gst_no,
-                      store_obj.store_owner, store_obj.contact_number, store_obj.printer_user_name, store_obj.store_id)
+                      store_obj.store_owner, store_obj.contact_number, store_obj.printer_user_name,
+                      store_obj.updated_by, getIndianTime(), store_obj.store_id)
             cursor.execute(edit_printer_query, values)
             return {
                 "status": True,
@@ -98,8 +104,10 @@ def edit_printer(store_obj):
 def get_printer_by_id(pid):
     try:
         with connection.cursor() as cursor:
-            printer_by_id_query = f""" SELECT p.*, loc.city_name FROM printer AS p LEFT JOIN locations AS loc 
-                                        ON p.city = loc.id WHERE p.id = '{pid}'"""
+            printer_by_id_query = f""" SELECT p.*, loc.city_name, creator.name, updator.name FROM printer AS p
+                                        LEFT JOIN users AS creator ON p.created_by = creator.uid
+                                        LEFT JOIN users AS updator ON p.updated_by = updator.uid
+                                        LEFT JOIN locations AS loc ON p.city = loc.id WHERE p.id = '{pid}'"""
             cursor.execute(printer_by_id_query)
             printer = cursor.fetchone()
             if printer is not None:
@@ -122,7 +130,10 @@ def get_printers_by_status(status):
     try:
         with connection.cursor() as cursor:
             printers_data_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.store_owner, p.contact_number, p.email FROM printer AS p
+            p.store_owner, p.contact_number, p.email, creator.name, updator.name, p.created_on, p.updated_on
+            FROM printer AS p
+            LEFT JOIN users AS creator ON p.created_by = creator.uid
+            LEFT JOIN users AS updator ON p.updated_by = updator.uid
             LEFT JOIN locations AS l ON p.city = l.id WHERE p.status LIKE '{status}' ORDER BY p.id DESC """
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
@@ -384,7 +395,7 @@ def change_print_jobs_status(pjid, status):
                                              VALUES (%s, %s)"""
             cursor.execute(add_printer_query, [transaction_id, status])
 
-            fcm_query = f"""SELECT u.name, u.fcm_token FROM transaction_history AS th
+            fcm_query = f"""SELECT u.name, u.fcm_token, u.uid FROM transaction_history AS th
                             LEFT JOIN users as u ON th.sender_uid = u.uid
                             WHERE th.id = %s"""
             cursor.execute(fcm_query, (transaction_id,))
@@ -405,8 +416,11 @@ def change_print_jobs_status(pjid, status):
             else:
                 title = f"Order {transaction_id} status: Dispatched"
                 message = "Your card has been dispatched."
-                print("fcm token=================================")
-            print(fcm_data[1])
+
+            sender_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                    VALUES ('{fcm_data[2]}', '{title}', '{message}')"""
+            cursor.execute(sender_notification_query)
+
             send_push_notification(fcm_data[1], title, message)
 
             return {

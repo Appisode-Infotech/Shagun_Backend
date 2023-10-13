@@ -35,6 +35,11 @@ def add_transaction_history(transaction_obj):
             'For your {event_type[0]} event')"""
             cursor.execute(reciever_notification_query)
 
+            sender_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+            VALUES ('{transaction_obj.uid}', 'Shagun','Shagun Amount sent to {transaction_obj.gifter_name}', 
+            'You have sent Shagun amount: {transaction_obj.shagun_amount} to {transaction_obj.gifter_name} for the {event_type[0]} event')"""
+            cursor.execute(sender_notification_query)
+
             printer_query = f"""SELECT printer_id FROM event 
                                  WHERE id = '{transaction_obj.event_id}' """
             cursor.execute(printer_query)
@@ -50,6 +55,11 @@ def add_transaction_history(transaction_obj):
             add_printer_query = """INSERT INTO order_status (transaction_id, status) 
                                                          VALUES (%s, %s)"""
             cursor.execute(add_printer_query, [transaction_id, 1])
+
+            sender_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                        VALUES ('{transaction_obj.uid}', 'Transaction','Order {transaction_id} status: Job Created', 
+                        'Your transaction is created and pending for further processing.')"""
+            cursor.execute(sender_notification_query)
 
             fcm_query = f"""SELECT fcm_token FROM users 
                                              WHERE uid = '{transaction_obj.uid}' """
@@ -327,11 +337,11 @@ def settle_payment(transactions_list):
         return {"status": False, "message": str(e)}, 301
 
 
-def update_transactions(transactions_list):
+def update_transactions(transactions_list, settled_by):
     try:
         with connection.cursor() as cursor:
             transactions_string = ', '.join(transactions_list)
-            track_order_query = f"""UPDATE transaction_history SET is_settled = 1 
+            track_order_query = f"""UPDATE transaction_history SET is_settled = 1, settled_by = '{settled_by}' 
                                     WHERE id IN ({transactions_string})"""
             cursor.execute(track_order_query)
 

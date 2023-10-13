@@ -115,6 +115,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -154,11 +155,11 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Banks List </h4>
                                     <div class="form-group">
-                                            <div class="input-group">
-                                                <input name="search" id="search" type="text" class="form-control"
-                                                       placeholder="Search" value="{{search}}"
-                                                       aria-label="Recipient's username">
-                                            </div>
+                                        <div class="input-group">
+                                            <input name="search" id="search" type="text" class="form-control"
+                                                   placeholder="Search" value="{{search}}"
+                                                   aria-label="Recipient's username">
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <button type="button" class="btn btn-outline-info btn-icon-text"
@@ -169,7 +170,8 @@
                                     </div>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample needs-validation" action="/add_bank_list" method="post" novalidate>
+                                            <form class="form-sample needs-validation" action="/add_bank_list"
+                                                  method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="text-center">
                                                     <h4 class="card-title">Add Bank</h4>
@@ -178,25 +180,29 @@
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
                                                             <label class="col-sm-3 col-form-label">Bank Name <span
-                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                                    style="font-weight: bold; color: red;">*</span></label>
                                                             <div class="col-sm-9">
                                                                 <input required id="bank_name" name="bank_name"
                                                                        type="text"
                                                                        pattern="^[A-Za-z][A-Za-z ]*$"
                                                                        title="Enter Bank Name" maxlength="256"
                                                                        class="form-control"/>
-                                                                <div class="invalid-feedback">Bank Name is mandatory</div>
+                                                                <div class="invalid-feedback">Bank Name is mandatory
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Created By</label>
+                                                            <label class="col-sm-3 col-form-label">Created By </label>
                                                             <div class="col-sm-9">
-                                                                <input readonly disabled class="form-control"
+                                                                <input disabled readonly class="form-control"
                                                                        value="{{ request.session.name }}">
-                                                                <input type="hidden" id="created_by_uid"
-                                                                       name="created_by_uid"
+                                                                <input required type="hidden" id="created_by"
+                                                                       name="created_by"
+                                                                       value="{{ request.session.uid }}">
+                                                                <input required type="hidden" id="updated_by"
+                                                                       name="updated_by"
                                                                        value="{{ request.session.uid }}">
                                                             </div>
                                                         </div>
@@ -214,12 +220,13 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="myTable"  class="table table-hover">
+                                    <table id="myTable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>SL No</th>
                                             <th>Bank Name</th>
                                             <th>Status</th>
+                                            <th>Creator/Updator</th>
                                             <th>Active/Inactive</th>
                                             <th>Edit</th>
                                         </tr>
@@ -244,6 +251,10 @@
                                                 {% elif bank.bank_status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{bank.creator}} <b><br/>on: </b>{{bank.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{bank.updator}} <b><br/>on: </b>{{bank.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">
@@ -271,18 +282,19 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <button onclick="showPopUpDiv('{{bank.bank_id}}', '{{bank.bank_name}}')"
+                                                <button onclick="showPopUpDiv('{{bank.bank_id}}', '{{bank.bank_name}}', '{{bank.updator}}')"
                                                         class="btn btn-outline-info btn-fw">Edit
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <div id="customAlertOverlay1" class="custom-alert-overlay">
                                                     <div class="custom-alert">
-                                                        <form class="form-sample needs-validation" action="/edit_bank_list"
+                                                        <form class="form-sample needs-validation"
+                                                              action="/edit_bank_list"
                                                               method="post" novalidate>
                                                             {% csrf_token %}
                                                             <h4 class="card-title">Edit Bank</h4>
                                                             <div class="row">
-                                                                <div class="col-md-9">
+                                                                <div class="col-md-10">
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Bank
                                                                             ID </label>
@@ -294,10 +306,11 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-9">
+                                                                <div class="col-md-10">
                                                                     <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Name <span
-                                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                                        <label class="col-sm-3 col-form-label">Name
+                                                                            <span
+                                                                                    style="font-weight: bold; color: red;">*</span></label>
                                                                         <div class="col-sm-9">
                                                                             <input required id="name" type="text"
                                                                                    class="form-control"
@@ -305,7 +318,22 @@
                                                                                    title="Enter Bank Name"
                                                                                    maxlength="256"
                                                                                    name="name"/>
-                                                                            <div class="invalid-feedback">Bank Name is mandatory</div>
+                                                                            <div class="invalid-feedback">Bank Name is
+                                                                                mandatory
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Updated
+                                                                            By </label>
+                                                                        <div class="col-sm-9">
+                                                                            <input disabled readonly id="updator"
+                                                                                   class="form-control">
+                                                                            <input type="hidden"
+                                                                                   name="updated_by"
+                                                                                   value="{{ request.session.uid }}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -395,14 +423,16 @@
     }
 
 
+
 </script>
 <script>
-    function showPopUpDiv(val1, val2) {
+    function showPopUpDiv(val1, val2, val3) {
         var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
         customAlertOverlay1.style.display = "flex";
 
         document.getElementById("id").value = val1;
         document.getElementById("name").value = val2;
+        document.getElementById("updator").value = val3;
     }
 
     function hidePopUpDiv() {
@@ -419,6 +449,7 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
 
 
 

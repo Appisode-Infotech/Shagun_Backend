@@ -102,6 +102,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -127,7 +128,12 @@
                 </div>
                 <div id="customAlertOverlay1" class="custom-alert-overlay">
                     <div class="custom-alert">
-                        You cannot Edit Rejected Events
+                        You cannot Edit Inactive/Rejected Events
+                    </div>
+                </div>
+                <div id="customAlertOverlay5" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        You cannot change status of Inactive Event
                     </div>
                 </div>
                 <div id="customAlertOverlay3" class="custom-alert-overlay">
@@ -224,6 +230,7 @@
                                                     <th>Event Name</th>
                                                     <th>Event Admins</th>
                                                     <th>Status</th>
+                                                    <th>Creator/Updator</th>
                                                     <th>Set Status</th>
                                                     <th>Active</th>
                                                     <th>Edit</th>
@@ -268,6 +275,27 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
+                                                        <b>created By: </b>{{event.creator}} <b><br/>on: </b>{{event.created_on}}<br/><br/>
+                                                        <b>Updated By: </b>{{event.updator}} <b><br/>on: </b>{{event.updated_on}}
+                                                    </td>
+                                                    <td>
+                                                    {% if event.status == 0 %}
+                                                        <div class="dropdown">
+                                                        <button type="button"
+                                                                    class="btn btn-outline-info dropdown-toggle"
+                                                                    id="dropdownMenuIconButton" data-toggle="dropdown"
+                                                                    aria-haspopup="true" onclick="showCustomAlertForApprovalstatus()"
+                                                                    aria-expanded="false">
+                                                                {% if event.is_approved == 0 %}
+                                                                Pending
+                                                                {% elif event.is_approved == 1 %}
+                                                                Approved
+                                                                {% elif event.is_approved == 2 %}
+                                                                Rejected
+                                                                {% endif %}
+                                                            </button>
+                                                        </div>
+                                                        {% else %}
                                                         <div class="dropdown">
                                                             <button type="button"
                                                                     class="btn btn-outline-info dropdown-toggle"
@@ -295,6 +323,7 @@
                                                                    onclick="showCustomAlertForApproval(this.getAttribute('data-event-id'), this.getAttribute('data-action'))">Rejected</a>
                                                             </div>
                                                         </div>
+                                                        {% endif%}
                                                     </td>
                                                     <td>
                                                         <div class="dropdown">
@@ -336,7 +365,7 @@
 
                                                     </td>
                                                     <td>
-                                                        {% if event.is_approved == 2 %}
+                                                        {% if event.is_approved == 2 or event.status == 0 %}
                                                         <button type="button" class="btn btn-outline-info btn-fw"
                                                                 onclick="showCustomAlertForEdit()">
                                                             Edit
@@ -429,6 +458,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -467,6 +497,7 @@
 
 
 
+
 </script>
 
 
@@ -476,6 +507,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 
@@ -514,6 +546,15 @@ function showCustomAlertForEdit() {
   }, 1000);
 }
 
+function showCustomAlertForApprovalstatus() {
+  var customAlertOverlay = document.getElementById("customAlertOverlay5");
+  customAlertOverlay.style.display = "flex";
+
+  setTimeout(function() {
+    customAlertOverlay.style.display = "none";
+  }, 1000);
+}
+
 
 function showCustomAlertForActivate() {
   var customAlertOverlay = document.getElementById("customAlertOverlay2");
@@ -523,6 +564,7 @@ function showCustomAlertForActivate() {
     customAlertOverlay.style.display = "none";
   }, 1000);
 }
+
 
 
 

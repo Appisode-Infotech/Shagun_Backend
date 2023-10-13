@@ -131,6 +131,9 @@
                                     Type
                                 </th>
                                 <th>
+                                    Reason
+                                </th>
+                                <th>
                                     Created On
                                 </th>
                                 <th>
@@ -138,6 +141,9 @@
                                 </th>
                                 <th>
                                     Set Status
+                                </th>
+                                <th>
+                                    Completed By
                                 </th>
                             </tr>
                             </thead>
@@ -169,6 +175,9 @@
                                 </td>
                                 <td>
                                     {{req.type}}
+                                </td>
+                                <td>
+                                    {{req.selected_reason}}
                                 </td>
                                 <td>
                                     {{req.created_on}}
@@ -221,6 +230,13 @@
                                         {% endif %}
                                     </div>
 
+                                </td>
+                                <td>
+                                {% if req.completed_by|length != 0 %}
+                                {{req.completed_by}}
+                                {% else %}
+                                Not Completed
+                                {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}

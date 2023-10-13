@@ -206,6 +206,7 @@
                                             <th>
                                                 User Status
                                             </th>
+                                            <th>Creator/Updator</th>
                                             <th>Activate/Inactivate</th>
                                             {% if request.session.role == 1 %}
                                             <th>Edit</th>
@@ -239,6 +240,10 @@
                                                 {% elif user.status == 0 %}
                                                 <label class="badge badge-danger">Inactive</label>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                <b>created By: </b>{{user.creator}} <b><br/>on: </b>{{user.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{user.updator}} <b><br/>on: </b>{{user.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">

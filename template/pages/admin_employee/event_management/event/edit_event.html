@@ -343,6 +343,8 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Created By</label>
@@ -350,6 +352,18 @@
                                                     <input disabled readonly class="form-control" value="{{event.event_data.created_by_uid}}">
                                                     <input type="hidden" id="created_by_uid" name="created_by_uid"
                                                            value={{event.event_data.created_by_uid}}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Updated By </label>
+                                                <div class="col-sm-9">
+                                                    <input disabled readonly class="form-control"
+                                                           value="{{ event.event_data.updator }} ">
+                                                    <input type="hidden" id="updated_by"
+                                                           name="updated_by"
+                                                           value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -614,7 +628,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 <script src="{% static 'js/select2.js' %}"></script>
 
 <!-- End custom js for this page-->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6O2CG9zBAksJH4SCgCZlbx3XRWVwzY1E&libraries=places&callback=initMap"
+<script src="{{map_api_key}}"
         async defer></script>
 <script>
         var map, marker, event_lat_lng, searchInput;

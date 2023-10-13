@@ -64,6 +64,45 @@ def custom_404(request, slug=None):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        # json_data = {
+        #     "created_by_uid": "admin@shagun.com",
+        #     "event_type_id": "13",
+        #     "city_id": "12",
+        #     "printer_id": "21",
+        #     "address_line1": "4rd Cross",
+        #     "address_line2": "#A148",
+        #     "event_lat_lng": "Latitude: 15.3647083, Longitude: 75.1239547",
+        #     "sub_events": [
+        #         {
+        #             "sub_event_name": "test",
+        #             "start_time": "2023-10-01 23:19:00",
+        #             "end_time": "2023-10-01 23:20:00"
+        #         }
+        #     ],
+        #     "event_date": "2023-10-01 23:19:00",
+        #     "event_note": "test event",
+        #     "event_admin": [
+        #         {
+        #             "name": "David Willey",
+        #             "role": "test1",
+        #             "uid": "wjkkjhgfdserty",
+        #             "profile": "images/profile_pic/circular_logo.png",
+        #             "QR_code": "qr code"
+        #         },
+        #         {
+        #             "name": "David Willey",
+        #             "role": "test1",
+        #             "uid": "wjkkjhgfdserty",
+        #             "profile": "images/profile_pic/circular_logo.png",
+        #             "QR_code": "qr code"
+        #         }
+        #     ],
+        #     "delivery_fee": "900",
+        #     "delivery_address": "4rd Cross #A148"
+        # }
+        # event_obj = create_event_model.create_event_model_from_dict(json_data)
+        # resp = event_controller.create_event(event_obj)
+        # print(resp)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
@@ -72,12 +111,12 @@ def admin_dashboard(request):
 
 def app_settings(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        print(request.POST)
 
         if request.method == 'POST':
             data = request.POST
             credentials = {
                 "map_api_key": data.get("map_api_key"),
+                "emailjs_url": data.get("emailjs_url"),
                 "emailjs_service_id": data.get("emailjs_service_id"),
                 "emailjs_template_id": data.get("emailjs_template_id"),
                 "emailjs_user_id": data.get("emailjs_user_id"),
@@ -101,7 +140,6 @@ def app_settings(request):
             json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util/credentials.json')
             with open(json_file_path, 'w') as file:
                 json.dump(credentials, file)
-            print("Credentials saved successfully")
 
             return redirect('app_settings')
         else:
@@ -109,7 +147,6 @@ def app_settings(request):
             try:
                 with open(json_file_path, 'r') as file:
                     credentials = json.load(file)
-                print(credentials)
                 return render(request, 'pages/admin_employee/app_settings/app_settings.html',
                               {"credentials": credentials})
             except FileNotFoundError:
@@ -119,7 +156,22 @@ def app_settings(request):
         return redirect('sign_up')
 
 
+def get_credentials(field):
+    try:
+        json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util/credentials.json')
+        with open(json_file_path, 'r') as file:
+            credentials = json.load(file)
+        return credentials[field]
+    except FileNotFoundError:
+        return redirect('get_credentials')
+
+
 def reset_password(request, email, action_page):
+    resp, status_code = reset_password_controller.reset_password(email, action_page)
+    return redirect(action_page)
+
+
+def reset_my_password(request, email, action_page):
     resp, status_code = reset_password_controller.reset_password(email, action_page)
     return JsonResponse(resp)
 
@@ -169,7 +221,7 @@ def update_printer_password(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-
+        print(response)
         return render(request, 'pages/admin_employee/event_management/event/events.html',
                       {'response': response['event_list']})
     else:
@@ -185,7 +237,7 @@ def manage_settlement(request):
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
-
+        print(response)
         return render(request, 'pages/admin_employee/event_management/event_type/event_type.html',
                       {"response": response['events_type']})
     else:
@@ -195,6 +247,7 @@ def manage_event_types(request):
 def manage_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_locations_list()
+        print(response)
         return render(request, 'pages/admin_employee/event_management/location/location.html', response)
     else:
         return redirect('sign_up')
@@ -203,6 +256,7 @@ def manage_location(request):
 def manage_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = bank_controller.get_all_banks_list()
+        print(response)
         return render(request, 'pages/admin_employee/users_management/banks/bank_lists.html',
                       {"bank_list": response['bank_list']})
     else:
@@ -212,8 +266,8 @@ def manage_bank_list(request):
 def add_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
-            resp = bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by_uid'])
+            resp = bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by'],
+                                                 request.POST['updated_by'])
             print(resp)
             return redirect('manage_bank_list')
     else:
@@ -223,7 +277,7 @@ def add_bank_list(request):
 def edit_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            bank_controller.edit_bank_list(request.POST['id'], request.POST['name'])
+            bank_controller.edit_bank_list(request.POST['id'], request.POST['name'], request.POST['updated_by'])
             return redirect('manage_bank_list')
     else:
         return redirect('sign_up')
@@ -289,7 +343,6 @@ def filter_user(request, status):
 def manage_bank_details(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_bank_data('%')
-
         return render(request, 'pages/admin_employee/users_management/banks/bank_details.html',
                       {"response": response['bank_data']})
     else:
@@ -299,7 +352,7 @@ def manage_bank_details(request):
 def manage_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
-
+        print(response)
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:
@@ -309,7 +362,7 @@ def manage_greeting_cards(request):
 def manage_users(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_users('%')
-
+        print(response)
         return render(request, 'pages/admin_employee/users_management/users/users.html',
                       {"response": response['user_data']})
     else:
@@ -329,7 +382,7 @@ def manage_employee(request):
 def manage_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_admins()
-
+        print(response)
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
                       {"response": response['user_data'], "role": 1})
     else:
@@ -361,7 +414,7 @@ def edit_delivery_vendors(request, vid):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
-            delivery_vendor_controller.update_vendor(vendor_obj)
+            resp = delivery_vendor_controller.update_vendor(vendor_obj)
             return redirect('manage_delivery_vendors')
         else:
             response, status_code = delivery_vendor_controller.edit_delivery_vendor(vid)
@@ -454,7 +507,6 @@ def filter_event_request(request, status):
 def get_settlement_for_event(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.event_settlement(status)
-
         return render(request, 'pages/admin_employee/event_management/settlement/settlements.html',
                       {"response": response['event_settlement'], "status": status})
     else:
@@ -585,7 +637,8 @@ def transactions_settlement(request, event_id):
             transaction_id = request.POST.getlist('selected_ids')
             settlement, status_code = transactions_controller.settle_payment(transaction_id)
             if status_code == 200:
-                response, status_code = transactions_controller.update_transactions(transaction_id)
+                response, status_code = transactions_controller.update_transactions(transaction_id,
+                                                                                    request.session.get('uid'))
                 return JsonResponse(response)
             else:
                 return JsonResponse(settlement)
@@ -612,9 +665,7 @@ def search_transactions_settlement(request, event_id):
 def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
-            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             event_controller.create_event(event_obj)
             return redirect('manage_event')
@@ -627,7 +678,8 @@ def add_events(request):
                 "event_types": event_types,
                 "location": location,
                 "users": users_list,
-                "printers": printers_list
+                "printers": printers_list,
+                "map_api_key": get_credentials('map_api_key')
             }
             return render(request, 'pages/admin_employee/event_management/event/add_events.html', context)
 
@@ -638,7 +690,9 @@ def add_events(request):
 def add_events_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by_uid'])
+            res = event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by'],
+                                                      request.POST['updated_by'])
+            print(res)
             return redirect('manage_event_types')
         else:
             return render(request, 'event_management/event_management/add_events_type.html')
@@ -662,8 +716,14 @@ def add_kyc(request):
                         destination.write(chunk)
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
-            user_controller.add_user_kyc(kyc_obj)
-            return redirect('add_bank')
+            response, status_code = user_controller.add_user_kyc(kyc_obj)
+            if status_code == 200:
+                return redirect('manage_kyc')
+            else:
+                response, status_code = user_controller.get_users_for_kyc('%')
+                msg = "Either proof1 or proof2 is already associated with another user or the user has a pending KYC awaiting approval"
+                return render(request, 'pages/admin_employee/users_management/kyc/add_kyc.html',
+                              {"message": msg, "user_data": response['user_data']})
         else:
             response, status_code = user_controller.get_users_for_kyc('%')
             return render(request, 'pages/admin_employee/users_management/kyc/add_kyc.html', response)
@@ -675,11 +735,18 @@ def add_bank(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             bank_obj = bank_details_model.bank_details_model_from_dict(request.POST)
-            user_controller.add_bank_details(bank_obj)
-            return redirect('manage_bank_details')
+            response, status_code = user_controller.add_bank_details(bank_obj)
+            print(response)
+            if status_code == 200:
+                return redirect('manage_bank_details')
+            else:
+                user, status_code = user_controller.get_all_users('%')
+                bank, status_code = bank_controller.get_active_banks_list()
+                msg = "The account number already exists with this bank for same or different user"
+                return render(request, 'pages/admin_employee/users_management/banks/add_bank.html',
+                              {"message": msg, "user": user['user_data'], "banks": bank})
         else:
             user, status_code = user_controller.get_all_users('%')
-            print(user)
             bank, status_code = bank_controller.get_active_banks_list()
             context = {
                 "user": user['user_data'],
@@ -692,11 +759,17 @@ def add_bank(request):
 
 def add_employee(request):
     if request.session.get('is_logged_in') is not None and request.session.get(
-            'is_logged_in') is True and request.session.get('role'):
+            'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             emp_obj = employee_model.add_employee_model_from_dict(request.POST)
-            user_controller.add_employee(emp_obj)
-            return redirect('manage_employee')
+            response, status_code = user_controller.add_employee(emp_obj)
+            if status_code == 200:
+                return redirect('manage_employee')
+            else:
+                msg = "Either phone or email is already associated with another user"
+                return render(request, 'pages/admin_employee/employee_management/employee/add_employee.html',
+                              {"message": msg})
+
         else:
             return render(request, 'pages/admin_employee/employee_management/employee/add_employee.html')
     else:
@@ -708,10 +781,14 @@ def add_admin(request):
             'is_logged_in') is True and request.session.get('role') == 1:
         if request.method == 'POST':
             admin_obj = employee_model.add_employee_model_from_dict(request.POST)
-            print(admin_obj)
-            response = user_controller.add_admin(admin_obj)
-            print(response)
-            return redirect('manage_admin')
+            response, status_code = user_controller.add_admin(admin_obj)
+            if status_code == 200:
+                return redirect('manage_admin')
+            else:
+                msg = "Either phone or email is already associated with another user"
+                return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html',
+                              {"message": msg})
+
         else:
             return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html')
     else:
@@ -722,8 +799,14 @@ def add_printer(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
-            store_controller.add_printer(store_obj)
-            return redirect('manage_printers')
+            response, status_code = store_controller.add_printer(store_obj)
+            if status_code == 200:
+                return redirect('manage_printers')
+            else:
+                msg = "Either phone or email or username is already associated with another Printing Vendor"
+                return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html',
+                              {"message": msg})
+
         else:
             location, status_code = event_controller.get_city_list_for_user()
             return render(request, 'pages/admin_employee/vendors_management/printing_vendor/add_printer.html',
@@ -736,8 +819,14 @@ def add_delivery_vendor(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             vendor_obj = add_vendor_model.add_vendor_model_from_dict(request.POST)
-            response = delivery_vendor_controller.add_vendor(vendor_obj)
-            return redirect('manage_delivery_vendors')
+            response, status_code = delivery_vendor_controller.add_vendor(vendor_obj)
+            if status_code == 200:
+                return redirect('manage_delivery_vendors')
+            else:
+                location, status_code = event_controller.get_city_list_for_user()
+                msg = "Phone is already associated with another Delivery Vendor"
+                return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/add_delivery_vendor.html',
+                              {"message": msg, "city_list": location['city_list']})
         else:
             location, status_code = event_controller.get_city_list_for_user()
             return render(request,
@@ -774,7 +863,8 @@ def add_greeting_cards(request):
 def add_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.add_location(request.POST['city_name'], request.POST['created_by_uid'])
+            event_controller.add_location(request.POST['city_name'], request.POST['created_by'],
+                                          request.POST['updated_by'])
             return redirect('manage_location')
     else:
         return redirect('sign_up')
@@ -849,7 +939,7 @@ def activate_deactivate_event_type(request, event_type_id, status):
 
 def activate_deactivate_event(request, event_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        event_controller.enable_disable_event(event_id, status)
+        event_controller.enable_disable_event(event_id, status, request.session.get('uid'))
         return redirect('manage_event')
     else:
         return redirect('sign_up')
@@ -886,7 +976,7 @@ def edit_kyc(request, kyc_id):
 
 def set_event_status(request, event_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        event_controller.set_event_status(event_id, status)
+        event_controller.set_event_status(event_id, status, request.session.get('uid'))
         return redirect('manage_event')
     else:
         return redirect('sign_up')
@@ -918,7 +1008,7 @@ def activate_deactivate_greeting_cards(request, card_id, status):
 
 def activate_deactivate_kyc(request, kyc_id, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        user_controller.enable_disable_kyc(kyc_id, status)
+        user_controller.enable_disable_kyc(kyc_id, status, request.session.get('uid'))
         return redirect('manage_kyc')
     else:
         return redirect('sign_up')
@@ -949,6 +1039,7 @@ def edit_employee(request, user_id):
             return redirect('manage_employee')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
+            print(response)
             return render(request, 'pages/admin_employee/employee_management/employee/edit_employee.html',
                           response)
     else:
@@ -972,7 +1063,7 @@ def edit_admin(request, user_id):
 def edit_event_type(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.edit_events_type(request.POST['id'], request.POST['name'])
+            event_controller.edit_events_type(request.POST['id'], request.POST['name'], request.POST['updated_by'])
             return redirect('manage_event_types')
     else:
         return redirect('sign_up')
@@ -981,7 +1072,7 @@ def edit_event_type(request):
 def edit_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            event_controller.edit_location(request.POST['id'], request.POST['name'])
+            event_controller.edit_location(request.POST['id'], request.POST['name'], request.POST['updated_by'])
             return redirect('manage_location')
     else:
         return redirect('sign_up')
@@ -991,7 +1082,8 @@ def edit_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
-            greeting_cards_controller.edit_greeting_cards(grt_obj)
+            res = greeting_cards_controller.edit_greeting_cards(grt_obj)
+            print(res)
             return redirect('manage_greeting_cards')
     else:
         return redirect('sign_up')
@@ -1011,10 +1103,12 @@ def edit_printer(request, printer_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
+            print(store_obj)
             response, status_code = store_controller.edit_printer(store_obj)
             return redirect('manage_printers')
         else:
             printer_data, status_code = store_controller.get_printer_by_id(printer_id)
+            print(printer_data)
             location, status_code = event_controller.get_city_list_for_user()
             context = {
                 "printer_data": printer_data,
@@ -1031,9 +1125,7 @@ def edit_printer(request, printer_id):
 def edit_event(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
-            print(request.POST)
             json_data = transform_data_to_json(request.POST)
-            print(json_data)
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             response = event_controller.edit_event(event_obj, event_id)
             return redirect('manage_event')
@@ -1049,7 +1141,8 @@ def edit_event(request, event_id):
                 "location": location,
                 "users": users_list,
                 "printers": printers_list,
-                "event": event_data
+                "event": event_data,
+                "map_api_key": get_credentials('map_api_key')
             }
             return render(request, 'pages/admin_employee/event_management/event/edit_event.html', context)
 
@@ -1275,7 +1368,7 @@ def printer_home_page(request):
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
-
+        print(response)
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:
@@ -1361,7 +1454,7 @@ def printer_add_greeting_cards(request):
                     for chunk in file_obj.chunks():
                         destination.write(chunk)
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(form_data)
-            greeting_cards_controller.add_greeting_card(grt_obj)
+            resp = greeting_cards_controller.add_greeting_card(grt_obj)
             return redirect('printer_manage_greeting_cards')
         else:
             printers_list, status_code = store_controller.get_printers_by_status(1)
@@ -1434,46 +1527,10 @@ def printer_closed_jobs(request):
         return redirect('printer_login')
 
 
-#
-# def get_all_jobs(request):
-#     response, status_code = store_controller.get_all_jobs()
-#     paginator = Paginator(response['jobs'], 25)
-#     page = request.GET.get('page')
-#     response = paginator.get_page(page)
-#     return render(request, 'event_management/event_management/test.html', {"response": response})
-
-#
-# def get_closed_jobs(request, status):
-#     response, status_code = store_controller.get_closed_jobs(status)
-#     paginator = Paginator(response['jobs'], 25)
-#     page = request.GET.get('page')
-#     response = paginator.get_page(page)
-#     return render(request, 'event_management/event_management/test.html', {"response": response, "status": status})
-
-
-# @api_view(['POST'])
-# def get_closed_jobs(request):
-#     response, status_code = store_controller.get_closed_jobs(request.data['status'])
-#     return JsonResponse(response, status=status_code)
-
-# @api_view(['POST'])
-# def add_employee(request):
-#     emp_obj = employee_model.add_employee_model_from_dict(request.data)
-#     response, status_code = user_controller.add_employee(emp_obj)
-#     return JsonResponse(response, status=status_code)
-
-
 @api_view(['POST'])
 def enable_disable_employee(request):
     response, status_code = user_controller.enable_disable_employee(request.data['uid'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
-
-# @api_view(['POST'])
-# def edit_employee(request):
-#     emp_obj = employee_model.add_employee_model_from_dict(request.data)
-#     response, status_code = user_controller.edit_employee(emp_obj)
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])
@@ -1490,17 +1547,6 @@ def app_compatibility(request):
     response, status_code = app_data_controller.app_compatibility(app_obj)
     return JsonResponse(response, status=status_code)
 
-
-#
-# @api_view(['POST'])
-# def update_callback_request(request):
-#     callback_obj = request_callback_model.request_callback_model_from_dict(request.data)
-#     response, status_code = request_controller.update_callback_request(callback_obj)
-#     return JsonResponse(response, status=status_code)
-
-
-# This API is used to verify the existence of a user. It checks if the provided user details or credentials match
-# any registered user in the backend system.
 
 @api_view(['POST'])
 def check_user(request):
@@ -1574,9 +1620,6 @@ def get_user_profile(request):
         return JsonResponse({'message': 'Invalid token'}, status=401)
 
 
-# This API enables users to modify their credentials or update their user information. It provides the functionality
-# to edit user details such as name, contact information, profile picture, or any other relevant data associated with
-# their account.
 @api_view(['POST'])
 def edit_user(request):
     token = request.headers.get('Authorization').split(' ')[1]
@@ -1819,24 +1862,11 @@ def get_location_by_id(request):
     return JsonResponse(response, status=status_code)
 
 
-# @api_view(['POST'])
-# def add_printer(request):
-#     store_obj = add_printer_model.add_printer_model_from_dict(request.data)
-#     response, status_code = store_controller.add_printer(store_obj)
-#     return JsonResponse(response, status=status_code)
-
 
 @api_view(['POST'])
 def enable_disable_printer(request):
     response, status_code = store_controller.disable_printer(request.data['id'], request.data['status'])
     return JsonResponse(response, status=status_code)
-
-
-# @api_view(['POST'])
-# def edit_printer(request):
-#     store_obj = add_printer_model.add_printer_model_from_dict(request.data)
-#     response, status_code = store_controller.edit_printer(store_obj)
-#     return JsonResponse(response, status=status_code)
 
 
 @api_view(['POST'])

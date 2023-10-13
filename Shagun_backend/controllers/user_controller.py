@@ -87,8 +87,12 @@ def edit_user(edit_reg_obj, file_name):
 def get_all_users(kyc):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 3 AND kyc LIKE '{kyc}' ORDER BY created_on DESC  """
+            users_data_query = f""" SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 3 AND a.kyc LIKE '{kyc}' ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -105,8 +109,12 @@ def get_all_users(kyc):
 def get_users_for_kyc(kyc):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 3 AND kyc = 0 ORDER BY created_on DESC  """
+            users_data_query = f""" SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 3 AND a.kyc = 0 ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -183,7 +191,6 @@ def add_user_kyc(kyc_obj):
             query = "SELECT * FROM users WHERE uid = %s;"
             cursor.execute(query, [kyc_obj.uid])
             user = cursor.fetchone()
-            print(user)
             if user is not None:
                 sql_query = """
                 INSERT INTO user_kyc (uid, full_name, dob, address_line1, identification_proof1,
@@ -191,33 +198,13 @@ def add_user_kyc(kyc_obj):
                     identification_doc1, identification_doc2, verification_status, created_on,
                     gender, address_line2, city, state, postcode, country, updated_on, created_by, updated_by)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON DUPLICATE KEY UPDATE
-                full_name = VALUES(full_name),
-                dob = VALUES(dob),
-                address_line1 = VALUES(address_line1),
-                identification_proof1 = VALUES(identification_proof1),
-                identification_proof2 = VALUES(identification_proof2),
-                identification_number1 = VALUES(identification_number1),
-                identification_number2 = VALUES(identification_number2),
-                identification_doc1 = VALUES(identification_doc1),
-                identification_doc2 = VALUES(identification_doc2),
-                verification_status = VALUES(verification_status),
-                created_on = VALUES(created_on),
-                gender = VALUES(gender),
-                address_line2 = VALUES(address_line2),
-                city = VALUES(city),
-                state = VALUES(state),
-                postcode = VALUES(postcode),
-                country = VALUES(country),
-                updated_on = VALUES(updated_on),
-                created_by = VALUES(created_by),
-                updated_by = VALUES(updated_by)
                 """
                 values = (kyc_obj.uid, kyc_obj.full_name, kyc_obj.dob, kyc_obj.adress1,
                           kyc_obj.identification_proof1, kyc_obj.identification_proof2, kyc_obj.identification_number1,
                           kyc_obj.identification_number2, kyc_obj.identification_doc1, kyc_obj.identification_doc2,
                           0, getIndianTime(), kyc_obj.gender, kyc_obj.adress2, kyc_obj.city, kyc_obj.state,
-                          kyc_obj.postcode, kyc_obj.country, getIndianTime(), kyc_obj.created_by_uid, kyc_obj.created_by_uid)
+                          kyc_obj.postcode, kyc_obj.country, getIndianTime(), kyc_obj.created_by_uid,
+                          kyc_obj.created_by_uid)
                 cursor.execute(sql_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
@@ -244,6 +231,7 @@ def add_user_kyc(kyc_obj):
                     "message": "UID invalid"
                 }, 200
     except pymysql.Error as e:
+        print("Duplicate")
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
@@ -295,14 +283,23 @@ def update_user_kyc(kyc_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-def enable_disable_kyc(kyc_id, v_status):
+def enable_disable_kyc(kyc_id, v_status, approved_by):
     try:
         with connection.cursor() as cursor:
-            sql_query = f"""UPDATE user_kyc AS uk
-                JOIN users AS u ON uk.uid = u.uid
-                SET uk.verification_status = '{v_status}', u.kyc = '{v_status}'
-                WHERE uk.id = '{kyc_id}' """
-            cursor.execute(sql_query)
+            if v_status == 1:
+                sql_query = f"""UPDATE user_kyc AS uk
+                    JOIN users AS u ON uk.uid = u.uid
+                    SET uk.verification_status = '{v_status}', u.kyc = '{v_status}', uk.approved_by = '{approved_by}', 
+                    uk.approved_on = '{getIndianTime()}'
+                    WHERE uk.id = '{kyc_id}' """
+                cursor.execute(sql_query)
+
+            else:
+                sql_query = f"""UPDATE user_kyc AS uk
+                                    JOIN users AS u ON uk.uid = u.uid
+                                    SET uk.verification_status = '{v_status}', u.kyc = '{v_status}'
+                                    WHERE uk.id = '{kyc_id}' """
+                cursor.execute(sql_query)
             return {''
                     "status": True,
                     "message": "User Kyc status changed successfully"
@@ -322,8 +319,12 @@ def get_kyc_data(status):
                 kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.address_line1, 
                 kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
-                kyc.verification_status, users.profile_pic
+                kyc.verification_status, users.profile_pic, creator.name, updator.name, approver.name, kyc.created_on, 
+                kyc.updated_on, kyc.approved_on
                 FROM user_kyc AS kyc
+                LEFT JOIN users AS creator ON kyc.created_by = creator.uid
+                LEFT JOIN users AS updator ON kyc.updated_by = updator.uid
+                LEFT JOIN users AS approver ON kyc.approved_by = approver.uid
                 INNER JOIN users ON kyc.uid = users.uid WHERE verification_status LIKE '{status}' ORDER BY 
                 kyc.created_on DESC """
 
@@ -401,15 +402,6 @@ def add_bank_details(bank_obj):
                 INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number, 
                     status, added_by, modified_on, modified_by)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON DUPLICATE KEY UPDATE
-                bank_name = VALUES(bank_name),
-                ifsc_code = VALUES(ifsc_code),
-                account_holder_name = VALUES(account_holder_name),
-                account_number = VALUES(account_number),
-                status = VALUES(status),
-                added_by = VALUES(added_by),
-                modified_on = VALUES(modified_on),
-                modified_by = VALUES(modified_by)
                 """
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
                           bank_obj.account_number, True, bank_obj.added_by, getIndianTime(), bank_obj.added_by)
@@ -516,8 +508,11 @@ def get_all_bank_data(status):
     try:
         with connection.cursor() as cursor:
             bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
-                bnk.account_number, bnk.status, users.profile_pic
+                bnk.account_number, bnk.status, users.profile_pic, creator.name, updator.name, bnk.created_on, 
+                bnk.modified_on
                 FROM bank_details AS bnk
+                LEFT JOIN users AS creator ON bnk.added_by = creator.uid
+                LEFT JOIN users AS updator ON bnk.modified_by = updator.uid
                 LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.status LIKE '{status}' ORDER BY bnk.created_on DESC """
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()
@@ -537,10 +532,12 @@ def add_employee(emp_obj):
     hashed_password = bcrypt.hashpw(emp_obj.password.encode('utf-8'), bcrypt.gensalt())
     try:
         with connection.cursor() as cursor:
-            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, 
+                                profile_pic, created_by, updated_by) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, getIndianTime(), True, 2,
-                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png', emp_obj.created_by,
+                      emp_obj.updated_by)
             cursor.execute(add_emp_query, values)
             # query = "SELECT * FROM users WHERE role = %s;"
             # cursor.execute(query, 2)
@@ -557,14 +554,14 @@ def add_employee(emp_obj):
 
 
 def add_admin(emp_obj):
-    # Hash the password using bcrypt
     hashed_password = bcrypt.hashpw(emp_obj.password.encode('utf-8'), bcrypt.gensalt())
     try:
         with connection.cursor() as cursor:
-            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, profile_pic) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, 
+                                profile_pic, created_by, updated_by) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, getIndianTime(), True, 1,
-                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png')
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png', emp_obj.created_by, emp_obj.updated_by)
             cursor.execute(add_emp_query, values)
             return {
                 "status": True,
@@ -580,7 +577,8 @@ def edit_employee(emp_obj, user_id):
     try:
         with connection.cursor() as cursor:
             edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
-                                phone = '{emp_obj.phone}', city = '{emp_obj.city}'
+                                phone = '{emp_obj.phone}', city = '{emp_obj.city}', updated_by = '{emp_obj.updated_by}', 
+                                updated_on = '{getIndianTime()}'
                                 WHERE id = '{user_id}'"""
             cursor.execute(edit_emp_query)
             return {
@@ -614,8 +612,12 @@ def enable_disable_employee(uid, status):
 def get_all_employees():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 2 ORDER BY created_on DESC"""
+            users_data_query = """ SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 2 ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -632,10 +634,15 @@ def get_all_employees():
 def get_all_admins():
     try:
         with connection.cursor() as cursor:
-            users_data_query = """ SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 1 ORDER BY created_on DESC """
+            users_data_query = """ SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 1 ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
+            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -687,12 +694,12 @@ def dashboard_search_employee_status(status):
 
 def employee_login(uname, pwd):
     with connection.cursor() as cursor:
-        emp_login_query = """SELECT password, name, profile_pic, role FROM users WHERE uid = %s AND 
+        emp_login_query = """SELECT password, name, profile_pic, role, status FROM users WHERE uid = %s AND 
                             ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
         print(result)
-        if result is not None:
+        if result is not None and result[4] == 1:
             stored_password = result[0].encode('utf-8')
             if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
                 return {
@@ -706,6 +713,10 @@ def employee_login(uname, pwd):
                 return {
                     "msg": "Invalid Password, please try again"
                 }
+        elif result is not None and result[4] == 0:
+            return {
+                "msg": "You Account is blocked, please contact your Admin"
+            }
         else:
             return {
                 "msg": "Invalid Credentials, please try again"
@@ -715,10 +726,14 @@ def employee_login(uname, pwd):
 def get_employee_by_id(emp_id):
     try:
         with connection.cursor() as cursor:
-            emp_data_query = f""" SELECT id,uid,name,email,phone,profile_pic,created_on,status,role,city
-             FROM users WHERE id = '{emp_id}'"""
+            emp_data_query = f""" SELECT u.id, u.uid, u.name, u.email, u.phone, u.profile_pic, u.created_on, u.status, 
+                                    u.role, u.city, creator.name, updator.name FROM users AS u
+                                    LEFT JOIN users AS creator ON u.created_by = creator.uid
+                                    LEFT JOIN users AS updator ON u.updated_by = updator.uid
+                                    WHERE u.id = '{emp_id}'"""
             cursor.execute(emp_data_query)
             emp_data = cursor.fetchone()
+            print(emp_data)
             if emp_data is not None:
                 return {
                     "status": True,
@@ -864,7 +879,8 @@ def edit_user_kyc(obj):
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid, getIndianTime().now(),
+                    obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid,
+                    getIndianTime().now(),
                     obj.id
                 ])
             else:
@@ -914,7 +930,7 @@ def get_user_requests(param):
                             SELECT
                                 u.name, u.phone, u.profile_pic, ucr.type,
                                 ucr.status, ucr.created_on, ucr.id,
-                                ucr.event_date, ucr.event_type, l.city_name, u.email
+                                ucr.event_date, ucr.event_type, l.city_name, u.email, ucr.selected_reason, ucr.completed_by
                             FROM
                                 user_callback_request AS ucr
                             LEFT JOIN

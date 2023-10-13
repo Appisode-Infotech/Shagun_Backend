@@ -138,6 +138,9 @@
                                 <th>
                                     Set Status
                                 </th>
+                                <th>
+                                    Completed By
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -221,6 +224,13 @@
                                         </div>
                                         {% endif %}
                                     </div>
+                                </td>
+                                <td>
+                                {% if req.completed_by|length != 0 %}
+                                {{req.completed_by}}
+                                {% else %}
+                                Not Completed
+                                {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}

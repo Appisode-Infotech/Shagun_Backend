@@ -118,6 +118,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -172,7 +173,8 @@
                                     </div>
                                     <div id="customAlertOverlay" class="custom-alert-overlay">
                                         <div class="custom-alert">
-                                            <form class="form-sample needs-validation" action="/add_location" method="post" novalidate>
+                                            <form class="form-sample needs-validation" action="/add_location"
+                                                  method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="text-center">
                                                     <h4 class="card-title">Add Location</h4>
@@ -182,25 +184,29 @@
                                                         <div class="form-group row">
                                                             <label class="col-sm-3 col-form-label">
                                                                 City Name <span
-                                                                        style="font-weight: bold; color: red;">*</span></label>
+                                                                    style="font-weight: bold; color: red;">*</span></label>
                                                             <div class="col-sm-9">
                                                                 <input required id="city_name" name="city_name"
                                                                        type="text"
                                                                        pattern="^[A-Za-z][A-Za-z ]*$"
                                                                        title="Enter City Name" maxlength="256"
                                                                        class="form-control"/>
-                                                                <div class="invalid-feedback">City Name is mandatory</div>
+                                                                <div class="invalid-feedback">City Name is mandatory
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-10">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-3 col-form-label">Created By</label>
+                                                            <label class="col-sm-3 col-form-label">Created By </label>
                                                             <div class="col-sm-9">
-                                                                <label class="form-control">{{ request.session.name}}
-                                                                </label>
-                                                                <input type="hidden" id="created_by_uid"
-                                                                       name="created_by_uid"
+                                                                <input disabled readonly class="form-control"
+                                                                       value="{{ request.session.name }}">
+                                                                <input required type="hidden" id="created_by"
+                                                                       name="created_by"
+                                                                       value="{{ request.session.uid }}">
+                                                                <input required type="hidden" id="updated_by"
+                                                                       name="updated_by"
                                                                        value="{{ request.session.uid }}">
                                                             </div>
                                                         </div>
@@ -218,12 +224,13 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="myTable"  class="table table-hover">
+                                    <table id="myTable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>SL No</th>
                                             <th>Location Name</th>
                                             <th>Status</th>
+                                            <th>Creator/Updator</th>
                                             <th>Active/Inactive</th>
                                             <th>Edit</th>
                                         </tr>
@@ -251,6 +258,10 @@
                                                 {% endif %}
                                             </td>
                                             <td>
+                                                <b>created By: </b>{{location.creator}} <b><br/>on: </b>{{location.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{location.updator}} <b><br/>on: </b>{{location.updated_on}}
+                                            </td>
+                                            <td>
                                                 <div class="dropdown">
                                                     <button type="button" class="btn btn-outline-info dropdown-toggle"
                                                             id="dropdownMenuIconButton2" data-toggle="dropdown"
@@ -274,18 +285,19 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <button onclick="showPopUpDiv('{{location.location_id}}', '{{location.location_name}}')"
+                                                <button onclick="showPopUpDiv('{{location.location_id}}', '{{location.location_name}}', '{{location.updator}}')"
                                                         class="btn btn-outline-info btn-fw">Edit
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <div id="customAlertOverlay1" class="custom-alert-overlay">
                                                     <div class="custom-alert">
-                                                        <form class="form-sample needs-validation" action="/edit_location"
+                                                        <form class="form-sample needs-validation"
+                                                              action="/edit_location"
                                                               method="post" novalidate>
                                                             {% csrf_token %}
                                                             <h4 class="card-title">Edit Location</h4>
                                                             <div class="row">
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-10">
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Location
                                                                             ID </label>
@@ -296,7 +308,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-10">
                                                                     <div class="form-group row">
                                                                         <label class="col-sm-3 col-form-label">Name
                                                                             <span
@@ -308,7 +320,22 @@
                                                                                    title="Enter City Name"
                                                                                    maxlength="256"
                                                                                    name="name"/>
-                                                                            <div class="invalid-feedback">Name is mandatory</div>
+                                                                            <div class="invalid-feedback">Name is
+                                                                                mandatory
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Updated
+                                                                            By </label>
+                                                                        <div class="col-sm-9">
+                                                                            <input disabled readonly id="updator"
+                                                                                   class="form-control">
+                                                                            <input type="hidden"
+                                                                                   name="updated_by"
+                                                                                   value="{{ request.session.uid }}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -402,14 +429,16 @@
 
 
 
+
 </script>
 <script>
-    function showPopUpDiv(val1, val2) {
+    function showPopUpDiv(val1, val2, val3) {
         var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
         customAlertOverlay1.style.display = "flex";
 
         document.getElementById("id").value = val1;
         document.getElementById("name").value = val2;
+        document.getElementById("updator").value = val3;
     }
 
     function hidePopUpDiv() {
@@ -426,6 +455,7 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
 
 
 

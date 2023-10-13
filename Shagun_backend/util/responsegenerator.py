@@ -16,7 +16,9 @@ class responseGenerator:
                 "profile": data[7],
                 "user_id": data[1],
                 "created_on": data[8],
-                "user_status": data[9]
+                "user_status": data[9],
+                "creator": data[10],
+                "updator": data[11],
             }
 
         if controller_type == EMPLOYEE_BY_ID:
@@ -31,7 +33,8 @@ class responseGenerator:
                 "status": data[7],
                 "role": data[8],
                 "city": data[9],
-                # "password": data[10].encode('utf-8')
+                "creator": data[10],
+                "updator": data[11],
             }
 
         if controller_type == EVENT_LIST:
@@ -92,7 +95,11 @@ class responseGenerator:
                         "admins": json.loads(events[1]),
                         "event_id": events[3],
                         "is_approved": events[4],
-                        "status": events[5]
+                        "status": events[5],
+                        "creator": events[6],
+                        "updator": events[7],
+                        "created_on": events[8],
+                        "updated_on": events[9],
                     }
                 )
             return event_list
@@ -125,10 +132,11 @@ class responseGenerator:
                         "printer_id": events[14],
                         "approved_date_time": events[15],
                         "status": events[16],
-                        "total_received_amount": round(events[19], 2),
-                        "balance_shagun_amount": round(events[20], 2),
-                        "settled_amount": round(events[21], 2),
-                        "event_type_name": events[22]
+                        "total_received_amount": round(events[21], 2),
+                        "balance_shagun_amount": round(events[22], 2),
+                        "settled_amount": round(events[23], 2),
+                        "event_type_name": events[24],
+                        "updated_by": events[19],
                     }
                 )
             return active_event
@@ -154,9 +162,12 @@ class responseGenerator:
                 "status": data[16],
                 "delivery_fee": int(data[17]),
                 "delivery_address": data[18],
-                "event_type_name": data[19],
-                "city_name": data[20],
-                "store_name": data[21]
+                "event_type_name": data[21],
+                "city_name": data[22],
+                "store_name": data[23],
+                "creator": data[24],
+                "updator": data[25],
+                "updated_on": data[20],
             }
 
         if controller_type == GIFT_EVENT:
@@ -264,7 +275,25 @@ class responseGenerator:
                         "card_price": int(cards[2]),
                         "card_id": cards[3],
                         "card_status": cards[4],
-                        "printer": cards[5]
+                        "printer": cards[5],
+                        "creator": cards[6],
+                        "updator": cards[7],
+                        "created_on": cards[8],
+                        "updated_on": cards[9],
+                    }
+                )
+            return greeting_cards
+
+        if controller_type == GETGREETING_CARDS:
+            greeting_cards = []
+            for cards in data:
+                greeting_cards.append(
+                    {
+                        "card_name": cards[0],
+                        "card_image_url": cards[1],
+                        "card_price": int(cards[2]),
+                        "card_id": cards[3],
+                        "card_status": cards[4]
                     }
                 )
             return greeting_cards
@@ -294,7 +323,11 @@ class responseGenerator:
                     {
                         "event_type_id": event_type[0],
                         "event_type_name": event_type[1],
-                        "status": event_type[2]
+                        "status": event_type[2],
+                        "creator": event_type[3],
+                        "updator": event_type[4],
+                        "created_on": event_type[5],
+                        "updated_on": event_type[6],
                     }
                 )
             return event_type_lists
@@ -306,7 +339,11 @@ class responseGenerator:
                     {
                         "location_id": event_type[0],
                         "location_name": event_type[1],
-                        "status": event_type[2]
+                        "status": event_type[2],
+                        "creator": event_type[3],
+                        "updator": event_type[4],
+                        "created_on": event_type[5],
+                        "updated_on": event_type[6],
                     }
                 )
             return location_lists
@@ -334,7 +371,13 @@ class responseGenerator:
                         "identification_doc1": kyc[9],
                         "identification_doc2": kyc[10],
                         "verification_status": kyc[11],
-                        "profile_pic": kyc[12]
+                        "profile_pic": kyc[12],
+                        "creator": kyc[13],
+                        "updator": kyc[14],
+                        "approver": kyc[15],
+                        "created_on": kyc[16],
+                        "updated_on": kyc[17],
+                        "approved_on": kyc[18],
 
                     }
                 )
@@ -381,7 +424,11 @@ class responseGenerator:
                         "account_holder_name": bank[4],
                         "account_number": bank[5],
                         "status": bank[6],
-                        "profile_pic": bank[7]
+                        "profile_pic": bank[7],
+                        "creator": bank[8],
+                        "updator": bank[9],
+                        "created_on": bank[10],
+                        "updated_on": bank[11],
 
                     }
                 )
@@ -420,7 +467,10 @@ class responseGenerator:
                         "profile_pic": user[7],
                         "created_on": user[8],
                         "status": user[9],
-                        "role": user[10]
+                        "role": user[10],
+                        "creator": user[11],
+                        "updator": user[12],
+                        "updated_on": user[13],
 
                     }
                 )
@@ -454,7 +504,11 @@ class responseGenerator:
                         "gst_no": printer[5],
                         "store_owner": printer[6],
                         "contact_number": printer[7],
-                        "email": printer[8]
+                        "email": printer[8],
+                        "creator": printer[9],
+                        "updator": printer[10],
+                        "created_on": printer[11],
+                        "updated_on": printer[12],
                     }
 
                 )
@@ -472,7 +526,11 @@ class responseGenerator:
                         "status": printer[4],
                         "gst_no": printer[5],
                         "store_owner": printer[6],
-                        "contact_number": printer[7]
+                        "contact_number": printer[7],
+                        "creator": printer[8],
+                        "updator": printer[9],
+                        "created_on": printer[10],
+                        "updated_on": printer[11],
                     }
 
                 )
@@ -490,8 +548,9 @@ class responseGenerator:
                 "store_owner": data[7],
                 "contact_number": data[8],
                 "printer_user_name": data[9],
-                "printer_password": data[10].encode('utf-8'),
-                "city_name": data[11]
+                "city_name": data[15],
+                "creator": data[16],
+                "updator": data[17],
 
             }
         if controller_type == DELIVERY_VENDOR_DATA:
@@ -507,7 +566,8 @@ class responseGenerator:
                 "contact_number": data[8],
                 "created_by": data[9],
                 "created_on": data[10],
-                "city_name": data[11]
+                "city_name": data[13],
+                "updator": data[14]
             }
 
         if controller_type == ALL_JOBS:
@@ -588,7 +648,11 @@ class responseGenerator:
                         "bank_id": bank[0],
                         "bank_name": bank[1],
                         "bank_logo": bank[2],
-                        "bank_status": bank[3]
+                        "bank_status": bank[3],
+                        "creator": bank[8],
+                        "updator": bank[9],
+                        "created_on": bank[4],
+                        "updated_on": bank[7],
                     }
 
                 )
@@ -638,6 +702,8 @@ class responseGenerator:
                         "event_type": req[8],
                         "city_name": req[9],
                         "email": req[10],
+                        "selected_reason": req[11],
+                        "completed_by": req[12],
                     }
                 )
             return req_list
@@ -663,10 +729,11 @@ class responseGenerator:
                     "created_on": trans[14],
                     "gifter_name": trans[15],
                     "card_price": trans[16],
-                    "event_date": trans[17],
-                    "event_type": trans[18],
-                    "sender_name": trans[19],
-                    "receiver_name": trans[20]
+                    "settled_by": trans[17],
+                    "event_date": trans[18],
+                    "event_type": trans[19],
+                    "sender_name": trans[20],
+                    "receiver_name": trans[21]
                 }
                 )
             return transaction_list

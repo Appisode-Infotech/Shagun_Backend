@@ -44,6 +44,7 @@ class AddVendorModel:
     delivery_vendor_owner: Optional[str] = None
     contact_number: Optional[str] = None
     created_by: Optional[str] = None
+    updated_by: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'AddVendorModel':
@@ -56,7 +57,8 @@ class AddVendorModel:
         delivery_vendor_owner = from_union([from_str, from_none], obj.get("delivery_vendor_owner"))
         contact_number = from_union([from_str, from_none], obj.get("contact_number"))
         created_by = from_union([from_str, from_none], obj.get("created_by"))
-        return AddVendorModel(id, delivery_vendor_name, city, address, gst_no, delivery_vendor_owner, contact_number, created_by)
+        updated_by = from_union([from_str, from_none], obj.get("updated_by"))
+        return AddVendorModel(id, delivery_vendor_name, city, address, gst_no, delivery_vendor_owner, contact_number, created_by, updated_by)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -76,6 +78,8 @@ class AddVendorModel:
             result["contact_number"] = from_union([from_str, from_none], self.contact_number)
         if self.created_by is not None:
             result["created_by"] = from_union([from_str, from_none], self.created_by)
+        if self.updated_by is not None:
+            result["updated_by"] = from_union([from_str, from_none], self.updated_by)
         return result
 
 

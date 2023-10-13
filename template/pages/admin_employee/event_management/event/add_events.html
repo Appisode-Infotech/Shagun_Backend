@@ -193,8 +193,42 @@
 
         .show {display: block;}
 
+        .spinner-border {
+            width: 2rem;
+            height: 2rem;
+        }
 
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            z-index: 9999; /* Ensure the overlay is on top of other elements */
+            display: none; /* Initially hidden */
+        }
 
+        .loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Add your other loader styles here */
+            z-index: 10000; /* Ensure the loader is on top of the overlay */
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
 
     </style>
@@ -213,6 +247,9 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <div class="overlay" id="overlay"></div> <!-- Overlay -->
+        <div id="loading" class="loader" style="display: none;">
+        </div>
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="row">
@@ -223,7 +260,7 @@
                                     <button id="backButton" class="btn btn-outline-info">
                                         <i class="fas fa-arrow-left" style="margin-right:5px;"></i> Go Back
                                     </button>
-                                    <label class="ml-2 custom-label"> Add New Event </label>
+                                    <label class="ml-2 custom-label"> Add New Event</label>
                                 </div>
 
                                 <form class="form-sample needs-validation" action="/add_events" method="post"
@@ -299,7 +336,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Event Date And Time <span
@@ -308,8 +344,10 @@
                                                     <input required type="datetime-local" id="event_date"
                                                            name="event_date" class="form-control"
                                                            onkeydown="return false"
-                                                           placeholder="Select a date and time">
-                                                    <div class="invalid-feedback">Event Date is mandatory</div>
+                                                           placeholder="22/12/1996 00:00">
+                                                    <div class="invalid-feedback">Event Date is mandatory & Please
+                                                        choose a future date.
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -389,6 +427,9 @@
                                                     <input required type="hidden" id="created_by_uid"
                                                            name="created_by_uid"
                                                            value="{{ request.session.uid }}">
+                                                    <input required type="hidden" id="updated_by"
+                                                           name="updated_by"
+                                                           value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -426,13 +467,17 @@
                                                 <input class="form-control" type="datetime-local"
                                                        name="sub_events[0][start]" placeholder="Start Time"
                                                        id="sub_event_start_date" onkeydown="return false" required>
-                                                <div class="invalid-feedback">Sub Event start time is mandatory</div>
+                                                <div class="invalid-feedback">Sub Event start time is mandatory & Please
+                                                    choose a future date.
+                                                </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <input class="form-control" type="datetime-local"
                                                        name="sub_events[0][end]" onkeydown="return false"
                                                        placeholder="End Time" id="sub_event_end_date" required>
-                                                <div class="invalid-feedback">Sub Event End time is mandatory</div>
+                                                <div class="invalid-feedback">Sub Event End time is mandatory & Please
+                                                    choose a future date.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -446,7 +491,8 @@
                                         <label class="col-sm-3 col-form-label">Event Admins</label>
                                         <div class="event-row mb-3">
                                             <div class="col-md-6 mb-3">
-                                                <input required type="text" id="name" name="event_admin[0][name]" readonly
+                                                <input required type="text" id="name" name="event_admin[0][name]"
+                                                       readonly
                                                        onclick="toggleDropdown('myDropdown4')"
                                                        placeholder="Search" class="form-control">
 
@@ -459,7 +505,7 @@
                                                     {% endfor %}
                                                 </div>
                                                 <div id="error-message4"
-                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
+                                                     style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <input required class="form-control" type="text" maxlength="256"
@@ -478,7 +524,8 @@
                                     </button>
 
                                     <div class="center-button">
-                                        <input type="submit" value="Submit" class="btn btn-primary mr-2">
+                                        <input type="submit" value="Submit" class="btn btn-primary mr-2"
+                                               id="submitButton">
                                     </div>
                                 </form>
                             </div>
@@ -498,7 +545,6 @@
 
 <!-- my_template.html -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -520,6 +566,8 @@
             })(i);
         }
     });
+
+
 
 
 
@@ -597,15 +645,14 @@
             eventAdminRow.classList.add('event-row');
             eventAdminRow.innerHTML = `
             <div class="col-md-6 mb-3">
-            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown2')" placeholder="Search" class="form-control">
-            <div id="myDropdown2" class="dropdown-content">
-                <input type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown2')" class="form-control">
+            <input type="text" id="name1" name = "event_admin[${eventAdminIndex}][name]" readonly onclick="toggleDropdown('myDropdown5')" placeholder="Search" class="form-control">
+            <div id="myDropdown5" class="dropdown-content">
+                <input type="text" placeholder="Search" id="myInput5" onkeyup="filterFunction('myDropdown5')" class="form-control">
                 {% for users in users.user_data %}
                 <a onclick="setValue('{{users.name}}', '{{users.uid}}', 'name${eventAdminIndex}', 'uid${eventAdminIndex}')">{{users.name}} {{users.phone}}</a>
                 {% endfor %}
             </div>
-            <div id="error-message6"
-                                                         style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
+            <div id="error-message6" style="color: #dc3545; font-size: 14px; margin-top: 5px"></div>
             </div>
             <div class="col-md-6 mb-3">
             <input class="form-control" type="text" name="event_admin[${eventAdminIndex}][role]" placeholder="Bride, Groom etc ...." required>
@@ -655,18 +702,19 @@
 
 
 
+
+
 </script>
 
 
 <script>
-// Function to toggle a specific dropdown based on its ID
 function toggleDropdown(dropdownId) {
   var dropdown = document.getElementById(dropdownId);
   dropdown.classList.toggle("show");
 }
 
-// Function to filter the dropdown content based on the input value
 function filterFunction(dropdownId) {
+  console.log(dropdownId)
   var input, filter, ul, li, a, i;
   input = document.getElementById("myInput" + dropdownId.slice(-1));
   filter = input.value.toUpperCase();
@@ -718,6 +766,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
 </script>
 <!-- container-scroller -->
 <!-- plugins:js -->
@@ -740,7 +790,7 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 <script src="{% static 'js/typeahead.js' %}"></script>
 <script src="{% static 'js/select2.js' %}"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6O2CG9zBAksJH4SCgCZlbx3XRWVwzY1E&libraries=places&callback=initMap"
+<script src="{{map_api_key}}"
         async defer></script>
 <script>
         var map, marker, event_lat_lng, searchInput;
@@ -811,6 +861,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 
+
+
 </script>
 
 <script>
@@ -821,6 +873,8 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
         document.getElementById("event_date").min = currentDate;
         document.getElementById("sub_event_start_date").min = currentDate;
         document.getElementById("sub_event_end_date").min = currentDate;
+
+
 
 </script>
 
@@ -887,8 +941,18 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
         });
 
-</script>
 
+
+</script>
+<script>
+document.getElementById("myForm").addEventListener("submit", function (event) {
+<!--    document.getElementById("submitButton").disabled = true;-->
+
+<!--    document.getElementById("overlay").style.display = "block";-->
+<!--    document.getElementById("loading").style.display = "block";-->
+
+});
+</script>
 
 
 <!-- Latest compiled and minified CSS -->

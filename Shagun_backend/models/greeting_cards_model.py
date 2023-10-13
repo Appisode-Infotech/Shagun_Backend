@@ -36,6 +36,8 @@ class GreetingCardsModel:
     status: Optional[str] = None
     id: Optional[str] = None
     printer_id: Optional[str] = None
+    created_by: Optional[str] = None
+    updated_by: Optional[str] = None
 
 
     @staticmethod
@@ -47,7 +49,9 @@ class GreetingCardsModel:
         card_image_url = from_union([from_str, from_none], obj.get("card_image_url"))
         status = from_union([from_str, from_none], obj.get("status"))
         printer_id = from_union([from_str, from_none], obj.get("printer_id"))
-        return GreetingCardsModel(card_name, card_price, card_image_url, status, id, printer_id)
+        created_by = from_union([from_str, from_none], obj.get("created_by"))
+        updated_by = from_union([from_str, from_none], obj.get("updated_by"))
+        return GreetingCardsModel(card_name, card_price, card_image_url, status, id, printer_id, created_by, updated_by)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -61,6 +65,10 @@ class GreetingCardsModel:
             result["status"] = from_union([from_str, from_none], self.status)
         if self.printer_id is not None:
             result["printer_id"] = from_union([from_str, from_none], self.printer_id)
+        if self.created_by is not None:
+            result["created_by"] = from_union([from_str, from_none], self.created_by)
+        if self.updated_by is not None:
+            result["updated_by"] = from_union([from_str, from_none], self.updated_by)
         return result
 
 

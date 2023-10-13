@@ -2,9 +2,8 @@ import pymysql
 from django.db import connection
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes
+from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes, GETGREETING_CARDS, getIndianTime
 from Shagun_backend.util.responsegenerator import responseGenerator
-
 
 def get_greeting_cards(event_id):
     try:
@@ -21,7 +20,7 @@ def get_greeting_cards(event_id):
 
             return {
                 "status": True,
-                "active_greeting_cards": responseGenerator.generateResponse(greeting_cards, GREETING_CARDS),
+                "active_greeting_cards": responseGenerator.generateResponse(greeting_cards, GETGREETING_CARDS),
                 "wishes": wishes
 
             }, 200
@@ -35,10 +34,13 @@ def get_greeting_cards(event_id):
 def get_all_greeting_cards():
     try:
         with connection.cursor() as cursor:
-            greeting_cards_query = """SELECT g.card_name, g.card_image_url, g.card_price, g.id, g.status, p.store_name 
-                                        FROM greeting_cards AS g
-                                        LEFT JOIN printer AS p ON g.printer_id = p.id 
-                                        ORDER BY created_on DESC """
+            greeting_cards_query = f"""SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status, 
+                                        p.store_name, creator.name, updator.name, gc.created_on, gc.updated_on 
+                                        FROM greeting_cards AS gc
+                                        LEFT JOIN users AS creator ON gc.created_by = creator.uid
+                                        LEFT JOIN users AS updator ON gc.updated_by = updator.uid
+                                        LEFT JOIN printer AS p ON gc.printer_id = p.id
+                                        ORDER BY gc.id DESC"""
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
 
@@ -56,10 +58,16 @@ def get_all_greeting_cards():
 def get_printer_greeting_cards(p_id):
     try:
         with connection.cursor() as cursor:
-            greeting_cards_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards 
-                                        WHERE printer_id = '{p_id}' ORDER BY created_on DESC"""
+            greeting_cards_query = f"""SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status, 
+                                        p.store_name, creator.name, updator.name, gc.created_on, gc.updated_on 
+                                        FROM greeting_cards AS gc
+                                        LEFT JOIN users AS creator ON gc.created_by = creator.uid
+                                        LEFT JOIN users AS updator ON gc.updated_by = updator.uid
+                                        LEFT JOIN printer AS p ON gc.printer_id = p.id
+                                        WHERE gc.printer_id = '{p_id}' ORDER BY gc.id DESC"""
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
+            print(greeting_cards)
 
             return {
                 "status": True,
@@ -186,7 +194,8 @@ def edit_greeting_cards(grt_obj):
     try:
         with connection.cursor() as cursor:
             edit_cards_query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', 
-            card_price = '{grt_obj.card_price}' WHERE id = '{grt_obj.id}' """
+            card_price = '{grt_obj.card_price}', updated_by = '{grt_obj.updated_by}', updated_on = '{getIndianTime()}' 
+            WHERE id = '{grt_obj.id}' """
             cursor.execute(edit_cards_query)
             return {
                 "status": True,
@@ -225,10 +234,12 @@ def add_greeting_card(grt_obj):
     try:
         with connection.cursor() as cursor:
             greeting_cards_query = f"""INSERT INTO greeting_cards 
-                                    (card_name, card_image_url, card_price, status,printer_id)
-                                    VALUES (%s, %s, %s, %s, %s)"""
+                                    (card_name, card_image_url, card_price, status,printer_id, created_by, created_on, 
+                                    updated_by, updated_on)
+                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(greeting_cards_query,
-                           (grt_obj.card_name, grt_obj.card_image_url, grt_obj.card_price, True, grt_obj.printer_id))
+                           (grt_obj.card_name, grt_obj.card_image_url, grt_obj.card_price, True, grt_obj.printer_id,
+                            grt_obj.created_by, getIndianTime() , grt_obj.updated_by, getIndianTime()))
             return {
                 "status": True,
                 "msg": "card added successfully"

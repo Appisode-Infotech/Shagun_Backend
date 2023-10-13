@@ -337,7 +337,8 @@
                                                     {% if data.is_settled == 0 %}
                                                     <label class="badge badge-danger">Pending</label>
                                                     {% elif data.is_settled == 1 %}
-                                                    <label class="badge badge-success">Settled</label>
+                                                    <label class="badge badge-success">Settled </label>
+                                                    <br/><br/> <b>Settled By: </b>{{data.settled_by}}
                                                     {% endif %}
                                                 </td>
                                                 <td>

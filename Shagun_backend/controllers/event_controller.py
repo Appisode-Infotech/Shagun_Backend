@@ -139,39 +139,37 @@ def create_event(event_obj):
                 options.add_argument('--headless')
                 options.add_argument('--disable-gpu')
                 driver = webdriver.Chrome(options=options)
-                try:
-                    driver.get('http://127.0.0.1:8000/view_qr?'
-                               'qr_owner=' + str(item['name']) +
-                               '&qr_image=' + str(item["qr_code"]) +
-                               '&admins=' + str(event_admins) +
-                               '&date=' + date +
-                               '&month=' + month +
-                               '&day=' + day +
-                               '&time=' + hour +
-                               '&event_type=' + admin[1])
-                    total_height = driver.execute_script("return document.body.scrollHeight")
-                    driver.set_window_size(500, total_height)
-                    scroll_offset = 0
-                    screenshot_parts = []
-                    while scroll_offset < total_height:
-                        screenshot = driver.get_screenshot_as_png()
-                        img = Image.open(io.BytesIO(screenshot))
-                        img = ImageOps.exif_transpose(img)
-                        img.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100, optimize=True)
-                        screenshot_parts.append(screenshot)
-                        scroll_offset += 600
-                        driver.execute_script(f"window.scrollTo(0, {scroll_offset});")
-                        time.sleep(2)
-                    full_screenshot = Image.new('RGB', (500, total_height))
-                    y_offset = 0
-                    for screenshot_part in screenshot_parts:
-                        img = Image.open(io.BytesIO(screenshot_part))
-                        full_screenshot.paste(img, (0, y_offset))
-                        y_offset += img.height
-                    full_screenshot.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100,
-                                         optimize=True)
-                finally:
-                    driver.quit()
+                driver.get('http://127.0.0.1:8000/view_qr?'
+                           'qr_owner=' + str(item['name']) +
+                           '&qr_image=' + str(item["qr_code"]) +
+                           '&admins=' + str(event_admins) +
+                           '&date=' + date +
+                           '&month=' + month +
+                           '&day=' + day +
+                           '&time=' + hour +
+                           '&event_type=' + admin[1])
+                total_height = driver.execute_script("return document.body.scrollHeight")
+                driver.set_window_size(500, total_height)
+                scroll_offset = 0
+                screenshot_parts = []
+                while scroll_offset < total_height:
+                    screenshot = driver.get_screenshot_as_png()
+                    img = Image.open(io.BytesIO(screenshot))
+                    img = ImageOps.exif_transpose(img)
+                    img.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100, optimize=True)
+                    screenshot_parts.append(screenshot)
+                    scroll_offset += 600
+                    driver.execute_script(f"window.scrollTo(0, {scroll_offset});")
+                    time.sleep(2)
+                full_screenshot = Image.new('RGB', (500, total_height))
+                y_offset = 0
+                for screenshot_part in screenshot_parts:
+                    img = Image.open(io.BytesIO(screenshot_part))
+                    full_screenshot.paste(img, (0, y_offset))
+                    y_offset += img.height
+                full_screenshot.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100,
+                                     optimize=True)
+                driver.quit()
 
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)

@@ -44,144 +44,138 @@ def send_push_notification(device_token, title, message):
 
 
 def create_event(event_obj):
-    try:
-        with connection.cursor() as cursor:
-            sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
-            event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
+    with connection.cursor() as cursor:
+        sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
+        event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
 
-            create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
+        create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
                                         address_line2, event_lat_lng, created_on, sub_events, event_date, event_note, 
                                         event_admin, is_approved, status, printer_id, delivery_fee, delivery_address, 
                                         updated_by, updated_on) 
                                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
-            values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
-                      event_obj.address_line2, event_obj.event_lat_lng, getIndianTime(), sub_events_json,
-                      event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id,
-                      event_obj.delivery_fee, event_obj.delivery_address, event_obj.updated_by, getIndianTime())
+        values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
+                  event_obj.address_line2, event_obj.event_lat_lng, getIndianTime(), sub_events_json,
+                  event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id,
+                  event_obj.delivery_fee, event_obj.delivery_address, event_obj.updated_by, getIndianTime())
 
-            cursor.execute(create_event_query, values)
-            event_id = cursor.lastrowid
-            event_admin_query = f"""SELECT e.event_admin, et.event_type_name FROM event AS e
+        cursor.execute(create_event_query, values)
+        event_id = cursor.lastrowid
+        event_admin_query = f"""SELECT e.event_admin, et.event_type_name FROM event AS e
                                     LEFT JOIN events_type AS et ON e.event_type_id = et.id
                                     WHERE  e.id = '{event_id}'"""
-            cursor.execute(event_admin_query)
-            admin = cursor.fetchone()
-            event_admins = json.loads(admin[0])
+        cursor.execute(event_admin_query)
+        admin = cursor.fetchone()
+        event_admins = json.loads(admin[0])
 
-            for item in event_admins:
-                uid = item["uid"]
-                print(uid)
-                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+        for item in event_admins:
+            uid = item["uid"]
+            print(uid)
+            event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                             VALUES ('{uid}', 'event',
                             'Event has been created',
                             ' Event created for {admin[1]} on {event_obj.event_date}')"""
-                cursor.execute(event_created_notification_query)
-                print("notification added")
+            cursor.execute(event_created_notification_query)
+            print("notification added")
 
-                phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
-                cursor.execute(phone_query)
-                user_data = cursor.fetchone()
-                print("user fetched for event")
-                title = f"Event has been created"
-                message = f"Event created for {admin[1]} on {event_obj.event_date}"
-                send_push_notification(user_data[1], title, message)
-                print("push noti sent")
+            phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
+            cursor.execute(phone_query)
+            user_data = cursor.fetchone()
+            print("user fetched for event")
+            title = f"Event has been created"
+            message = f"Event created for {admin[1]} on {event_obj.event_date}"
+            send_push_notification(user_data[1], title, message)
+            print("push noti sent")
 
-                # Replace this with deep link
-                text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
-                print("text for QR" + text)
+            # Replace this with deep link
+            text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
+            print("text for QR" + text)
 
-                logo_path = "static/images/square_logo.jpg"
-                logo = Image.open(logo_path)
+            logo_path = "static/images/square_logo.jpg"
+            logo = Image.open(logo_path)
 
-                basewidth = 100
+            basewidth = 100
 
-                # adjust image size
-                wpercent = (basewidth / float(logo.size[0]))
-                hsize = int((float(logo.size[1]) * float(wpercent)))
+            # adjust image size
+            wpercent = (basewidth / float(logo.size[0]))
+            hsize = int((float(logo.size[1]) * float(wpercent)))
 
-                logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
-                QRcode = qrcode.QRCode(
-                    error_correction=qrcode.constants.ERROR_CORRECT_H
-                )
+            logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
+            QRcode = qrcode.QRCode(
+                error_correction=qrcode.constants.ERROR_CORRECT_H
+            )
 
-                QRcode.add_data(text)
+            QRcode.add_data(text)
 
-                QRcode.make()
-                QRcolor = '#671160'
+            QRcode.make()
+            QRcolor = '#671160'
 
-                QRimg = QRcode.make_image(
-                    fill_color=QRcolor, back_color="white").convert('RGB')
+            QRimg = QRcode.make_image(
+                fill_color=QRcolor, back_color="white").convert('RGB')
 
-                pos = ((QRimg.size[0] - logo.size[0]) // 2,
-                       (QRimg.size[1] - logo.size[1]) // 2)
-                QRimg.paste(logo, pos)
+            pos = ((QRimg.size[0] - logo.size[0]) // 2,
+                   (QRimg.size[1] - logo.size[1]) // 2)
+            QRimg.paste(logo, pos)
 
-                media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
-                os.makedirs(media_dir, exist_ok=True)
-                image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
+            media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
+            os.makedirs(media_dir, exist_ok=True)
+            image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
 
-                QRimg.save(image_path)
-                print("qr saved")
+            QRimg.save(image_path)
+            print("qr saved")
 
-                image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
-                item["qr_code"] = image_url
-                print("qr url" + str(item["qr_code"]))
+            image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
+            item["qr_code"] = image_url
+            print("qr url" + str(item["qr_code"]))
 
-                date_obj = datetime.datetime.strptime(event_obj.event_date, "%Y-%m-%d %H:%M:%S")
-                month = date_obj.strftime("%b")
-                day = date_obj.strftime("%a")
-                date = date_obj.strftime("%d")
-                hour = date_obj.strftime("%I:%M %p")
+            date_obj = datetime.datetime.strptime(event_obj.event_date, "%Y-%m-%d %H:%M:%S")
+            month = date_obj.strftime("%b")
+            day = date_obj.strftime("%a")
+            date = date_obj.strftime("%d")
+            hour = date_obj.strftime("%I:%M %p")
 
-                options = webdriver.ChromeOptions()
-                options.add_argument('--headless')
-                options.add_argument('--disable-gpu')
-                driver = webdriver.Chrome(options=options)
-                driver.get('http://127.0.0.1:8000/view_qr?'
-                           'qr_owner=' + str(item['name']) +
-                           '&qr_image=' + str(item["qr_code"]) +
-                           '&admins=' + str(event_admins) +
-                           '&date=' + date +
-                           '&month=' + month +
-                           '&day=' + day +
-                           '&time=' + hour +
-                           '&event_type=' + admin[1])
-                total_height = driver.execute_script("return document.body.scrollHeight")
-                driver.set_window_size(500, total_height)
-                scroll_offset = 0
-                screenshot_parts = []
-                while scroll_offset < total_height:
-                    screenshot = driver.get_screenshot_as_png()
-                    img = Image.open(io.BytesIO(screenshot))
-                    img = ImageOps.exif_transpose(img)
-                    img.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100, optimize=True)
-                    screenshot_parts.append(screenshot)
-                    scroll_offset += 600
-                    driver.execute_script(f"window.scrollTo(0, {scroll_offset});")
-                    time.sleep(2)
-                full_screenshot = Image.new('RGB', (500, total_height))
-                y_offset = 0
-                for screenshot_part in screenshot_parts:
-                    img = Image.open(io.BytesIO(screenshot_part))
-                    full_screenshot.paste(img, (0, y_offset))
-                    y_offset += img.height
-                full_screenshot.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100,
-                                     optimize=True)
-                driver.quit()
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')
+            options.add_argument('--disable-gpu')
+            driver = webdriver.Chrome(options=options)
+            driver.get('http://127.0.0.1:8000/view_qr?'
+                       'qr_owner=' + str(item['name']) +
+                       '&qr_image=' + str(item["qr_code"]) +
+                       '&admins=' + str(event_admins) +
+                       '&date=' + date +
+                       '&month=' + month +
+                       '&day=' + day +
+                       '&time=' + hour +
+                       '&event_type=' + admin[1])
+            total_height = driver.execute_script("return document.body.scrollHeight")
+            driver.set_window_size(500, total_height)
+            scroll_offset = 0
+            screenshot_parts = []
+            while scroll_offset < total_height:
+                screenshot = driver.get_screenshot_as_png()
+                img = Image.open(io.BytesIO(screenshot))
+                img = ImageOps.exif_transpose(img)
+                img.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100, optimize=True)
+                screenshot_parts.append(screenshot)
+                scroll_offset += 600
+                driver.execute_script(f"window.scrollTo(0, {scroll_offset});")
+                time.sleep(2)
+            full_screenshot = Image.new('RGB', (500, total_height))
+            y_offset = 0
+            for screenshot_part in screenshot_parts:
+                img = Image.open(io.BytesIO(screenshot_part))
+                full_screenshot.paste(img, (0, y_offset))
+                y_offset += img.height
+            full_screenshot.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100,
+                                 optimize=True)
+            driver.quit()
 
-            update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
-            cursor.execute(update_qr_sql)
-            return {
-                       "status": True,
-                       "message": "Event Created successfully"
-                   }, 200
-
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
+        update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
+        cursor.execute(update_qr_sql)
+        return {
+                   "status": True,
+                   "message": "Event Created successfully"
+               }, 200
 
 
 # def create_event(event_obj):

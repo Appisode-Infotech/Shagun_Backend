@@ -12,7 +12,7 @@ from django.conf import settings
 from django.db import connection
 from firebase_admin import credentials, messaging
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import FirefoxOptions
 
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
@@ -136,9 +136,9 @@ def create_event(event_obj):
             hour = date_obj.strftime("%I:%M %p")
 
             print("case2")
-            options = Options()
+            options = FirefoxOptions()
             print("case3")
-            options.headless = True
+            options.add_argument("--headless")
             print("case4")
             options.add_argument('--disable-gpu')
             print("case5")

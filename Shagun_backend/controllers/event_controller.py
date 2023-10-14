@@ -128,17 +128,23 @@ def create_event(event_obj):
                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
                 item["qr_code"] = image_url
                 print("qr url" + str(item["qr_code"]))
-
+                print("case1")
                 date_obj = datetime.datetime.strptime(event_obj.event_date, "%Y-%m-%d %H:%M:%S")
                 month = date_obj.strftime("%b")
                 day = date_obj.strftime("%a")
                 date = date_obj.strftime("%d")
                 hour = date_obj.strftime("%I:%M %p")
+                print("case2")
 
                 options = webdriver.ChromeOptions()
+                print("case3")
+
                 options.add_argument('--headless')
+                print("case4")
                 options.add_argument('--disable-gpu')
+                print("case5")
                 driver = webdriver.Firefox(options=options)
+                print("case6")
                 try:
                     driver.get('http://127.0.0.1:8000/view_qr?'
                                'qr_owner=' + str(item['name']) +
@@ -149,27 +155,47 @@ def create_event(event_obj):
                                '&day=' + day +
                                '&time=' + hour +
                                '&event_type=' + admin[1])
+                    print("case7")
                     total_height = driver.execute_script("return document.body.scrollHeight")
+                    print("case8")
                     driver.set_window_size(500, total_height)
+                    print("case9")
                     scroll_offset = 0
+                    print("case10")
                     screenshot_parts = []
+                    print("case11")
                     while scroll_offset < total_height:
                         screenshot = driver.get_screenshot_as_png()
+                        print("case12")
                         img = Image.open(io.BytesIO(screenshot))
+                        print("case13")
                         img = ImageOps.exif_transpose(img)
+                        print("case14")
                         img.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100, optimize=True)
+                        print("case15")
                         screenshot_parts.append(screenshot)
+                        print("case16")
                         scroll_offset += 600
+                        print("case17")
                         driver.execute_script(f"window.scrollTo(0, {scroll_offset});")
+                        print("case18")
                         time.sleep(2)
+                    print("case19")
                     full_screenshot = Image.new('RGB', (500, total_height))
+                    print("case20")
                     y_offset = 0
+                    print("case21")
                     for screenshot_part in screenshot_parts:
+                        print("case22")
                         img = Image.open(io.BytesIO(screenshot_part))
+                        print("case23")
                         full_screenshot.paste(img, (0, y_offset))
+                        print("case24")
                         y_offset += img.height
+                    print("case25")
                     full_screenshot.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100,
                                          optimize=True)
+                    print("case26")
                 except Exception as qrError:
                     print(qrError)
                 finally:

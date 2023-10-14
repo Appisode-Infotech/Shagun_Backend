@@ -138,7 +138,7 @@ def create_event(event_obj):
                 options = webdriver.ChromeOptions()
                 options.add_argument('--headless')
                 options.add_argument('--disable-gpu')
-                driver = webdriver.Chrome(options=options)
+                driver = webdriver.Firefox(options=options)
                 try:
                     driver.get('http://127.0.0.1:8000/view_qr?'
                                'qr_owner=' + str(item['name']) +

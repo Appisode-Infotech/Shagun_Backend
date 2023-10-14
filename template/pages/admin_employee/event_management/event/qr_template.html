@@ -197,13 +197,13 @@
 <body>
 <div class="container">
     <div class="block1"></div>
-    <img class="image" src="{{qr_image}}" alt="Placeholder Image">
+    <img class="image" src="{{MEDIA_URL}}{{request.GET.qr_image}}" alt="Placeholder Image">
     <div class="title">e-Shubham</div>
     <div class="event">
         <div class="event-admins">
             {% for admin in admins %}
             <div class="event-admin">
-                <img src="{{admin.profile}}" alt="Person 1">
+                <img src="{{MEDIA_URL}}{{admin.profile}}" alt="Person 1">
                 <div class="name">{{admin.name}}</div>
             </div>
             {% endfor %}

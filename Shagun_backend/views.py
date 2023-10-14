@@ -64,45 +64,6 @@ def custom_404(request, slug=None):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        json_data = {
-            "created_by_uid": "admin@shagun.com",
-            "event_type_id": "13",
-            "city_id": "12",
-            "printer_id": "21",
-            "address_line1": "4rd Cross",
-            "address_line2": "#A148",
-            "event_lat_lng": "Latitude: 15.3647083, Longitude: 75.1239547",
-            "sub_events": [
-                {
-                    "sub_event_name": "test",
-                    "start_time": "2023-10-01 23:19:00",
-                    "end_time": "2023-10-01 23:20:00"
-                }
-            ],
-            "event_date": "2023-10-01 23:19:00",
-            "event_note": "test event",
-            "event_admin": [
-                {
-                    "name": "David Willey",
-                    "role": "test1",
-                    "uid": "wjkkjhgfdserty",
-                    "profile": "images/profile_pic/circular_logo.png",
-                    "QR_code": "qr code"
-                },
-                {
-                    "name": "David Willey",
-                    "role": "test1",
-                    "uid": "wjkkjhgfdserty",
-                    "profile": "images/profile_pic/circular_logo.png",
-                    "QR_code": "qr code"
-                }
-            ],
-            "delivery_fee": "900",
-            "delivery_address": "4rd Cross #A148"
-        }
-        event_obj = create_event_model.create_event_model_from_dict(json_data)
-        resp = event_controller.create_event(event_obj)
-        print(resp)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
@@ -665,6 +626,9 @@ def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             json_data = transform_data_to_json(request.POST)
+            print("---------------------------")
+            print(json_data)
+            print("---------------------------")
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             event_controller.create_event(event_obj)
             return redirect('manage_event')
@@ -688,6 +652,11 @@ def add_events(request):
 
 def view_qr(request):
     admins_json = request.GET.get('admins', '[]')
+    admins_json = admins_json.replace("'", "\"")
+    print("=====================")
+    print(admins_json)
+    print(type(admins_json))
+    print("=====================")
     admins = json.loads(admins_json)
     context = {
         'admins': admins,

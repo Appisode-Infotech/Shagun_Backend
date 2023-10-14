@@ -26,7 +26,7 @@ def get_credentials(field):
             credentials = json.load(file)
         return credentials[field]
     except FileNotFoundError:
-        get_credentials()
+        get_credentials(field)
 
 
 def reset_password(email, user):

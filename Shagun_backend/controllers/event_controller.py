@@ -125,7 +125,7 @@ def create_event(event_obj):
                 options.add_argument('--disable-gpu')
                 driver = webdriver.Chrome(options=options)
                 try:
-                    driver.get('http://127.0.0.1:8000/qr?'
+                    driver.get('http://127.0.0.1:8000/view_qr?'
                                'qr_owner=' + item['name'] +
                                '&qr_image=' + 'http://127.0.0.1:8000/media/' + image_url +
                                '&admins=' + event_admins +

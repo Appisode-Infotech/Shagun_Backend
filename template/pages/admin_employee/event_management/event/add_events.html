@@ -944,15 +944,43 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 
 
 </script>
+
 <script>
-document.getElementById("myForm").addEventListener("submit", function (event) {
-<!--    document.getElementById("submitButton").disabled = true;-->
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("myForm");
+        const submitButton = document.getElementById("submitButton");
+        const overlay = document.getElementById("overlay");
+        const loading = document.getElementById("loading");
 
-<!--    document.getElementById("overlay").style.display = "block";-->
-<!--    document.getElementById("loading").style.display = "block";-->
+        form.addEventListener("submit", function(event) {
+            const requiredFields = form.querySelectorAll("[required]");
+            let allRequiredFieldsFilled = true;
 
-});
+            requiredFields.forEach(function(field) {
+                if (
+                    (field.tagName.toLowerCase() === "input" ||
+                    field.tagName.toLowerCase() === "select" ||
+                    field.tagName.toLowerCase() === "textarea")
+                ) {
+                    if (field.value === "") {
+                        console.log("Found empty required field: " + field.name);
+                        allRequiredFieldsFilled = false;
+                    }
+                }
+            });
+
+            if (allRequiredFieldsFilled) {
+                overlay.style.display = "block";
+                loading.style.display = "block";
+            } else {
+                event.preventDefault();
+            }
+        });
+    });
 </script>
+
+
+
 
 
 <!-- Latest compiled and minified CSS -->

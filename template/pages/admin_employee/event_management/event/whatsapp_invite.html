@@ -279,10 +279,9 @@
                                                             +91
                                                         </div>
                                                         <div class="col-8 col-sm-10">
-                                                            <input type="tel" name="phone"
+                                                            <input type="tel" name="phone" id="phone"
                                                                    pattern="[0-9]{10}" class="form-control"
-                                                                   title="Please enter a 10-digit phone number"
-                                                                   required>
+                                                                   title="Please enter a 10-digit phone number">
                                                             <div class="invalid-feedback"> Phone
                                                                 number is mandatory
                                                             </div>
@@ -451,66 +450,66 @@
 </script>
 <script>
         document.getElementById("myForm").addEventListener("submit", function (e) {
-    e.preventDefault();
+        e.preventDefault();
 
-    var phone = document.getElementById("phone").value;
-    var csvFile = document.querySelector('input[type="file"]').value;
-    var uidInput = document.getElementById("uid");
+        var phone = document.getElementById("phone").value;
+        var csvFile = document.querySelector('input[type="file"]').value;
+        var uidInput = document.getElementById("uid");
 
-    if (uidInput.value.trim() === "" || (phone === "" && csvFile === "")) {
-        var errorContainer = document.querySelector('.messages-container');
-        errorContainer.style.display = "block";
-    } else {
-        var customAlertOverlay = document.getElementById("customAlertOverlay");
-        customAlertOverlay.style.display = "none";
-
-        document.getElementById("overlay").style.display = "block";
-        document.getElementById("loader").style.display = "block";
-
-        var event_id = document.getElementById("event_id").textContent;
-        console.log(event_id);
-
-        // Construct the URL with the event_id as a query parameter
-        var url = '/whatsapp_invite/' + event_id + '/';
-        console.log(url);
-
-        fetch(url, {
-            method: 'POST',
-            body: new FormData(document.getElementById("myForm")),
-        })
-        .then(response => {
-            return response.json(); // Parse the response as JSON
-        })
-        .then(data => {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-
+        if (uidInput.value.trim() === "" || (phone === "" && csvFile === "")) {
+            var errorContainer = document.querySelector('.messages-container');
+            errorContainer.style.display = "block";
+        } else {
             var customAlertOverlay = document.getElementById("customAlertOverlay");
-            var customAlertIcon = document.getElementById("customAlertIcon");
-            var customAlertIconError = document.getElementById("customAlertIconError");
-            var customAlertMessage = document.getElementById("customAlertMessage");
+            customAlertOverlay.style.display = "none";
 
-            if (data.status) {
-                customAlertIcon.style.display = "block";
-                customAlertIconError.style.display = "none";
-                customAlertIcon.style.color = "green";
-                customAlertIcon.style.fontSize = "48px";
-                customAlertMessage.textContent = data.message;
-                customAlertOverlay.style.display = "flex";
-            } else {
-                customAlertIcon.style.display = "none";
-                customAlertIconError.style.display = "block";
-                customAlertIconError.style.color = "red";
-                customAlertIconError.style.fontSize = "48px";
-                customAlertMessage.textContent = data.message;
-                customAlertOverlay.style.display = "flex";
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    }
-});
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("loader").style.display = "block";
+
+            var event_id = document.getElementById("event_id").textContent;
+            console.log(event_id);
+
+            // Construct the URL with the event_id as a query parameter
+            var url = '/whatsapp_invite/' + event_id + '/';
+            console.log(url);
+
+            fetch(url, {
+                method: 'POST',
+                body: new FormData(document.getElementById("myForm")),
+            })
+            .then(response => {
+                return response.json(); // Parse the response as JSON
+            })
+            .then(data => {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+
+                var customAlertOverlay = document.getElementById("customAlertOverlay");
+                var customAlertIcon = document.getElementById("customAlertIcon");
+                var customAlertIconError = document.getElementById("customAlertIconError");
+                var customAlertMessage = document.getElementById("customAlertMessage");
+
+                if (data.status) {
+                    customAlertIcon.style.display = "block";
+                    customAlertIconError.style.display = "none";
+                    customAlertIcon.style.color = "green";
+                    customAlertIcon.style.fontSize = "48px";
+                    customAlertMessage.textContent = data.message;
+                    customAlertOverlay.style.display = "flex";
+                } else {
+                    customAlertIcon.style.display = "none";
+                    customAlertIconError.style.display = "block";
+                    customAlertIconError.style.color = "red";
+                    customAlertIconError.style.fontSize = "48px";
+                    customAlertMessage.textContent = data.message;
+                    customAlertOverlay.style.display = "flex";
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    });
 
 </script>
 

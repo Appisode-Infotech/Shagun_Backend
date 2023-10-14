@@ -29,6 +29,10 @@ def add_transaction_history(transaction_obj):
             cursor.execute(event_type_query)
             event_type = cursor.fetchone()
 
+            receiver_name_query = f"""SELECT name FROM users WHERE uid = '{transaction_obj.receiver_uid}' """
+            cursor.execute(receiver_name_query)
+            recv_name = cursor.fetchone()
+
             reciever_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
             VALUES ('{transaction_obj.receiver_uid}', 'Shagun',
             '{transaction_obj.gifter_name} sent you Shagun amount: {transaction_obj.shagun_amount} ',
@@ -36,8 +40,8 @@ def add_transaction_history(transaction_obj):
             cursor.execute(reciever_notification_query)
 
             sender_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
-            VALUES ('{transaction_obj.uid}', 'Shagun','Shagun Amount sent to {transaction_obj.gifter_name}', 
-            'You have sent Shagun amount: {transaction_obj.shagun_amount} to {transaction_obj.gifter_name} for the {event_type[0]} event')"""
+            VALUES ('{transaction_obj.uid}', 'Shagun','Shagun Amount sent to {recv_name[0]}', 
+            'You have sent Shagun amount: {transaction_obj.shagun_amount} to {recv_name[0]} for the {event_type[0]} event')"""
             cursor.execute(sender_notification_query)
 
             printer_query = f"""SELECT printer_id FROM event 

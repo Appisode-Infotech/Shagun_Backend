@@ -803,9 +803,10 @@ def add_printer(request):
             if status_code == 200:
                 return redirect('manage_printers')
             else:
+                location, status_code = event_controller.get_city_list_for_user()
                 msg = "Either phone or email or username is already associated with another Printing Vendor"
-                return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html',
-                              {"message": msg})
+                return render(request, 'pages/admin_employee/vendors_management/printing_vendor/add_printer.html',
+                              {"message": msg, "city_list": location['city_list']})
 
         else:
             location, status_code = event_controller.get_city_list_for_user()
@@ -825,7 +826,8 @@ def add_delivery_vendor(request):
             else:
                 location, status_code = event_controller.get_city_list_for_user()
                 msg = "Phone is already associated with another Delivery Vendor"
-                return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/add_delivery_vendor.html',
+                return render(request,
+                              'pages/admin_employee/vendors_management/delivery_vendor/add_delivery_vendor.html',
                               {"message": msg, "city_list": location['city_list']})
         else:
             location, status_code = event_controller.get_city_list_for_user()
@@ -1103,12 +1105,10 @@ def edit_printer(request, printer_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
-            print(store_obj)
-            response, status_code = store_controller.edit_printer(store_obj)
+            store_controller.edit_printer(store_obj)
             return redirect('manage_printers')
         else:
             printer_data, status_code = store_controller.get_printer_by_id(printer_id)
-            print(printer_data)
             location, status_code = event_controller.get_city_list_for_user()
             context = {
                 "printer_data": printer_data,
@@ -1860,7 +1860,6 @@ def enable_disable_location(request):
 def get_location_by_id(request):
     response, status_code = event_controller.get_location_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
-
 
 
 @api_view(['POST'])

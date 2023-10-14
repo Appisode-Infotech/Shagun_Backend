@@ -64,45 +64,6 @@ def custom_404(request, slug=None):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        # json_data = {
-        #     "created_by_uid": "admin@shagun.com",
-        #     "event_type_id": "13",
-        #     "city_id": "12",
-        #     "printer_id": "21",
-        #     "address_line1": "4rd Cross",
-        #     "address_line2": "#A148",
-        #     "event_lat_lng": "Latitude: 15.3647083, Longitude: 75.1239547",
-        #     "sub_events": [
-        #         {
-        #             "sub_event_name": "test",
-        #             "start_time": "2023-10-01 23:19:00",
-        #             "end_time": "2023-10-01 23:20:00"
-        #         }
-        #     ],
-        #     "event_date": "2023-10-01 23:19:00",
-        #     "event_note": "test event",
-        #     "event_admin": [
-        #         {
-        #             "name": "David Willey",
-        #             "role": "test1",
-        #             "uid": "wjkkjhgfdserty",
-        #             "profile": "images/profile_pic/circular_logo.png",
-        #             "QR_code": "qr code"
-        #         },
-        #         {
-        #             "name": "David Willey",
-        #             "role": "test1",
-        #             "uid": "wjkkjhgfdserty",
-        #             "profile": "images/profile_pic/circular_logo.png",
-        #             "QR_code": "qr code"
-        #         }
-        #     ],
-        #     "delivery_fee": "900",
-        #     "delivery_address": "4rd Cross #A148"
-        # }
-        # event_obj = create_event_model.create_event_model_from_dict(json_data)
-        # resp = event_controller.create_event(event_obj)
-        # print(resp)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
@@ -221,7 +182,6 @@ def update_printer_password(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-        print(response)
         return render(request, 'pages/admin_employee/event_management/event/events.html',
                       {'response': response['event_list']})
     else:
@@ -666,6 +626,9 @@ def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             json_data = transform_data_to_json(request.POST)
+            print("---------------------------")
+            print(json_data)
+            print("---------------------------")
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             event_controller.create_event(event_obj)
             return redirect('manage_event')
@@ -685,6 +648,20 @@ def add_events(request):
 
     else:
         return redirect('sign_up')
+
+
+def view_qr(request):
+    admins_json = request.GET.get('admins', '[]')
+    admins_json = admins_json.replace("'", "\"")
+    print("=====================")
+    print(admins_json)
+    print(type(admins_json))
+    print("=====================")
+    admins = json.loads(admins_json)
+    context = {
+        'admins': admins,
+    }
+    return render(request, 'pages/admin_employee/event_management/event/qr_template.html', context)
 
 
 def add_events_type(request):
@@ -803,9 +780,10 @@ def add_printer(request):
             if status_code == 200:
                 return redirect('manage_printers')
             else:
+                location, status_code = event_controller.get_city_list_for_user()
                 msg = "Either phone or email or username is already associated with another Printing Vendor"
-                return render(request, 'pages/admin_employee/employee_management/admin/add_admin.html',
-                              {"message": msg})
+                return render(request, 'pages/admin_employee/vendors_management/printing_vendor/add_printer.html',
+                              {"message": msg, "city_list": location['city_list']})
 
         else:
             location, status_code = event_controller.get_city_list_for_user()
@@ -825,7 +803,8 @@ def add_delivery_vendor(request):
             else:
                 location, status_code = event_controller.get_city_list_for_user()
                 msg = "Phone is already associated with another Delivery Vendor"
-                return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/add_delivery_vendor.html',
+                return render(request,
+                              'pages/admin_employee/vendors_management/delivery_vendor/add_delivery_vendor.html',
                               {"message": msg, "city_list": location['city_list']})
         else:
             location, status_code = event_controller.get_city_list_for_user()
@@ -1103,12 +1082,10 @@ def edit_printer(request, printer_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             store_obj = add_printer_model.add_printer_model_from_dict(request.POST)
-            print(store_obj)
-            response, status_code = store_controller.edit_printer(store_obj)
+            store_controller.edit_printer(store_obj)
             return redirect('manage_printers')
         else:
             printer_data, status_code = store_controller.get_printer_by_id(printer_id)
-            print(printer_data)
             location, status_code = event_controller.get_city_list_for_user()
             context = {
                 "printer_data": printer_data,
@@ -1860,7 +1837,6 @@ def enable_disable_location(request):
 def get_location_by_id(request):
     response, status_code = event_controller.get_location_by_id(request.data['id'])
     return JsonResponse(response, status=status_code)
-
 
 
 @api_view(['POST'])

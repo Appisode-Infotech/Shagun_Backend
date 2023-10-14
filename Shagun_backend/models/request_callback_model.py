@@ -57,7 +57,7 @@ class RequestCallbackModel:
         event_date = from_union([from_str, from_none], obj.get("event_date"))
         event_type = from_union([from_str, from_none], obj.get("event_type"))
         city = from_union([from_int, from_none], obj.get("city"))
-        selected_reason = from_union([from_int, from_none], obj.get("selected_reason"))
+        selected_reason = from_union([from_str, from_none], obj.get("selected_reason"))
         return RequestCallbackModel(id, completed_by, status, uid, type, event_date, event_type, city, selected_reason)
 
     def to_dict(self) -> dict:

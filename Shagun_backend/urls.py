@@ -71,6 +71,7 @@ urlpatterns = [
     path('search_event_settlement', dashboard_search_event_settlement,
          name='dashboard_search_event_settlement'),
     path('add_events', add_events, name='add_events'),
+    path('view_qr', view_qr, name='view_qr'),
     path('manage_event_types', manage_event_types, name='manage_event_types'),
     path('manage_location', manage_location, name='manage_location'),
     path('manage_bank_list', manage_bank_list, name='manage_bank_list'),

@@ -47,13 +47,14 @@ def add_printer(store_obj):
     try:
         with connection.cursor() as cursor:
             add_printer_query = """INSERT INTO printer (store_name, city, address, email, gst_no, store_owner,
-                                 contact_number, printer_user_name, printer_password, created_by, updated_by) 
-                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                 contact_number, printer_user_name, printer_password, created_by, updated_by, 
+                                 created_on, updated_on) 
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(add_printer_query, [store_obj.store_name, store_obj.city, store_obj.address,
                                                store_obj.email, store_obj.gst_no, store_obj.store_owner,
                                                store_obj.contact_number,
                                                store_obj.printer_user_name, hashed_password, store_obj.created_by,
-                                               store_obj.updated_by])
+                                               store_obj.updated_by, getIndianTime(), getIndianTime()])
             return {
                 "status": True,
                 "user": "store added successfully"

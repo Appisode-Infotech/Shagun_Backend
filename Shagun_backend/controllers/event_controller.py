@@ -3,6 +3,7 @@ import json
 import os
 import time
 from datetime import datetime
+from selenium.webdriver.firefox.options import Options
 
 import firebase_admin
 import pymysql
@@ -134,12 +135,11 @@ def create_event(event_obj):
                 day = date_obj.strftime("%a")
                 date = date_obj.strftime("%d")
                 hour = date_obj.strftime("%I:%M %p")
+
                 print("case2")
-
-                options = webdriver.ChromeOptions()
+                options = Options()
                 print("case3")
-
-                options.add_argument('--headless')
+                options.headless = True
                 print("case4")
                 options.add_argument('--disable-gpu')
                 print("case5")

@@ -221,7 +221,6 @@ def update_printer_password(request):
 def manage_event(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_all_event_list()
-        print(response)
         return render(request, 'pages/admin_employee/event_management/event/events.html',
                       {'response': response['event_list']})
     else:
@@ -685,6 +684,15 @@ def add_events(request):
 
     else:
         return redirect('sign_up')
+
+
+def view_qr(request):
+    admins_json = request.GET.get('admins', '[]')
+    admins = json.loads(admins_json)
+    context = {
+        'admins': admins,
+    }
+    return render(request, 'pages/admin_employee/event_management/event/qr_template.html', context)
 
 
 def add_events_type(request):

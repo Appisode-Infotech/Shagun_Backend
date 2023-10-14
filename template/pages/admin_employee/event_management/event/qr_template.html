@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Reset default margin and padding for all elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Style for the outermost container */
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background: white;
+        }
+
+        /* Style for the colored rectangular block */
+        .block1 {
+            width: 500px;
+            height: 497px;
+            left: 0;
+            top: 503px;
+            position: absolute;
+            background: #EAB948;
+        }
+
+        /* Style for the image */
+        .image {
+            width: 428px;
+            height: 393px;
+            left: 36px;
+            top: 161px;
+            position: absolute;
+            border-radius: 20px;
+            border: 5px #42033D solid;
+        }
+
+        /* Style for the "e-Shubham" text */
+        .title {
+            width: 250px;
+            height: 59px;
+            left: 124px;
+            top: 60px;
+            position: absolute;
+            color: black;
+            font-size: 40px;
+            font-family: Nunito;
+            font-weight: 700;
+            word-wrap: break-word;
+        }
+
+        /* Style for the event section */
+        .event {
+            width: 427.91px;
+            height: 257.20px;
+            left: 36.05px;
+            top: 638.95px;
+            position: absolute;
+            background: #42033D;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .divider {
+            width: 2px;
+            height: 100px;
+            background: #EEF7FC;
+            margin: 0 20px; /* Adjust the margin as needed */
+        }
+
+        .event-admins {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .event-admin {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            font-family: Nunito;
+            font-weight: 700;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .event-admin img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            border: 5px #9F813C solid;
+            margin-right:10px;
+        }
+
+        /* Style for the event date and time */
+        .event-date-time {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: left;
+        }
+
+        .date {
+                width:100px;
+
+            background: #EAB948;
+            border-radius: 20px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .date-text {
+            color: #42033D;
+            font-size: 20px;
+            font-family: Nunito;
+            font-weight: 700;
+        }
+
+        .time {
+            background: #EEF7FC;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .time-text {
+            color: black;
+            font-size: 13px;
+            font-family: Nunito;
+            font-weight: 700;
+        }
+
+
+            /* Style for the wedding banner */
+   /* Style for the wedding banner */
+.banner {
+    width: 358px;
+    height: 56px;
+    left: 71px;
+    top: 575px;
+    position: absolute;
+    background: #42033D;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+}
+
+/* Style for the event type text */
+.event-type {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-family: Nunito;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+
+.block2 {
+    width: 500px;
+    height: 80px;
+    left: 0;
+    top: 928px;
+    position: absolute;
+    background: #42033D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Style for the scan message */
+.scan-message {
+    position: relative;
+    color: white;
+    font-size: 18px;
+    font-family: Nunito;
+    font-weight: 700;
+    word-wrap: break-word;
+}
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="block1"></div>
+    <img class="image" src="{{qr_image}}" alt="Placeholder Image">
+    <div class="title">e-Shubham</div>
+    <div class="event">
+        <div class="event-admins">
+            {% for admin in admins %}
+            <div class="event-admin">
+                <img src="{{admin.profile}}" alt="Person 1">
+                <div class="name">{{admin.name}}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="divider"></div>
+        <div class="date">
+            <div class="date-text">{{request.GET.date}}<br/>{{request.GET.month}}<br/>{{request.GET.day}}</div>
+            <div class="time">
+                <div class="time-text">{{request.GET.time}}</div>
+            </div>
+        </div>
+    </div>
+        <div class="block2">
+            <div class="scan-message" align="center">Scan to wish {{ request.GET.qr_owner }} and send shagun</div>
+        </div>
+    <div class="banner">
+            <div class="event-type">{{ request.GET.event_type }}</div>
+    </div>
+</div>
+</body>
+</html>

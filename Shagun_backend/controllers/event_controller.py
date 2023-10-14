@@ -17,6 +17,11 @@ from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
 firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696d2d.json"
 full_firebase_cred_path = os.path.join(settings.MEDIA_ROOT, firebase_cred_path)
 cred = credentials.Certificate(full_firebase_cred_path)
@@ -134,10 +139,12 @@ def create_event(event_obj):
             date = date_obj.strftime("%d")
             hour = date_obj.strftime("%I:%M %p")
 
-            options = webdriver.ChromeOptions()
+            options = Options()
             options.add_argument('--headless')
-            options.add_argument('--disable-gpu')
-            driver = webdriver.Chrome(options=options)
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
+            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
             driver.get('http://127.0.0.1:8000/view_qr?'
                        'qr_owner=' + str(item['name']) +
                        '&qr_image=' + str(item["qr_code"]) +

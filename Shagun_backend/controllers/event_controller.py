@@ -170,6 +170,8 @@ def create_event(event_obj):
                         y_offset += img.height
                     full_screenshot.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100,
                                          optimize=True)
+                except Exception as qrError:
+                    print(qrError)
                 finally:
                     driver.quit()
 

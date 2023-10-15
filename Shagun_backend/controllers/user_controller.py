@@ -231,7 +231,6 @@ def add_user_kyc(kyc_obj):
                     "message": "UID invalid"
                 }, 200
     except pymysql.Error as e:
-        print("Duplicate")
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
@@ -642,7 +641,6 @@ def get_all_admins():
                 WHERE a.role = 1 ORDER BY a.id DESC """
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -662,7 +660,6 @@ def dashboard_search_employee(search):
                 LIKE '%{search}%') ORDER BY created_on DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
-            print(user_data)
             return {
                 "status": True,
                 "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
@@ -704,7 +701,6 @@ def employee_login(uname, pwd):
                             ( role = 2 OR role = 1 );"""
         cursor.execute(emp_login_query, [uname])
         result = cursor.fetchone()
-        print(result)
         if result is not None and result[4] == 1:
             stored_password = result[0].encode('utf-8')
             if bcrypt.checkpw(pwd.encode('utf-8'), stored_password):
@@ -739,7 +735,6 @@ def get_employee_by_id(emp_id):
                                     WHERE u.id = '{emp_id}'"""
             cursor.execute(emp_data_query)
             emp_data = cursor.fetchone()
-            print(emp_data)
             if emp_data is not None:
                 return {
                     "status": True,
@@ -929,7 +924,6 @@ def edit_user_kyc(obj):
 
 
 def get_user_requests(param):
-    print(param)
     try:
         with connection.cursor() as cursor:
             request_query = f"""
@@ -949,7 +943,6 @@ def get_user_requests(param):
 
             cursor.execute(request_query)
             reso = request_list = cursor.fetchall()
-            print(reso)
             return {
                 "status": True,
                 "req_list": responsegenerator.responseGenerator.generateResponse(request_list, REQUEST_LIST)

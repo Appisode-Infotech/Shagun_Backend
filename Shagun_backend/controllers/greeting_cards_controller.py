@@ -67,7 +67,6 @@ def get_printer_greeting_cards(p_id):
                                         WHERE gc.printer_id = '{p_id}' ORDER BY gc.id DESC"""
             cursor.execute(greeting_cards_query)
             greeting_cards = cursor.fetchall()
-            print(greeting_cards)
 
             return {
                 "status": True,
@@ -166,7 +165,6 @@ def dashboard_search_greetings_status(status):
              WHERE status = '{status}' ORDER BY created_on DESC"""
             cursor.execute(search_greeting_query)
             greeting_cards = cursor.fetchall()
-            print(greeting_cards)
             return {
                 "status": True,
                 "all_greeting_cards": responsegenerator.responseGenerator.generateResponse(greeting_cards, GREETING_CARDS)

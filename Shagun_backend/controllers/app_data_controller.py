@@ -5,6 +5,7 @@ from Shagun_backend.controllers.credentials import get_credentials
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import APP_COMPATIBILITY, getIndianTime
 
+
 # def app_compatibility(app_obj):
 #     try:
 #         with connection.cursor() as cursor:
@@ -41,6 +42,9 @@ def app_compatibility(app_obj):
                 "created": getIndianTime(),
                 "updated": getIndianTime(),
             }, 200
+
+        else:
+            return {}, 301
 
     except Exception as e:
         return {"status": False, "message": str(e)}, 301

@@ -1508,6 +1508,7 @@ def get_employee_by_id(request):
 def app_compatibility(request):
     app_obj = app_data_model.app_data_model_from_dict(request.data)
     response, status_code = app_data_controller.app_compatibility(app_obj)
+    print(response)
     return JsonResponse(response, status=status_code)
 
 

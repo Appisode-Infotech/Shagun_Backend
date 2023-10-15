@@ -6,5 +6,4 @@ def get_credentials():
             data = json.load(json_file)
             return data
     except FileNotFoundError:
-        print("Credentials file not found.")
         return {}

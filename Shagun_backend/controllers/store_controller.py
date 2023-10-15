@@ -387,7 +387,6 @@ def change_print_jobs_status(pjid, status):
             query = "SELECT transaction_id FROM print_jobs WHERE id = %s"
             cursor.execute(query, (pjid,))
             transaction_id = cursor.fetchone()[0]
-            print(transaction_id)
 
             add_printer_query = """INSERT INTO order_status (transaction_id, status) 
                                              VALUES (%s, %s)"""
@@ -398,7 +397,6 @@ def change_print_jobs_status(pjid, status):
                             WHERE th.id = %s"""
             cursor.execute(fcm_query, (transaction_id,))
             fcm_data = cursor.fetchone()
-            print(fcm_data)
 
             if status == 1:
                 title = f"Order #{transaction_id} status: Job Created"
@@ -417,14 +415,9 @@ def change_print_jobs_status(pjid, status):
                 message = "Your card has been dispatched."
 
             sender_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
-                                    VALUES ('{fcm_data[2]}', '{title}', '{message}')"""
+                                    VALUES ('{fcm_data[2]}', 'track', '{title}', '{message}')"""
             cursor.execute(sender_notification_query)
-
-            print("notification table updated")
-
-            resp = send_push_notification(fcm_data[1], title, message)
-            print("push sent")
-            print(resp)
+            send_push_notification(fcm_data[1], title, message)
 
             return {
                 "status": True,

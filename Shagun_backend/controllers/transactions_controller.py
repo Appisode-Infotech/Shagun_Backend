@@ -78,7 +78,7 @@ def add_transaction_history(transaction_obj):
             cursor.execute(receiver_fcm_query)
             recv_fcm_token = cursor.fetchone()
             title = f"{transaction_obj.gifter_name} sent you Shagun amount: {transaction_obj.shagun_amount}"
-            message = f"For your {event_type[0]} event')"
+            message = f"For your {event_type[0]} event"
             send_push_notification(recv_fcm_token[0], title, message)
 
             return {

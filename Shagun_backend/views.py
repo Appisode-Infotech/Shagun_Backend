@@ -1852,13 +1852,6 @@ def enable_disable_location(request):
     return JsonResponse(response, status=status_code)
 
 
-#
-# @api_view(['POST'])
-# def edit_location(request):
-#     response, status_code = event_controller.edit_location(request.data['id'], request.data['city_name'])
-#     return JsonResponse(response, status=status_code)
-
-
 @api_view(['POST'])
 def get_location_by_id(request):
     response, status_code = event_controller.get_location_by_id(request.data['id'])

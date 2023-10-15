@@ -24,10 +24,7 @@ from Shagun_backend.util.constants import APP_COMPATIBILITY, getIndianTime
 def app_compatibility(app_obj):
     try:
         app_data = get_credentials()
-        print(type(app_obj.app_name))
-        print(type(app_data.get('android_app_name')))
         if app_obj.platform == "android" and app_obj.app_name == app_data.get('android_app_name'):
-            print("android")
             return {
                 "app_name": app_data.get('android_app_name'),
                 "min_version": app_data.get('android_min_version'),
@@ -37,7 +34,6 @@ def app_compatibility(app_obj):
                 "updated": getIndianTime(),
             }, 200
         elif app_obj.platform == "ios" and app_obj.app_name == app_data.get('ios_app_name'):
-            print("ios")
             return {
                 "app_name": app_data.get('ios_app_name'),
                 "min_version": app_data.get('ios_min_version'),

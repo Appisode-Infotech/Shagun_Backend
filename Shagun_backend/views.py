@@ -47,7 +47,6 @@ def logout(request):
 
 
 def previewPrint(request):
-    print(request.GET['imageUrl'])
     return render(request, 'pages/printer/print_job/print_card.html')
 
 
@@ -102,8 +101,7 @@ def admin_dashboard(request):
             "delivery_address": "4rd Cross #A148"
         }
         event_obj = create_event_model.create_event_model_from_dict(json_data)
-        resp = event_controller.create_event(event_obj)
-        print(resp)
+        event_controller.create_event(event_obj)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
@@ -194,7 +192,6 @@ def update_printer_password(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         if request.method == 'POST':
             response = store_controller.update_printer_password(request.POST)
-            print(response)
             if not response['status']:
                 messages.error(request, response['message'])
                 return render(request, 'pages/printer/printer_auth/change_password.html',
@@ -226,7 +223,6 @@ def manage_settlement(request):
 def manage_event_types(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_event_type_list_for_admin()
-        print(response)
         return render(request, 'pages/admin_employee/event_management/event_type/event_type.html',
                       {"response": response['events_type']})
     else:
@@ -236,7 +232,6 @@ def manage_event_types(request):
 def manage_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_locations_list()
-        print(response)
         return render(request, 'pages/admin_employee/event_management/location/location.html', response)
     else:
         return redirect('sign_up')
@@ -245,7 +240,6 @@ def manage_location(request):
 def manage_bank_list(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = bank_controller.get_all_banks_list()
-        print(response)
         return render(request, 'pages/admin_employee/users_management/banks/bank_lists.html',
                       {"bank_list": response['bank_list']})
     else:
@@ -257,7 +251,6 @@ def add_bank_list(request):
         if request.method == 'POST':
             resp = bank_controller.add_bank_list(request.POST['bank_name'], request.POST['created_by'],
                                                  request.POST['updated_by'])
-            print(resp)
             return redirect('manage_bank_list')
     else:
         return redirect('sign_up')
@@ -341,7 +334,6 @@ def manage_bank_details(request):
 def manage_greeting_cards(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.get_all_greeting_cards()
-        print(response)
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:
@@ -351,7 +343,6 @@ def manage_greeting_cards(request):
 def manage_users(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_users('%')
-        print(response)
         return render(request, 'pages/admin_employee/users_management/users/users.html',
                       {"response": response['user_data']})
     else:
@@ -371,7 +362,6 @@ def manage_employee(request):
 def manage_admin(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.get_all_admins()
-        print(response)
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
                       {"response": response['user_data'], "role": 1})
     else:
@@ -678,10 +668,6 @@ def add_events(request):
 def view_qr(request):
     admins_json = request.GET.get('admins', '[]')
     admins_json = admins_json.replace("'", "\"")
-    print("=====================")
-    print(admins_json)
-    print(type(admins_json))
-    print("=====================")
     admins = json.loads(admins_json)
     context = {
         'admins': admins,
@@ -694,7 +680,6 @@ def add_events_type(request):
         if request.method == 'POST':
             res = event_controller.create_events_type(request.POST['event_type_name'], request.POST['created_by'],
                                                       request.POST['updated_by'])
-            print(res)
             return redirect('manage_event_types')
         else:
             return render(request, 'event_management/event_management/add_events_type.html')
@@ -738,7 +723,6 @@ def add_bank(request):
         if request.method == 'POST':
             bank_obj = bank_details_model.bank_details_model_from_dict(request.POST)
             response, status_code = user_controller.add_bank_details(bank_obj)
-            print(response)
             if status_code == 200:
                 return redirect('manage_bank_details')
             else:
@@ -919,7 +903,7 @@ def activate_deactivate_printers(request, printer_id, status):
 
 def change_print_jobs_status(request, pid, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-        response, status_code = store_controller.change_print_jobs_status(pid, status)
+        store_controller.change_print_jobs_status(pid, status)
         return redirect('Open_printer_jobs')
     else:
         return redirect('sign_up')
@@ -1043,7 +1027,6 @@ def edit_employee(request, user_id):
             return redirect('manage_employee')
         else:
             response, status_code = user_controller.get_employee_by_id(user_id)
-            print(response)
             return render(request, 'pages/admin_employee/employee_management/employee/edit_employee.html',
                           response)
     else:
@@ -1087,7 +1070,6 @@ def edit_greeting_cards(request):
         if request.method == 'POST':
             grt_obj = greeting_cards_model.greeting_cards_model_from_dict(request.POST)
             res = greeting_cards_controller.edit_greeting_cards(grt_obj)
-            print(res)
             return redirect('manage_greeting_cards')
     else:
         return redirect('sign_up')
@@ -1154,7 +1136,6 @@ def edit_event(request, event_id):
 
 def filtered_events_on_approval_status(request, status):
     response, status_code = event_controller.get_event_by_approval_status(status)
-    print(response)
     return render(request, 'pages/admin_employee/event_management/event/events.html',
                   {'response': response['event_list'], "status": status})
 
@@ -1279,7 +1260,6 @@ def dashboard_search_greetings(request):
 def dashboard_search_greetings_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.dashboard_filter_greetings(status)
-        print(response)
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
                       {'response': response['all_greeting_cards'], "status": status})
     else:
@@ -1547,7 +1527,6 @@ def get_employee_by_id(request):
 def app_compatibility(request):
     app_obj = app_data_model.app_data_model_from_dict(request.data)
     response, status_code = app_data_controller.app_compatibility(app_obj)
-    print(response)
     return JsonResponse(response, status=status_code)
 
 

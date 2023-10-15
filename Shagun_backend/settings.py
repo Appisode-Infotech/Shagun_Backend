@@ -84,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shagun',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'Shagun@#123',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -135,9 +135,6 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-CREDENTIALS_JSON_PATH = os.path.join(BASE_DIR, 'util', 'credentials.json')
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

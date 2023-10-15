@@ -33,7 +33,6 @@ def send_push_notification(device_token, title, message):
         notification = messaging.Notification(title=title, body=message)
         message = messaging.Message(notification=notification, token=device_token)
         messaging.send(message)
-        print("FCM notification sent successfully.")
     except Exception as e:
         print(f"Error sending FCM notification: {str(e)}")
 

@@ -40,7 +40,6 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
         with connection.cursor() as cursor:
             invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) VALUES (%s, %s, %s, %s)"""
             data_list = [(invited_by, invited_to, e_id, invite_message) for invited_to in invited_to]
-            print(data_list)
             cursor.executemany(invite_query, data_list)
             return {
                 "status": True,

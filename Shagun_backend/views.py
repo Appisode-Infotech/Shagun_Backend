@@ -866,7 +866,6 @@ def activate_deactivate_printers(request, printer_id, status):
 def change_print_jobs_status(request, pid, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response = store_controller.change_print_jobs_status(pid, status)
-        print(response)
         return redirect('Open_printer_jobs')
     else:
         return redirect('sign_up')

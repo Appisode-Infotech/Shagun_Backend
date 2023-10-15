@@ -373,7 +373,5 @@ try:
         cursor.execute(query)
         connection.commit()
 
-    print("Tables created successfully.")
-
 except pymysql.Error as e:
     print(f"Error: {e}")

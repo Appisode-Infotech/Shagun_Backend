@@ -23,16 +23,16 @@ from Shagun_backend.util.constants import APP_COMPATIBILITY, getIndianTime
 def app_compatibility(app_obj):
     try:
         app_data = get_credentials()
-        if app_obj.platform == "android":
+        if app_obj.platform == "android" and app_obj.app_name == app_data.get('android_app_name'):
             return {
                 "app_name": app_data.get('android_app_name'),
                 "min_version": app_data.get('android_min_version'),
                 "latest_version": app_data.get('android_max_version'),
-                "platform": app_data.get('android'),
+                "platform": 'android',
                 "created": getIndianTime(),
                 "updated": getIndianTime(),
             }, 200
-        else:
+        elif app_obj.platform == "ios" and app_obj.app_name == app_data.get('ios_app_name'):
             return {
                 "app_name": app_data.get('ios_app_name'),
                 "min_version": app_data.get('ios_min_version'),

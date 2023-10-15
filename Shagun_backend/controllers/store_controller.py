@@ -43,7 +43,6 @@ def printer_login(uname, pwd):
 
 def add_printer(store_obj):
     hashed_password = bcrypt.hashpw(store_obj.printer_password.encode('utf-8'), bcrypt.gensalt())
-    print(hashed_password)
     try:
         with connection.cursor() as cursor:
             add_printer_query = """INSERT INTO printer (store_name, city, address, email, gst_no, store_owner,
@@ -160,7 +159,6 @@ def dashboard_search_printers(search):
             OR contact_number LIKE '%{search}%' OR printer_user_name LIKE '%{search}%' ) ORDER BY p.id DESC"""
             cursor.execute(printers_data_query)
             printer_data = cursor.fetchall()
-            print(printer_data)
             return {
                 "status": True,
                 "printer_data": responsegenerator.responseGenerator.generateResponse(printer_data, ALL_PRINTERS_DATA)
@@ -184,7 +182,6 @@ def dashboard_search_printers_status(status):
 
             cursor.execute(printers_status_query)
             printer_data = cursor.fetchall()
-            print(printer_data)
             return {
                 "status": True,
                 "printer_data": responsegenerator.responseGenerator.generateResponse(printer_data, ALL_PRINTERS_DATA)
@@ -242,7 +239,6 @@ def search_all_jobs(status, search):
             ORDER BY pj.created_on DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
-            print(get_all_jobs_query)
             if jobs is not None:
                 return {
                     "status": True,
@@ -279,7 +275,6 @@ def printer_search_all_jobs(status, search, pid):
             ORDER BY pj.id DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
-            print(get_all_jobs_query)
             if jobs is not None:
                 return {
                     "status": True,
@@ -309,7 +304,6 @@ def filter_all_jobs(status):
             WHERE pj.status = '{status}' ORDER BY pj.created_on DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
-            print(get_all_jobs_query)
             if jobs is not None:
                 return {
                     "status": True,
@@ -339,7 +333,6 @@ def printer_filter_jobs(status, pid):
             WHERE pj.status = '{status}' AND pj.printer_id = '{pid}' ORDER BY pj.created_on DESC"""
             cursor.execute(get_all_jobs_query)
             jobs = cursor.fetchall()
-            print(get_all_jobs_query)
             if jobs is not None:
                 return {
                     "status": True,
@@ -406,27 +399,32 @@ def change_print_jobs_status(pjid, status):
             cursor.execute(fcm_query, (transaction_id,))
             fcm_data = cursor.fetchone()
             print(fcm_data)
+
             if status == 1:
-                title = f"Order {transaction_id} status: Job Created"
+                title = f"Order #{transaction_id} status: Job Created"
                 message = "Your transaction is created and pending for further processing."
             elif status == 2:
-                title = f"Order {transaction_id} status: Printing Started"
+                title = f"Order #{transaction_id} status: Printing Started"
                 message = "The printing process of your card has begun."
             elif status == 3:
-                title = f"Order {transaction_id} status: Printing Completed"
+                title = f"Order #{transaction_id} status: Printing Completed"
                 message = "Printing of your card is completed successfully."
             elif status == 4:
-                title = f"Order {transaction_id} status: Ready for Dispatch"
+                title = f"Order #{transaction_id} status: Ready for Dispatch"
                 message = "Your card is now ready for dispatch."
             else:
-                title = f"Order {transaction_id} status: Dispatched"
+                title = f"Order #{transaction_id} status: Dispatched"
                 message = "Your card has been dispatched."
 
             sender_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                                     VALUES ('{fcm_data[2]}', '{title}', '{message}')"""
             cursor.execute(sender_notification_query)
 
-            send_push_notification(fcm_data[1], title, message)
+            print("notification table updated")
+
+            resp = send_push_notification(fcm_data[1], title, message)
+            print("push sent")
+            print(resp)
 
             return {
                 "status": True,

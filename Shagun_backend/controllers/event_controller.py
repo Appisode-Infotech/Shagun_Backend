@@ -32,7 +32,7 @@ def send_push_notification(device_token, title, message):
     try:
         notification = messaging.Notification(title=title, body=message)
         message = messaging.Message(notification=notification, token=device_token)
-        response = messaging.send(message)
+        messaging.send(message)
         print("FCM notification sent successfully.")
     except Exception as e:
         print(f"Error sending FCM notification: {str(e)}")
@@ -112,11 +112,9 @@ def create_event(event_obj):
                 image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
 
                 QRimg.save(image_path)
-                print("qr saved")
 
                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
                 item["qr_code"] = image_url
-                print("qr url" + str(item["qr_code"]))
 
                 date_obj = datetime.datetime.strptime(event_obj.event_date, "%Y-%m-%d %H:%M:%S")
                 month = date_obj.strftime("%b")
@@ -617,7 +615,6 @@ def get_event_type_list_for_admin():
                                             LEFT JOIN users AS updator ON e.updated_by = updator.uid"""
             cursor.execute(event_type_for_admin_query)
             events = cursor.fetchall()
-            print(events)
             return {
                        "status": True,
                        "events_type": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_TYPE_LIST)

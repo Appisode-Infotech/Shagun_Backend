@@ -176,8 +176,12 @@ def dashboard_search_printers_status(status):
     try:
         with connection.cursor() as cursor:
             printers_status_query = f""" SELECT p.id, p.store_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.store_owner, p.contact_number, p.email FROM printer AS p
-            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}' ORDER BY p.id DESC"""
+                        p.store_owner, p.contact_number, p.email, creator.name, updator.name, p.created_on, p.updated_on
+                        FROM printer AS p
+                        LEFT JOIN users AS creator ON p.created_by = creator.uid
+                        LEFT JOIN users AS updator ON p.updated_by = updator.uid
+                        LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}' ORDER BY p.id DESC """
+
             cursor.execute(printers_status_query)
             printer_data = cursor.fetchall()
             print(printer_data)

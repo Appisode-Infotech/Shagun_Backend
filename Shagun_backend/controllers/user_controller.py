@@ -677,8 +677,14 @@ def dashboard_search_employee(search):
 def dashboard_search_employee_status(status):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 2 AND status = '{status}' ORDER BY created_on DESC"""
+            users_data_query = f""" SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                            a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                            FROM users AS a 
+                            LEFT JOIN users AS creator ON a.created_by = creator.uid
+                            LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                            WHERE a.role = 2 AND a.status = '{status}' ORDER BY a.id DESC """
+
+
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {
@@ -994,7 +1000,7 @@ def filter_user_requests(param, status):
                             SELECT
                                 u.name, u.phone, u.profile_pic, ucr.type,
                                 ucr.status, ucr.created_on, ucr.id,
-                                ucr.event_date, ucr.event_type, l.city_name, u.email
+                                ucr.event_date, ucr.event_type, l.city_name, u.email, ucr.selected_reason, ucr.completed_by
                             FROM
                                 user_callback_request AS ucr
                             LEFT JOIN
@@ -1003,7 +1009,7 @@ def filter_user_requests(param, status):
                                 locations AS l ON ucr.city = l.id
                             WHERE
                                 ucr.type = '{param}' AND u.role = 3 AND ucr.status = '{status}' 
-                                ORDER BY ucr.created_on DESC;
+                                ORDER BY ucr.status ASC ;
                         """
 
             cursor.execute(request_query)

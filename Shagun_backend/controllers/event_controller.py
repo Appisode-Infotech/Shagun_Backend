@@ -17,6 +17,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+from Shagun_backend.controllers.credentials import get_credentials
 from Shagun_backend.util import responsegenerator
 from Shagun_backend.util.constants import *
 from Shagun_backend.util.responsegenerator import responseGenerator
@@ -25,16 +26,6 @@ firebase_cred_path = "firebase_cred/shagun-20c2a-firebase-adminsdk-bef1u-ab9b696
 full_firebase_cred_path = os.path.join(settings.MEDIA_ROOT, firebase_cred_path)
 cred = credentials.Certificate(full_firebase_cred_path)
 firebase_admin.initialize_app(cred)
-
-
-def get_credentials(field):
-    try:
-        json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util/credentials.json')
-        with open(json_file_path, 'r') as file:
-            credentials = json.load(file)
-            return credentials.get(field)
-    except FileNotFoundError:
-        return ""
 
 
 def send_push_notification(device_token, title, message):
@@ -75,26 +66,20 @@ def create_event(event_obj):
 
             for item in event_admins:
                 uid = item["uid"]
-                print(uid)
                 event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                             VALUES ('{uid}', 'event',
                             'Event has been created',
                             ' Event created for {admin[1]} on {event_obj.event_date}')"""
                 cursor.execute(event_created_notification_query)
-                print("notification added")
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
                 cursor.execute(phone_query)
                 user_data = cursor.fetchone()
-                print("user fetched for event")
                 title = f"Event has been created"
                 message = f"Event created for {admin[1]} on {event_obj.event_date}"
                 send_push_notification(user_data[1], title, message)
-                print("push noti sent")
-
-                # Replace this with deep link
-                text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
-                print("text for QR" + text)
+                deep_link = get_credentials()
+                text = deep_link.get("deep_link") + "eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
 
                 logo_path = "static/images/square_logo.jpg"
                 logo = Image.open(logo_path)
@@ -191,87 +176,6 @@ def create_event(event_obj):
         return {"status": False, "message": str(e)}, 301
 
 
-# def create_event(event_obj):
-#     try:
-#         with connection.cursor() as cursor:
-#             sub_events_json = json.dumps([sub_event.__dict__ for sub_event in event_obj.sub_events])
-#             event_admin_json = json.dumps([event_admins.__dict__ for event_admins in event_obj.event_admin])
-#
-#             create_event_query = """INSERT INTO event (created_by_uid, event_type_id, city_id, address_line1,
-#                                         address_line2, event_lat_lng, created_on, sub_events, event_date, event_note,
-#                                         event_admin, is_approved, status, printer_id, delivery_fee, delivery_address)
-#                                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-#
-#             values = (event_obj.created_by_uid, event_obj.event_type_id, event_obj.city_id, event_obj.address_line1,
-#                       event_obj.address_line2, event_obj.event_lat_lng, getIndianTime(), sub_events_json,
-#                       event_obj.event_date, event_obj.event_note, event_admin_json, False, True, event_obj.printer_id,
-#                       event_obj.delivery_fee, event_obj.delivery_address)
-#
-#             cursor.execute(create_event_query, values)
-#             event_id = cursor.lastrowid
-#             event_admin_query = f"""SELECT e.event_admin, et.event_type_name FROM event AS e
-#                                     LEFT JOIN events_type AS et ON e.event_type_id = et.id
-#                                     WHERE  e.id = '{event_id}'"""
-#             cursor.execute(event_admin_query)
-#             admin = cursor.fetchone()
-#             event_admins = json.loads(admin[0])
-#             for item in event_admins:
-#                 uid = item["uid"]
-#                 event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message)
-#                             VALUES ('{uid}', 'event',
-#                             'Event has been created',
-#                             ' Event created for {admin[1]} on {event_obj.event_date}')"""
-#                 cursor.execute(event_created_notification_query)
-#
-#                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
-#                 cursor.execute(phone_query)
-#                 user_data = cursor.fetchone()
-#                 title = f"Event has been created"
-#                 message = f"Event created for {admin[1]} on {event_obj.event_date}"
-#                 send_push_notification(user_data[1], title, message)
-#
-#                 # Replace this with your desired text
-#                 text = "https://shagun-20c2a.web.app/event?eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
-#
-#                 # Generate QR code
-#                 qr = qrcode.QRCode(
-#                     version=1,  # QR code version (controls size)
-#                     error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
-#                     box_size=10,  # Size of each box in pixels
-#                     border=4,  # Border size in boxes
-#                 )
-#
-#                 # Add data to the QR code
-#                 qr.add_data(text)
-#                 qr.make(fit=True)
-#
-#                 # Create an image from the QR code instance with the desired fill color
-#                 fill_color = "#671160"
-#                 img = qr.make_image(fill_color=fill_color, back_color="white")
-#
-#                 # Construct the path to save the image in the media directory
-#                 media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
-#                 os.makedirs(media_dir, exist_ok=True)
-#                 image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
-#
-#                 img.save(image_path)
-#
-#                 # The relative URL to the saved image
-#                 image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
-#                 item["qr_code"] = image_url
-#
-#             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
-#             cursor.execute(update_qr_sql)
-#             return {
-#                 "status": True,
-#                 "message": "Event Created successfully"
-#             }, 200
-#
-#     except pymysql.Error as e:
-#         return {"status": False, "message": str(e)}, 301
-#     except Exception as e:
-#         return {"status": False, "message": str(e)}, 301
-#
 
 def edit_event(event_obj, event_id):
     try:
@@ -448,10 +352,13 @@ def search_event_settlement(search):
 def get_event_by_approval_status(status):
     try:
         with connection.cursor() as cursor:
-            event_list_query = f"""SELECT event.event_date, event.event_admin, events_type.event_type_name, event.id,
-                        event.is_approved, event.status FROM event 
-                        LEFT JOIN events_type ON event.event_type_id = events_type.id 
-                        WHERE event.is_approved LIKE '{status}' ORDER BY event.created_on DESC"""
+            event_list_query = f"""SELECT e.event_date, e.event_admin, et.event_type_name, e.id, 
+                                              e.is_approved, e.status, creator.name, updator.name, e.created_on, e.updated_on  
+                                              FROM event AS e
+                                                LEFT JOIN users AS creator ON e.created_by_uid = creator.uid
+                                                LEFT JOIN users AS updator ON e.updated_by = updator.uid
+                                                LEFT JOIN events_type AS et ON e.event_type_id = et.id 
+                                              WHERE e.is_approved LIKE '{status}' ORDER BY e.id DESC """
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {

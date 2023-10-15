@@ -120,8 +120,14 @@ def printer_search_greetings(search, pid):
 def dashboard_filter_greetings(status):
     try:
         with connection.cursor() as cursor:
-            search_greeting_query = f"""SELECT card_name, card_image_url, card_price, id, status FROM greeting_cards
-             WHERE status= '{status}' ORDER BY created_on DESC"""
+            search_greeting_query = f"""SELECT gc.card_name, gc.card_image_url, gc.card_price, gc.id, gc.status, 
+                                                    p.store_name, creator.name, updator.name, gc.created_on, gc.updated_on 
+                                                    FROM greeting_cards AS gc
+                                                    LEFT JOIN users AS creator ON gc.created_by = creator.uid
+                                                    LEFT JOIN users AS updator ON gc.updated_by = updator.uid
+                                                    LEFT JOIN printer AS p ON gc.printer_id = p.id
+                                                    WHERE gc.status= '{status}' ORDER BY gc.id DESC """
+
             cursor.execute(search_greeting_query)
             greeting_cards = cursor.fetchall()
             return {

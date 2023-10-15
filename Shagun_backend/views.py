@@ -17,6 +17,7 @@ from Shagun_backend import settings
 from Shagun_backend.controllers import user_controller, event_controller, app_data_controller, store_controller, \
     transactions_controller, user_home_page_controller, greeting_cards_controller, admin_controller, \
     request_controller, bank_controller, test_controller, delivery_vendor_controller, reset_password_controller
+from Shagun_backend.controllers.credentials import get_credentials
 from Shagun_backend.models import user_kyc_model, bank_details_model, create_event_model, \
     app_data_model, add_printer_model, transactions_history_model, employee_model, \
     gifts_transaction_model, request_callback_model, greeting_cards_model, add_vendor_model
@@ -64,6 +65,45 @@ def custom_404(request, slug=None):
 
 def admin_dashboard(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        json_data = {
+            "created_by_uid": "admin@shagun.com",
+            "event_type_id": "13",
+            "city_id": "12",
+            "printer_id": "21",
+            "address_line1": "4rd Cross",
+            "address_line2": "#A148",
+            "event_lat_lng": "Latitude: 15.3647083, Longitude: 75.1239547",
+            "sub_events": [
+                {
+                    "sub_event_name": "test",
+                    "start_time": "2023-10-01 23:19:00",
+                    "end_time": "2023-10-01 23:20:00"
+                }
+            ],
+            "event_date": "2023-10-01 23:19:00",
+            "event_note": "test event",
+            "event_admin": [
+                {
+                    "name": "David Willey",
+                    "role": "test1",
+                    "uid": "wjkkjhgfdserty",
+                    "profile": "images/profile_pic/circular_logo.png",
+                    "QR_code": "qr code"
+                },
+                {
+                    "name": "David Willey",
+                    "role": "test1",
+                    "uid": "wjkkjhgfdserty",
+                    "profile": "images/profile_pic/circular_logo.png",
+                    "QR_code": "qr code"
+                }
+            ],
+            "delivery_fee": "900",
+            "delivery_address": "4rd Cross #A148"
+        }
+        event_obj = create_event_model.create_event_model_from_dict(json_data)
+        resp = event_controller.create_event(event_obj)
+        print(resp)
         response, status_code = admin_controller.admin_dashboard(request.session.get('uid'))
         return render(request, 'index.html', response)
     else:
@@ -115,17 +155,6 @@ def app_settings(request):
 
     else:
         return redirect('sign_up')
-
-
-def get_credentials(field):
-    try:
-        json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util/credentials.json')
-        with open(json_file_path, 'r') as file:
-            credentials = json.load(file)
-        return credentials[field]
-    except FileNotFoundError:
-        return redirect('get_credentials')
-
 
 def reset_password(request, email, action_page):
     resp, status_code = reset_password_controller.reset_password(email, action_page)
@@ -362,8 +391,6 @@ def manage_printers(request):
 def manage_delivery_vendors(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = delivery_vendor_controller.get_delivery_vendor()
-        print(response)
-
         return render(request, 'pages/admin_employee/vendors_management/delivery_vendor/delivery_vendor.html',
                       {"response": response['delivery_vendor_data']})
     else:
@@ -626,9 +653,6 @@ def add_events(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             json_data = transform_data_to_json(request.POST)
-            print("---------------------------")
-            print(json_data)
-            print("---------------------------")
             event_obj = create_event_model.create_event_model_from_dict(json_data)
             event_controller.create_event(event_obj)
             return redirect('manage_event')
@@ -637,12 +661,13 @@ def add_events(request):
             location, status_code = event_controller.get_city_list_for_user()
             users_list, status_code = user_controller.get_all_users(1)
             printers_list, status_code = store_controller.get_printers_by_status(1)
+            credentials = get_credentials()
             context = {
                 "event_types": event_types,
                 "location": location,
                 "users": users_list,
                 "printers": printers_list,
-                "map_api_key": get_credentials('map_api_key')
+                "map_api_key": credentials.get('map_api_key')
             }
             return render(request, 'pages/admin_employee/event_management/event/add_events.html', context)
 
@@ -1129,6 +1154,7 @@ def edit_event(request, event_id):
 
 def filtered_events_on_approval_status(request, status):
     response, status_code = event_controller.get_event_by_approval_status(status)
+    print(response)
     return render(request, 'pages/admin_employee/event_management/event/events.html',
                   {'response': response['event_list'], "status": status})
 
@@ -1253,7 +1279,7 @@ def dashboard_search_greetings(request):
 def dashboard_search_greetings_status(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = greeting_cards_controller.dashboard_filter_greetings(status)
-
+        print(response)
         return render(request, 'pages/admin_employee/event_management/greeting_card/greeting_cards.html',
                       {'response': response['all_greeting_cards'], "status": status})
     else:
@@ -1345,7 +1371,6 @@ def printer_home_page(request):
 def printer_manage_greeting_cards(request):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.get_printer_greeting_cards(request.session.get('id'))
-        print(response)
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {"response": response['all_greeting_cards']})
     else:

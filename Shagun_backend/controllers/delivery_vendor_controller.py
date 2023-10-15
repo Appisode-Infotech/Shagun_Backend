@@ -67,8 +67,13 @@ def dashboard_search_delivery_vendor_status(status):
     try:
         with connection.cursor() as cursor:
             delivery_vendor_status_query = f""" SELECT p.id, p.delivery_vendor_name, l.city_name, p.address, p.status, p.gst_no, 
-            p.delivery_vendor_owner, p.contact_number FROM delivery_vendors AS p
-            LEFT JOIN locations AS l ON p.city = l.id WHERE p.status = '{status}' ORDER BY p.id DESC"""
+                        p.delivery_vendor_owner, p.contact_number, creator.name, updator.name, p.created_on, p.updated_on 
+                        FROM delivery_vendors AS p
+                        LEFT JOIN users AS creator ON p.created_by = creator.uid
+                        LEFT JOIN users AS updator ON p.updated_by = updator.uid
+                        LEFT JOIN locations AS l ON p.city = l.id
+                        WHERE p.status = '{status}' ORDER BY p.id DESC """
+
             cursor.execute(delivery_vendor_status_query)
             delivery_vendor_data = cursor.fetchall()
             return {

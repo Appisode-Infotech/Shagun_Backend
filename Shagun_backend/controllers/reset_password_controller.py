@@ -10,6 +10,7 @@ import json
 import os
 from django.http import JsonResponse
 
+from Shagun_backend.controllers.credentials import get_credentials
 
 
 def generate_random_string(length=8):
@@ -17,16 +18,6 @@ def generate_random_string(length=8):
     random_pwd = ''.join(random.choice(characters) for _ in range(length))
 
     return random_pwd
-
-
-def get_credentials(field):
-    try:
-        json_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util/credentials.json')
-        with open(json_file_path, 'r') as file:
-            credentials = json.load(file)
-        return credentials[field]
-    except FileNotFoundError:
-        get_credentials(field)
 
 
 def reset_password(email, user):
@@ -42,15 +33,16 @@ def reset_password(email, user):
                 if result is not None and result[1] == 1:
                     sql_query = f"""UPDATE printer SET printer_password	 = '{hashed_password}' WHERE email = '{email}' """
                     cursor.execute(sql_query)
-                    url = get_credentials('emailjs_url')
+                    credentials = get_credentials()
+                    url = credentials.get('emailjs_url')
                     data = {
-                        'service_id': get_credentials('emailjs_service_id'),
-                        'template_id': get_credentials('template_ycnjmqh'),
-                        'user_id': get_credentials('emailjs_user_id'),
+                        'service_id': credentials.get('emailjs_service_id'),
+                        'template_id': credentials.get('template_ycnjmqh'),
+                        'user_id': credentials.get('emailjs_user_id'),
                         'template_params': {
                             'to_email': email,
                             'new_password': new_pwd,
-                            'g-recaptcha-response': get_credentials('emailjs_grecaptcha_response')
+                            'g-recaptcha-response': credentials.get('emailjs_grecaptcha_response')
                         }
                     }
 
@@ -82,15 +74,16 @@ def reset_password(email, user):
                 if result is not None and result[1] == 1:
                     sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """
                     cursor.execute(sql_query)
-                    url = get_credentials('emailjs_url')
+                    credentials = get_credentials()
+                    url = credentials.get('emailjs_url')
                     data = {
-                        'service_id': get_credentials('emailjs_service_id'),
-                        'template_id': get_credentials('template_ycnjmqh'),
-                        'user_id': get_credentials('emailjs_user_id'),
+                        'service_id': credentials.get('emailjs_service_id'),
+                        'template_id': credentials.get('template_ycnjmqh'),
+                        'user_id': credentials.get('emailjs_user_id'),
                         'template_params': {
                             'to_email': email,
                             'new_password': new_pwd,
-                            'g-recaptcha-response': get_credentials('emailjs_grecaptcha_response')
+                            'g-recaptcha-response': credentials.get('emailjs_grecaptcha_response')
                         }
                     }
 

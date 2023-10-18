@@ -122,7 +122,9 @@ def reset_password(request, email, action_page):
 
 
 def reset_my_password(request, email, action_page):
+    print("reset my pwd")
     resp, status_code = reset_password_controller.reset_password(email, action_page)
+    print(resp)
     return JsonResponse(resp)
 
 

@@ -130,6 +130,11 @@
         {% include 'nav_bar.html' %}
         <!-- partial -->
         <div class="main-panel">
+            <div id="customAlertOverlay" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                         You cannot Reset Password for Inactive User
+                    </div>
+                </div>
             <div class="content-wrapper">
                 <div id="customAlertOverlay3" class="custom-alert-overlay">
                     <div class="custom-alert">
@@ -310,12 +315,21 @@
                                             </td>
                                             {% endif %}
                                             <td>
+                                                {% if user.status == 1 %}
                                                 <button class="btn btn-outline-info btn-fw"
                                                         data-emp-email="{{ user.email }}"
                                                         data-action_page="manage_employee"
                                                         onclick="showCustomAlertForResetPassword(this.getAttribute('data-emp-email'), this.getAttribute('data-action_page'))">
                                                     Reset Password
                                                 </button>
+                                                {% else %}
+                                                <button class="btn btn-outline-info btn-fw"
+                                                        data-emp-email="{{ user.email }}"
+                                                        data-action_page="manage_employee"
+                                                        onclick="showCustomAlertResetPwd()">
+                                                    Reset Password
+                                                </button>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -342,6 +356,16 @@
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<script>
+    function showCustomAlertResetPwd() {
+      var customAlertOverlay = document.getElementById("customAlertOverlay");
+      customAlertOverlay.style.display = "flex";
+
+      setTimeout(function() {
+        customAlertOverlay.style.display = "none";
+      }, 1000);
+    }
+</script>
 <script>
     function showCustomAlertForActivateInactive(employeeId, action) {
         console.log(employeeId);

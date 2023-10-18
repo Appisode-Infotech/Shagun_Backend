@@ -113,6 +113,7 @@
         }
 
 
+
     </style>
 </head>
 
@@ -129,6 +130,11 @@
         {% include 'nav_bar.html' %}
         <!-- partial -->
         <div class="main-panel">
+            <div id="customAlertOverlay" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        You cannot Reset Password for Inactive User
+                    </div>
+                </div>
             <div class="content-wrapper">
 
                 <div id="customAlertOverlay4" class="custom-alert-overlay">
@@ -154,11 +160,11 @@
                                 <div class="header-container">
                                     <h4 class="card-title">Printing Vendor List</h4>
                                     <div class="form-group">
-                                            <div class="input-group">
-                                                <input name="search" id="search" type="text" class="form-control"
-                                                       placeholder="Search" value="{{search}}"
-                                                       aria-label="Recipient's username">
-                                            </div>
+                                        <div class="input-group">
+                                            <input name="search" id="search" type="text" class="form-control"
+                                                   placeholder="Search" value="{{search}}"
+                                                   aria-label="Recipient's username">
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="mr-2 custom-label"><b> Printer Filter: </b
@@ -193,7 +199,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="myTable"  class="table table-hover">
+                                    <table id="myTable" class="table table-hover">
                                         <thead>
                                         <tr>
                                             <th>
@@ -236,14 +242,14 @@
                                         {% for printer in response %}
                                         <tr>
                                             {% with sl_no=forloop.counter %}
-                                                    <td>{{sl_no}}</td>
-                                                    {% endwith %}
+                                            <td>{{sl_no}}</td>
+                                            {% endwith %}
                                             <td>
                                                 {{printer.store_owner}}
                                             </td>
                                             <td>
                                                 {{printer.contact_number}}
-                                              </td>
+                                            </td>
                                             <td>
                                                 <b>Store Name: </b>{{printer.store_name}}</br></br>
                                                 <b>Store GST: </b><span class="masked-number">{{printer.gst_no}}</span>
@@ -293,12 +299,20 @@
                                                 </button>
                                             </td>
                                             <td>
+                                                {% if printer.status == 1 %}
                                                 <button class="btn btn-outline-info btn-fw"
                                                         data-printer-email="{{ printer.email }}"
                                                         data-action_page="manage_printers"
                                                         onclick="showCustomAlertForResetPassword(this.getAttribute('data-printer-email'), this.getAttribute('data-action_page'))">
                                                     Reset Password
                                                 </button>
+                                                {% else %}
+                                                <button class="btn btn-outline-info btn-fw"
+                                                        data-printer-email="{{ printer.email }}"
+                                                        data-action_page="manage_printers"
+                                                        onclick="showCustomAlertResetPwd()"> Reset Password
+                                                    </button>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                         </tr>
@@ -328,6 +342,17 @@
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+
+<script>
+    function showCustomAlertResetPwd() {
+      var customAlertOverlay = document.getElementById("customAlertOverlay");
+      customAlertOverlay.style.display = "flex";
+
+      setTimeout(function() {
+        customAlertOverlay.style.display = "none";
+      }, 1000);
+    }
+</script>
 <script>    
     function showCustomAlertForResetPassword(printerEmail, action_page) {
         window.printerEmail = printerEmail;
@@ -353,6 +378,7 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay4");
         customAlertOverlay.style.display = "none";
     }
+
 
 </script>
 <!-- endinject -->
@@ -381,6 +407,7 @@
             }
         });
     });
+
 </script>
 
 </html>

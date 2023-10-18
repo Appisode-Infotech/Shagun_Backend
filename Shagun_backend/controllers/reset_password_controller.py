@@ -25,11 +25,12 @@ def reset_password(email, user):
         with connection.cursor() as cursor:
             new_pwd = generate_random_string()
             hashed_password = bcrypt.hashpw(new_pwd.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-            if user == 'printer_login':
+            if user == 'printer_login' or user == 'manage_printers':
                 printer_check_query = f"""SELECT id, status FROM printer 
                                                     WHERE email = '{email}' """
                 cursor.execute(printer_check_query)
                 result = cursor.fetchone()
+                print(result)
                 if result is not None and result[1] == 1:
                     credentials = get_credentials()
                     url = credentials.get('emailjs_url')
@@ -48,7 +49,7 @@ def reset_password(email, user):
 
                     email_response = requests.post(url, data=json.dumps(data), headers=headers)
                     if email_response.status_code == 200:
-                        sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """
+                        sql_query = f"""UPDATE printer SET printer_password = '{hashed_password}' WHERE email = '{email}' """
                         cursor.execute(sql_query)
                     else:
                         return {

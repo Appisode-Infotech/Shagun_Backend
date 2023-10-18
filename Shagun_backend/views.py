@@ -122,9 +122,7 @@ def reset_password(request, email, action_page):
 
 
 def reset_my_password(request, email, action_page):
-    print("reset my pwd")
     resp, status_code = reset_password_controller.reset_password(email, action_page)
-    print(resp)
     return JsonResponse(resp)
 
 
@@ -372,6 +370,7 @@ def edit_delivery_vendors(request, vid):
 def printer_login(request):
     if request.method == 'POST':
         response = store_controller.printer_login(request.POST['printer_user_name'], request.POST['printer_password'])
+        print(response)
         if response['msg'] == 'Success':
             request.session['is_printer_logged_in'] = True
             request.session['id'] = response['id']

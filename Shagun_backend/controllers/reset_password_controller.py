@@ -30,7 +30,6 @@ def reset_password(email, user):
                                                     WHERE email = '{email}' """
                 cursor.execute(printer_check_query)
                 result = cursor.fetchone()
-                print(result)
                 if result is not None and result[1] == 1:
                     credentials = get_credentials()
                     url = credentials.get('emailjs_url')

@@ -31,8 +31,6 @@ def reset_password(email, user):
                 cursor.execute(printer_check_query)
                 result = cursor.fetchone()
                 if result is not None and result[1] == 1:
-                    sql_query = f"""UPDATE printer SET printer_password	 = '{hashed_password}' WHERE email = '{email}' """
-                    cursor.execute(sql_query)
                     credentials = get_credentials()
                     url = credentials.get('emailjs_url')
                     data = {
@@ -48,7 +46,15 @@ def reset_password(email, user):
 
                     headers = {'Content-Type': 'application/json'}
 
-                    response = requests.post(url, data=json.dumps(data), headers=headers)
+                    email_response = requests.post(url, data=json.dumps(data), headers=headers)
+                    if email_response.status_code == 200:
+                        sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """
+                        cursor.execute(sql_query)
+                    else:
+                        return {
+                            "status": False,
+                            "message": "Failed to send the new password. Please try again or contact your admin if you are facing the issue continiously"
+                        }, 200
 
                     return {
                         "status": True,
@@ -67,18 +73,15 @@ def reset_password(email, user):
                     }, 200
 
             else:
-                user_check_query = f"""SELECT id, status FROM users 
-                                                                    WHERE email = '{email}' """
+                user_check_query = f"""SELECT id, status FROM users WHERE email = '{email}' """
                 cursor.execute(user_check_query)
                 result = cursor.fetchone()
                 if result is not None and result[1] == 1:
-                    sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """
-                    cursor.execute(sql_query)
                     credentials = get_credentials()
                     url = credentials.get('emailjs_url')
                     data = {
                         'service_id': credentials.get('emailjs_service_id'),
-                        'template_id': credentials.get('template_ycnjmqh'),
+                        'template_id': credentials.get('emailjs_template_id'),
                         'user_id': credentials.get('emailjs_user_id'),
                         'template_params': {
                             'to_email': email,
@@ -89,7 +92,15 @@ def reset_password(email, user):
 
                     headers = {'Content-Type': 'application/json'}
 
-                    response = requests.post(url, data=json.dumps(data), headers=headers)
+                    email_response = requests.post(url, data=json.dumps(data), headers=headers)
+                    if email_response.status_code == 200:
+                        sql_query = f"""UPDATE users SET password = '{hashed_password}' WHERE email = '{email}' """
+                        cursor.execute(sql_query)
+                    else:
+                        return {
+                            "status": False,
+                            "message": "Failed to send the new password. Please try again or contact your admin if you are facing the issue continiously"
+                        }, 200
 
                     return {
                         "status": True,

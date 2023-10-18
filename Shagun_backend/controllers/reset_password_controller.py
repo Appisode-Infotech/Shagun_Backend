@@ -35,7 +35,7 @@ def reset_password(email, user):
                     url = credentials.get('emailjs_url')
                     data = {
                         'service_id': credentials.get('emailjs_service_id'),
-                        'template_id': credentials.get('template_ycnjmqh'),
+                        'template_id': credentials.get('emailjs_template_id'),
                         'user_id': credentials.get('emailjs_user_id'),
                         'template_params': {
                             'to_email': email,

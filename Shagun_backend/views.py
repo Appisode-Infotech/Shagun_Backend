@@ -1081,14 +1081,14 @@ def edit_event(request, event_id):
             users_list, status_code = user_controller.get_all_users(1)
             printers_list, status_code = store_controller.get_printers_by_status(1)
             event_data, status_code = event_controller.get_event_by_id(event_id)
-
+            cred = get_credentials()
             context = {
                 "event_types": event_types,
                 "location": location,
                 "users": users_list,
                 "printers": printers_list,
                 "event": event_data,
-                "map_api_key": get_credentials('map_api_key')
+                "map_api_key": cred.get('map_api_key')
             }
             return render(request, 'pages/admin_employee/event_management/event/edit_event.html', context)
 

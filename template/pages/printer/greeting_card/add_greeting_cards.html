@@ -163,6 +163,7 @@
                                     </button>
                                     <label class="ml-2 custom-label"> Add Greeting Card </label>
                                 </div>
+
                                 <form class="form-sample needs-validation" action="/printer_add_greeting_cards"
                                       method="post"
                                       enctype="multipart/form-data" id="myForm" novalidate>
@@ -232,10 +233,10 @@
                                                          alt="Uploaded Image">
                                                     <input accept=".jpg, .jpeg, .png" type="file"
                                                            name="greeting_card" id="card_image_url"
-                                                           class="file-upload-default">
+                                                           class="file-upload-default" required>
                                                     <div class="input-group col-xs-12">
                                                         <input type="text" class="form-control file-upload-info"
-                                                               readonly
+                                                               disabled
                                                                placeholder="Upload Image" id="img">
                                                         <span class="input-group-append">
                                                   <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
@@ -249,7 +250,7 @@
 
                                     </div>
                                     <div class="center-button">
-                                        <input required type="submit" value="Submit" class="btn btn-primary mt-2">
+                                        <input  type="submit" value="Submit" class="btn btn-primary mt-2">
                                     </div>
                                 </form>
                             </div>

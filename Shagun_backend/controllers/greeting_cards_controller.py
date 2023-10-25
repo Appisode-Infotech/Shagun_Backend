@@ -2,7 +2,8 @@ import pymysql
 from django.db import connection
 
 from Shagun_backend.util import responsegenerator
-from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes, GETGREETING_CARDS, getIndianTime
+from Shagun_backend.util.constants import GREETING_CARDS, GREETING_CARDS_BY_ID, wishes, GETGREETING_CARDS, \
+    getIndianTime, PRINTER_GREETING_CARDS
 from Shagun_backend.util.responsegenerator import responseGenerator
 
 def get_greeting_cards(event_id):
@@ -150,7 +151,7 @@ def printer_filter_greeting_cards(status, pid):
             return {
                 "status": True,
                 "all_greeting_cards": responsegenerator.responseGenerator.generateResponse(greeting_cards,
-                                                                                           GREETING_CARDS)
+                                                                                           PRINTER_GREETING_CARDS)
             }, 200
 
     except pymysql.Error as e:

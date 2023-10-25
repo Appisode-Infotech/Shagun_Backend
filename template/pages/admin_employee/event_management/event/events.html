@@ -103,6 +103,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -279,12 +280,13 @@
                                                         <b>Updated By: </b>{{event.updator}} <b><br/>on: </b>{{event.updated_on}}
                                                     </td>
                                                     <td>
-                                                    {% if event.status == 0 %}
+                                                        {% if event.status == 0 %}
                                                         <div class="dropdown">
-                                                        <button type="button"
+                                                            <button type="button"
                                                                     class="btn btn-outline-info dropdown-toggle"
                                                                     id="dropdownMenuIconButton" data-toggle="dropdown"
-                                                                    aria-haspopup="true" onclick="showCustomAlertForApprovalstatus()"
+                                                                    aria-haspopup="true"
+                                                                    onclick="showCustomAlertForApprovalstatus()"
                                                                     aria-expanded="false">
                                                                 {% if event.is_approved == 0 %}
                                                                 Pending
@@ -405,7 +407,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="pagination justify-content-center col-12" id="paginationControls"></div>
+                <div class="pagination-container col-12" align="center">
+                    <div class="entries-info" id="entriesInfo"></div>
+                    <div class="pagination-controls" id="paginationControls"></div>
+                </div>
             </div>
             <!-- content-wrapper ends -->
             <!-- partial:partials/_footer.html -->
@@ -459,6 +464,7 @@
 
 
 
+
 </script>
 
 <script>
@@ -498,6 +504,7 @@
 
 
 
+
 </script>
 
 
@@ -507,6 +514,7 @@
         var selectedValue = dropdown.value;
         window.location.href = selectedValue;
     });
+
 
 
 
@@ -564,6 +572,7 @@ function showCustomAlertForActivate() {
     customAlertOverlay.style.display = "none";
   }, 1000);
 }
+
 
 
 

@@ -30591,6 +30591,11 @@ div.tagsinput span.tag a {
     display: none;
   }
 }
+ .page.active {
+            background-color: #007BFF;
+            color: #fff;
+ }
+
 
 .custom-label {
             font-size: 1.5rem; /* Adjust the font size as needed */

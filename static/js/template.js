@@ -112,14 +112,13 @@
   });
 
 
- $(document).ready(function() {
+  $(document).ready(function() {
     var table = $('#myTable');
     var rowsPerPage = 10;
     var currentPage = 1;
     var totalRows = table.find('tbody tr:not(.no-data-found)').length;
-    var totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage)); // Ensure at least 1 page
+    var totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
 
-    // Function to show/hide rows based on the current page
     function showPage(page) {
         table.find('tbody tr').hide();
         var startIndex = (page - 1) * rowsPerPage;
@@ -127,64 +126,59 @@
         table.find('tbody tr').slice(startIndex, endIndex).show();
     }
 
-    // Initialize the table by showing the first page
-    showPage(currentPage);
-
-    // Function to update the pagination controls with page numbers
     function updatePagination() {
         var paginationControls = $('#paginationControls');
         paginationControls.empty();
+        var maxPageLinks = 5;
+        var startPage = Math.max(1, currentPage - Math.floor(maxPageLinks / 2));
+        var endPage = Math.min(totalPages, startPage + maxPageLinks - 1);
 
-        // Show the "Showing X out of Y entries" text or "No entries to display" if there are no rows
-        var entriesText = totalRows > 0
-            ? 'Showing ' + (currentPage - 1) * rowsPerPage + 1 + ' to ' + Math.min(currentPage * rowsPerPage, totalRows) + ' of ' + totalRows + ' entries'
-            : 'No entries to display';
-        paginationControls.append('<div id="entriesInfo">' + entriesText + '</div');
-
-        // Previous button
-        if (currentPage > 1) {
-            paginationControls.append('<button id="prevPage">Previous</button>');
-        }
-
-        // Page numbers
-        for (var i = 1; i <= totalPages; i++) {
-            var pageButton = $('<button class="page">' + i + '</button>');
-            if (i === currentPage) {
-                pageButton.addClass('active');
+        if (totalRows > 0) {
+            if (currentPage > 1) {
+                paginationControls.append('<button id="firstPage">First</button>');
+                paginationControls.append('<button id="prevPage">Previous</button>');
             }
-            paginationControls.append(pageButton);
+            for (var i = startPage; i <= endPage; i++) {
+                var pageButton = $('<button class="page">' + i + '</button>');
+                if (i === currentPage) {
+                    pageButton.addClass('active');
+                }
+                paginationControls.append(pageButton);
+            }
+            if (currentPage < totalPages) {
+                paginationControls.append('<button id="nextPage">Next</button>');
+                paginationControls.append('<button id="lastPage">Last</button>');
+            }
         }
 
-        // Next button
-        if (currentPage < totalPages) {
-            paginationControls.append('<button id="nextPage">Next</button>');
-        }
+        // Calculate and update entries text here
+        var startEntry = (currentPage - 1) * rowsPerPage + 1;
+        var endEntry = Math.min(currentPage * rowsPerPage, totalRows);
+        var entriesText = totalRows > 0
+            ? 'Showing ' + startEntry + ' to ' + endEntry + ' of ' + totalRows + ' entries'
+            : '';
+        paginationControls.append('<div id="entriesInfo">' + entriesText + '</div');
     }
 
-    // Update pagination on page load
+    showPage(currentPage);
     updatePagination();
 
-    // Function to handle search
-    function handleSearch() {
-        var searchText = $('#search').val().toLowerCase()
-        if (searchText === "") {
-            showPage(1);
-            updatePagination();
-        } else {
-            $("table tbody tr").each(function() {
-                var rowText = $(this).text().toLowerCase();
-                var isVisible = rowText.includes(searchText);
-                $(this).toggle(isVisible);
-            });
-        }
-    }
-
-    // Handle search input
     $('#search').on('keyup', function() {
         handleSearch();
     });
 
-    // Handle Next and Previous buttons
+    $('#paginationControls').on('click', '#firstPage', function() {
+        currentPage = 1;
+        showPage(currentPage);
+        updatePagination();
+    });
+
+    $('#paginationControls').on('click', '#lastPage', function() {
+        currentPage = totalPages;
+        showPage(currentPage);
+        updatePagination();
+    });
+
     $('#paginationControls').on('click', '#nextPage', function() {
         if (currentPage < totalPages) {
             currentPage++;
@@ -201,7 +195,6 @@
         }
     });
 
-    // Handle page number clicks
     $('#paginationControls').on('click', '.page', function() {
         var newPage = parseInt($(this).text());
         if (newPage !== currentPage) {
@@ -210,7 +203,24 @@
             updatePagination();
         }
     });
+
+    function handleSearch() {
+        var searchText = $('#search').val().toLowerCase();
+        if (searchText === "") {
+            showPage(1);
+            updatePagination();
+        } else {
+            $("table tbody tr").each(function() {
+                var rowText = $(this).text().toLowerCase();
+                var isVisible = rowText.includes(searchText);
+                $(this).toggle(isVisible);
+            });
+            currentPage = 1; // Reset to page 1 after a search
+            updatePagination();
+        }
+    }
 });
+
 
 
   // focus input when clicking on search icon

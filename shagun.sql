@@ -1221,7 +1221,7 @@ INSERT INTO `printer` (`id`, `store_name`, `city`, `address`, `email`, `status`,
 (19, 'a', 11, '#A-148 3rd Cross 1st stage Peenya Industrial Estate Bangalore-58', 'sangeethathapa82@gmail', 1, 'qsljuytr678uytf', 'Ganesh', '0888421654', 'admintest@gmail.c', 'adminA@123', NULL, NULL, NULL, NULL),
 (21, 'teststore', 11, 'mysore, karnataka', 'teststore@gmail.com', 1, 'GSTIN098975644x', 'Vijay Kumar', '9090890989', 'teststore@gmail.com', '$2b$12$/5hmq6QBIMsmBuoULJej1.PM.hFA5C7C3FxCCcxLR1PF2LYTHBnua', NULL, NULL, NULL, NULL),
 (22, 'siddideshwar printers', 12, '4rd Cross', 'rooprajt@gmail.com', 1, 'GSTIN0989756445', 'Roop Raj', '9738505213', 'rooprajt@gmail.com', '$2b$12$SbOQDp8ZtL1ZkBlRtjgItOORzMVhL6QO8j5Swq9TxBWNqxSh0VSDq', NULL, NULL, 'nkbhandari95@gmail.com', NULL),
-(24, 'test created by', 12, '4rd Cross', 'testcreatedby@gmail.com', 1, 'GSTIN0989756442', 'test created by', '9087656789', 'testcreatedby@gmail.com', '$2b$12$e5aACJ6wDkwD71xw20t0Iu4FNtCpupJw9Zjz.FS1ViNx1ZCuB12g2', NULL, NULL, 'nkbhandari95@gmail.com', '2023-10-08 16:09:53');
+(24, 'test Created By', 12, '4rd Cross', 'testcreatedby@gmail.com', 1, 'GSTIN0989756442', 'test Created By', '9087656789', 'testcreatedby@gmail.com', '$2b$12$e5aACJ6wDkwD71xw20t0Iu4FNtCpupJw9Zjz.FS1ViNx1ZCuB12g2', NULL, NULL, 'nkbhandari95@gmail.com', '2023-10-08 16:09:53');
 
 -- --------------------------------------------------------
 

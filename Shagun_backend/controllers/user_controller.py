@@ -557,10 +557,11 @@ def add_admin(emp_obj):
     try:
         with connection.cursor() as cursor:
             add_emp_query = """INSERT INTO users (uid, name, email, phone, created_on, status, role, city, password, 
-                                profile_pic, created_by, updated_by) 
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                profile_pic, created_by, updated_by, updated_on) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (emp_obj.email, emp_obj.name, emp_obj.email, emp_obj.phone, getIndianTime(), True, 1,
-                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png', emp_obj.created_by, emp_obj.updated_by)
+                      emp_obj.city, hashed_password, 'images/profile_pic/profile.png', emp_obj.created_by,
+                      emp_obj.updated_by, getIndianTime())
             cursor.execute(add_emp_query, values)
             return {
                 "status": True,

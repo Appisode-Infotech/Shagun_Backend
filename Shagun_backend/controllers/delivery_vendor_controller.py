@@ -156,10 +156,10 @@ def update_vendor(vendor_obj):
                         city = '{vendor_obj.city}', address = '{vendor_obj.address}', gst_no = '{vendor_obj.gst_no}', 
                         delivery_vendor_owner = '{vendor_obj.delivery_vendor_owner}', 
                         contact_number = '{vendor_obj.contact_number}', updated_by = '{vendor_obj.updated_by}',
-                        updated_on = '{getIndianTime()}'
+                        updated_on = %s
                          WHERE id = '{vendor_obj.id}' 
                         """
-            cursor.execute(update_vendor_query)
+            cursor.execute(update_vendor_query, (getIndianTime(),))
             return {
                 "status": True,
                 "Vendor": "Vendor updated successfully"

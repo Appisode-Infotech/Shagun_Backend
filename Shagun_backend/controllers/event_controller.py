@@ -475,8 +475,8 @@ def edit_events_type(lid, event_type_name, updated_by):
     try:
         with connection.cursor() as cursor:
             edit_query = f"""UPDATE events_type SET event_type_name = '{event_type_name}' , updated_by = '{updated_by}', 
-                            updated_on = '{getIndianTime()}' where id= '{lid}'"""
-            cursor.execute(edit_query)
+                            updated_on = %s where id= '{lid}'"""
+            cursor.execute(edit_query, (getIndianTime(),))
             return {
                        "status": True,
                        "message": "Events Type edited successfully"

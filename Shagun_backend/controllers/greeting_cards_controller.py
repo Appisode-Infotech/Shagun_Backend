@@ -198,9 +198,9 @@ def edit_greeting_cards(grt_obj):
     try:
         with connection.cursor() as cursor:
             edit_cards_query = f"""UPDATE greeting_cards SET card_name = '{grt_obj.card_name}', 
-            card_price = '{grt_obj.card_price}', updated_by = '{grt_obj.updated_by}', updated_on = '{getIndianTime()}' 
+            card_price = '{grt_obj.card_price}', updated_by = '{grt_obj.updated_by}', updated_on = %s 
             WHERE id = '{grt_obj.id}' """
-            cursor.execute(edit_cards_query)
+            cursor.execute(edit_cards_query, (getIndianTime(),))
             return {
                 "status": True,
                 "msg": "Greeting card updated successfully"

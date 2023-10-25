@@ -1081,14 +1081,14 @@ def edit_event(request, event_id):
             users_list, status_code = user_controller.get_all_users(1)
             printers_list, status_code = store_controller.get_printers_by_status(1)
             event_data, status_code = event_controller.get_event_by_id(event_id)
-            cred = get_credentials()
+            credentials = get_credentials()
             context = {
                 "event_types": event_types,
                 "location": location,
                 "users": users_list,
                 "printers": printers_list,
                 "event": event_data,
-                "map_api_key": cred.get('map_api_key')
+                "map_api_key": credentials.get('map_api_key')
             }
             return render(request, 'pages/admin_employee/event_management/event/edit_event.html', context)
 
@@ -1420,6 +1420,7 @@ def printer_filter_greetings_cards(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.printer_filter_greeting_cards(status,
                                                                                         request.session.get('id'))
+        print(response)
 
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {'response': response['all_greeting_cards'], "status": status})

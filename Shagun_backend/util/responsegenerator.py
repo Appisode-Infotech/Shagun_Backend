@@ -567,7 +567,8 @@ class responseGenerator:
                 "created_by": data[9],
                 "created_on": data[10],
                 "city_name": data[13],
-                "updator": data[14]
+                "creator": data[14],
+                "updator": data[15]
             }
 
         if controller_type == ALL_JOBS:

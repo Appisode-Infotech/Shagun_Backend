@@ -239,7 +239,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Created By</label>
                                                 <div class="col-sm-9">
-                                                    <label class="form-control">{{ request.session.name }}</label>
+                                                    <label class="form-control">{{ response.creator }}</label>
                                                     <input type="hidden" id="created_by" name="created_by"
                                                            value="{{ response.created_by }}">
                                                 </div>
@@ -247,13 +247,13 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Updated By </label>
+                                                <label class="col-sm-3 col-form-label">Updated By : {{ response.session.uid }}</label>
                                                 <div class="col-sm-9">
                                                     <input disabled readonly class="form-control"
                                                            value="{{ response.updator }} ">
-                                                    <input type="hidden" id="updated_by"
+                                                    <input required type="hidden" id="updated_by"
                                                            name="updated_by"
-                                                           value="{{ response.session.uid }}">
+                                                           value="{{ request.session.uid }}">
                                                 </div>
                                             </div>
                                         </div>

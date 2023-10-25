@@ -112,12 +112,12 @@
   });
 
 
-  $(document).ready(function() {
+ $(document).ready(function() {
     var table = $('#myTable');
     var rowsPerPage = 10;
     var currentPage = 1;
-    var totalRows = table.find('tbody tr').length;
-    var totalPages = Math.ceil(totalRows / rowsPerPage);
+    var totalRows = table.find('tbody tr:not(.no-data-found)').length;
+    var totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage)); // Ensure at least 1 page
 
     // Function to show/hide rows based on the current page
     function showPage(page) {
@@ -134,6 +134,12 @@
     function updatePagination() {
         var paginationControls = $('#paginationControls');
         paginationControls.empty();
+
+        // Show the "Showing X out of Y entries" text or "No entries to display" if there are no rows
+        var entriesText = totalRows > 0
+            ? 'Showing ' + (currentPage - 1) * rowsPerPage + 1 + ' to ' + Math.min(currentPage * rowsPerPage, totalRows) + ' of ' + totalRows + ' entries'
+            : 'No entries to display';
+        paginationControls.append('<div id="entriesInfo">' + entriesText + '</div');
 
         // Previous button
         if (currentPage > 1) {
@@ -161,11 +167,11 @@
     // Function to handle search
     function handleSearch() {
         var searchText = $('#search').val().toLowerCase()
-        if(searchText===""){
+        if (searchText === "") {
             showPage(1);
             updatePagination();
-        }else{
-              $("table tbody tr").each(function() {
+        } else {
+            $("table tbody tr").each(function() {
                 var rowText = $(this).text().toLowerCase();
                 var isVisible = rowText.includes(searchText);
                 $(this).toggle(isVisible);
@@ -205,6 +211,7 @@
         }
     });
 });
+
 
   // focus input when clicking on search icon
   $('#navbar-search-icon').click(function() {

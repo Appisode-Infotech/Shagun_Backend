@@ -116,6 +116,7 @@ def app_settings(request):
     else:
         return redirect('sign_up')
 
+
 def reset_password(request, email, action_page):
     resp, status_code = reset_password_controller.reset_password(email, action_page)
     return redirect(action_page)
@@ -191,10 +192,28 @@ def manage_event_types(request):
         return redirect('sign_up')
 
 
+def filter_event_types(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.filter_event_type_list_for_admin(status)
+        return render(request, 'pages/admin_employee/event_management/event_type/event_type.html',
+                      {"response": response['events_type'], "status": status})
+    else:
+        return redirect('sign_up')
+
+
 def manage_location(request):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = event_controller.get_locations_list()
         return render(request, 'pages/admin_employee/event_management/location/location.html', response)
+    else:
+        return redirect('sign_up')
+
+
+def filter_location(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = event_controller.filter_locations_list(status)
+        return render(request, 'pages/admin_employee/event_management/location/location.html',
+                      {"locations": response['locations'], "status": status})
     else:
         return redirect('sign_up')
 
@@ -326,6 +345,15 @@ def manage_admin(request):
         response, status_code = user_controller.get_all_admins()
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
                       {"response": response['user_data'], "role": 1})
+    else:
+        return redirect('sign_up')
+
+
+def filter_admin(request, status):
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        response, status_code = user_controller.filter_all_admins(status)
+        return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
+                      {"response": response['user_data'], "role": 1, "status":status})
     else:
         return redirect('sign_up')
 
@@ -1420,8 +1448,6 @@ def printer_filter_greetings_cards(request, status):
     if request.session.get('is_printer_logged_in') is not None and request.session.get('is_printer_logged_in') is True:
         response, status_code = greeting_cards_controller.printer_filter_greeting_cards(status,
                                                                                         request.session.get('id'))
-        print(response)
-
         return render(request, 'pages/printer/greeting_card/greeting_cards.html',
                       {'response': response['all_greeting_cards'], "status": status})
     else:

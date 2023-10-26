@@ -163,15 +163,14 @@ def create_event(event_obj):
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)
             return {
-                       "status": True,
-                       "message": "Event Created successfully"
-                   }, 200
+                "status": True,
+                "message": "Event Created successfully"
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
 
 
 def edit_event(event_obj, event_id):
@@ -228,9 +227,9 @@ def edit_event(event_obj, event_id):
                 send_push_notification(user_data[1], title, message)
 
             return {
-                       "status": True,
-                       "message": "Event Updated successfully"
-                   }, 200
+                "status": True,
+                "message": "Event Updated successfully"
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -245,9 +244,9 @@ def enable_disable_event(e_id, et_status, updated_by):
             values = (et_status, updated_by, e_id)
             cursor.execute(disable_event_query, values)
             return {
-                       "status": True,
-                       "message": "Event Status changed successfully"
-                   }, 200
+                "status": True,
+                "message": "Event Status changed successfully"
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -271,14 +270,14 @@ def get_event_by_id(et_id):
             event_data = cursor.fetchone()
             if event_data is not None:
                 return {
-                           "status": True,
-                           "event_data": responsegenerator.responseGenerator.generateResponse(event_data, EVENT_BY_ID)
-                       }, 200
+                    "status": True,
+                    "event_data": responsegenerator.responseGenerator.generateResponse(event_data, EVENT_BY_ID)
+                }, 200
             else:
                 return {
-                           "status": False,
-                           "event": None
-                       }, 301
+                    "status": False,
+                    "event": None
+                }, 301
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -304,10 +303,10 @@ def event_settlement(status):
             cursor.execute(event_settlement_query)
             amount = cursor.fetchall()
             return {
-                       "status": True,
-                       # "msg": amount
-                       "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
-                   }, 200
+                "status": True,
+                # "msg": amount
+                "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -336,9 +335,9 @@ def search_event_settlement(search):
             cursor.execute(event_settlement_query)
             amount = cursor.fetchall()
             return {
-                       "status": True,
-                       "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
-                   }, 200
+                "status": True,
+                "event_settlement": responsegenerator.responseGenerator.generateResponse(amount, ACTIVE_EVENT)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -359,9 +358,9 @@ def get_event_by_approval_status(status):
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
-                       "status": True,
-                       "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
-                   }, 200
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -378,14 +377,14 @@ def gift_event(e_id, phone):
             event = cursor.fetchone()
             if event is not None:
                 return {
-                           "status": True,
-                           "gift_event": responsegenerator.responseGenerator.generateResponse(event, GIFT_EVENT)
-                       }, 200
+                    "status": True,
+                    "gift_event": responsegenerator.responseGenerator.generateResponse(event, GIFT_EVENT)
+                }, 200
             else:
                 return {
-                           "status": False,
-                           "event": None
-                       }, 301
+                    "status": False,
+                    "event": None
+                }, 301
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -402,9 +401,9 @@ def get_event_list(uid):
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
-                       "status": True,
-                       "event_list": responsegenerator.responseGenerator.generateResponse(events, EVENT_LIST)
-                   }, 200
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, EVENT_LIST)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -427,9 +426,9 @@ def get_single_event(event_id, phone):
             cursor.execute(single_event_query)
             events = cursor.fetchone()
             return {
-                       "status": True,
-                       "event": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
-                   }, 200
+                "status": True,
+                "event": responsegenerator.responseGenerator.generateResponse(events, SINGLE_EVENT)
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -444,9 +443,9 @@ def create_events_type(event_name, created_by, updated_by):
             values = (event_name, True, created_by, getIndianTime(), updated_by, getIndianTime())
             cursor.execute(events_type_query, values)
             return {
-                       "status": True,
-                       "message": "Event Type added successfully"
-                   }, 200
+                "status": True,
+                "message": "Event Type added successfully"
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -460,9 +459,9 @@ def disable_events_type(event_id, e_status):
             values = (e_status, event_id)
             cursor.execute(disable_events_type_query, values)
             return {
-                       "status": True,
-                       "message": "Event Type changed successfully"
-                   }, 200
+                "status": True,
+                "message": "Event Type changed successfully"
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -478,9 +477,9 @@ def edit_events_type(lid, event_type_name, updated_by):
                             updated_on = %s where id= '{lid}'"""
             cursor.execute(edit_query, (getIndianTime(),))
             return {
-                       "status": True,
-                       "message": "Events Type edited successfully"
-                   }, 200
+                "status": True,
+                "message": "Events Type edited successfully"
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -495,14 +494,14 @@ def events_type_by_id(et_id):
             events = cursor.fetchone()
             if events is not None:
                 return {
-                           "status": True,
-                           "event_type": responsegenerator.responseGenerator.generateResponse(events, EVENT_TYPE_BY_ID)
-                       }, 200
+                    "status": True,
+                    "event_type": responsegenerator.responseGenerator.generateResponse(events, EVENT_TYPE_BY_ID)
+                }, 200
             else:
                 return {
-                           "status": False,
-                           "event_type": None
-                       }, 301
+                    "status": False,
+                    "event_type": None
+                }, 301
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -518,10 +517,10 @@ def get_event_type_list_for_user():
             event_type_list = cursor.fetchall()
 
             return {
-                       "status": True,
-                       "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)
+                "status": True,
+                "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)
 
-                   }, 200
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -538,9 +537,9 @@ def add_location(city_name, created_by, updated_by):
             values = (city_name, True, created_by, getIndianTime(), updated_by, getIndianTime())
             cursor.execute(add_location_query, values)
             return {
-                       "status": True,
-                       "message": "location added successfully"
-                   }, 200
+                "status": True,
+                "message": "location added successfully"
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -554,9 +553,9 @@ def disable_location(location_id, loc_status):
             values = (loc_status, location_id)
             cursor.execute(disable_loc_query, values)
             return {
-                       "status": True,
-                       "message": "Location status changed successfully"
-                   }, 200
+                "status": True,
+                "message": "Location status changed successfully"
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -572,9 +571,9 @@ def edit_location(lid, city_name, updated_by):
                                         updated_on = '{getIndianTime()}' where id= '{lid}' """
             cursor.execute(edit_location_query)
             return {
-                       "status": True,
-                       "message": "Location edited successfully"
-                   }, 200
+                "status": True,
+                "message": "Location edited successfully"
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -589,14 +588,14 @@ def get_location_by_id(loc_id):
             location = cursor.fetchone()
             if location is not None:
                 return {
-                           "status": True,
-                           "location": responsegenerator.responseGenerator.generateResponse(location, EVENT_TYPE_BY_ID)
-                       }, 200
+                    "status": True,
+                    "location": responsegenerator.responseGenerator.generateResponse(location, EVENT_TYPE_BY_ID)
+                }, 200
             else:
                 return {
-                           "status": False,
-                           "location": None
-                       }, 301
+                    "status": False,
+                    "location": None
+                }, 301
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -615,9 +614,30 @@ def get_event_type_list_for_admin():
             cursor.execute(event_type_for_admin_query)
             events = cursor.fetchall()
             return {
-                       "status": True,
-                       "events_type": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_TYPE_LIST)
-                   }, 200
+                "status": True,
+                "events_type": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_TYPE_LIST)
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def filter_event_type_list_for_admin(status):
+    try:
+        with connection.cursor() as cursor:
+            event_type_for_admin_query = f"""SELECT e.id, e.event_type_name, e.status, creator.name, updator.name, 
+                                            e.created_on, e.updated_on 
+                                            FROM events_type AS e
+                                            LEFT JOIN users AS creator ON e.created_by = creator.uid
+                                            LEFT JOIN users AS updator ON e.updated_by = updator.uid
+                                            WHERE e.status= '{status}'"""
+            cursor.execute(event_type_for_admin_query)
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "events_type": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_TYPE_LIST)
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -634,9 +654,29 @@ def get_locations_list():
             cursor.execute(location_list_query)
             events = cursor.fetchall()
             return {
-                       "status": True,
-                       "locations": responsegenerator.responseGenerator.generateResponse(events, ALL_LOCATION_LIST)
-                   }, 200
+                "status": True,
+                "locations": responsegenerator.responseGenerator.generateResponse(events, ALL_LOCATION_LIST)
+            }, 200
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
+
+def filter_locations_list(status):
+    try:
+        with connection.cursor() as cursor:
+            location_list_query = f"""SELECT l.id, l.city_name, l.status, creator.name, updator.name, l.created_on, 
+                                        l.updated_on FROM locations AS l
+                                        LEFT JOIN users AS creator ON l.created_by = creator.uid
+                                        LEFT JOIN users AS updator ON l.updated_by = updator.uid
+                                        WHERE l.status = '{status}'"""
+            cursor.execute(location_list_query)
+            events = cursor.fetchall()
+            return {
+                "status": True,
+                "locations": responsegenerator.responseGenerator.generateResponse(events, ALL_LOCATION_LIST)
+            }, 200
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
@@ -698,13 +738,13 @@ def get_my_event_list(uid):
             event_type_list = cursor.fetchall()
 
             return {
-                       "status": True,
-                       "my_events": responsegenerator.responseGenerator.generateResponse(my_events, EVENT_LIST),
-                       "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
-                                                                                              INVITED_EVENT_LIST),
-                       "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)
+                "status": True,
+                "my_events": responsegenerator.responseGenerator.generateResponse(my_events, EVENT_LIST),
+                "invited_events": responsegenerator.responseGenerator.generateResponse(invited_events,
+                                                                                       INVITED_EVENT_LIST),
+                "event_type_list": responseGenerator.generateResponse(event_type_list, EVENT_TYPE_LIST)
 
-                   }, 200
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -727,10 +767,10 @@ def search_user_event(uid):
             upcoming_events = cursor.fetchall()
 
             return {
-                       "status": True,
-                       "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events,
-                                                                                               SEARCH_EVENT_LIST)
-                   }, 200
+                "status": True,
+                "upcoming_events": responsegenerator.responseGenerator.generateResponse(upcoming_events,
+                                                                                        SEARCH_EVENT_LIST)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -751,9 +791,9 @@ def get_all_event_list():
             cursor.execute(event_list_query)
             events = cursor.fetchall()
             return {
-                       "status": True,
-                       "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
-                   }, 200
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -775,9 +815,9 @@ def dashboard_search_event(search):
             cursor.execute(single_events_query)
             events = cursor.fetchall()
             return {
-                       "status": True,
-                       "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
-                   }, 200
+                "status": True,
+                "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -810,10 +850,10 @@ def get_city_list_for_user():
             locations_list = cursor.fetchall()
 
             return {
-                       "status": True,
-                       "city_list": responseGenerator.generateResponse(locations_list, ACTIVE_LOCATIONS_LIST)
+                "status": True,
+                "city_list": responseGenerator.generateResponse(locations_list, ACTIVE_LOCATIONS_LIST)
 
-                   }, 200
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -831,9 +871,9 @@ def set_event_status(event_id, status, approver):
                 event_approve_query = f"UPDATE event SET approved_by = '{approver}' WHERE id = '{event_id}'"
                 cursor.execute(event_approve_query)
             return {
-                       "status": True,
-                       "message": "Event Status changed successfully"
-                   }, 200
+                "status": True,
+                "message": "Event Status changed successfully"
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -876,9 +916,9 @@ def event_admin(event_id):
             update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
             cursor.execute(update_qr_sql)
             return {
-                       "status": True,
-                       "msg": event_admins
-                   }, 200
+                "status": True,
+                "msg": event_admins
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -964,9 +1004,9 @@ def get_my_invited_event_list(uid):
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
             return {
-                       "invited_list": responsegenerator.responseGenerator.generateResponse(invited_events,
-                                                                                            INVITED_EVENTS_LIST)
-                   }, 200
+                "invited_list": responsegenerator.responseGenerator.generateResponse(invited_events,
+                                                                                     INVITED_EVENTS_LIST)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301
@@ -981,9 +1021,9 @@ def get_my_notifications_list(uid):
             cursor.execute(notification_query)
             notification_list = cursor.fetchall()
             return {
-                       "notification_list": responsegenerator.responseGenerator.generateResponse(notification_list,
-                                                                                                 NOTIFICATION_LIST)
-                   }, 200
+                "notification_list": responsegenerator.responseGenerator.generateResponse(notification_list,
+                                                                                          NOTIFICATION_LIST)
+            }, 200
 
     except pymysql.Error as e:
         return {"status": False, "message": str(e)}, 301

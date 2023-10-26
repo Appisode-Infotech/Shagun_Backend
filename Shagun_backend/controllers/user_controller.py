@@ -652,6 +652,27 @@ def get_all_admins():
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+def filter_all_admins(status):
+    try:
+        with connection.cursor() as cursor:
+            users_data_query = f""" SELECT a.id, a.uid, a.name, a.email, a.phone, a.auth_type, a.kyc, a.profile_pic, 
+                a.created_on, a.status, a.role, creator.name, updator.name, a.updated_on
+                FROM users AS a 
+                LEFT JOIN users AS creator ON a.created_by = creator.uid
+                LEFT JOIN users AS updator ON a.updated_by = updator.uid
+                WHERE a.role = 1 AND a.status = '{status}' ORDER BY a.id DESC """
+            cursor.execute(users_data_query)
+            user_data = cursor.fetchall()
+            return {
+                "status": True,
+                "user_data": responsegenerator.responseGenerator.generateResponse(user_data, ALL_USERS_DATA)
+            }, 200
+
+    except pymysql.Error as e:
+        return {"status": False, "message": str(e)}, 301
+    except Exception as e:
+        return {"status": False, "message": str(e)}, 301
+
 
 def dashboard_search_employee(search):
     try:

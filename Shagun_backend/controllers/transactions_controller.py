@@ -243,15 +243,26 @@ def get_received_gift_for_event(uid, eid):
 def get_transaction_list(event_id, status):
     try:
         with connection.cursor() as cursor:
-            track_order_query = f""" SELECT th.*, e.event_date, et.event_type_name,sender.name, receiver.name
-            FROM transaction_history AS th
-            LEFT JOIN event As e ON th.event_id = e.id
-            LEFT JOIN events_type As et ON e.event_type_id = et.id
-            LEFT JOIN users As sender ON th.sender_uid = sender.uid
-            LEFT JOIN users As receiver ON th.receiver_uid = receiver.uid
-            WHERE th.event_id = '{event_id}' AND is_settled LIKE '{status}' ORDER BY th.created_on DESC """
+            track_order_query = f"""
+                SELECT th.*, e.event_date, et.event_type_name, sender.name, receiver.name, 
+                       bk.bank_name, os.created_on
+                FROM transaction_history AS th
+                LEFT JOIN event AS e ON th.event_id = e.id
+                LEFT JOIN events_type AS et ON e.event_type_id = et.id
+                LEFT JOIN users AS sender ON th.sender_uid = sender.uid
+                LEFT JOIN users AS receiver ON th.receiver_uid = receiver.uid
+                LEFT JOIN bank_details AS bk ON th.reciever_bank_id = bk.id
+                LEFT JOIN (
+                    SELECT transaction_id, MAX(CASE WHEN status = 6 THEN created_on END) AS created_on
+                    FROM order_status
+                    GROUP BY transaction_id
+                ) AS os ON th.id = os.transaction_id
+                WHERE th.event_id = '{event_id}' AND th.is_settled LIKE '{status}'
+                ORDER BY th.created_on DESC
+            """
             cursor.execute(track_order_query)
             track = cursor.fetchall()
+
             return {
                 "status": True,
                 "message": "Transaction Completed",
@@ -288,18 +299,18 @@ def search_transaction_list(event_id, search):
         return {"status": False, "message": str(e)}, 301
 
 
-def settle_payment(transactions_list):
+def settle_payment(transactions_list, settled_by):
     try:
         with connection.cursor() as cursor:
             transactions_string = ', '.join(transactions_list)
-            settlement_data_query = f"""SELECT th.receiver_uid, th.shagun_amount, u.name AS sender_name FROM transaction_history AS th
+            settlement_data_query = f"""SELECT th.receiver_uid, th.shagun_amount, u.name AS sender_name, th.id FROM transaction_history AS th
                                         LEFT JOIN users AS u ON u.uid = th.sender_uid
                                         WHERE th.id IN ({transactions_string})"""
             cursor.execute(settlement_data_query)
             settlement_data = cursor.fetchall()
             user_totals = {}
 
-            for receiver, amount, sender_name in settlement_data:
+            for receiver, amount, sender_name, tid in settlement_data:
                 if receiver in user_totals:
                     user_totals[receiver]['amount'] += amount
                     user_totals[receiver]['sender_name'] = sender_name
@@ -310,13 +321,17 @@ def settle_payment(transactions_list):
                 total_amount = data['amount']
                 sender_name = data['sender_name']
                 bank_data_query = f"""SELECT bk.bank_name, bk.ifsc_code, bk.account_holder_name, bk.account_number,
-                                        u.name, u.fcm_token FROM bank_details AS bk 
+                                        u.name, u.fcm_token, bk.id FROM bank_details AS bk 
                                         LEFT JOIN users AS u ON bk.uid = u.uid 
-                                        WHERE bk.uid = '{receiver}' """
+                                        WHERE bk.uid = '{receiver}' AND bk.status = 1 """
                 cursor.execute(bank_data_query)
                 bank_data = cursor.fetchall()
                 for row in bank_data:
-                    bank_name, ifsc_code, account_holder_name, account_number, receiver_name, fcm_token = row
+                    bank_name, ifsc_code, account_holder_name, account_number, receiver_name, fcm_token, bkid = row
+                    track_order_query = f"""UPDATE transaction_history SET is_settled = 1, settled_by = '{settled_by}',
+                                                        reciever_bank_id = {bkid} WHERE id = {tid} """
+                    cursor.execute(track_order_query)
+
                     invite_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                                                     VALUES ('{receiver}', 'shagun',
                                                     'Shagun amount {total_amount} credited by {sender_name}',
@@ -342,9 +357,9 @@ def update_transactions(transactions_list, settled_by):
     try:
         with connection.cursor() as cursor:
             transactions_string = ', '.join(transactions_list)
-            track_order_query = f"""UPDATE transaction_history SET is_settled = 1, settled_by = '{settled_by}' 
-                                    WHERE id IN ({transactions_string})"""
-            cursor.execute(track_order_query)
+            # track_order_query = f"""UPDATE transaction_history SET is_settled = 1, settled_by = '{settled_by}'
+            #                         WHERE id IN ({transactions_string})"""
+            # cursor.execute(track_order_query)
 
             sql = "INSERT INTO order_status (transaction_id, status) VALUES (%s, %s)"
             values = [(transaction_id, 6) for transaction_id in transactions_list]

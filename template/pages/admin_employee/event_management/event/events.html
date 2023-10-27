@@ -258,8 +258,7 @@
                                                     <td>
                                                         {% for admin in event.admins %}
                                                         <b>{{ admin.role }}</b> : {{ admin.name }} &nbsp;
-
-                                                        <a href="{{ MEDIA_URL }}{{ admin.qr_code }}" target="_blank">
+                                                        <a href="{{ MEDIA_URL }}{{ admin.qr_code }}" target="_blank" title="view QR code">
                                                             <i class="fas fa-qrcode"
                                                                style="color: blue; cursor: pointer;"></i>
                                                         </a><br><br>
@@ -609,6 +608,7 @@ function showCustomAlertForActivate() {
 <!-- Custom js for this page-->
 <!-- End custom js for this page-->
 
+<script src="https://cdn.jsdelivr.net/npm/tooltip.js@1.3.3/dist/umd/tooltip.min.js"></script>
 
 </body>
 

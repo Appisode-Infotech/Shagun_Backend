@@ -8,6 +8,7 @@
     <title>Shagun Admin</title>
     <!-- plugins:css -->
     {% load static%}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/fontawesome/css/all.min.css' %}">
@@ -114,6 +115,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -135,6 +137,13 @@
                     You cannot Reset Password for Inactive User
                 </div>
             </div>
+            {% if message %}
+            <div id="customAlertOverlay1" class="custom-alert-overlay">
+                <div class="custom-alert">
+                    {{message}}
+                </div>
+            </div>
+            {% endif %}
             <div class="content-wrapper">
                 <div id="customAlertOverlay3" class="custom-alert-overlay">
                     <div class="custom-alert">
@@ -179,6 +188,29 @@
                                                    placeholder="Search" value="{{search}}"
                                                    aria-label="Recipient's username">
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="mr-2 custom-label"> Event Type Filter: </label>
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" style="width: 110px; height: 40px;">
+                                            {% if status == '%' or status is None %}
+                                            All
+                                            {% elif status == 0 %}
+                                            Inactive
+                                            {% elif status == 1 %}
+                                            Active
+                                            {% endif %}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                            <a class="dropdown-item"
+                                               href="{% url 'manage_admin'  %}">All</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filter_admin' 1 %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filter_admin' 0 %}">Inactive</a>
+                                        </div>
+
                                     </div>
                                     {% if request.session.role == 1 %}
                                     <div class="form-group">
@@ -330,6 +362,22 @@
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
 <script>
+    $(document).ready(function () {
+        var customAlertOverlay = $('#customAlertOverlay1');
+
+        if (customAlertOverlay.length) {
+            var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
+            customAlertOverlay1.style.display = "flex";
+
+            setTimeout(function () {
+                customAlertOverlay1.style.display = "none";
+            }, 3000);
+        }
+    });
+</script>
+
+
+<script>
     function showCustomAlertResetPwd() {
       var customAlertOverlay = document.getElementById("customAlertOverlay");
       customAlertOverlay.style.display = "flex";
@@ -338,6 +386,7 @@
         customAlertOverlay.style.display = "none";
       }, 1000);
     }
+
 
 </script>
 <script>
@@ -395,6 +444,7 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay4");
         customAlertOverlay.style.display = "none";
     }
+
 
 
 

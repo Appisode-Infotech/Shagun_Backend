@@ -147,6 +147,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -191,6 +192,29 @@
                                                    placeholder="Search" value="{{search}}"
                                                    aria-label="Recipient's username">
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="mr-2 custom-label"> Event Type Filter: </label>
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                id="dropdownMenuIconButton3" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" style="width: 110px; height: 40px;">
+                                            {% if status == '%' or status is None %}
+                                            All
+                                            {% elif status == 0 %}
+                                            Inactive
+                                            {% elif status == 1 %}
+                                            Active
+                                            {% endif %}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                            <a class="dropdown-item"
+                                               href="{% url 'manage_event_types'  %}">All</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filter_event_types' 1 %}">Active</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filter_event_types' 0 %}">Inactive</a>
+                                        </div>
+
                                     </div>
                                     <div class="form-group">
                                         <button type="button" class="btn btn-outline-info btn-icon-text"
@@ -468,6 +492,7 @@
 
 
 
+
 </script>
 
 
@@ -509,6 +534,7 @@
 
 
 
+
 </script>
 <script>
         function toggleForm() {
@@ -529,6 +555,7 @@
                 document.removeEventListener("click", hideFormOnClickOutside);
             }
         }
+
 
 
 

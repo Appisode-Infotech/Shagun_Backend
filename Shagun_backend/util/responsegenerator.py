@@ -284,6 +284,20 @@ class responseGenerator:
                 )
             return greeting_cards
 
+        if controller_type == PRINTER_GREETING_CARDS:
+            greeting_cards = []
+            for cards in data:
+                greeting_cards.append(
+                    {
+                        "card_name": cards[0],
+                        "card_image_url": cards[1],
+                        "card_price": int(cards[2]),
+                        "card_id": cards[3],
+                        "card_status": cards[4]
+                    }
+                )
+            return greeting_cards
+
         if controller_type == GETGREETING_CARDS:
             greeting_cards = []
             for cards in data:
@@ -734,7 +748,9 @@ class responseGenerator:
                     "event_date": trans[18],
                     "event_type": trans[19],
                     "sender_name": trans[20],
-                    "receiver_name": trans[21]
+                    "receiver_name": trans[21],
+                    "bank_name": trans[22],
+                    "settled_on": trans[23]
                 }
                 )
             return transaction_list

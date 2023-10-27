@@ -245,20 +245,26 @@ def get_transaction_list(event_id, status):
         with connection.cursor() as cursor:
             track_order_query = f"""
                 SELECT th.*, e.event_date, et.event_type_name, sender.name, receiver.name, 
-                       bk.bank_name, os.created_on
-                FROM transaction_history AS th
-                LEFT JOIN event AS e ON th.event_id = e.id
-                LEFT JOIN events_type AS et ON e.event_type_id = et.id
-                LEFT JOIN users AS sender ON th.sender_uid = sender.uid
-                LEFT JOIN users AS receiver ON th.receiver_uid = receiver.uid
-                LEFT JOIN bank_details AS bk ON th.reciever_bank_id = bk.id
-                LEFT JOIN (
-                    SELECT transaction_id, MAX(CASE WHEN status = 6 THEN created_on END) AS created_on
-                    FROM order_status
-                    GROUP BY transaction_id
-                ) AS os ON th.id = os.transaction_id
-                WHERE th.event_id = '{event_id}' AND th.is_settled LIKE '{status}'
-                ORDER BY th.created_on DESC
+       bk.bank_name, os.created_on, bk.account_number,
+       CASE WHEN EXISTS (
+           SELECT 1
+           FROM bank_details AS active_bank
+           WHERE active_bank.uid = sender.uid AND active_bank.status = 1
+       ) THEN 1 ELSE 0 END AS has_active_bank
+FROM transaction_history AS th
+LEFT JOIN event AS e ON th.event_id = e.id
+LEFT JOIN events_type AS et ON e.event_type_id = et.id
+LEFT JOIN users AS sender ON th.sender_uid = sender.uid
+LEFT JOIN users AS receiver ON th.receiver_uid = receiver.uid
+LEFT JOIN bank_details AS bk ON th.reciever_bank_id = bk.id
+LEFT JOIN (
+    SELECT transaction_id, MAX(CASE WHEN status = 6 THEN created_on END) AS created_on
+    FROM order_status
+    GROUP BY transaction_id
+) AS os ON th.id = os.transaction_id
+WHERE th.event_id = '{event_id}' AND th.is_settled LIKE '{status}'
+ORDER BY th.created_on DESC
+
             """
             cursor.execute(track_order_query)
             track = cursor.fetchall()

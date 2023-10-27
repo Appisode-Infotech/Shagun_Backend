@@ -199,6 +199,7 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <span style="display:none;" id="event_id">{{ event_id }}</span>
+                <span style="display:none;" id="status">{{ status }}</span>
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
@@ -573,10 +574,11 @@
         document.getElementById("loader").style.display = "block";
 
         var event_id = document.getElementById("event_id").textContent;
+        var status = document.getElementById("status").textContent;
         console.log(event_id);
 
         // Construct the URL with the event_id as a query parameter
-        var url = '/transactions_settlement/' + event_id + '/';
+        var url = '/transactions_settlement/' + status + '/' + event_id + '/';
         console.log(url);
 
         // Create a new FormData object to hold the combined data

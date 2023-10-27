@@ -118,8 +118,24 @@ def app_settings(request):
 
 
 def reset_password(request, email, action_page):
-    resp, status_code = reset_password_controller.reset_password(email, action_page)
-    return redirect(action_page)
+    if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
+        resp, status_code = reset_password_controller.admin_reset_password(email, action_page)
+        message = f"Password reset successfully for {email}"
+        if action_page == 'manage_admin':
+            response, status_code = user_controller.get_all_admins()
+            return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
+                          {"response": response['user_data'], "role": 1, "message": resp['message']})
+        elif action_page == 'manage_employee':
+            response, status_code = user_controller.get_all_employees()
+            return render(request, 'pages/admin_employee/employee_management/employee/employees.html',
+                          {"response": response['user_data'], "role": 2, "message": resp['message']})
+        elif action_page == 'manage_printers':
+            response, status_code = store_controller.get_printers_by_status('%')
+            return render(request, 'pages/admin_employee/vendors_management/printing_vendor/printing_vendor.html',
+                          {"response": response['printer_data'], "message": resp['message']})
+
+    else:
+        return redirect('sign_up')
 
 
 def reset_my_password(request, email, action_page):
@@ -602,7 +618,7 @@ def transactions_settlement(request, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             transaction_id = request.POST.getlist('selected_ids')
-            settlement, status_code = transactions_controller.settle_payment(transaction_id)
+            settlement, status_code = transactions_controller.settle_payment(transaction_id, request.session.get('uid'))
             if status_code == 200:
                 response, status_code = transactions_controller.update_transactions(transaction_id,
                                                                                     request.session.get('uid'))
@@ -611,7 +627,6 @@ def transactions_settlement(request, event_id):
                 return JsonResponse(settlement)
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
-
             return render(request,
                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
                           {"response": response['transactions'], "event_id": event_id})

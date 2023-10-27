@@ -748,7 +748,9 @@ class responseGenerator:
                     "event_date": trans[18],
                     "event_type": trans[19],
                     "sender_name": trans[20],
-                    "receiver_name": trans[21]
+                    "receiver_name": trans[21],
+                    "bank_name": trans[22],
+                    "settled_on": trans[23]
                 }
                 )
             return transaction_list

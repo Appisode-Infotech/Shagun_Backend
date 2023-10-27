@@ -13,6 +13,7 @@ def home_page_data(uid):
             user_data = cursor.fetchone()
             phone = user_data[4]
             user_status = user_data[9]
+            kyc_status = user_data[6]
 
             sent_transactions_query = f"""
                 SELECT COALESCE(SUM(shagun_amount), 0) AS total_amount
@@ -45,9 +46,9 @@ def home_page_data(uid):
             cursor.execute(invited_events_query)
             invited_events = cursor.fetchall()
 
-            get_kyc_query = f"SELECT kyc FROM users WHERE uid = '{uid}'"
+            get_kyc_query = f"SELECT count(*) FROM user_kyc WHERE uid = '{uid}'"
             cursor.execute(get_kyc_query)
-            kyc_status = cursor.fetchone()
+            kyc_count = cursor.fetchone()[0]
 
             get_kyc_request_query = f"SELECT * FROM user_callback_request WHERE uid = '{uid}' AND status = 0 AND type = 'KYC' "
             cursor.execute(get_kyc_request_query)
@@ -62,7 +63,8 @@ def home_page_data(uid):
 
             return {
                 "status": True,
-                "kyc_status": kyc_status[0],
+                "kyc_status": kyc_status,
+                "kyc_count": kyc_count,
                 "user_status": user_status,
                 "is_active_kyc_request": is_active_kyc_request,
                 "total_sent_amount": round(sent_transactions[0]),

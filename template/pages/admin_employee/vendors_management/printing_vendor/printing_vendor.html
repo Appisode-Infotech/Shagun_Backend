@@ -114,6 +114,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -131,10 +132,17 @@
         <!-- partial -->
         <div class="main-panel">
             <div id="customAlertOverlay" class="custom-alert-overlay">
-                    <div class="custom-alert">
-                        You cannot Reset Password for Inactive User
-                    </div>
+                <div class="custom-alert">
+                    You cannot Reset Password for Inactive User
                 </div>
+            </div>
+            {% if message %}
+            <div id="customAlertOverlay1" class="custom-alert-overlay">
+                <div class="custom-alert">
+                    {{message}}
+                </div>
+            </div>
+            {% endif %}
             <div class="content-wrapper">
 
                 <div id="customAlertOverlay4" class="custom-alert-overlay">
@@ -311,7 +319,7 @@
                                                         data-printer-email="{{ printer.email }}"
                                                         data-action_page="manage_printers"
                                                         onclick="showCustomAlertResetPwd()"> Reset Password
-                                                    </button>
+                                                </button>
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -345,7 +353,21 @@
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        var customAlertOverlay = $('#customAlertOverlay1');
 
+        if (customAlertOverlay.length) {
+            var customAlertOverlay1 = document.getElementById("customAlertOverlay1");
+            customAlertOverlay1.style.display = "flex";
+
+            setTimeout(function () {
+                customAlertOverlay1.style.display = "none";
+            }, 3000);
+        }
+    });
+
+</script>
 <script>
     function showCustomAlertResetPwd() {
       var customAlertOverlay = document.getElementById("customAlertOverlay");
@@ -355,6 +377,7 @@
         customAlertOverlay.style.display = "none";
       }, 1000);
     }
+
 </script>
 <script>    
     function showCustomAlertForResetPassword(printerEmail, action_page) {
@@ -381,6 +404,7 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay4");
         customAlertOverlay.style.display = "none";
     }
+
 
 
 </script>
@@ -410,6 +434,7 @@
             }
         });
     });
+
 
 </script>
 

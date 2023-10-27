@@ -274,7 +274,6 @@
                                                 <th><input type="checkbox" id="select-all" onclick="toggleSelectAll()">
                                                 </th>
                                                 {% endif %}
-                                                <th>ID</th>
                                                 <th>Event Name</th>
                                                 <th>Sender Details</th>
                                                 <th>Receiver</th>
@@ -313,7 +312,6 @@
                                                     {% endif %}
                                                 </td>
                                                 {% endif %}
-                                                <td>{{ data.id }}</td>
                                                 <td>{{ data.event_type }}</td>
                                                 <td><b>Sent by:</b> {{ data.sender_name }}</br></br>
                                                     <b>Behalf of: </b>{{data.gifter_name}}
@@ -339,6 +337,8 @@
                                                     {% elif data.is_settled == 1 %}
                                                     <label class="badge badge-success">Settled </label>
                                                     <br/><br/> <b>Settled By: </b>{{data.settled_by}}
+                                                    <br/><br/> <b>Settled On: </b>{{data.settled_on}}
+                                                    <br/><br/> <b>Settled Bank: </b>{{data.bank_name}}
                                                     {% endif %}
                                                 </td>
                                                 <td>

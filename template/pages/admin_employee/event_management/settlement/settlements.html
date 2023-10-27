@@ -179,7 +179,7 @@
                                             <td>
                                                 {% if event.total_received_amount > 0 %}
                                                 <button type="button" class="btn btn-outline-info btn-fw"
-                                                        onclick="window.location.href='{% url 'transactions_settlement' event.id %}'">
+                                                        onclick="window.location.href='{% url 'transactions_settlement' status event.id %}'">
                                                     View
                                                     <i class="fas fa-eye" style="color: #4876FF; cursor: pointer;"></i>
                                                 </button>

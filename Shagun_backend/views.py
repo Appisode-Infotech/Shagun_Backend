@@ -369,7 +369,7 @@ def filter_admin(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         response, status_code = user_controller.filter_all_admins(status)
         return render(request, 'pages/admin_employee/employee_management/admin/admins.html',
-                      {"response": response['user_data'], "role": 1, "status":status})
+                      {"response": response['user_data'], "role": 1, "status": status})
     else:
         return redirect('sign_up')
 
@@ -614,7 +614,7 @@ def search_closed_printer_jobs(request):
         return redirect('sign_up')
 
 
-def transactions_settlement(request, event_id):
+def transactions_settlement(request, status, event_id):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
         if request.method == 'POST':
             transaction_id = request.POST.getlist('selected_ids')
@@ -627,9 +627,10 @@ def transactions_settlement(request, event_id):
                 return JsonResponse(settlement)
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
+            print(response)
             return render(request,
                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                          {"response": response['transactions'], "event_id": event_id})
+                          {"response": response['transactions'], "event_id": event_id, "status": status})
     else:
         return redirect('sign_up')
 
@@ -1145,10 +1146,10 @@ def filtered_events_on_approval_status(request, status):
                   {'response': response['event_list'], "status": status})
 
 
-def filter_transaction_lists(request, event_id, status):
-    response, status_code = transactions_controller.get_transaction_list(event_id, status)
+def filter_transaction_lists(request, event_id, filter, status):
+    response, status_code = transactions_controller.get_transaction_list(event_id, filter)
     return render(request, 'pages/admin_employee/event_management/settlement/transactions_settlement.html',
-                  {"response": response['transactions'], "event_id": event_id, "status": status})
+                  {"response": response['transactions'], "event_id": event_id, "filter": filter, "status": status})
 
 
 def dashboard_search_event(request):

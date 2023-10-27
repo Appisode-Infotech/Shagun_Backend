@@ -227,6 +227,9 @@
                                             <th>
                                                 KYC Activation Data
                                             </th>
+                                            <th>
+                                                User Info
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -332,6 +335,10 @@
                                             </td>
                                             <td>
                                                 <b>Activated By: </b>{{kyc.approver}} <b><br/>on: </b>{{kyc.approved_on}}
+                                            </td>
+                                            <td>
+                                                <b>Email: </b>{{kyc.email}}
+                                                <br/><br/><b>Phone: </b>{{kyc.phone}}
                                             </td>
                                         </tr>
                                         {% endfor %}

@@ -790,6 +790,11 @@ def get_all_event_list():
                                   ORDER BY e.id DESC """
             cursor.execute(event_list_query)
             events = cursor.fetchall()
+            for event in events:
+                admins = json.loads(event[1])
+                for admin in admins:
+                    print(admin['uid'])
+
             return {
                 "status": True,
                 "event_list": responsegenerator.responseGenerator.generateResponse(events, ALL_EVENT_LIST)

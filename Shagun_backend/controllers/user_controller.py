@@ -319,10 +319,11 @@ def get_kyc_data(status):
                 kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
                 kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
                 kyc.verification_status, users.profile_pic, creator.name, updator.name, approver.name, kyc.created_on, 
-                kyc.updated_on, kyc.approved_on
+                kyc.updated_on, kyc.approved_on, user.email, user.phone
                 FROM user_kyc AS kyc
                 LEFT JOIN users AS creator ON kyc.created_by = creator.uid
                 LEFT JOIN users AS updator ON kyc.updated_by = updator.uid
+                LEFT JOIN users AS user ON kyc.uid = user.uid
                 LEFT JOIN users AS approver ON kyc.approved_by = approver.uid
                 INNER JOIN users ON kyc.uid = users.uid WHERE verification_status LIKE '{status}' ORDER BY 
                 kyc.created_on DESC """
@@ -338,31 +339,6 @@ def get_kyc_data(status):
         return {"status": False, "message": str(e)}, 301
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
-
-
-def filter_kyc():
-    try:
-        with connection.cursor() as cursor:
-            kyc_data_query = """ SELECT 
-                kyc.id, kyc.uid, kyc.full_name, kyc.dob, kyc.address_line1, 
-                kyc.identification_proof1, kyc.identification_proof2, kyc.identification_number1, 
-                kyc.identification_number2, kyc.identification_doc1, kyc.identification_doc2, 
-                kyc.verification_status, users.profile_pic
-                FROM user_kyc AS kyc
-                INNER JOIN users ON kyc.uid = users.uid ORDER BY kyc.created_on DESC"""
-
-            cursor.execute(kyc_data_query)
-            kyc_data = cursor.fetchall()
-            return {
-                "status": True,
-                "kyc_data": responsegenerator.responseGenerator.generateResponse(kyc_data, ALL_KYC_DATA)
-            }, 200
-
-    except pymysql.Error as e:
-        return {"status": False, "message": str(e)}, 301
-    except Exception as e:
-        return {"status": False, "message": str(e)}, 301
-
 
 def get_kyc_by_id(kyc_id):
     try:
@@ -508,10 +484,11 @@ def get_all_bank_data(status):
         with connection.cursor() as cursor:
             bank_data_query = f""" SELECT bnk.id, bnk.uid, bnk.ifsc_code, bnk.bank_name, bnk.account_holder_name,
                 bnk.account_number, bnk.status, users.profile_pic, creator.name, updator.name, bnk.created_on, 
-                bnk.modified_on
+                bnk.modified_on, user.email, user.phone
                 FROM bank_details AS bnk
                 LEFT JOIN users AS creator ON bnk.added_by = creator.uid
                 LEFT JOIN users AS updator ON bnk.modified_by = updator.uid
+                LEFT JOIN users AS user ON bnk.uid = user.uid
                 LEFT JOIN users ON bnk.uid = users.uid WHERE bnk.status LIKE '{status}' ORDER BY bnk.created_on DESC """
             cursor.execute(bank_data_query)
             bank_data_query = cursor.fetchall()

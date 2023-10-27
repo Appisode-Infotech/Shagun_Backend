@@ -228,6 +228,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>SL No</th>
+                                                    <th>Event ID</th>
                                                     <th>Event Name</th>
                                                     <th>Event Admins</th>
                                                     <th>Status</th>
@@ -253,6 +254,7 @@
                                                     {% with sl_no=forloop.counter %}
                                                     <td>{{sl_no}}</td>
                                                     {% endwith %}
+                                                    <td>{{ event.event_id }}</td>
                                                     <td>{{ event.event_name }}</td>
 
                                                     <td>

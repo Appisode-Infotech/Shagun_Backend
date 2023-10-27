@@ -392,6 +392,8 @@ class responseGenerator:
                         "created_on": kyc[16],
                         "updated_on": kyc[17],
                         "approved_on": kyc[18],
+                        "email": kyc[19],
+                        "phone": kyc[20],
 
                     }
                 )
@@ -443,6 +445,8 @@ class responseGenerator:
                         "updator": bank[9],
                         "created_on": bank[10],
                         "updated_on": bank[11],
+                        "email": bank[12],
+                        "phone": bank[13],
 
                     }
                 )

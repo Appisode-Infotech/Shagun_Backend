@@ -131,8 +131,12 @@ def get_users_for_kyc(kyc):
 def filter_users(status):
     try:
         with connection.cursor() as cursor:
-            users_data_query = f""" SELECT id, uid, name, email, phone, auth_type, kyc, profile_pic, created_on, status, role
-                FROM users WHERE role = 3 AND status LIKE '{status}' ORDER BY created_on DESC"""
+            users_data_query = f""" SELECT u.id, u.uid, u.name, u.email, u.phone, u.auth_type, u.kyc, u.profile_pic, 
+                                    u.created_on, u.status, u.role, creator.name, updator.name, u.updated_on
+                                    FROM users AS u
+                                    LEFT JOIN users AS creator ON u.created_by = creator.uid
+                                    LEFT JOIN users AS updator ON u.updated_by = updator.uid
+                                    WHERE u.role = 3 AND u.status LIKE '{status}' ORDER BY u.id DESC"""
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()
             return {

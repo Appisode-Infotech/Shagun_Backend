@@ -309,9 +309,7 @@ def filter_bank(request, status):
 
 def filter_user(request, status):
     if request.session.get('is_logged_in') is not None and request.session.get('is_logged_in') is True:
-
         response, status_code = user_controller.filter_users(status)
-
         return render(request, 'pages/admin_employee/users_management/users/users.html',
                       {"response": response['user_data'], "status": status})
 
@@ -627,7 +625,6 @@ def transactions_settlement(request, status, event_id):
                 return JsonResponse(settlement)
         else:
             response, status_code = transactions_controller.get_transaction_list(event_id, '%')
-            print(response)
             return render(request,
                           'pages/admin_employee/event_management/settlement/transactions_settlement.html',
                           {"response": response['transactions'], "event_id": event_id, "status": status})

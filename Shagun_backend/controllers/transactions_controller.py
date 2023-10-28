@@ -136,13 +136,15 @@ def get_sent_gift(gift_data_obj):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, th.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{gift_data_obj.uid}')
-                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
+                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic, pj.wish, 
+                     th.gifter_name
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.receiver_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
                 LEFT JOIN events_type AS et ON ev.event_type_id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
+                LEFT JOIN print_jobs AS pj ON th.id = pj.transaction_id
                 WHERE th.sender_uid = '{gift_data_obj.uid}'AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
                 ({month_filter}) ORDER BY th.created_on DESC"""
             cursor.execute(sent_gift_query)
@@ -181,13 +183,15 @@ def get_received_gift(gift_data_obj):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, th.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{gift_data_obj.uid}') 
-                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
+                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic, pj.wish,
+                    th.gifter_name
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.sender_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
                 LEFT JOIN events_type AS et ON ev.event_type_id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
+                LEFT JOIN print_jobs AS pj ON th.id = pj.transaction_id
                 WHERE th.receiver_uid = '{gift_data_obj.uid}' AND et.event_type_name LIKE '{gift_data_obj.type}' AND 
                 ({month_filter}) ORDER BY th.created_on DESC"""
             cursor.execute(sent_gift_query)
@@ -216,13 +220,15 @@ def get_received_gift_for_event(uid, eid):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, th.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{uid}' AND event_id = '{eid}') 
-                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
+                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic, pj.wish,
+                    th.gifter_name
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.sender_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
                 LEFT JOIN events_type AS et ON ev.event_type_id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
+                LEFT JOIN print_jobs AS pj ON th.id = pj.transaction_id
                 WHERE th.receiver_uid = '{uid}' AND th.event_id = '{eid}' ORDER BY th.created_on DESC"""
             cursor.execute(sent_gift_query)
             received_gifts = cursor.fetchall()
@@ -245,25 +251,25 @@ def get_transaction_list(event_id, status):
         with connection.cursor() as cursor:
             track_order_query = f"""
                 SELECT th.*, e.event_date, et.event_type_name, sender.name, receiver.name, 
-       bk.bank_name, os.created_on, bk.account_number,
-       CASE WHEN EXISTS (
-           SELECT 1
-           FROM bank_details AS active_bank
-           WHERE active_bank.uid = sender.uid AND active_bank.status = 1
-       ) THEN 1 ELSE 0 END AS has_active_bank
-FROM transaction_history AS th
-LEFT JOIN event AS e ON th.event_id = e.id
-LEFT JOIN events_type AS et ON e.event_type_id = et.id
-LEFT JOIN users AS sender ON th.sender_uid = sender.uid
-LEFT JOIN users AS receiver ON th.receiver_uid = receiver.uid
-LEFT JOIN bank_details AS bk ON th.reciever_bank_id = bk.id
-LEFT JOIN (
-    SELECT transaction_id, MAX(CASE WHEN status = 6 THEN created_on END) AS created_on
-    FROM order_status
-    GROUP BY transaction_id
-) AS os ON th.id = os.transaction_id
-WHERE th.event_id = '{event_id}' AND th.is_settled LIKE '{status}'
-ORDER BY th.created_on DESC
+                       bk.bank_name, os.created_on, bk.account_number, receiver.phone,
+                       CASE WHEN EXISTS (
+                           SELECT 1
+                           FROM bank_details AS active_bank
+                           WHERE active_bank.uid = receiver.uid AND active_bank.status = 1
+                       ) THEN 1 ELSE 0 END AS has_active_bank
+                FROM transaction_history AS th
+                LEFT JOIN event AS e ON th.event_id = e.id
+                LEFT JOIN events_type AS et ON e.event_type_id = et.id
+                LEFT JOIN users AS sender ON th.sender_uid = sender.uid
+                LEFT JOIN users AS receiver ON th.receiver_uid = receiver.uid
+                LEFT JOIN bank_details AS bk ON th.reciever_bank_id = bk.id
+                LEFT JOIN (
+                    SELECT transaction_id, MAX(CASE WHEN status = 6 THEN created_on END) AS created_on
+                    FROM order_status
+                    GROUP BY transaction_id
+                ) AS os ON th.id = os.transaction_id
+                WHERE th.event_id = '{event_id}' AND th.is_settled LIKE '{status}'
+                ORDER BY th.created_on DESC
 
             """
             cursor.execute(track_order_query)
@@ -411,13 +417,15 @@ def search_sent_gift(gift_data_obj):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, th.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE sender_uid = '{gift_data_obj.uid}')
-                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
+                     AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic, pj.wish,
+                     th.gifter_name
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.receiver_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
                 LEFT JOIN events_type AS et ON ev.event_type_id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
+                LEFT JOIN print_jobs AS pj ON th.id = pj.transaction_id
                 WHERE th.sender_uid = '{gift_data_obj.uid}' 
                 AND ( u.name LIKE '%{gift_data_obj.search}%' OR u.phone LIKE '%{gift_data_obj.search}%') 
                 ORDER BY th.created_on DESC"""
@@ -451,13 +459,15 @@ def search_received_gift(gift_data_obj):
                     th.transaction_fee, th.delivery_fee, th.created_on, gc.card_price, et.event_type_name, th.id, 
                     CASE WHEN th.is_settled <> 0 THEN True ELSE False END AS settlement_status,
                     (SELECT SUM(shagun_amount) FROM transaction_history WHERE receiver_uid = '{gift_data_obj.uid}') 
-                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic
+                    AS total_amount, u.name, bd.bank_name, bd.bank_logo, bd.account_number, u.profile_pic, pj.wish,
+                    th.gifter_name
                 FROM transaction_history AS th
                 LEFT JOIN users As u ON th.sender_uid = u.uid
                 LEFT JOIN event AS ev ON th.event_id = ev.id
                 LEFT JOIN events_type AS et ON ev.event_type_id = et.id
                 LEFT JOIN greeting_cards AS gc ON th.greeting_card_id = gc.id
                 LEFT JOIN bank_details AS bd ON th.reciever_bank_id = bd.id
+                LEFT JOIN print_jobs AS pj ON th.id = pj.transaction_id
                 WHERE th.receiver_uid = '{gift_data_obj.uid}' 
                 AND ( u.name LIKE '%{gift_data_obj.search}%' OR u.phone LIKE '%{gift_data_obj.search}%') 
                 ORDER BY th.created_on DESC"""

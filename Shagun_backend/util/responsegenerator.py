@@ -260,7 +260,9 @@ class responseGenerator:
                         "bank_name": sent[13],
                         "bank_logo": sent[14],
                         "acc_no": sent[15],
-                        "profile_pic": sent[16]
+                        "profile_pic": sent[16],
+                        "wish": sent[17],
+                        "on_behalf_of": sent[18],
                     }
                 )
             return total_gift_amount, sent_gift
@@ -756,7 +758,8 @@ class responseGenerator:
                     "bank_name": trans[22],
                     "settled_on": trans[23],
                     "acc_no": trans[24],
-                    "active_account": trans[25]
+                    "active_account": trans[26],
+                    "receiver_phone": trans[25]
                 }
                 )
             return transaction_list

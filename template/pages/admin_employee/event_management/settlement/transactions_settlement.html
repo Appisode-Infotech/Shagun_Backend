@@ -313,11 +313,17 @@
                                                 </td>
                                                 {% endif %}
                                                 <td>{{data.id}}</td>
-                                                <td>{{ data.event_type }}</td>
+                                                <td>
+                                                    <b>Event Name: </b>{{ data.event_type }}
+                                                    <br/><br/><b>Event ID: </b>ESHUB{{ data.event_id }}
+                                                </td>
                                                 <td><b>Sent by:</b> {{ data.sender_name }}</br></br>
                                                     <b>Behalf of: </b>{{data.gifter_name}}
                                                 </td>
-                                                <td>{{ data.receiver_name }}</td>
+                                                <td>
+                                                    <b>Name: </b>{{ data.receiver_name }}
+                                                    <br/><br/><b>Phone: <b>{{ data.receiver_phone }}
+                                                </td>
                                                 <td>
                                                     <b>Transaction Amount : </b>₹ {{ data.transaction_amount}}</br></br>
                                                     <b>Shagun Amount: </b>₹ {{ data.shagun_amount }}</br></br>

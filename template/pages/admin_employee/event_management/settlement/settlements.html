@@ -163,7 +163,10 @@
                                             {% with sl_no=forloop.counter %}
                                                     <td>{{sl_no}}</td>
                                                     {% endwith %}
-                                            <td>{{ event.event_type_name }}</td>
+                                            <td>
+                                                    <b>Event Name: </b>{{ event.event_type_name }}
+                                                    <br/><br/><b>Event ID: </b>ESHUB{{ event.id }}
+                                                </td>
                                             <td>
                                                 {% for admin in event.event_admin %}
                                                 <b>{{ admin.role }}</b> : {{ admin.name }}</br></br>

@@ -756,7 +756,8 @@ class responseGenerator:
                     "bank_name": trans[22],
                     "settled_on": trans[23],
                     "acc_no": trans[24],
-                    "active_account": trans[25]
+                    "active_account": trans[26],
+                    "receiver_phone": trans[25]
                 }
                 )
             return transaction_list

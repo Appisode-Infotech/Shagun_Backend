@@ -260,7 +260,9 @@ class responseGenerator:
                         "bank_name": sent[13],
                         "bank_logo": sent[14],
                         "acc_no": sent[15],
-                        "profile_pic": sent[16]
+                        "profile_pic": sent[16],
+                        "wish": sent[17],
+                        "on_behalf_of": sent[18],
                     }
                 )
             return total_gift_amount, sent_gift

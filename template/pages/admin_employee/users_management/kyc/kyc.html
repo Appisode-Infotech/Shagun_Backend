@@ -298,8 +298,8 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <b>Created By: </b>{{kyc.creator}} <b><br/>on: </b>{{kyc.created_on}}<br/><br/>
-                                                <b>Updated By: </b>{{kyc.updator}} <b><br/>on: </b>{{kyc.updated_on}}
+                                                <b>Created By: </b>{{kyc.creator}} <b><br/><br/>on: </b>{{kyc.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{kyc.updator}} <b><br/><br/>on: </b>{{kyc.updated_on}}
                                             </td>
                                             {% if request.session.role == 1 %}
                                             <td>
@@ -334,7 +334,7 @@
                                                 </button>
                                             </td>
                                             <td>
-                                                <b>Activated By: </b>{{kyc.approver}} <b><br/>on: </b>{{kyc.approved_on}}
+                                                <b>Activated By: </b>{{kyc.approver}} <b><br/><br/>on: </b>{{kyc.approved_on}}
                                             </td>
                                             <td>
                                                 <b>Email: </b>{{kyc.email}}

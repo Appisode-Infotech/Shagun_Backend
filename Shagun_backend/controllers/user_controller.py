@@ -221,8 +221,7 @@ def add_user_kyc(kyc_obj):
                 cursor.execute(fcm_query)
                 fcm_token = cursor.fetchone()
                 title = f"KYC Completed"
-                message = f""" KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and 
-                                {kyc_obj.identification_proof2}:{kyc_obj.identification_number2} """
+                message = f""" KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and {kyc_obj.identification_proof2}:{kyc_obj.identification_number2} """
                 send_push_notification(fcm_token[0], title, message)
 
                 return {
@@ -397,7 +396,7 @@ def add_bank_details(bank_obj):
                 cursor.execute(fcm_query)
                 fcm_token = cursor.fetchone()
                 title = f"Bank Linked"
-                message = f""" Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked """
+                message = f"""Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked """
                 send_push_notification(fcm_token[0], title, message)
 
                 return {
@@ -911,8 +910,7 @@ def edit_user_kyc(obj):
             cursor.execute(fcm_query)
             fcm_token = cursor.fetchone()
             title = f"KYC Updated"
-            message = f""" KYC Updated with {obj.identification_proof1}:{obj.identification_number1} and 
-                                            {obj.identification_proof2}:{obj.identification_number2} """
+            message = f""" KYC Updated with {obj.identification_proof1}:{obj.identification_number1} and {obj.identification_proof2}:{obj.identification_number2} """
             send_push_notification(fcm_token[0], title, message)
             connection.commit()
             return {

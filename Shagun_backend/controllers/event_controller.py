@@ -213,6 +213,101 @@ def edit_event(event_obj, event_id):
             for item in event_admins:
                 uid = item["uid"]
                 event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                                            VALUES ('{uid}', 'event',
+                                            'Event has been created',
+                                            ' Event created for {admin[1]} on {event_obj.event_date}')"""
+                cursor.execute(event_created_notification_query)
+
+                phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
+                cursor.execute(phone_query)
+                user_data = cursor.fetchone()
+                title = f"Event has been created"
+                message = f"Event created for {admin[1]} on {event_obj.event_date}"
+                send_push_notification(user_data[1], title, message)
+                deep_link = get_credentials()
+                text = deep_link.get("deep_link") + "eventId=" + str(event_id) + "&invitedBy=" + user_data[0]
+
+                logo_path = "static/images/square_logo.jpg"
+                logo = Image.open(logo_path)
+
+                basewidth = 100
+
+                # adjust image size
+                wpercent = (basewidth / float(logo.size[0]))
+                hsize = int((float(logo.size[1]) * float(wpercent)))
+
+                logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
+                QRcode = qrcode.QRCode(
+                    error_correction=qrcode.constants.ERROR_CORRECT_H
+                )
+
+                QRcode.add_data(text)
+
+                QRcode.make()
+                QRcolor = '#671160'
+
+                QRimg = QRcode.make_image(
+                    fill_color=QRcolor, back_color="white").convert('RGB')
+
+                pos = ((QRimg.size[0] - logo.size[0]) // 2,
+                       (QRimg.size[1] - logo.size[1]) // 2)
+                QRimg.paste(logo, pos)
+
+                media_dir = os.path.join(settings.MEDIA_ROOT, 'images', 'qr_codes')
+                os.makedirs(media_dir, exist_ok=True)
+                image_path = os.path.join(media_dir, f"""{event_id}_{user_data[0]}.png""")
+
+                QRimg.save(image_path)
+
+                image_url = f"""images/qr_codes/{event_id}_{user_data[0]}.png"""
+                item["qr_code"] = image_url
+
+                date_obj = datetime.datetime.strptime(event_obj.event_date, "%Y-%m-%d %H:%M:%S")
+                month = date_obj.strftime("%b")
+                day = date_obj.strftime("%a")
+                date = date_obj.strftime("%d")
+                hour = date_obj.strftime("%I:%M %p")
+
+                options = Options()
+                options.add_argument('--headless')
+                options.add_argument('--no-sandbox')
+                options.add_argument('--disable-dev-shm-usage')
+                driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+                try:
+                    driver.get('http://127.0.0.1:8000/view_qr?'
+                               'qr_owner=' + str(item['name']) +
+                               '&qr_image=' + str(item["qr_code"]) +
+                               '&admins=' + str(event_admins) +
+                               '&date=' + date +
+                               '&month=' + month +
+                               '&day=' + day +
+                               '&time=' + hour +
+                               '&event_type=' + admin[1])
+                    total_height = driver.execute_script("return document.body.scrollHeight")
+                    driver.set_window_size(500, total_height)
+                    scroll_offset = 0
+                    screenshot_parts = []
+                    while scroll_offset < total_height:
+                        screenshot = driver.get_screenshot_as_png()
+                        img = Image.open(io.BytesIO(screenshot))
+                        img = ImageOps.exif_transpose(img)
+                        img.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100, optimize=True)
+                        screenshot_parts.append(screenshot)
+                        scroll_offset += 600
+                        driver.execute_script(f"window.scrollTo(0, {scroll_offset});")
+                        time.sleep(2)
+                    full_screenshot = Image.new('RGB', (500, total_height))
+                    y_offset = 0
+                    for screenshot_part in screenshot_parts:
+                        img = Image.open(io.BytesIO(screenshot_part))
+                        full_screenshot.paste(img, (0, y_offset))
+                        y_offset += img.height
+                    full_screenshot.save(os.path.join(settings.MEDIA_ROOT, image_url), format='PNG', quality=100,
+                                         optimize=True)
+                finally:
+                    driver.quit()
+
+                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
                                         VALUES ('{uid}', 'event',
                                         'Event has been updated',
                                         ' Event updated for {admin[1]} on {event_obj.event_date}')"""
@@ -225,6 +320,9 @@ def edit_event(event_obj, event_id):
                 title = f"Event has been Updated"
                 message = f"Event created for {admin[1]} on {event_obj.event_date}"
                 send_push_notification(user_data[1], title, message)
+
+            update_qr_sql = f"""UPDATE event SET event_admin = '{json.dumps(event_admins)}' WHERE id = '{event_id}' """
+            cursor.execute(update_qr_sql)
 
             return {
                 "status": True,

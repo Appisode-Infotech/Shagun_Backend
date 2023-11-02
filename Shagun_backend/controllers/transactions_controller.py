@@ -377,8 +377,8 @@ def update_transactions(transactions_list, settled_by):
             #                         WHERE id IN ({transactions_string})"""
             # cursor.execute(track_order_query)
 
-            sql = "INSERT INTO order_status (transaction_id, status) VALUES (%s, %s)"
-            values = [(transaction_id, 6) for transaction_id in transactions_list]
+            sql = "INSERT INTO order_status (transaction_id, status,created_on) VALUES (%s, %s, %s)"
+            values = [(transaction_id, 6, getIndianTime()) for transaction_id in transactions_list]
             cursor.executemany(sql, values)
 
             return {

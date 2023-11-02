@@ -119,6 +119,7 @@
 
 
 
+
     </style>
 </head>
 
@@ -136,6 +137,67 @@
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper">
+                <div id="customAlertOverlay1" class="custom-alert-overlay">
+                    <div class="custom-alert">
+                        <form class="form-sample needs-validation"
+                              action="/edit_location"
+                              method="post" novalidate>
+                            {% csrf_token %}
+                            <h4 class="card-title">Edit Location</h4>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Location
+                                            ID </label>
+                                        <div class="col-sm-9">
+                                            <input readonly id="id" name="id"
+                                                   type="text"
+                                                   class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Name
+                                            <span
+                                                    style="font-weight: bold; color: red;">*</span></label>
+                                        <div class="col-sm-9">
+                                            <input required id="name" type="text"
+                                                   class="form-control"
+                                                   pattern="^[A-Za-z][A-Za-z ]*$"
+                                                   title="Enter City Name"
+                                                   maxlength="256"
+                                                   name="name"/>
+                                            <div class="invalid-feedback">Name is
+                                                mandatory
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Updated
+                                            By </label>
+                                        <div class="col-sm-9">
+                                            <input disabled readonly id="updator"
+                                                   class="form-control">
+                                            <input type="hidden"
+                                                   name="updated_by"
+                                                   value="{{ request.session.uid }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="center-button">
+                                <button type="button" onclick="hidePopUpDiv()"
+                                        class="btn btn-outline-danger btn-fw">Cancel
+                                </button>
+                                <input type="submit" value="Submit"
+                                       class="btn btn-outline-info btn-icon-text">
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div id="customAlertOverlay3" class="custom-alert-overlay">
                     <div class="custom-alert">
                         <label class="form-group">
@@ -313,67 +375,7 @@
                                                         class="btn btn-outline-info btn-fw">Edit
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <div id="customAlertOverlay1" class="custom-alert-overlay">
-                                                    <div class="custom-alert">
-                                                        <form class="form-sample needs-validation"
-                                                              action="/edit_location"
-                                                              method="post" novalidate>
-                                                            {% csrf_token %}
-                                                            <h4 class="card-title">Edit Location</h4>
-                                                            <div class="row">
-                                                                <div class="col-md-10">
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Location
-                                                                            ID </label>
-                                                                        <div class="col-sm-9">
-                                                                            <input readonly id="id" name="id"
-                                                                                   type="text"
-                                                                                   class="form-control"/>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-10">
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Name
-                                                                            <span
-                                                                                    style="font-weight: bold; color: red;">*</span></label>
-                                                                        <div class="col-sm-9">
-                                                                            <input required id="name" type="text"
-                                                                                   class="form-control"
-                                                                                   pattern="^[A-Za-z][A-Za-z ]*$"
-                                                                                   title="Enter City Name"
-                                                                                   maxlength="256"
-                                                                                   name="name"/>
-                                                                            <div class="invalid-feedback">Name is
-                                                                                mandatory
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-10">
-                                                                    <div class="form-group row">
-                                                                        <label class="col-sm-3 col-form-label">Updated
-                                                                            By </label>
-                                                                        <div class="col-sm-9">
-                                                                            <input disabled readonly id="updator"
-                                                                                   class="form-control">
-                                                                            <input type="hidden"
-                                                                                   name="updated_by"
-                                                                                   value="{{ request.session.uid }}">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="center-button">
-                                                                <button type="button" onclick="hidePopUpDiv()"
-                                                                        class="btn btn-outline-danger btn-fw">Cancel
-                                                                </button>
-                                                                <input type="submit" value="Submit"
-                                                                       class="btn btn-outline-info btn-icon-text">
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
+
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -457,6 +459,7 @@
 
 
 
+
 </script>
 <script>
     function showPopUpDiv(val1, val2, val3) {
@@ -482,6 +485,7 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay");
         customAlertOverlay.style.display = "none";
     }
+
 
 
 

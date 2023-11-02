@@ -116,6 +116,8 @@
 
 
 
+
+
     </style>
 </head>
 
@@ -253,6 +255,14 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {% if response|length == 0 %}
+                                        <tr class="no-data-found">
+                                            <td colspan="50" style="text-align: center;">
+                                                <h4>No data found</h4>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+
                                         {% for user in response %}
                                         <tr>
                                             {% with sl_no=forloop.counter %}
@@ -280,9 +290,9 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <b>Created By: </b>{{user.creator}} <b><br/>on:
-                                            </b>{{user.created_on}}<br/><br/>
-                                                <b>Updated By: </b>{{user.updator}} <b><br/>on: </b>{{user.updated_on}}
+                                                <b>Created By: </b>{{user.creator}} <b><br/><br/>on:
+                                                </b>{{user.created_on}}<br/><br/>
+                                                <b>Updated By: </b>{{user.updator}} <b><br/><br/>on: </b>{{user.updated_on}}
                                             </td>
                                             <td>
                                                 <div class="dropdown">
@@ -336,6 +346,7 @@
                                         </tr>
                                         {% endfor %}
                                         </tbody>
+                                        {% endif %}
                                     </table>
                                 </div>
                             </div>
@@ -374,6 +385,8 @@
             }, 3000);
         }
     });
+
+
 </script>
 
 
@@ -386,6 +399,8 @@
         customAlertOverlay.style.display = "none";
       }, 1000);
     }
+
+
 
 
 </script>
@@ -444,6 +459,8 @@
         var customAlertOverlay = document.getElementById("customAlertOverlay4");
         customAlertOverlay.style.display = "none";
     }
+
+
 
 
 

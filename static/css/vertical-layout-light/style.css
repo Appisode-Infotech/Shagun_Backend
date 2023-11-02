@@ -30635,5 +30635,11 @@ div.tagsinput span.tag a {
             text-align: center;
         }
 
+#paginationControls {
+    /* Add margin to the top of the entriesInfo element */
+    #entriesInfo {
+        margin-top: 10px; /* Adjust the margin as per your preference */
+    }
+}
 
 /*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */

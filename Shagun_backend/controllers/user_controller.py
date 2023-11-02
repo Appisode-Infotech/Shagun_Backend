@@ -865,7 +865,7 @@ def edit_user_kyc(obj):
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
-                    obj.postcode, obj.city, obj.country, obj.modified_by_uid, getIndianTime().now(), obj.id
+                    obj.postcode, obj.city, obj.country, obj.modified_by_uid, getIndianTime(), obj.id
                 ])
             elif obj.identification_doc1 is None:
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
@@ -874,7 +874,7 @@ def edit_user_kyc(obj):
                 values.extend([
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.adress1, obj.state, obj.adress2, obj.postcode, obj.city, obj.country,
-                    obj.identification_doc2, obj.modified_by_uid, getIndianTime().now(), obj.id
+                    obj.identification_doc2, obj.modified_by_uid, getIndianTime(), obj.id
                 ])
             elif obj.identification_doc2 is None:
                 sql += "full_name=%s, gender=%s, dob=%s, identification_proof1=%s, identification_number1=%s, "
@@ -884,7 +884,7 @@ def edit_user_kyc(obj):
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
                     obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.modified_by_uid,
-                    getIndianTime().now(),
+                    getIndianTime(),
                     obj.id
                 ])
             else:
@@ -896,7 +896,7 @@ def edit_user_kyc(obj):
                     obj.full_name, obj.gender, obj.dob, obj.identification_proof1, obj.identification_number1,
                     obj.identification_proof2, obj.identification_number2, obj.adress1, obj.state, obj.adress2,
                     obj.postcode, obj.city, obj.country, obj.identification_doc1, obj.identification_doc2,
-                    obj.modified_by_uid, getIndianTime().now(), obj.id
+                    obj.modified_by_uid, getIndianTime(), obj.id
                 ])
 
             cursor.execute(sql, values)

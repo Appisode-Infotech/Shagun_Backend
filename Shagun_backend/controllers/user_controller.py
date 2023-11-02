@@ -380,11 +380,11 @@ def add_bank_details(bank_obj):
                                (bank_obj.uid,))
                 sql_query = """
                 INSERT INTO bank_details (uid, bank_name, ifsc_code, account_holder_name, account_number, 
-                    status, added_by, modified_on, modified_by)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    status, added_by, modified_on, modified_by, created_on)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 values = (bank_obj.uid, bank_obj.bank_name, bank_obj.ifsc_code, bank_obj.account_holder_name,
-                          bank_obj.account_number, True, bank_obj.added_by, getIndianTime(), bank_obj.added_by)
+                          bank_obj.account_number, True, bank_obj.added_by, getIndianTime(), bank_obj.added_by, getIndianTime())
                 cursor.execute(sql_query, values)
 
                 KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 

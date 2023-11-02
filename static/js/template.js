@@ -204,21 +204,28 @@
         }
     });
 
-    function handleSearch() {
-        var searchText = $('#search').val().toLowerCase();
-        if (searchText === "") {
-            showPage(1);
-            updatePagination();
-        } else {
-            $("table tbody tr").each(function() {
-                var rowText = $(this).text().toLowerCase();
-                var isVisible = rowText.includes(searchText);
-                $(this).toggle(isVisible);
-            });
-            currentPage = 1; // Reset to page 1 after a search
-            updatePagination();
-        }
+  function handleSearch() {
+    var searchText = $('#search').val().toLowerCase();
+    var visibleRows = table.find('tbody tr:not(.no-data-found)').filter(function() {
+        var rowText = $(this).text().toLowerCase();
+        return rowText.includes(searchText);
+    });
+    totalRows = visibleRows.length; // Update totalRows with the count of visible rows
+
+    if (searchText === "") {
+        showPage(1);
+        updatePagination();
+    } else {
+        // Hide all rows first and then show the filtered rows
+        table.find('tbody tr').hide();
+        visibleRows.show();
+
+        currentPage = 1; // Reset to page 1 after a search
+                totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
+
+        updatePagination();
     }
+}
 });
 
 

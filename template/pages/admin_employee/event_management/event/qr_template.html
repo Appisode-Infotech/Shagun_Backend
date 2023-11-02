@@ -204,7 +204,10 @@
             {% for admin in admins %}
             <div class="event-admin">
                 <img src="{{MEDIA_URL}}{{admin.profile}}" alt="Person 1">
+                <div>
                 <div class="name">{{admin.name}}</div>
+                <div class="role">({{admin.role}})</div>
+                    </div>
             </div>
             {% endfor %}
         </div>

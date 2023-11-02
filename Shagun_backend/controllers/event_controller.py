@@ -1033,12 +1033,12 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
     try:
         with connection.cursor() as cursor:
             invite_query = """
-                INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) 
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message, created_at) 
+                VALUES (%s, %s, %s, %s, %s)
                 ON DUPLICATE KEY UPDATE
                 invited_by = VALUES(invited_by), invite_message = VALUES(invite_message)
             """
-            data_list = [(invited_by, invited_to, e_id, invite_message) for invited_to in invited_to]
+            data_list = [(invited_by, invited_to, e_id, invite_message, getIndianTime()) for invited_to in invited_to]
             cursor.executemany(invite_query, data_list)
 
             event_name_query = f"""SELECT et.event_type_name FROM event AS e

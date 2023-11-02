@@ -145,6 +145,7 @@ def reset_my_password(request, email, action_page):
 
 def forgot_password(request, action_page):
     if request.method == 'POST':
+        print(action_page)
         return redirect(action_page)
     else:
         return render(request, 'pages/admin_employee/login_signup/forget_password.html', {"action_page": action_page})

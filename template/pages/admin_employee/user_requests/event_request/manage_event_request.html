@@ -45,7 +45,6 @@
     <style>
 
 
-
     </style>
 </head>
 
@@ -65,195 +64,200 @@
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="header-container">
-                        <h4 class="card-title">Event Request List</h4>
-                        <div class="form-group">
-                                <div class="input-group">
-                                    <input name="search" id="search" type="text" class="form-control"
-                                           placeholder="Search" value="{{search}}"
-                                           aria-label="Recipient's username">
-                                </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="mr-2 custom-label"> Event Filter: </label>
-                            <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                    id="Fil" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false" style="width: 130px; height: 40px;">
-                                {% if status is None %}
-                                All
-                                {% elif status == '0' %}
-                                Pending
-                                {% elif status == '1' %}
-                                Completed
-                                {% elif status == '2' %}
-                                Rejected
-                                {% endif %}
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
-                                <a class="dropdown-item"
-                                   href="{% url 'event_request' %}">All</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_event_request' 0%}">Pending</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_event_request' 1 %}">Completed</a>
-                                <a class="dropdown-item"
-                                   href="{% url 'filter_event_request' 2 %}">Rejected</a>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="myTable"  class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>
-                                    SL No
-                                </th>
-                                <th>
-                                    User
-                                </th>
-                                <th>
-                                    Name
-                                </th>
-                                <th>
-                                    Contact No
-                                </th>
-                                <th>
-                                    Email
-                                </th>
-                                <th>
-                                    Type
-                                </th>
-                                <th>
-                                    Event Type
-                                </th>
-                                <th>
-                                    Created On
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Set Status
-                                </th>
-                                <th>
-                                    Completed By
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% if response|length == 0 %}
-                            <tr>
-                                <td colspan="16" style="text-align: center;">
-                                    <h4>No data found</h4>
-                                </td>
-                            </tr>
-                            {% else %}
-
-                            {% for req in response %}
-                            <tr>
-                                {% with sl_no=forloop.counter %}
-                                                    <td>{{sl_no}}</td>
-                                                    {% endwith %}
-                                <td class="py-1">
-                                    <img src="{{MEDIA_URL}}{{ req.profile }}" alt="image"/>
-                                </td>
-                                <td>
-                                    {{req.name}}
-                                </td>
-                                <td>
-                                    {{req.phone}}
-                                </td>
-                                <td>
-                                    {{req.email}}
-                                </td>
-                                <td>
-                                    {{req.type}}
-                                </td>
-                                <td>
-                                    {{req.event_type}}
-                                </td>
-                                <td>
-                                    {{req.created_on}}
-                                </td>
-                                <td>
-                                    {% if req.status == 0 %}
-                                    <label class="badge badge-info">Pending</label>
-                                    {% elif req.status == 1 %}
-                                    <label class="badge badge-success">Completed</label>
-                                    {% elif req.status == 2 %}
-                                    <label class="badge badge-danger">Rejected</label>
-                                    {% endif %}
-                                </td>
-
-                                <td>
-                                    <div class="dropdown">
-                                        {% if req.status == 1 %}
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="header-container">
+                                    <h4 class="card-title">Event Request List</h4>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input name="search" id="search" type="text" class="form-control"
+                                                   placeholder="Search" value="{{search}}"
+                                                   aria-label="Recipient's username">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="mr-2 custom-label"> Event Filter: </label>
                                         <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" disabled>
-                                            {% if req.status == 0 %}
+                                                id="Fil" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false" style="width: 130px; height: 40px;">
+                                            {% if status is None %}
+                                            All
+                                            {% elif status == '0' %}
                                             Pending
-                                            {% elif req.status == 1 %}
+                                            {% elif status == '1' %}
                                             Completed
-                                            {% elif req.status == 2 %}
-                                            Rejected
-                                            {% endif %}
-                                        </button>
-                                        {% else %}
-                                        <button type="button" class="btn btn-outline-info dropdown-toggle"
-                                                id="dropdownMenuIconButton1" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                            {% if req.status == 0 %}
-                                            Pending
-                                            {% elif req.status == 1 %}
-                                            Completed
-                                            {% elif req.status == 2 %}
+                                            {% elif status == '2' %}
                                             Rejected
                                             {% endif %}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
                                             <a class="dropdown-item"
-                                               href="{% url 'set_event_request_status' req.id request.session.uid 0 %}">Pending</a>
+                                               href="{% url 'event_request' %}">All</a>
                                             <a class="dropdown-item"
-                                               href="{% url 'set_event_request_status' req.id request.session.uid 1 %}">Completed</a>
+                                               href="{% url 'filter_event_request' 0%}">Pending</a>
                                             <a class="dropdown-item"
-                                               href="{% url 'set_event_request_status' req.id request.session.uid 2 %}">Rejected</a>
+                                               href="{% url 'filter_event_request' 1 %}">Completed</a>
+                                            <a class="dropdown-item"
+                                               href="{% url 'filter_event_request' 2 %}">Rejected</a>
                                         </div>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                                <td>
-                                {% if req.completed_by|length != 0 %}
-                                {{req.completed_by}}
-                                {% else %}
-                                Not Completed
-                                {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
 
-                            </tbody>
-                        </table>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="myTable" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                SL No
+                                            </th>
+                                            <th>
+                                                User
+                                            </th>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Contact No
+                                            </th>
+                                            <th>
+                                                Email
+                                            </th>
+                                            <th>
+                                                Type
+                                            </th>
+                                            <th>
+                                                Event Type
+                                            </th>
+                                            <th>
+                                                Created On
+                                            </th>
+                                            <th>
+                                                Status
+                                            </th>
+                                            <th>
+                                                Set Status
+                                            </th>
+                                            <th>
+                                                Completed By
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if response|length == 0 %}
+                                        <tr>
+                                            <td colspan="16" style="text-align: center;">
+                                                <h4>No data found</h4>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+
+                                        {% for req in response %}
+                                        <tr>
+                                            {% with sl_no=forloop.counter %}
+                                            <td>{{sl_no}}</td>
+                                            {% endwith %}
+                                            <td class="py-1">
+                                                <img src="{{MEDIA_URL}}{{ req.profile }}" alt="image"/>
+                                            </td>
+                                            <td>
+                                                {{req.name}}
+                                            </td>
+                                            <td>
+                                                {{req.phone}}
+                                            </td>
+                                            <td>
+                                                {{req.email}}
+                                            </td>
+                                            <td>
+                                                {{req.type}}
+                                            </td>
+                                            <td>
+                                                {{req.event_type}}
+                                            </td>
+                                            <td>
+                                                {{req.created_on}}
+                                            </td>
+                                            <td>
+                                                {% if req.status == 0 %}
+                                                <label class="badge badge-info">Pending</label>
+                                                {% elif req.status == 1 %}
+                                                <label class="badge badge-success">Completed</label>
+                                                {% elif req.status == 2 %}
+                                                <label class="badge badge-danger">Rejected</label>
+                                                {% endif %}
+                                            </td>
+
+                                            <td>
+                                                <div class="dropdown">
+                                                    {% if req.status == 1 %}
+                                                    <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false" disabled>
+                                                        {% if req.status == 0 %}
+                                                        Pending
+                                                        {% elif req.status == 1 %}
+                                                        Completed
+                                                        {% elif req.status == 2 %}
+                                                        Rejected
+                                                        {% endif %}
+                                                    </button>
+                                                    {% else %}
+                                                    <button type="button" class="btn btn-outline-info dropdown-toggle"
+                                                            id="dropdownMenuIconButton1" data-toggle="dropdown"
+                                                            aria-haspopup="true"
+                                                            aria-expanded="false">
+                                                        {% if req.status == 0 %}
+                                                        Pending
+                                                        {% elif req.status == 1 %}
+                                                        Completed
+                                                        {% elif req.status == 2 %}
+                                                        Rejected
+                                                        {% endif %}
+                                                    </button>
+                                                    <div class="dropdown-menu"
+                                                         aria-labelledby="dropdownMenuIconButton3">
+                                                        <a class="dropdown-item"
+                                                           href="{% url 'set_event_request_status' req.id request.session.uid 0 %}">Pending</a>
+                                                        <a class="dropdown-item"
+                                                           href="{% url 'set_event_request_status' req.id request.session.uid 1 %}">Completed</a>
+                                                        <a class="dropdown-item"
+                                                           href="{% url 'set_event_request_status' req.id request.session.uid 2 %}">Rejected</a>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if req.completed_by|length != 0 %}
+                                                {{req.completed_by}}
+                                                {% else %}
+                                                Not Completed
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination-container col-12" align="center">
+                        <div class="entries-info" id="entriesInfo"></div>
+                        <div class="pagination-controls" id="paginationControls"></div>
                     </div>
                 </div>
             </div>
+
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            {% include 'footer.html' %}
+            <!-- partial -->
         </div>
-
+        <!-- main-panel ends -->
     </div>
-</div>
-
-<!-- content-wrapper ends -->
-<!-- partial:../../partials/_footer.html -->
-{% include 'footer.html' %}
-<!-- partial -->
-</div>
-<!-- main-panel ends -->
-</div>
-<!-- page-body-wrapper ends -->
+    <!-- page-body-wrapper ends -->
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->

@@ -344,6 +344,7 @@ def get_kyc_data(status):
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def get_kyc_by_id(kyc_id):
     try:
         with connection.cursor() as cursor:
@@ -559,9 +560,9 @@ def edit_employee(emp_obj, user_id):
         with connection.cursor() as cursor:
             edit_emp_query = f"""UPDATE users SET name = '{emp_obj.name}', email = '{emp_obj.email}', 
                                 phone = '{emp_obj.phone}', city = '{emp_obj.city}', updated_by = '{emp_obj.updated_by}', 
-                                updated_on = '{getIndianTime()}'
+                                updated_on = %s
                                 WHERE id = '{user_id}'"""
-            cursor.execute(edit_emp_query)
+            cursor.execute(edit_emp_query, (getIndianTime()))
             return {
                 "status": True,
                 "message": "Employee edited successfully"
@@ -633,6 +634,7 @@ def get_all_admins():
     except Exception as e:
         return {"status": False, "message": str(e)}, 301
 
+
 def filter_all_admins(status):
     try:
         with connection.cursor() as cursor:
@@ -683,7 +685,6 @@ def dashboard_search_employee_status(status):
                             LEFT JOIN users AS creator ON a.created_by = creator.uid
                             LEFT JOIN users AS updator ON a.updated_by = updator.uid
                             WHERE a.role = 2 AND a.status = '{status}' ORDER BY a.id DESC """
-
 
             cursor.execute(users_data_query)
             user_data = cursor.fetchall()

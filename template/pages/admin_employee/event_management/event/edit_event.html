@@ -158,6 +158,38 @@
       margin-bottom: 5px;
     }
 
+    .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            z-index: 9999; /* Ensure the overlay is on top of other elements */
+            display: none; /* Initially hidden */
+        }
+
+        .loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Add your other loader styles here */
+            z-index: 10000; /* Ensure the loader is on top of the overlay */
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
 
     </style>
 
@@ -175,8 +207,11 @@
         <!-- partial:../../partials/_sidebar.html -->
         {% include 'nav_bar.html' %}
         <!-- partial -->
+        <div class="overlay" id="overlay"></div>
+                <div id="loading" class="loader" style="display: none;"></div>
         <div class="main-panel">
             <div class="content-wrapper">
+
                 <div class="row">
                     <div class="col-12 grid-margin">
                         <div class="card">
@@ -188,7 +223,7 @@
                                     <label class="ml-2 custom-label"> Edit Event </label>
                                 </div>
                                 <form class="form-sample needs-validation" action="{% url 'edit_event' event.event_data.id %}"
-                                      method="post"
+                                      method="post" id="myForm"
                                       enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <p class="card-description">
@@ -774,6 +809,41 @@ function setValue(value1, value2, inputField1Id, inputField2Id) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("myForm");
+        const submitButton = document.getElementById("submitButton");
+        const overlay = document.getElementById("overlay");
+        const loading = document.getElementById("loading");
+
+        form.addEventListener("submit", function(event) {
+            const requiredFields = form.querySelectorAll("[required]");
+            let allRequiredFieldsFilled = true;
+
+            requiredFields.forEach(function(field) {
+                if (
+                    (field.tagName.toLowerCase() === "input" ||
+                    field.tagName.toLowerCase() === "select" ||
+                    field.tagName.toLowerCase() === "textarea")
+                ) {
+                    if (field.value === "") {
+                        console.log("Found empty required field: " + field.name);
+                        allRequiredFieldsFilled = false;
+                    }
+                }
+            });
+
+            if (allRequiredFieldsFilled) {
+                overlay.style.display = "block";
+                loading.style.display = "block";
+            } else {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
 
 </body>
 

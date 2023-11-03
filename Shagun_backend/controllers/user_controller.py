@@ -40,10 +40,10 @@ def user_register(reg_obj, file_name):
     try:
         with connection.cursor() as cursor:
             sql_query = """INSERT INTO users (name, email, phone, kyc, profile_pic, uid, status, auth_type, role, 
-                            fcm_token, city) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                            fcm_token, city, created_on) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             values = (
                 reg_obj['name'], reg_obj['email'], reg_obj['phone'], False, file_name, reg_obj['uid'], True,
-                reg_obj['auth_type'], reg_obj['role'], reg_obj['fcm_token'], reg_obj['city'])
+                reg_obj['auth_type'], reg_obj['role'], reg_obj['fcm_token'], reg_obj['city'], getIndianTime())
             cursor.execute(sql_query, values)
             query = "SELECT * FROM users WHERE uid = %s;"
             cursor.execute(query, [reg_obj['uid']])
@@ -211,10 +211,11 @@ def add_user_kyc(kyc_obj):
                           kyc_obj.created_by_uid)
                 cursor.execute(sql_query, values)
 
-                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                             VALUES ('{kyc_obj.uid}', 'KYC',
                             'KYC Completed for {kyc_obj.full_name}',
-                            'KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and {kyc_obj.identification_proof2}:{kyc_obj.identification_number2}')"""
+                            'KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and {kyc_obj.identification_proof2}:{kyc_obj.identification_number2}',
+                            {getIndianTime()})"""
                 cursor.execute(KYC_notification_query)
 
                 fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{kyc_obj.uid}' """
@@ -386,10 +387,11 @@ def add_bank_details(bank_obj):
                           bank_obj.account_number, True, bank_obj.added_by, getIndianTime(), bank_obj.added_by, getIndianTime())
                 cursor.execute(sql_query, values)
 
-                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                                             VALUES ('{bank_obj.uid}', 'KYC',
                                             'Linked {bank_obj.bank_name} Bank for {bank_obj.account_holder_name}',
-                                            'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked ')"""
+                                            'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked',
+                                            {getIndianTime()})"""
                 cursor.execute(KYC_notification_query)
 
                 fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{bank_obj.uid}' """
@@ -429,10 +431,11 @@ def edit_bank_details(bank_obj):
                           getIndianTime(), bank_obj.modified_by, bank_obj.bank_id)
                 cursor.execute(edit_bank_query, values)
 
-                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                                                             VALUES ('{bank_obj.uid}', 'KYC',
                                                             'Linked {bank_obj.bank_name} Bank for {bank_obj.account_holder_name}',
-                                                            'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked ')"""
+                                                            'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked',
+                                                            {getIndianTime()})"""
                 cursor.execute(KYC_notification_query)
 
                 fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{bank_obj.uid}' """
@@ -900,10 +903,11 @@ def edit_user_kyc(obj):
                 ])
 
             cursor.execute(sql, values)
-            KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+            KYC_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                                         VALUES ('{obj.uid}', 'KYC',
                                         'KYC Updated for {obj.full_name}',
-                                        'KYC updated with {obj.identification_proof1}:{obj.identification_number1} and {obj.identification_proof2}:{obj.identification_number2}')"""
+                                        'KYC updated with {obj.identification_proof1}:{obj.identification_number1} and {obj.identification_proof2}:{obj.identification_number2}',
+                                        {getIndianTime()})"""
             cursor.execute(KYC_notification_query)
 
             fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{obj.uid}' """

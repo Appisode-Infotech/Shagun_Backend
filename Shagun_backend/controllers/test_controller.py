@@ -3,6 +3,7 @@ import json
 import pymysql
 from django.db import connection
 
+from Shagun_backend.util.constants import getIndianTime
 
 
 def event_admin(event_id):
@@ -38,8 +39,9 @@ def event_admin(event_id):
 def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
     try:
         with connection.cursor() as cursor:
-            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message) VALUES (%s, %s, %s, %s)"""
-            data_list = [(invited_by, invited_to, e_id, invite_message) for invited_to in invited_to]
+            invite_query = """INSERT INTO event_guest_invite (invited_by, invited_to, event_id, invite_message, 
+                                created_at) VALUES (%s, %s, %s, %s, %s)"""
+            data_list = [(invited_by, invited_to, e_id, invite_message, getIndianTime()) for invited_to in invited_to]
             cursor.executemany(invite_query, data_list)
             return {
                 "status": True,

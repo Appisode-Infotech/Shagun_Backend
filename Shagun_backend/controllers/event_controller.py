@@ -65,10 +65,11 @@ def create_event(event_obj):
 
             for item in event_admins:
                 uid = item["uid"]
-                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                             VALUES ('{uid}', 'event',
                             'Event has been created',
-                            ' Event created for {admin[1]} on {event_obj.event_date}')"""
+                            ' Event created for {admin[1]} on {event_obj.event_date}',
+                            {getIndianTime()})"""
                 cursor.execute(event_created_notification_query)
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
@@ -212,10 +213,11 @@ def edit_event(event_obj, event_id):
             event_admins = json.loads(admin[0])
             for item in event_admins:
                 uid = item["uid"]
-                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                                             VALUES ('{uid}', 'event',
                                             'Event has been created',
-                                            ' Event created for {admin[1]} on {event_obj.event_date}')"""
+                                            ' Event created for {admin[1]} on {event_obj.event_date}',
+                                            {getIndianTime()})"""
                 cursor.execute(event_created_notification_query)
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
@@ -307,10 +309,11 @@ def edit_event(event_obj, event_id):
                 finally:
                     driver.quit()
 
-                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                event_created_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                                         VALUES ('{uid}', 'event',
                                         'Event has been updated',
-                                        ' Event updated for {admin[1]} on {event_obj.event_date}')"""
+                                        ' Event updated for {admin[1]} on {event_obj.event_date}',
+                                        {getIndianTime()})"""
                 cursor.execute(event_created_notification_query)
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
@@ -1056,10 +1059,11 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
             results = cursor.fetchall()
             for row in results:
                 name, fcm_token, uid = row
-                invite_notification_query = f"""INSERT INTO notification (uid, type, title, message) 
+                invite_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                                         VALUES ('{uid}', 'invite',
                                         '{invited_by[0]} has invited you to {event_name[0]}',
-                                        '{invited_by[0]} has invited you to {event_name[0]}')"""
+                                        '{invited_by[0]} has invited you to {event_name[0]}',
+                                        {getIndianTime()})"""
                 cursor.execute(invite_notification_query)
                 title = f"""{invited_by[0]} has invited you to {event_name[0]}"""
                 send_push_notification(fcm_token, title, invite_message)

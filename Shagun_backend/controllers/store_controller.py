@@ -415,7 +415,7 @@ def change_print_jobs_status(pjid, status):
                 message = "Your card has been dispatched."
 
             sender_notification_query = f"""INSERT INTO notification (uid, type, title, message,created_on) 
-                                    VALUES ('{fcm_data[2]}', 'track', '{title}', '{message}', {getIndianTime()})"""
+                                    VALUES ('{fcm_data[2]}', 'track', '{title}', '{message}', '{getIndianTime()}')"""
             cursor.execute(sender_notification_query)
             send_push_notification(fcm_data[1], title, message)
 

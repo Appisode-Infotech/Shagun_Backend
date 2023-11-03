@@ -215,7 +215,7 @@ def add_user_kyc(kyc_obj):
                             VALUES ('{kyc_obj.uid}', 'KYC',
                             'KYC Completed for {kyc_obj.full_name}',
                             'KYC added for {kyc_obj.identification_proof1}:{kyc_obj.identification_number1} and {kyc_obj.identification_proof2}:{kyc_obj.identification_number2}',
-                            {getIndianTime()})"""
+                            '{getIndianTime()}')"""
                 cursor.execute(KYC_notification_query)
 
                 fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{kyc_obj.uid}' """
@@ -391,7 +391,7 @@ def add_bank_details(bank_obj):
                                             VALUES ('{bank_obj.uid}', 'KYC',
                                             'Linked {bank_obj.bank_name} Bank for {bank_obj.account_holder_name}',
                                             'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked',
-                                            {getIndianTime()})"""
+                                            '{getIndianTime()}')"""
                 cursor.execute(KYC_notification_query)
 
                 fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{bank_obj.uid}' """
@@ -435,7 +435,7 @@ def edit_bank_details(bank_obj):
                                                             VALUES ('{bank_obj.uid}', 'KYC',
                                                             'Linked {bank_obj.bank_name} Bank for {bank_obj.account_holder_name}',
                                                             'Your {bank_obj.bank_name} bank with acc no: {bank_obj.account_number} is linked',
-                                                            {getIndianTime()})"""
+                                                            '{getIndianTime()}')"""
                 cursor.execute(KYC_notification_query)
 
                 fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{bank_obj.uid}' """
@@ -907,7 +907,7 @@ def edit_user_kyc(obj):
                                         VALUES ('{obj.uid}', 'KYC',
                                         'KYC Updated for {obj.full_name}',
                                         'KYC updated with {obj.identification_proof1}:{obj.identification_number1} and {obj.identification_proof2}:{obj.identification_number2}',
-                                        {getIndianTime()})"""
+                                        '{getIndianTime()}')"""
             cursor.execute(KYC_notification_query)
 
             fcm_query = f"""SELECT fcm_token FROM users WHERE uid = '{obj.uid}' """

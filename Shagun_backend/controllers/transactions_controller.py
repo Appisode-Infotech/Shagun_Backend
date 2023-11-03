@@ -37,13 +37,13 @@ def add_transaction_history(transaction_obj):
             VALUES ('{transaction_obj.receiver_uid}', 'Shagun',
             '{transaction_obj.gifter_name} sent you Shagun amount: {transaction_obj.shagun_amount} ',
             'For your {event_type[0]} event',
-            {getIndianTime()})"""
+            '{getIndianTime()}')"""
             cursor.execute(reciever_notification_query)
 
             sender_notification_query = f"""INSERT INTO notification (uid, type, title, message,created_on) 
             VALUES ('{transaction_obj.uid}', 'Shagun','Shagun Amount sent to {recv_name[0]}', 
             'You have sent Shagun amount: {transaction_obj.shagun_amount} to {recv_name[0]} for the {event_type[0]} event',
-            {getIndianTime()})"""
+            '{getIndianTime()}')"""
             cursor.execute(sender_notification_query)
 
             printer_query = f"""SELECT printer_id FROM event 
@@ -65,7 +65,7 @@ def add_transaction_history(transaction_obj):
             sender_notification_query = f"""INSERT INTO notification (uid, type, title, message, created_on) 
                         VALUES ('{transaction_obj.uid}', 'Transaction','Order {transaction_id} status: Job Created', 
                         'Your transaction is created and pending for further processing.',
-                        {getIndianTime()})"""
+                        '{getIndianTime()}')"""
             cursor.execute(sender_notification_query)
 
             fcm_query = f"""SELECT fcm_token FROM users 
@@ -355,7 +355,7 @@ def settle_payment(transactions_list, settled_by):
                                                     VALUES ('{receiver}', 'shagun',
                                                     'Shagun amount {total_amount} credited by {sender_name}',
                                                     'Shagun amount of {total_amount} INR has been successfully transferred to {bank_name} Bank for the account ending with {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]}',
-                                                    {getIndianTime()})"""
+                                                    '{getIndianTime()}')"""
                     cursor.execute(invite_notification_query)
                     title = f"""Shagun amount {total_amount} credited from {sender_name}"""
                     message = f""" Shagun amount of {total_amount} INR has been successfully transferred to {bank_name} Bank for the account ending with {'*' * (len(str(account_number)) - 4) + str(account_number)[-4:]} """

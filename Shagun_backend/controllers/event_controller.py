@@ -69,7 +69,7 @@ def create_event(event_obj):
                             VALUES ('{uid}', 'event',
                             'Event has been created',
                             ' Event created for {admin[1]} on {event_obj.event_date}',
-                            {getIndianTime()})"""
+                            '{getIndianTime()}')"""
                 cursor.execute(event_created_notification_query)
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
@@ -217,7 +217,7 @@ def edit_event(event_obj, event_id):
                                             VALUES ('{uid}', 'event',
                                             'Event has been created',
                                             ' Event created for {admin[1]} on {event_obj.event_date}',
-                                            {getIndianTime()})"""
+                                            '{getIndianTime()}')"""
                 cursor.execute(event_created_notification_query)
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
@@ -313,7 +313,7 @@ def edit_event(event_obj, event_id):
                                         VALUES ('{uid}', 'event',
                                         'Event has been updated',
                                         ' Event updated for {admin[1]} on {event_obj.event_date}',
-                                        {getIndianTime()})"""
+                                        '{getIndianTime()}')"""
                 cursor.execute(event_created_notification_query)
 
                 phone_query = f"""SELECT phone, fcm_token FROM users WHERE  uid = '{uid}'"""
@@ -1063,7 +1063,7 @@ def save_event_guest_invite(invited_by, invited_to, e_id, invite_message):
                                         VALUES ('{uid}', 'invite',
                                         '{invited_by[0]} has invited you to {event_name[0]}',
                                         '{invited_by[0]} has invited you to {event_name[0]}',
-                                        {getIndianTime()})"""
+                                        '{getIndianTime()}')"""
                 cursor.execute(invite_notification_query)
                 title = f"""{invited_by[0]} has invited you to {event_name[0]}"""
                 send_push_notification(fcm_token, title, invite_message)

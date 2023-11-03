@@ -708,6 +708,7 @@ def add_kyc(request):
 
             kyc_obj = user_kyc_model.user_kyc_model_from_dict(form_data)
             response, status_code = user_controller.add_user_kyc(kyc_obj)
+            print(response)
             if status_code == 200:
                 return redirect('manage_kyc')
             else:
